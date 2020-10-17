@@ -1,0 +1,19 @@
+#
+# nanovg
+#
+---
+policies:
+  no_auto_import: true
+imports:
+  sokol:
+    git: https://github.com/floooh/sokol
+  sokol-tools-bin:
+    git: https://github.com/floooh/sokol-tools-bin
+  fips-imgui:
+    git: https://github.com/fips-libs/fips-imgui.git
+  fips-libmodplug:
+    git: https://github.com/fips-libs/fips-libmodplug
+  fips-utils:
+    git: https://github.com/fips-libs/fips-utils
+  fips-glfw:
+    git: https://github.com/fips-libs/fips-glfw
