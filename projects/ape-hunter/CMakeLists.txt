@@ -1,4 +1,4 @@
-fips_begin_app(ape_hunter windowed)
+fips_begin_app(ape-hunter windowed)
     fips_files(main.cpp
                objects.h
                objects.cpp
@@ -7,6 +7,6 @@ fips_begin_app(ape_hunter windowed)
                textManager.h
                textManager.cpp)
     fips_dir(../data)
-    fipsutil_copy(ape_hunter.yml)
+    fipsutil_copy(ape-hunter.yml)
     fips_deps(framework)
 fips_end_app()

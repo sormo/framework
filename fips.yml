@@ -1,6 +1,3 @@
-#
-# nanovg
-#
 ---
 policies:
   no_auto_import: true
