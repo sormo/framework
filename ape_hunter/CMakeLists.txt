@@ -6,5 +6,7 @@ fips_begin_app(ape_hunter windowed)
                colorLerp.cpp
                textManager.h
                textManager.cpp)
+    fips_dir(../data)
+    fipsutil_copy(ape_hunter.yml)
     fips_deps(framework)
 fips_end_app()

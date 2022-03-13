@@ -5,10 +5,13 @@
 #include "sokol_glue.h"
 #include "sokol_time.h"
 #include "imgui.h"
+
 #define SOKOL_IMGUI_IMPL
 #include "sokol_imgui.h"
 
 static uint64_t last_time = 0;
+
+static sg_pass_action pass_action;
 
 namespace imgui
 {
@@ -31,43 +34,29 @@ void configure_font(void* data, size_t size)
     io.Fonts->AddFontFromMemoryTTF(data, size, 16.0f, &fontCfg);
 }
 
-sg_image create_font_texture()
-{
-    unsigned char* font_pixels;
-    int font_width, font_height;
-    ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&font_pixels, &font_width, &font_height);
-    sg_image_desc img_desc = { };
-    img_desc.width = font_width;
-    img_desc.height = font_height;
-    img_desc.pixel_format = SG_PIXELFORMAT_RGBA8;
-    img_desc.wrap_u = SG_WRAP_CLAMP_TO_EDGE;
-    img_desc.wrap_v = SG_WRAP_CLAMP_TO_EDGE;
-    img_desc.min_filter = SG_FILTER_LINEAR;
-    img_desc.mag_filter = SG_FILTER_LINEAR;
-    img_desc.content.subimage[0][0].ptr = font_pixels;
-    img_desc.content.subimage[0][0].size = font_width * font_height * 4;
-
-    sg_image result = sg_make_image(&img_desc);
-    ImGui::GetIO().Fonts->TexID = (ImTextureID)(size_t)result.id;
-
-    return result;
-}
-
 void setup(void* fontData, size_t fontSize)
 {
-    simgui_desc_t simgui_desc{};
-    simgui_desc.no_default_font = true;
-    simgui_desc.dpi_scale = sapp_dpi_scale();
+    // setup sokol-gfx, sokol-time and sokol-imgui
+    sg_desc desc = { };
+    desc.context = sapp_sgcontext();
+    sg_setup(&desc);
+
+    // use sokol-imgui with all default-options (we're not doing
+    // multi-sampled rendering or using non-default pixel formats)
+    simgui_desc_t simgui_desc = { };
     simgui_setup(&simgui_desc);
 
-    configure_font(fontData, fontSize);
-    create_font_texture();
+    // initial clear color
+    pass_action.colors[0].action = SG_ACTION_CLEAR;
+    pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 1.0f };
 }
 
-void prepare_render(float width, float height)
+void prepare_render()
 {
-    const double delta_time = stm_sec(stm_laptime(&last_time));
-    simgui_new_frame(width, height, delta_time);
+    const int width = sapp_width();
+    const int height = sapp_height();
+
+    simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
 }
 
 void render()

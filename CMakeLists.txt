@@ -17,6 +17,7 @@ if (FIPS_EMSCRIPTEN)
     set(slang "glsl300es:glsl100")
 else()
     add_definitions(-DSOKOL_GLCORE33)
+    add_definitions(-DSOKOL_EXTERNAL_GL_LOADER)
     set(slang "glsl330")
 endif()
 
@@ -25,14 +26,12 @@ set(FIPS_RTTI ON CACHE BOOL "Enable C++ RTTI" FORCE)
 set(CMAKE_CXX_STANDARD 17)
 
 fips_include_directories(libs libs/glad/include libs/nanovg libs/box2d/include)
-fips_add_subdirectory(libs/dbgui)
 fips_add_subdirectory(libs/glad)
 fips_add_subdirectory(libs/nanovg)
 fips_add_subdirectory(libs/box2d/src)
 
 fips_import_fips_imgui_imgui()
 
-fips_add_subdirectory(clear)
 fips_include_directories(framework)
 fips_add_subdirectory(framework)
 fips_add_subdirectory(test)

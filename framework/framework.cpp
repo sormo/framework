@@ -1,11 +1,10 @@
-#include <Windows.h>
-
 #ifdef __EMSCRIPTEN__
 #define NANOVG_GLES2_IMPLEMENTATION
 #define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #else
+#include <Windows.h>
 #define NANOVG_GL3_IMPLEMENTATION
 #include <glad/glad.h>
 #define SOKOL_WIN32_NO_GL_LOADER
@@ -141,7 +140,7 @@ void frame_update()
 {
     sfetch_dowork();
 
-    imgui::prepare_render(frame::screen_width(), frame::screen_height());
+    imgui::prepare_render();
 
     events_frame();
 
