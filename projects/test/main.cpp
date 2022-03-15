@@ -217,8 +217,5 @@ void update()
 
     LineAngleTest = (LinePoint2 - LinePoint1).Angle();
 
-    world.Update();
-    world.Draw();
-
     draw_gui();
 }
