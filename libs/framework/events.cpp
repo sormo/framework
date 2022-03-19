@@ -93,11 +93,8 @@ struct ResizeEvent
     {
         if (std::fabsf(width - frame::screen_width()) > 1.0f || std::fabsf(height - frame::screen_height()) > 1.0f)
         {
-            width = frame::screen_width();
-            height = frame::screen_height();
-
             for (auto&[_, callback] : callbacks)
-                callback(width, height);
+                callback();
         }
     }
 
@@ -117,7 +114,7 @@ namespace frame
 {
     Point mouse_screen_position()
     {
-        return { ImGui::GetIO().MousePos.x, frame::screen_height() - ImGui::GetIO().MousePos.y };
+        return Point{ ImGui::GetIO().MousePos.x, frame::screen_height() - ImGui::GetIO().MousePos.y } - canvas_position();
     }
 
     bool mouse_pressed()

@@ -34,9 +34,8 @@ fips_add_subdirectory(libs/box2d/src)
 
 fips_import_fips_imgui_imgui()
 
-fips_include_directories(framework)
-
-fips_add_subdirectory(framework)
+fips_include_directories(libs/framework)
+fips_add_subdirectory(libs/framework)
 
 fips_ide_group("")
 fips_add_subdirectory(projects)

@@ -9,8 +9,6 @@
 #define SOKOL_IMGUI_IMPL
 #include "sokol_imgui.h"
 
-static uint64_t last_time = 0;
-
 static sg_pass_action pass_action;
 
 namespace imgui
@@ -34,7 +32,7 @@ void configure_font(void* data, size_t size)
     io.Fonts->AddFontFromMemoryTTF(data, size, 16.0f, &fontCfg);
 }
 
-void setup(void* fontData, size_t fontSize)
+void setup(void*, size_t)
 {
     // setup sokol-gfx, sokol-time and sokol-imgui
     sg_desc desc = { };

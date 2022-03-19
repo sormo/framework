@@ -75,6 +75,8 @@ void advanceState()
             texts.trajectory.FadeOut();
             texts.startSimmulation.FadeIn();
             break;
+        default:
+            break;
         }
         stopSimulation();
         break;
@@ -82,6 +84,8 @@ void advanceState()
         if (!texts.startSimmulation.GetHidden())
             texts.startSimmulation.FadeOut();
         startSimulation();
+        break;
+    default:
         break;
     }
 
@@ -156,7 +160,7 @@ void setup()
         advanceState();
     });
 
-    frame::resize_register([](float, float)
+    frame::resize_register([]()
     {
         destroyObjects(objects);
         objects = createObjects();

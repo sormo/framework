@@ -5,60 +5,60 @@
 constexpr float MinGuiWidth = 300.0f;
 constexpr float MinGuiHeight = 120.0f;
 
-Point guiPosition;
-Point guiSize;
+Point gui_position;
+Point gui_size;
 
-int32_t numberOfCircles = 10;
-int32_t numberOfSquares = 50;
+const int32_t number_circles = 10;
+const int32_t number_squares = 50;
 
-int32_t circlesCount = 0;
-int32_t squaresCount = 0;
+int32_t circles_count = 0;
+int32_t squares_count = 0;
 
 World world;
 
-void setupCanvas()
+void setup_canvas()
 {
     float size = frame::screen_width() > frame::screen_height() ? frame::screen_height() : frame::screen_width();
 
     if (frame::screen_width() > frame::screen_height())
     {
-        float remainingWidth = frame::screen_width() - size;
-        if (remainingWidth > MinGuiWidth)
+        float remaining_width = frame::screen_width() - size;
+        if (remaining_width > MinGuiWidth)
         {
             frame::set_canvas_position({ frame::screen_width() - size, 0.0f });
-            guiPosition = { 0.0f, 0.0f };
-            guiSize = { remainingWidth, frame::screen_height() };
+            gui_position = { 0.0f, 0.0f };
+            gui_size = { remaining_width, frame::screen_height() };
         }
         else
         {
             size -= MinGuiHeight;
             frame::set_canvas_position({ (frame::screen_width() - size) / 2.0f, 0.0f });
-            guiPosition = { (frame::screen_width() - size) / 2.0f, 0.0f };
-            guiSize = { size, MinGuiHeight };
+            gui_position = { (frame::screen_width() - size) / 2.0f, 0.0f };
+            gui_size = { size, MinGuiHeight };
         }
     }
     else
     {
-        float remainingHeight = frame::screen_height() - size;
-        if (remainingHeight > MinGuiHeight)
+        float remaining_height = frame::screen_height() - size;
+        if (remaining_height > MinGuiHeight)
         {
             frame::set_canvas_position({ 0.0f, 0.0f });
-            guiPosition = { 0.0f, 0.0f };
-            guiSize = { size, frame::screen_height() - size };
+            gui_position = { 0.0f, 0.0f };
+            gui_size = { size, frame::screen_height() - size };
         }
         else
         {
             size = frame::screen_height() - MinGuiHeight;
             frame::set_canvas_position({ (frame::screen_width() - size) / 2.0f, 0.0f });
-            guiPosition = { (frame::screen_width() - size) / 2.0f, 0.0f };
-            guiSize = { size, MinGuiHeight };
+            gui_position = { (frame::screen_width() - size) / 2.0f, 0.0f };
+            gui_size = { size, MinGuiHeight };
         }
     }
 
     frame::set_canvas_size(size, size);
 }
 
-void createSquares(int32_t count)
+void create_squares(int32_t count)
 {
     auto position = frame::rel_pos(0.5f, 0.5f);
 
@@ -70,11 +70,11 @@ void createSquares(int32_t count)
     }
 }
 
-void createCircles(int32_t count)
+void create_circles(int32_t count)
 {
     auto position = frame::rel_pos(0.5f, 0.5f);
 
-    for (auto i = 0; i < numberOfCircles; i++)
+    for (auto i = 0; i < count; i++)
     {
         auto rect = world.CreateCircle(position, 5.0f);
         world.SetStatic(rect, false);
@@ -82,7 +82,7 @@ void createCircles(int32_t count)
     }
 }
 
-void recreateWorld()
+void recreate_world()
 {
     world.Clear();
 
@@ -91,19 +91,19 @@ void recreateWorld()
     world.SetStatic(ground, true);
     world.SetFill(ground, nvgRGB(80, 80, 80));
 
-    createCircles(circlesCount);
-    createSquares(squaresCount);
+    create_circles(circles_count);
+    create_squares(squares_count);
 }
 
-void createObjects()
+void create_objects()
 {
     // TODO rel pos for canvas ???
 
-    createSquares(numberOfSquares);
-    squaresCount += numberOfSquares;
+    create_squares(number_squares);
+    squares_count += number_squares;
 
-    createCircles(numberOfCircles);
-    circlesCount += numberOfCircles;
+    create_circles(number_circles);
+    circles_count += number_circles;
 }
 
 void setup()
@@ -115,25 +115,25 @@ void setup()
     ImGui::GetStyle().PopupRounding = 0.0f;
     ImGui::GetStyle().ScrollbarRounding = 0.0f;
 
-    setupCanvas();
+    setup_canvas();
 
-    recreateWorld();
+    recreate_world();
 
-    frame::resize_register([](float, float)
+    frame::resize_register([]()
     {
-        setupCanvas();
-        recreateWorld();
+        setup_canvas();
+        recreate_world();
     });
 
     frame::mouse_press_register([]()
     {
-        createObjects();
+        create_objects();
     });
 
     frame::canvas_background(nvgRGBf(0.1f, 0.1f, 0.1f));
 }
 
-void drawGui()
+void draw_gui()
 {
     constexpr int32_t FrameCount = 300;
     constexpr int32_t FrameSample = 20;
@@ -152,29 +152,24 @@ void drawGui()
         FrameSampleCounter = 0;
     }
 
-    ImGui::SetNextWindowPos({ guiPosition.x(), guiPosition.y() });
-    ImGui::SetNextWindowSize({ guiSize.x(), guiSize.y() });
+    ImGui::SetNextWindowPos({ gui_position.x(), gui_position.y() });
+    ImGui::SetNextWindowSize({ gui_size.x(), gui_size.y() });
 
     bool open = true;
     ImGui::Begin("Settings", &open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
-    ImGui::SliderInt(u8"Kruhy", &numberOfCircles, 0, 30);
-    ImGui::SameLine();
-    ImGui::Text("%d", circlesCount);
-
-    ImGui::SliderInt(u8"Štvorce", &numberOfSquares, 0, 100);
-    ImGui::SameLine();
-    ImGui::Text("%d", squaresCount);
+    ImGui::Text("Circles %d", circles_count);
+    ImGui::Text("Squares %d", squares_count);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
     ImGui::SameLine();
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    auto frameSize = ImGui::GetContentRegionAvail();
-    if (frameSize.y > frameSize.x)
-        frameSize.y = frameSize.x;
+    auto frame_size = ImGui::GetContentRegionAvail();
+    if (frame_size.y > frame_size.x)
+        frame_size.y = frame_size.x;
 
-    ImGui::PlotLines("", FrameTimes, FrameCount, FrameIndex, nullptr, 0.0f, 60.0f, frameSize);
+    ImGui::PlotLines("", FrameTimes, FrameCount, FrameIndex, nullptr, 0.0f, 60.0f, frame_size);
 
     ImGui::End();
 
@@ -183,7 +178,7 @@ void drawGui()
 
 void update()
 {
-    drawGui();
+    draw_gui();
     world.Update();
     world.Draw();
 }
