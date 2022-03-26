@@ -1,6 +1,8 @@
 #include "framework.h"
 #include <cmath>
 
+void canvas_apply_text();
+
 namespace frame
 {
     namespace detail
@@ -97,7 +99,7 @@ namespace frame
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), frame::canvas_height() - position.y());
+        nvgTranslate(vg, position.x(), position.y());
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
@@ -116,7 +118,7 @@ namespace frame
     {
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), frame::canvas_height() - position.y());
+        nvgTranslate(vg, position.x(), position.y());
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
@@ -145,7 +147,7 @@ namespace frame
 
         nvgSave(vg);
 
-        nvgTranslate(vg, from.x(), frame::canvas_height() - from.y());
+        nvgTranslate(vg, from.x(), from.y());
         nvgRotate(vg, -angle);
 
         nvgBeginPath(vg);
@@ -168,8 +170,8 @@ namespace frame
 
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), frame::canvas_height() - from.y());
-        nvgLineTo(vg, to.x(), frame::canvas_height() - to.y());
+        nvgMoveTo(vg, from.x(), from.y());
+        nvgLineTo(vg, to.x(), to.y());
 
         nvgStrokeColor(vg, color);
         nvgStroke(vg);
@@ -198,8 +200,8 @@ namespace frame
             nvgBeginPath(vg);
             nvgStrokeColor(vg, color);
 
-            nvgMoveTo(vg, x1, frame::canvas_height() - y1);
-            nvgLineTo(vg, x2, frame::canvas_height() - y2);
+            nvgMoveTo(vg, x1, y1);
+            nvgLineTo(vg, x2, y2);
             nvgStroke(vg);
 
             x1 = x2 + DashLength;
@@ -210,8 +212,8 @@ namespace frame
     {
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), frame::canvas_height() - from.y());
-        nvgQuadTo(vg, control.x(), frame::canvas_height() - control.y(), to.x(), frame::canvas_height() - to.y());
+        nvgMoveTo(vg, from.x(), from.y());
+        nvgQuadTo(vg, control.x(), control.y(), to.x(), to.y());
 
         nvgStrokeColor(vg, color);
         nvgStroke(vg);
@@ -248,12 +250,15 @@ namespace frame
     {
         nvgSave(vg);
 
+        nvgResetTransform(vg);
+        canvas_apply_text();
+
         float bounds[4];
         nvgFontSize(vg, size);
         nvgTextBoxBounds(vg, 0.0f, 0.0f, width, text, nullptr, bounds);
 
         float x = position.x() - bounds[0];
-        float y = frame::canvas_height() - bounds[1] - bounds[3] - position.y() - size;
+        float y = -bounds[1] - bounds[3] - position.y() - size;
 
         nvgTextAlign(vg, NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT);
         nvgFillColor(vg, color);
@@ -266,12 +271,15 @@ namespace frame
     {
         nvgSave(vg);
 
+        nvgResetTransform(vg);
+        canvas_apply_text();
+
         float bounds[4];
         nvgFontSize(vg, size);
         nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
 
         float x = position.x() - bounds[0];
-        float y = frame::canvas_height() - bounds[1] - bounds[3] - position.y() - size;
+        float y = -bounds[1] - bounds[3] - position.y() - size;
 
         nvgTextAlign(vg, NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT);
         nvgFontSize(vg, size);

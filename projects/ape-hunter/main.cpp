@@ -155,7 +155,7 @@ void setup()
 
     createTexts();
 
-    frame::mouse_release_register([]()
+    frame::mouse_release_register(frame::mouse_button::left, []()
     {
         advanceState();
     });

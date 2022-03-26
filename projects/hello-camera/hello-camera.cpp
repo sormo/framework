@@ -40,14 +40,6 @@ void create_ground()
     world.SetFill(ground, nvgRGB(80, 80, 80));
 }
 
-void show_resize_type_combo()
-{
-    static int index = 0;
-    ImGui::Combo("##", &index, "None\0ResizeWorld\0ResizeScreen\0");
-
-    resize_type = (ResizeType)index;
-}
-
 void draw_debug_gui()
 {
     ImGui::BeginMainMenuBar();
@@ -64,7 +56,7 @@ void draw_debug_gui()
     ImGui::Text("%.2f %.2f", frame::screen_width(), frame::screen_height());
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas Size");
-    ImGui::Text("%.2f %.2f ", frame::canvas_width(), frame::canvas_height());
+    ImGui::Text("%.2f %.2f", frame::canvas_width(), frame::canvas_height());
 
     ImGui::EndMainMenuBar();
 }
@@ -83,9 +75,15 @@ void draw_gui()
     ImGui::SameLine();
     ImGui::Text("%d", squares_count);
 
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Resize");
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas Offset");
     ImGui::SameLine();
-    show_resize_type_combo();
+    ImGui::Text("%.2f %.2f", frame::canvas_offset().x(), frame::canvas_offset().y());
+    ImGui::TextColored(ImVec4(0, 1, 1, 1), "Use right mouse button to move canvas offset");
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas Scale");
+    ImGui::SameLine();
+    ImGui::Text("%.2f %.2f", frame::canvas_scale().x(), frame::canvas_scale().y());
+    ImGui::TextColored(ImVec4(0, 1, 1, 1), "Use mouse wheel to modify scale");
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
     ImGui::SameLine();
@@ -94,56 +92,48 @@ void draw_gui()
     ImGui::End();
 }
 
-void apply_resize_none(float width, float height)
+void create_world_object()
 {
-    // move canvas to center of screen
-    Point canvas_position((width - frame::canvas_width()) / 2.0f, (height - frame::canvas_height()) / 2.0f);
-    frame::set_canvas_screen_size(800.0f, 600.0f);
-    frame::set_canvas_screen_position(canvas_position);
-    frame::set_canvas_size(800.0f, 600.0f);
+    if (rand() % 2)
+        create_square();
+    else
+        create_circle();
 }
 
-void apply_resize_screen(float width, float height)
+void modify_canvas_offset()
 {
-    frame::set_canvas_screen_size(width, height);
-    frame::set_canvas_screen_position({ 0.0f, 0.0f });
-    frame::set_canvas_size(800.0f, 600.0f);
+    if (frame::mouse_pressed(frame::mouse_button::right))
+    {
+        frame::set_canvas_offset(frame::canvas_offset() + frame::mouse_screen_delta());
+    }
 }
 
-void apply_resize_world(float width, float height)
+void modify_canvas_scale()
 {
-    frame::set_canvas_screen_size(width, height);
-    frame::set_canvas_screen_position({ 0.0f, 0.0f });
-    frame::set_canvas_size(width, height);
+    if (frame::mouse_wheel_delta())
+    {
+        float new_scale = frame::canvas_scale().x() + frame::mouse_wheel_delta() * 0.01f;
+        if (new_scale < 0.1f)
+            new_scale = 0.1f;
+
+        // preserver canvas mouse position after scale
+        auto canvas_mouse_position_before = frame::mouse_canvas_position();
+        
+        frame::set_canvas_scale({ new_scale, new_scale });
+        
+        auto canvas_mouse_position_after = frame::mouse_canvas_position();
+        auto canvas_delta = canvas_mouse_position_before - canvas_mouse_position_after;
+
+        // TODO is bug that we need to multiply by scale ?
+        frame::set_canvas_offset(frame::canvas_offset() + canvas_delta * frame::canvas_scale());
+    }
 }
 
 void setup()
 {
     create_ground();
 
-    frame::mouse_press_register(frame::mouse_button::left, []()
-    {
-        if (rand() % 2)
-            create_square();
-        else
-            create_circle();
-    });
-
-    frame::resize_register([]()
-    {
-        switch (resize_type)
-        {
-        case ResizeType::None:
-            apply_resize_none(frame::screen_width(), frame::screen_height());
-            break;
-        case ResizeType::ResizeScreen:
-            apply_resize_screen(frame::screen_width(), frame::screen_height());
-            break;
-        case ResizeType::ResizeWorld:
-            apply_resize_world(frame::screen_width(), frame::screen_height());
-            break;
-        }
-    });
+    frame::mouse_press_register(frame::mouse_button::left, create_world_object);
 
     frame::canvas_background(nvgRGBf(0.1f, 0.1f, 0.1f));
 }
@@ -152,10 +142,10 @@ void update()
 {
     draw_gui();
     draw_debug_gui();
+    modify_canvas_offset();
+    modify_canvas_scale();
 
-    //auto size = frame::text_dimensions("RESIZE TEST", 60.0f);
-    //frame::rectangle(frame::rel_pos(0.1f, 0.6f) + Point{size.x() / 2.0f, size.y() / 2.0f}, 0.0f, size.x(), size.y(), nvgRGBf(0.0f, 0.0f, 0.0f));
-    frame::text("RESIZE TEST", frame::rel_pos(0.1f, 0.6f), 60.0f, nvgRGBf(0.3f, 0.3f, 0.3f));
+    frame::text("CAMERA TEST", {10.0f, 300.0f}, 60.0f, nvgRGBf(0.3f, 0.3f, 0.3f));
 
     world.Update();
     world.Draw();

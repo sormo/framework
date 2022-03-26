@@ -37,6 +37,8 @@ struct
     float width;
     float height;
     Point position;
+    Point offset;
+    Point scale = Point(1.0f, 1.0f);
     NVGcolor color;
 
 } canvas;
@@ -60,6 +62,33 @@ void canvas_apply()
     nvgFillColor(vg, canvas.color);
     nvgFill(vg);
     nvgScissor(vg, 0.0f, 0.0f, canvas.width, canvas.height);
+
+    nvgResetTransform(vg);
+
+    float transform[6] =
+    {
+        canvas.scale.x(),
+        0.0f,
+        0.0f,
+        -canvas.scale.y(),
+        canvas.position.x() - canvas.offset.x(),
+        canvas.offset.y() - canvas.position.y() + frame::screen_height()
+    };
+    nvgTransform(vg, transform[0], transform[1], transform[2], transform[3], transform[4], transform[5]);
+}
+
+void canvas_apply_text()
+{
+    float transform[6] =
+    {
+        canvas.scale.x(),
+        0.0f,
+        0.0f,
+        canvas.scale.y(),
+        canvas.position.x() - canvas.offset.x(),
+        canvas.offset.y() - canvas.position.y() + frame::screen_height()
+    };
+    nvgTransform(vg, transform[0], transform[1], transform[2], transform[3], transform[4], transform[5]);
 }
 
 namespace frame
@@ -74,28 +103,28 @@ namespace frame
         return { x * frame::canvas_width(), y * frame::canvas_height() };
     }
 
-    float canvas_width()
+    float canvas_screen_width()
     {
         return canvas.width;
     }
 
-    float canvas_height()
+    float canvas_screen_height()
     {
         return canvas.height;
     }
 
-    void set_canvas_size(float width, float height)
+    void set_canvas_screen_size(float width, float height)
     {
         canvas.width = width;
         canvas.height = height;
     }
 
-    Point canvas_position()
+    Point canvas_screen_position()
     {
         return canvas.position;
     }
 
-    void set_canvas_position(const Point& position)
+    void set_canvas_screen_position(const Point& position)
     {
         canvas.position = { position.x(), position.y() };
     }
@@ -110,19 +139,55 @@ namespace frame
         return { position.x(), frame::screen_height() - position.y() };
     }
 
-    Point convert_from_canvas_to_screen(const Point& position)
-    {
-        return position + canvas.position;
-    }
-
     Point convert_from_screen_to_gui(const Point& position)
     {
         return { position.x(), frame::screen_height() - position.y() };
     }
 
+    Point convert_from_canvas_to_screen(const Point& position)
+    {
+        // TODO test
+        return (position + canvas.position - canvas.offset) * canvas.scale;
+    }
+
     Point convert_from_screen_to_canvas(const Point& position)
     {
-        return canvas.position - position;
+        return (position - canvas.position + canvas.offset) / canvas.scale;
+    }
+
+    Point canvas_offset()
+    {
+        return canvas.offset;
+    }
+
+    void set_canvas_offset(const Point& offset)
+    {
+        canvas.offset = offset;
+    }
+
+    Point canvas_scale()
+    {
+        return canvas.scale;
+    }
+
+    void set_canvas_scale(const Point& scale)
+    {
+        canvas.scale = scale;
+    }
+
+    float canvas_width()
+    {
+        return canvas.width / canvas.scale.x();
+    }
+
+    float canvas_height()
+    {
+        return canvas.height / canvas.scale.y();
+    }
+
+    void set_canvas_size(float width, float height)
+    {
+        canvas.scale = { canvas.width / width, canvas.height / height };
     }
 }
 

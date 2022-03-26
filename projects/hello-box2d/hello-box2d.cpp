@@ -36,7 +36,7 @@ void setup()
 {
     create_ground();
 
-    frame::mouse_press_register([]()
+    frame::mouse_press_register(frame::mouse_button::left, []()
     {
         if (rand() % 2)
             create_square();

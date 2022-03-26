@@ -21,16 +21,6 @@ Point WorldScalePoint(const b2Vec2& p)
     return { p.x * WorldScale, p.y * WorldScale };
 }
 
-Point ConvertPositionToScreen(const b2Vec2& p)
-{
-    return { p.x * WorldScale, frame::canvas_height() - p.y * WorldScale };
-}
-
-b2Vec2 ConvertPositionFromScreen(const Point& p)
-{
-    return { p.x() / WorldScale, (frame::canvas_height() - p.y()) / WorldScale };
-}
-
 World::World(const Point& gravity)
     : m_world({ gravity.x(), gravity.y() })
 {
@@ -183,7 +173,7 @@ void World::DrawObject(const ObjectData& data)
     if (data.type == ObjectData::Type::Rectangle)
     {
         frame::rectangle(position,
-            -data.body->GetAngle(),
+            data.body->GetAngle(),
             data.shape.rectangle.width,
             data.shape.rectangle.height,
             data.fillColor);
@@ -191,7 +181,7 @@ void World::DrawObject(const ObjectData& data)
     else
     {
         frame::circle(position,
-            -data.body->GetAngle(),
+            data.body->GetAngle(),
             data.shape.circle.radius,
             data.fillColor);
     }

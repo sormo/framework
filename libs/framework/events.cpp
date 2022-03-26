@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include <vector>
 #include <cmath>
-#include <unordered_map>
+#include <map>
 
 struct MouseEvent
 {
@@ -11,23 +11,24 @@ struct MouseEvent
     {
         Press,
         Release
-    }
-    type;
+    };
 
-    MouseEvent(Type t)
-        : type(t)
+    int32_t Register(frame::mouse_button_callback callback, Type type, frame::mouse_button button)
     {
-    }
+        if (type == Type::Press)
+            callbacksPress.insert({ handleCounter++, { button, callback } });
+        else
+            callbacksRelease.insert({ handleCounter++, { button, callback } });
 
-    int32_t Register(frame::mouse_callback callback)
-    {
-        callbacks.push_back(callback);
-        return handleCounter++;
+        return handleCounter - 1;
     }
 
     void Unregister(int32_t handle)
     {
-        callbacks[handle] = nullptr;
+        if (callbacksPress.count(handle))
+            callbacksPress.erase(handle);
+        else
+            callbacksRelease.erase(handle);
     }
 
     void Frame()
@@ -35,37 +36,64 @@ struct MouseEvent
         if (ImGui::GetIO().WantCaptureMouse)
             return;
 
-        // press event
-        if (ImGui::GetIO().MouseDown[0] && !isPressed)
+        auto CheckButton = [this](int32_t index, bool& pressed)
         {
-            isPressed = true;
-            if (type == Type::Press)
-                TriggerEvent();
-        }
+            if (pressed)
+            {
+                if (!ImGui::GetIO().MouseDown[index])
+                {
+                    pressed = false;
+                    TriggerEventRelease((frame::mouse_button)index);
+                }
+            }
+            else
+            {
+                if (ImGui::GetIO().MouseDown[index])
+                {
+                    pressed = true;
+                    TriggerEventPress((frame::mouse_button)index);
+                }
+            }
+        };
 
-        // release event
-        if (!ImGui::GetIO().MouseDown[0] && isPressed)
-        {
-            isPressed = false;
-            if (type == Type::Release)
-                TriggerEvent();
-        }
+        CheckButton(0, isLeftPressed);
+        CheckButton(1, isRightPressed);
+        CheckButton(2, isMiddlePressed);
     }
 
 private:
-    void TriggerEvent()
+    void TriggerEventPress(frame::mouse_button button)
     {
-        for (auto& callback : callbacks)
+        for (auto&[_, registration] : callbacksPress)
         {
-            if (callback)
-                callback();
+            if (registration.button == button)
+                registration.callback();
         }
     }
 
-    bool isPressed = false;
+    void TriggerEventRelease(frame::mouse_button button)
+    {
+        for (auto& [_, registration] : callbacksRelease)
+        {
+            if (registration.button == button)
+                registration.callback();
+        }
+    }
 
-    int32_t handleCounter = 0;
-    std::vector<frame::mouse_callback> callbacks;
+    bool isLeftPressed = false;
+    bool isRightPressed = false;
+    bool isMiddlePressed = false;
+
+    int32_t handleCounter = 1;
+
+    struct MouseRegistration
+    {
+        frame::mouse_button button;
+        frame::mouse_button_callback callback;
+    };
+
+    std::map<int32_t, MouseRegistration> callbacksPress;
+    std::map<int32_t, MouseRegistration> callbacksRelease;
 };
 
 struct ResizeEvent
@@ -95,6 +123,9 @@ struct ResizeEvent
         {
             for (auto&[_, callback] : callbacks)
                 callback();
+
+            width = frame::screen_width();
+            height = frame::screen_height();
         }
     }
 
@@ -102,69 +133,74 @@ struct ResizeEvent
     float height;
 
     int32_t handleCounter = 0;
-    std::unordered_map<int32_t, frame::resize_callback> callbacks;
+    std::map<int32_t, frame::resize_callback> callbacks;
 };
 
-MouseEvent pressEvent(MouseEvent::Type::Press);
-MouseEvent releaseEvent(MouseEvent::Type::Release);
-
-std::unique_ptr<ResizeEvent> resizeEvent;
+MouseEvent mouse_event;
+std::unique_ptr<ResizeEvent> resize_event;
 
 namespace frame
 {
     Point mouse_screen_position()
     {
-        return Point{ ImGui::GetIO().MousePos.x, frame::screen_height() - ImGui::GetIO().MousePos.y } - canvas_position();
+        return Point{ ImGui::GetIO().MousePos.x, frame::screen_height() - ImGui::GetIO().MousePos.y };
     }
 
-    bool mouse_pressed()
+    Point mouse_canvas_position()
+    {
+        return convert_from_screen_to_canvas(mouse_screen_position());
+    }
+
+    bool mouse_pressed(mouse_button button)
     {
         if (ImGui::GetIO().WantCaptureMouse)
             return false;
-
-        // left mouse button
-        return ImGui::GetIO().MouseDown[0];
+        return ImGui::GetIO().MouseDown[(int32_t)button];
     }
 
-    int32_t mouse_press_register(mouse_callback callback)
+    int32_t mouse_press_register(mouse_button button, mouse_button_callback callback)
     {
-        return pressEvent.Register(callback);
+        return mouse_event.Register(callback, MouseEvent::Type::Press, button);
     }
 
-    void mouse_press_unregister(int32_t handle)
+    int32_t mouse_release_register(mouse_button button, mouse_button_callback callback)
     {
-        return pressEvent.Unregister(handle);
+        return mouse_event.Register(callback, MouseEvent::Type::Release, button);
     }
 
-    int32_t mouse_release_register(mouse_callback callback)
+    void mouse_unregister(int32_t handle)
     {
-        return releaseEvent.Register(callback);
-    }
-
-    void mouse_release_unregister(int32_t handle)
-    {
-        return releaseEvent.Unregister(handle);
+        mouse_event.Unregister(handle);
     }
 
     int32_t resize_register(resize_callback callback)
     {
-        if (!resizeEvent)
-            resizeEvent = std::make_unique<ResizeEvent>();
-        return resizeEvent->Register(callback);
+        if (!resize_event)
+            resize_event = std::make_unique<ResizeEvent>();
+        return resize_event->Register(callback);
     }
 
     void resize_unregister(int32_t handle)
     {
-        if (!resizeEvent)
-            resizeEvent = std::make_unique<ResizeEvent>();
-        resizeEvent->Unregister(handle);
+        if (!resize_event)
+            resize_event = std::make_unique<ResizeEvent>();
+        resize_event->Unregister(handle);
+    }
+
+    Point mouse_screen_delta()
+    {
+        return { -ImGui::GetIO().MouseDelta.x, ImGui::GetIO().MouseDelta.y };
+    }
+
+    float mouse_wheel_delta()
+    {
+        return ImGui::GetIO().MouseWheel;
     }
 }
 
 void events_frame()
 {
-    pressEvent.Frame();
-    releaseEvent.Frame();
-    if (resizeEvent)
-        resizeEvent->Frame();
+    mouse_event.Frame();
+    if (resize_event)
+        resize_event->Frame();
 }

@@ -15,41 +15,56 @@ namespace frame
     // x and y should be numbers between 0 and 1
     Point rel_pos(float x, float y);
 
-    // TODO
     Point convert_from_gui_to_screen(const Point& position);
     Point convert_from_canvas_to_screen(const Point& position);
     Point convert_from_screen_to_gui(const Point& position);
     Point convert_from_screen_to_canvas(const Point& position);
 
     // *** screen ***
+    // screen position is relative to lower-left corner (y goes up)
     void screen_background(const NVGcolor& color);
     float screen_width();
     float screen_height();
-    // helper function to notify about resize
     using resize_callback = std::function<void()>;
     int32_t resize_register(resize_callback callback);
     void resize_unregister(int32_t handle);
 
     // *** canvas ***
+    // y goes up (same as screen position)
     void canvas_background(const NVGcolor& color);
+    // canvas screen position and size is in pixels, offset, scale and size below does not influence these
+    float canvas_screen_width();
+    float canvas_screen_height();
+    Point canvas_screen_position();
+    void set_canvas_screen_size(float width, float height);
+    void set_canvas_screen_position(const Point& position);
+    
+    // set value of lower-left point
+    Point canvas_offset();
+    Point canvas_scale();
     float canvas_width();
     float canvas_height();
+    void set_canvas_offset(const Point& offset);
+    // setting canvas size will change scale and vice-versa (screen size is not changed) 
+    void set_canvas_scale(const Point& scale);
     void set_canvas_size(float width, float height);
-    // lower-left corner of canvas (screen coordinates)
-    Point canvas_position();
-    // set lower-left position of canvas
-    void set_canvas_position(const Point& position);
 
     // *** mouse ***
-    // screen position is relative to lower-left
+    using mouse_button_callback = std::function<void()>;
+    enum class mouse_button { left, right, middle };
+
     Point mouse_screen_position();
-    bool mouse_pressed();
-    // helper function to track mouse press event
-    using mouse_callback = std::function<void()>;
-    int32_t mouse_press_register(mouse_callback callback);
-    void mouse_press_unregister(int32_t handle);
-    int32_t mouse_release_register(mouse_callback callback);
-    void mouse_release_unregister(int32_t handle);
+    Point mouse_canvas_position();
+    
+    bool mouse_pressed(mouse_button button);
+    
+    Point mouse_screen_delta();
+
+    int32_t mouse_press_register(mouse_button button, mouse_button_callback callback);
+    int32_t mouse_release_register(mouse_button button, mouse_button_callback callback);
+    void mouse_unregister(int32_t handle);
+
+    float mouse_wheel_delta();
 
     // *** drawing ***
     void rectangle(const Point& position, float radians, float width, float height, const NVGcolor& color);

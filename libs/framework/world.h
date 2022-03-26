@@ -77,6 +77,3 @@ private:
     std::unordered_map<Object, ObjectData> m_objects;
     std::unordered_map<Layer, std::vector<Object>> m_layers;
 };
-
-// debug
-b2Vec2 ConvertPositionFromScreen(const Point& p);
