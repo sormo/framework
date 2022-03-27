@@ -10,6 +10,7 @@ class World
 public:
     using Object = int32_t;
     using Layer = int32_t;
+    using Joint = int32_t;
 
     static constexpr Layer LayerDefault = 0;
 
@@ -39,9 +40,16 @@ public:
 
     void Clear();
 
+    std::vector<Object> QueryObjects(const Point& position);
+
+    // target is initial position which will be dragged to mouse
+    Joint CreateMouseJoint(Object obj, const Point& target);
+    void DestroyJoint(Joint joint);
+
 private:
     b2World m_world;
     Object m_objectCounter = 1;
+    Joint m_jointCounter = 1;
 
     struct ObjectData
     {
@@ -65,15 +73,26 @@ private:
             {
                 float radius;
             } circle;
-        } shape;
-        
+        } shape;    
     };
 
     Object CreateObject(const Point& position, b2Shape& shape, ObjectData&& data);
     void DrawObject(const ObjectData& data);
+    void DrawJointsDebug();
 
     void RemoveFromLayers(Object obj);
 
+    Object GetObjectFromBody(b2Body* body);
+
+    // TODO joints are attached to bodies, if body is destroyed, joints may get destroyed also
+    // need to cleanup on body destroy
+
     std::unordered_map<Object, ObjectData> m_objects;
+    std::unordered_map<Joint, b2Joint*> m_joints;
     std::unordered_map<Layer, std::vector<Object>> m_layers;
+
+    b2Body* m_ground = nullptr;
+    void EnsureGroundObjectCreated();
+
+    void UpdateMouseJoints();
 };

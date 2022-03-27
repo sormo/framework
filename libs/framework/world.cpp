@@ -62,14 +62,12 @@ World::Object World::CreateObject(const Point& position, b2Shape& shape, ObjectD
 {
     b2BodyDef bodyDef{};
     bodyDef.position = WorldScalePoint(position);
-    bodyDef.type = b2_staticBody;
 
     b2Body* body = m_world.CreateBody(&bodyDef);
 
     b2FixtureDef fixtureDef{};
-    fixtureDef.isSensor = false;
     fixtureDef.friction = 0.8f;
-    fixtureDef.density = 12.0f;
+    fixtureDef.density = 1.0f; // TODO
     fixtureDef.restitution = 0.1f;
     fixtureDef.shape = &shape;
 
@@ -149,6 +147,8 @@ const NVGcolor& World::GetFill(Object obj)
 
 void World::Update()
 {
+    UpdateMouseJoints();
+
     m_world.Step(1.0f / 60.0f, 8, 3);
 }
 
@@ -164,6 +164,9 @@ void World::Draw(Layer layer)
 
         DrawObject(m_objects[obj]);
     }
+
+    // debug
+    //DrawJointsDebug();
 }
 
 void World::DrawObject(const ObjectData& data)
@@ -187,6 +190,19 @@ void World::DrawObject(const ObjectData& data)
     }
 }
 
+void World::DrawJointsDebug()
+{
+    for (const auto& joint : m_joints)
+    {
+        auto p1 = WorldScalePoint(joint.second->GetAnchorA());
+        auto p2 = WorldScalePoint(joint.second->GetAnchorB());
+
+        frame::circle(p1, 0.0f, 5.0f, nvgRGBAf(1.0f, 0.0f, 0.0f, 0.5f));
+        frame::circle(p2, 0.0f, 5.0f, nvgRGBAf(1.0f, 0.0f, 0.0f, 0.5f));
+        frame::line_solid(p1, p2, nvgRGBAf(1.0f, 1.0f, 1.0f, 0.5f));
+    }
+}
+
 void World::RemoveFromLayers(Object obj)
 {
     for (auto& [layer, objects] : m_layers)
@@ -207,4 +223,94 @@ void World::Clear()
 
     m_objects.clear();
     m_layers.clear();
+}
+
+World::Object World::GetObjectFromBody(b2Body* body)
+{
+    for (auto& [obj, data] : m_objects)
+    {
+        if (data.body == body)
+            return obj;
+    }
+    assert(false);
+    return -1;
+}
+
+class QueryObjectsCallback : public b2QueryCallback
+{
+    virtual bool ReportFixture(b2Fixture* f)
+    {
+        if (f->TestPoint(point))
+            bodies.push_back(f->GetBody());
+        return true;
+    }
+public:
+    std::vector<b2Body*> bodies;
+    b2Vec2 point;
+};
+
+std::vector<World::Object> World::QueryObjects(const Point& position)
+{
+    QueryObjectsCallback callback;
+    callback.point = WorldScalePoint(position);
+
+    b2AABB aabb;
+    aabb.lowerBound = callback.point - b2Vec2(0.1f, 0.1f);
+    aabb.upperBound = callback.point + b2Vec2(0.1f, 0.1f);
+
+    m_world.QueryAABB(&callback, aabb);
+
+    std::vector<World::Object> result;
+    for (auto body : callback.bodies)
+        result.push_back(GetObjectFromBody(body));
+
+    return result;
+}
+
+void World::EnsureGroundObjectCreated()
+{
+    if (m_ground)
+        return;
+
+    b2BodyDef def{};
+    m_ground = m_world.CreateBody(&def);
+}
+
+World::Joint World::CreateMouseJoint(Object obj, const Point& target)
+{
+    EnsureGroundObjectCreated();
+
+    static const float FrequencyHz = 5.0f;
+    static const float DampingRatio = 0.7f;
+    static const float MaxForceFactor = 1000.0f;
+
+    b2MouseJointDef def;
+    def.bodyA = m_ground;
+    def.bodyB = m_objects[obj].body;
+    def.target = WorldScalePoint(target);
+    def.maxForce = MaxForceFactor * m_objects[obj].body->GetMass();
+    b2LinearStiffness(def.stiffness, def.damping, FrequencyHz, DampingRatio, def.bodyA, def.bodyB);
+
+    m_joints[m_jointCounter++] = m_world.CreateJoint(&def);
+    def.bodyB->SetAwake(true);
+
+    return m_jointCounter - 1;
+}
+
+void World::DestroyJoint(Joint joint)
+{
+    m_world.DestroyJoint(m_joints[joint]);
+    m_joints.erase(joint);
+}
+
+void World::UpdateMouseJoints()
+{
+    for (auto& [_, joint] : m_joints)
+    {
+        if (joint->GetType() == e_mouseJoint)
+        {
+            b2MouseJoint* mouseJoint = dynamic_cast<b2MouseJoint*>(joint);
+            mouseJoint->SetTarget(WorldScalePoint(frame::mouse_canvas_position()));
+        }
+    }
 }

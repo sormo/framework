@@ -6,6 +6,7 @@ int32_t circles_count = 0;
 int32_t squares_count = 0;
 
 World world;
+World::Joint mouse_joint = 0;
 
 void create_square()
 {
@@ -44,6 +45,20 @@ void setup()
             create_circle();
     });
 
+    frame::mouse_press_register(frame::mouse_button::right, []()
+    {
+        auto objects = world.QueryObjects(frame::mouse_canvas_position());
+        if (!objects.empty())
+            mouse_joint = world.CreateMouseJoint(objects[0], frame::mouse_canvas_position());
+    });
+
+    frame::mouse_release_register(frame::mouse_button::right, []()
+    {
+        if (mouse_joint)
+            world.DestroyJoint(mouse_joint);
+        mouse_joint = 0;
+    });
+
     frame::canvas_background(nvgRGBf(0.1f, 0.1f, 0.1f));
 }
 
@@ -60,6 +75,7 @@ void draw_gui()
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Squares");
     ImGui::SameLine();
     ImGui::Text("%d", squares_count);
+    ImGui::TextColored(ImVec4(0, 1, 1, 1), "Use right mouse button to grab objects");
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
     ImGui::SameLine();
