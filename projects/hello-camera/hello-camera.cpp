@@ -19,7 +19,7 @@ void create_square()
 {
     auto rect = world.CreateRectangle(frame::mouse_canvas_position(), 10.0f, 10.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, nvgRGB(227, 142, 31));
+    world.SetFill(rect, Color::RGB(227, 142, 31));
 
     squares_count++;
 }
@@ -28,7 +28,7 @@ void create_circle()
 {
     auto rect = world.CreateCircle(frame::mouse_canvas_position(), 5.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, nvgRGB(177, 242, 235));
+    world.SetFill(rect, Color::RGB(177, 242, 235));
 
     circles_count++;
 }
@@ -37,7 +37,7 @@ void create_ground()
 {
     auto ground = world.CreateRectangle(frame::rel_pos(0.5f, 0.0f), frame::screen_width(), 20.0f);
     world.SetStatic(ground, true);
-    world.SetFill(ground, nvgRGB(80, 80, 80));
+    world.SetFill(ground, Color::RGB(80, 80, 80));
 }
 
 void draw_debug_gui()
@@ -49,7 +49,7 @@ void draw_debug_gui()
     ImGui::Text("%.3f %.3f", mouse_screen.x(), mouse_screen.y());
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas");
-    auto mouse_canvas = frame::convert_from_screen_to_canvas(mouse_screen);
+    auto mouse_canvas = frame::screen_to_canvas(mouse_screen);
     ImGui::Text("%.3f %.3f", mouse_canvas.x(), mouse_canvas.y());
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen Size");
@@ -104,7 +104,7 @@ void modify_canvas_offset()
 {
     if (frame::mouse_pressed(frame::mouse_button::right))
     {
-        frame::set_canvas_offset(frame::canvas_offset() + frame::mouse_screen_delta());
+        frame::canvas_set_offset(frame::canvas_offset() + frame::mouse_screen_delta());
     }
 }
 
@@ -119,13 +119,13 @@ void modify_canvas_scale()
         // preserver canvas mouse position after scale
         auto canvas_mouse_position_before = frame::mouse_canvas_position();
         
-        frame::set_canvas_scale({ new_scale, new_scale });
+        frame::canvas_set_scale({ new_scale, new_scale });
         
         auto canvas_mouse_position_after = frame::mouse_canvas_position();
         auto canvas_delta = canvas_mouse_position_before - canvas_mouse_position_after;
 
         // TODO is bug that we need to multiply by scale ?
-        frame::set_canvas_offset(frame::canvas_offset() + canvas_delta * frame::canvas_scale());
+        frame::canvas_set_offset(frame::canvas_offset() + canvas_delta * frame::canvas_scale());
     }
 }
 
@@ -135,7 +135,7 @@ void setup()
 
     frame::mouse_press_register(frame::mouse_button::left, create_world_object);
 
-    frame::canvas_background(nvgRGBf(0.1f, 0.1f, 0.1f));
+    frame::canvas_background(Color::RGBf(0.1f, 0.1f, 0.1f));
 }
 
 void update()
@@ -145,7 +145,7 @@ void update()
     modify_canvas_offset();
     modify_canvas_scale();
 
-    frame::text("CAMERA TEST", {10.0f, 300.0f}, 60.0f, nvgRGBf(0.3f, 0.3f, 0.3f));
+    frame::text("CAMERA TEST", {10.0f, 300.0f}, 60.0f, Color::RGBf(0.3f, 0.3f, 0.3f));
 
     world.Update();
     world.Draw();

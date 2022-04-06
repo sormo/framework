@@ -4,7 +4,7 @@ float LerpTimeIncrement = 0.05f;
 
 extern World world;
 
-ColorLerp::Lerper::Lerper(const NVGcolor& source, const NVGcolor& destination)
+ColorLerp::Lerper::Lerper(const Color& source, const Color& destination)
     : source(source), destination(destination)
 {
 }
@@ -13,14 +13,14 @@ bool ColorLerp::Lerper::Update()
     time += LerpTimeIncrement;
     return time < 1.0f;
 }
-NVGcolor ColorLerp::Lerper::CurrentColor()
+Color ColorLerp::Lerper::CurrentColor()
 {
-    return nvgLerpRGBA(source, destination, time);
+    return source.Lerp(destination, time);
 }
 
 struct ColorLerp::LerperColor : public ColorLerp::Lerper
 {
-    LerperColor(NVGcolor& color, const NVGcolor& destination)
+    LerperColor(Color& color, const Color& destination)
         : Lerper(color, destination), color(color)
     {
     }
@@ -30,12 +30,12 @@ struct ColorLerp::LerperColor : public ColorLerp::Lerper
 
         return Lerper::Update();
     }
-    NVGcolor& color;
+    Color& color;
 };
 
 struct ColorLerp::LerperObject : public ColorLerp::Lerper
 {
-    LerperObject(World::Object object, const NVGcolor& destination)
+    LerperObject(World::Object object, const Color& destination)
         : Lerper(world.GetFill(object), destination), object(object)
     {
     }
@@ -47,13 +47,13 @@ struct ColorLerp::LerperObject : public ColorLerp::Lerper
     World::Object object;
 };
 
-void ColorLerp::LerpColor(NVGcolor& color, const NVGcolor& destination, FinishedCallback finished)
+void ColorLerp::LerpColor(Color& color, const Color& destination, FinishedCallback finished)
 {
     m_lerpers.emplace_back(std::make_unique<LerperColor>(color, destination));
     m_lerpers.back()->finished = finished;
 }
 
-void ColorLerp::LerpObject(World::Object object, const NVGcolor& destination, FinishedCallback finished)
+void ColorLerp::LerpObject(World::Object object, const Color& destination, FinishedCallback finished)
 {
     m_lerpers.emplace_back(std::make_unique<LerperObject>(object, destination));
     m_lerpers.back()->finished = finished;

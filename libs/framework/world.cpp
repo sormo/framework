@@ -21,6 +21,64 @@ Point WorldScalePoint(const b2Vec2& p)
     return { p.x * WorldScale, p.y * WorldScale };
 }
 
+class DebugDraw : public b2Draw
+{
+public:
+    DebugDraw()
+    {
+        SetFlags(e_shapeBit);
+    }
+
+    /// Draw a closed polygon provided in CCW order.
+    void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
+    {
+        std::vector<Point> points(vertexCount);
+        for (int32_t i = 0; i < vertexCount; i++)
+            points[i] = WorldScalePoint(vertices[i]);
+        frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+    }
+
+    /// Draw a solid closed polygon provided in CCW order.
+    void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
+    {
+        std::vector<Point> points(vertexCount);
+        for (int32_t i = 0; i < vertexCount; i++)
+            points[i] = WorldScalePoint(vertices[i]);
+        frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+    }
+
+    /// Draw a circle.
+    void DrawCircle(const b2Vec2& center, float radius, const b2Color& color) override
+    {
+        frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    }
+
+    /// Draw a solid circle.
+    void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color) override
+    {
+        frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    }
+
+    /// Draw a line segment.
+    void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override
+    {
+        frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), Color::RGBf(color.r, color.g, color.b, color.a));
+    }
+
+    /// Draw a transform. Choose your own length scale.
+    /// @param xf a transform.
+    void DrawTransform(const b2Transform& xf) override
+    {
+
+    }
+
+    /// Draw a point.
+    void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override
+    {
+        frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    }
+} g_debugDraw;
+
 World::World(const Point& gravity)
     : m_world({ gravity.x(), gravity.y() })
 {
@@ -74,7 +132,7 @@ World::Object World::CreateObject(const Point& position, b2Shape& shape, ObjectD
     body->CreateFixture(&fixtureDef);
 
     data.body = body;
-    data.fillColor = nvgRGB(255, 255, 255);
+    data.fillColor = Color::WHITE;
 
     m_objects[m_objectCounter++] = std::move(data);
 
@@ -96,7 +154,7 @@ void World::SetStatic(Object obj, bool isStatic)
     m_objects[obj].body->SetType(isStatic ? b2_staticBody : b2_dynamicBody);
 }
 
-void World::SetFill(Object obj, const NVGcolor& color)
+void World::SetFill(Object obj, const Color& color)
 {
     m_objects[obj].fillColor = color;
 }
@@ -140,7 +198,7 @@ float World::GetMass(Object obj)
     return m_objects[obj].body->GetMass();
 }
 
-const NVGcolor& World::GetFill(Object obj)
+const Color& World::GetFill(Object obj)
 {
     return m_objects[obj].fillColor;
 }
@@ -175,18 +233,18 @@ void World::DrawObject(const ObjectData& data)
 
     if (data.type == ObjectData::Type::Rectangle)
     {
-        frame::rectangle(position,
+        frame::draw_rectangle_ex(position,
             data.body->GetAngle(),
             data.shape.rectangle.width,
             data.shape.rectangle.height,
-            data.fillColor);
+            data.fillColor, 0.0f, Color::BLANK);
     }
     else
     {
-        frame::circle(position,
+        frame::draw_circle_ex(position,
             data.body->GetAngle(),
             data.shape.circle.radius,
-            data.fillColor);
+            data.fillColor, 0.0f, Color::BLANK);
     }
 }
 
@@ -197,9 +255,9 @@ void World::DrawJointsDebug()
         auto p1 = WorldScalePoint(joint.second->GetAnchorA());
         auto p2 = WorldScalePoint(joint.second->GetAnchorB());
 
-        frame::circle(p1, 0.0f, 5.0f, nvgRGBAf(1.0f, 0.0f, 0.0f, 0.5f));
-        frame::circle(p2, 0.0f, 5.0f, nvgRGBAf(1.0f, 0.0f, 0.0f, 0.5f));
-        frame::line_solid(p1, p2, nvgRGBAf(1.0f, 1.0f, 1.0f, 0.5f));
+        frame::draw_circle_ex(p1, 0.0f, 5.0f, Color::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, Color::BLANK);
+        frame::draw_circle_ex(p2, 0.0f, 5.0f, Color::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, Color::BLANK);
+        frame::draw_line_solid(p1, p2, Color::RGBf(1.0f, 1.0f, 1.0f, 0.5f));
     }
 }
 

@@ -9,7 +9,9 @@ fips_begin_lib(framework)
                imgui_impl.cpp
                drawing.cpp
                events.h
-               events.cpp)
+               events.cpp
+               color.h
+               color.cpp)
     fips_deps(nanovg)
     fips_deps(glad)
     fips_deps(box2d)

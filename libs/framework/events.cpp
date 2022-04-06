@@ -104,7 +104,7 @@ struct ResizeEvent
         height = frame::screen_height();
     }
 
-    int32_t Register(frame::resize_callback callback)
+    int32_t Register(frame::screen_resize_callback callback)
     {
         int32_t handle = ++handleCounter;
 
@@ -133,7 +133,7 @@ struct ResizeEvent
     float height;
 
     int32_t handleCounter = 0;
-    std::map<int32_t, frame::resize_callback> callbacks;
+    std::map<int32_t, frame::screen_resize_callback> callbacks;
 };
 
 MouseEvent mouse_event;
@@ -148,7 +148,7 @@ namespace frame
 
     Point mouse_canvas_position()
     {
-        return convert_from_screen_to_canvas(mouse_screen_position());
+        return screen_to_canvas(mouse_screen_position());
     }
 
     bool mouse_pressed(mouse_button button)
@@ -173,14 +173,14 @@ namespace frame
         mouse_event.Unregister(handle);
     }
 
-    int32_t resize_register(resize_callback callback)
+    int32_t screen_resize_register(screen_resize_callback callback)
     {
         if (!resize_event)
             resize_event = std::make_unique<ResizeEvent>();
         return resize_event->Register(callback);
     }
 
-    void resize_unregister(int32_t handle)
+    void screen_resize_unregister(int32_t handle)
     {
         if (!resize_event)
             resize_event = std::make_unique<ResizeEvent>();

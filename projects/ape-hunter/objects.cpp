@@ -19,7 +19,7 @@ void createProjectile(Objects& obj)
 
     obj.projectile = world.CreateCircle(obj.projectilePosition, obj.projectileRadius);
     world.SetStatic(obj.projectile, false);
-    world.SetFill(obj.projectile, nvgRGB(255, 128, 64));
+    world.SetFill(obj.projectile, Color::RGB(255, 128, 64));
     world.SetBullet(obj.projectile, true);
 }
 
@@ -30,13 +30,13 @@ void createHunter(Objects& obj)
 
     obj.hunter = world.CreateRectangle(obj.hunterPosition, obj.hunterSize, obj.hunterSize);
     world.SetStatic(obj.hunter, false);
-    world.SetFill(obj.hunter, nvgRGB(255, 64, 128));
+    world.SetFill(obj.hunter, Color::RGB(255, 64, 128));
 }
 
 void createGround(Objects& obj)
 {
     obj.ground = world.CreateRectangle(frame::rel_pos(0.5f, GroundRelHeight / 2.0f), frame::canvas_width(), GroundRelHeight * frame::canvas_height());
-    world.SetFill(obj.ground, nvgRGB(100, 100, 90));
+    world.SetFill(obj.ground, Color::RGB(100, 100, 90));
     world.SetLayer(obj.ground, Background);
 
     obj.groundHeight = GroundRelHeight * frame::canvas_height();

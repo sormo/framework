@@ -58,7 +58,7 @@ void advanceState()
     case State::VelocityVectors:
         texts.heading.FadeOut();
         texts.velocity.FadeIn();
-        colorLerp.LerpObject(objects.ground, nvgTransRGBA(world.GetFill(objects.ground), 255));
+        colorLerp.LerpObject(objects.ground, world.GetFill(objects.ground).Transparency(255));
         break;
     case State::GravityVectors:
         texts.velocity.FadeOut();
@@ -109,30 +109,30 @@ void createTexts()
     texts.heading = textsManager->Text(u8"Kruh a Štvorec")
         .SetPosition(frame::rel_pos(0.5f, 0.5f))
         .SetSize(35.0f)
-        .SetColor(nvgRGB(220, 225, 220));
+        .SetColor(Color::RGB(220, 225, 220));
 
     texts.velocity = textsManager->Text(u8"Kruhu je udelená počiatočná rýchlosť  v ,\nktorej smer ukazuje priamo na štvorec.")
         .SetPosition(frame::rel_pos(0.2f, 0.7f))
         .SetSize(15.0f)
-        .SetColor(nvgRGB(220, 225, 220))
+        .SetColor(Color::RGB(220, 225, 220))
         .SetHidden(true);
 
     texts.gravity = textsManager->Text(u8"Na obe telesá pôsobí gravitačné zrýchlenie  g.")
         .SetPosition(frame::rel_pos(0.2f, 0.7f))
         .SetSize(15.0f)
-        .SetColor(nvgRGB(220, 225, 220))
+        .SetColor(Color::RGB(220, 225, 220))
         .SetHidden(true);
 
     texts.trajectory = textsManager->Text(u8"Štvorec bude padať rovno dolu a kruh\nsa bude pohybovať po parabolickej trajektórii.")
         .SetPosition(frame::rel_pos(0.2f, 0.7f))
         .SetSize(15.0f)
-        .SetColor(nvgRGB(220, 225, 220))
+        .SetColor(Color::RGB(220, 225, 220))
         .SetHidden(true);
 
     texts.startSimmulation = textsManager->Text(u8"Dokázeš nastaviť parametre tak, aby\nkruh trafil padajúci štvorec?\nV ďalšom kroku sa spustí simulácia.")
         .SetPosition(frame::rel_pos(0.1f, 0.6f))
         .SetSize(15.0f)
-        .SetColor(nvgRGB(220, 225, 220))
+        .SetColor(Color::RGB(220, 225, 220))
         .SetHidden(true);
 }
 
@@ -147,11 +147,11 @@ void setup()
     ImGui::GetStyle().PopupRounding = 0.0f;
     ImGui::GetStyle().ScrollbarRounding = 0.0f;
 
-    frame::screen_background(nvgRGBf(0.1f, 0.1f, 0.1f));
+    frame::screen_background(Color::RGBf(0.1f, 0.1f, 0.1f));
 
     objects = createObjects();
     // set alpha of ground to 0
-    world.SetFill(objects.ground, nvgTransRGBA(world.GetFill(objects.ground), 0));
+    world.SetFill(objects.ground, world.GetFill(objects.ground).Transparency(0));
 
     createTexts();
 
@@ -160,7 +160,7 @@ void setup()
         advanceState();
     });
 
-    frame::resize_register([]()
+    frame::screen_resize_register([]()
     {
         destroyObjects(objects);
         objects = createObjects();
@@ -207,26 +207,26 @@ void drawGui()
 void drawVelocityVector(Objects& obj)
 {
     Point projectileVelocity(obj.projectilePosition + (obj.hunterPosition - obj.projectilePosition).Normalized() * obj.velocityLength);
-    frame::line_directed(obj.projectilePosition, projectileVelocity, nvgRGB(255, 128, 128));
-    frame::line_text(obj.projectilePosition, projectileVelocity, "v", 0.9f, 15.0f, 10.0f, frame::Side::Left, nvgRGB(200, 200, 200));
+    frame::draw_line_directed(obj.projectilePosition, projectileVelocity, Color::RGB(255, 128, 128));
+    frame::draw_line_text(obj.projectilePosition, projectileVelocity, "v", 0.9f, 15.0f, 10.0f, frame::Side::Left, Color::RGB(200, 200, 200));
 }
 
 void drawGravityVectors(Objects& obj)
 {
     Point hunterGravity(obj.hunterPosition.x(), obj.hunterPosition.y() - obj.gravityLength);
-    frame::line_directed(obj.hunterPosition, hunterGravity, nvgRGB(255, 128, 128));
-    frame::line_text(obj.hunterPosition, hunterGravity, "g", 0.9f, 15.0f, 10.0f, frame::Side::Right, nvgRGB(200, 200, 200));
+    frame::draw_line_directed(obj.hunterPosition, hunterGravity, Color::RGB(255, 128, 128));
+    frame::draw_line_text(obj.hunterPosition, hunterGravity, "g", 0.9f, 15.0f, 10.0f, frame::Side::Right, Color::RGB(200, 200, 200));
 
     Point projectileGravity(obj.projectilePosition.x(), obj.projectilePosition.y() - obj.gravityLength);
-    frame::line_directed(obj.projectilePosition, projectileGravity, nvgRGB(255, 128, 128));
-    frame::line_text(obj.projectilePosition, projectileGravity, "g", 0.9f, 15.0f, 10.0f, frame::Side::Left, nvgRGB(200, 200, 200));
+    frame::draw_line_directed(obj.projectilePosition, projectileGravity, Color::RGB(255, 128, 128));
+    frame::draw_line_text(obj.projectilePosition, projectileGravity, "g", 0.9f, 15.0f, 10.0f, frame::Side::Left, Color::RGB(200, 200, 200));
 }
 
 void drawTrajectories(Objects& obj)
 {
-    static const NVGcolor TrajectoryColor = nvgRGB(50, 50, 50);
+    static const Color TrajectoryColor = Color::RGB(50, 50, 50);
 
-    frame::line_solid(obj.hunterPosition, { obj.hunterPosition.x(), obj.groundHeight }, TrajectoryColor);
+    frame::draw_line_solid(obj.hunterPosition, { obj.hunterPosition.x(), obj.groundHeight }, TrajectoryColor);
 
     float v0 = obj.projectileVelocity.Length();
     float a = obj.projectileVelocity.Angle();
@@ -236,18 +236,18 @@ void drawTrajectories(Objects& obj)
     float d = (v0 * v0 * std::sinf(2.0f * a)) / g;
     Point dp(obj.projectilePosition.x() + d, obj.projectilePosition.y());
 
-    frame::circle(dp, 0.0f, 2.0f, nvgRGB(80, 80, 80));
+    frame::draw_circle(dp, 2.0f, Color::RGB(80, 80, 80));
 
     // vyska vrhu
     float h = (v0 * v0 * std::powf(std::sinf(a), 2.0f)) / (2.0f * g);
     Point hp(obj.projectilePosition.x() + d / 2.0f, obj.projectilePosition.y() + h);
 
-    frame::circle(hp, 0.0f, 2.0f, nvgRGB(80, 80, 80));
+    frame::draw_circle(hp, 2.0f, Color::RGB(80, 80, 80));
 
     float o = std::tanf(a) * (d / 2.0f);
     Point ohp(obj.projectilePosition.x() + d / 2.0f, obj.projectilePosition.y() + o);
 
-    frame::curve_quad(obj.projectilePosition, ohp, dp, TrajectoryColor);
+    frame::draw_curve_quad(obj.projectilePosition, ohp, dp, TrajectoryColor);
 }
 
 void update()
@@ -262,7 +262,7 @@ void update()
 
     if (state >= State::VelocityVectors && state != State::Running)
     {
-        frame::line_dashed(objects.projectilePosition, objects.hunterPosition, nvgRGB(50, 50, 50));
+        frame::draw_line_dashed(objects.projectilePosition, objects.hunterPosition, Color::RGB(50, 50, 50));
         drawVelocityVector(objects);
     }
 

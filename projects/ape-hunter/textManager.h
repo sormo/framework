@@ -12,7 +12,7 @@ public:
     Text& SetPosition(const Point& position);
     Text& SetWidth(float width);
     Text& SetSize(float size);
-    Text& SetColor(const NVGcolor& color);
+    Text& SetColor(const Color& color);
     Text& SetHidden(bool hidden);
 
     Text& FadeIn();
@@ -44,7 +44,7 @@ public:
     void SetPosition(Handle text, const Point& position);
     void SetWidth(Handle text, float width);
     void SetSize(Handle text, float size);
-    void SetColor(Handle text, const NVGcolor& color);
+    void SetColor(Handle text, const Color& color);
     void SetHidden(Handle text, bool hidden);
 
     void FadeIn(Handle text);
@@ -63,7 +63,7 @@ private:
         Point position;
         float width = std::numeric_limits<float>::max();
         float size = 12.0f;
-        NVGcolor color = nvgRGB(255, 255, 255);
+        Color color = Color::WHITE;
         bool isHidden = false;
     };
 

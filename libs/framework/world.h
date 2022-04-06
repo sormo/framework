@@ -1,5 +1,6 @@
 #pragma once
 #include "point.h"
+#include "color.h"
 #include <box2d/box2d.h>
 #include <nanovg.h>
 #include <unordered_map>
@@ -26,10 +27,10 @@ public:
     Point GetPosition(Object obj);
     float GetRotation(Object obj);
     float GetMass(Object obj);
-    const NVGcolor& GetFill(Object obj);
+    const Color& GetFill(Object obj);
 
     void SetStatic(Object obj, bool isStatic);
-    void SetFill(Object obj, const NVGcolor& color);
+    void SetFill(Object obj, const Color& color);
     void SetForce(Object obj, const Point& force);
     void SetVelocity(Object obj, const Point& velocity);
     void SetLayer(Object obj, Layer layer = LayerDefault);
@@ -54,7 +55,7 @@ private:
     struct ObjectData
     {
         b2Body* body;
-        NVGcolor fillColor;
+        Color fillColor;
 
         enum class Type
         {

@@ -37,7 +37,7 @@ void TextManager::SetSize(Handle text, float size)
     m_texts[text].size = size;
 }
 
-void TextManager::SetColor(Handle text, const NVGcolor& color)
+void TextManager::SetColor(Handle text, const Color& color)
 {
     m_texts[text].color = color;
 }
@@ -49,22 +49,23 @@ void TextManager::SetHidden(Handle text, bool hidden)
 
 void TextManager::FadeIn(Handle text)
 {
-    float alpha = m_texts[text].color.a;
+    auto currentColor = m_texts[text].color;
 
     m_texts[text].isHidden = false;
-    m_texts[text].color = nvgTransRGBAf(m_texts[text].color, 0.0f);
-    m_lerp.LerpColor(m_texts[text].color, nvgTransRGBAf(m_texts[text].color, alpha));
+    m_texts[text].color.Alpha() = 0.0f;
+    m_lerp.LerpColor(m_texts[text].color, currentColor);
 }
 
 void TextManager::FadeOut(Handle text)
 {
-    float alpha = m_texts[text].color.a;
+    auto transparentColor = m_texts[text].color.Transparency(0);
 
     m_texts[text].isHidden = false;
-    m_lerp.LerpColor(m_texts[text].color, nvgTransRGBAf(m_texts[text].color, 0.0f), [this, alpha, text]()
+    m_lerp.LerpColor(m_texts[text].color, transparentColor,
+    [this, currentAlpha = m_texts[text].color.Alpha(), text]()
     {
         m_texts[text].isHidden = true;
-        m_texts[text].color = nvgTransRGBAf(m_texts[text].color, alpha);
+        m_texts[text].color.Alpha() = currentAlpha;
     });
 }
 
@@ -128,7 +129,7 @@ Text& Text::SetSize(float size)
     return *this;
 }
 
-Text& Text::SetColor(const NVGcolor& color)
+Text& Text::SetColor(const Color& color)
 {
     m_manager->SetColor(m_handle, color);
     return *this;
