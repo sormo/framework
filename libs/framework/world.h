@@ -6,6 +6,10 @@
 #include <unordered_map>
 #include <vector>
 
+b2Vec2 ConvertVector(const Point& v);
+b2Vec2 WorldScalePoint(const Point& p);
+Point WorldScalePoint(const b2Vec2& p);
+
 class DebugDraw : public b2Draw
 {
 public:
@@ -25,6 +29,7 @@ public:
     using Object = int32_t;
     using Layer = int32_t;
     using Joint = int32_t;
+    using Rope = int32_t;
 
     static constexpr Layer LayerDefault = 0;
 
@@ -50,6 +55,7 @@ public:
     void SetForce(Object obj, const Point& force);
     void SetVelocity(Object obj, const Point& velocity);
     void SetLayer(Object obj, Layer layer = LayerDefault);
+    void SetLayerRope(Rope rope, Layer layer = LayerDefault);
     void SetBullet(Object obj, bool bullet);
     void SetDensity(Object obj, float density);
 
@@ -70,10 +76,13 @@ public:
     Joint CreateDistanceJoint(Object obj1, Object obj2, const Point& point1, const Point& point2, bool allowSmallerDistance);
     Joint CreateDistanceJointEx(Object obj1, Object obj2, const Point& point1, const Point& point2, float length, float minLength, float maxLength);
 
-private:
+    Rope CreateRope(const std::vector<Point>& points, const Color& color, Object* leftAttach, Object* rightAttach);
+
+//private:
     b2World m_world;
     Object m_objectCounter = 1;
     Joint m_jointCounter = 1;
+    Rope m_ropeCounter = 1;
 
     struct ObjectData
     {
@@ -83,7 +92,7 @@ private:
         enum class Type
         {
             Rectangle,
-            Circle
+            Circle,
         } type;
 
         union
@@ -97,23 +106,43 @@ private:
             {
                 float radius;
             } circle;
+
         } shape;    
+    };
+
+    struct RopeData
+    {
+        static const float SegmentHeight;
+        static const float SegmentWidth;
+
+        Color fillColor;
+        std::vector<Object> segments;
     };
 
     Object CreateObject(const Point& position, float angle, b2Shape& shape, ObjectData&& data);
     void DrawObject(const ObjectData& data);
+    void DrawRope(const RopeData& data);
     void DrawJointsDebug();
 
     void RemoveFromLayers(Object obj);
+    void RemoveFromLayersRope(Rope obj);
 
     Object GetObjectFromBody(b2Body* body);
 
     // TODO joints are attached to bodies, if body is destroyed, joints may get destroyed also
     // need to cleanup on body destroy
 
+    // TODO separate layers and whole drawing from world ???
+    struct LayerData
+    {
+        std::vector<Object> objects;
+        std::vector<Rope> ropes;
+    };
+
     std::unordered_map<Object, ObjectData> m_objects;
     std::unordered_map<Joint, b2Joint*> m_joints;
-    std::unordered_map<Layer, std::vector<Object>> m_layers;
+    std::unordered_map<Rope, RopeData> m_ropes;
+    std::unordered_map<Layer, LayerData> m_layers;
 
     b2Body* m_ground = nullptr;
     void EnsureGroundObjectCreated();

@@ -6,6 +6,9 @@
 constexpr float WorldScale = 50.0f;
 constexpr float WorldScaleSqrt = 7.0710678f; // std::sqrtf(WorldScale);
 
+const float World::RopeData::SegmentHeight = 10.0f;
+const float World::RopeData::SegmentWidth = 15.0f;
+
 b2Vec2 ConvertVector(const Point& v)
 {
     return { v.x() / WorldScale, -v.y() / WorldScale };
@@ -71,6 +74,109 @@ World::Object World::CreateCircle(const Point& position, float radius)
     return CreateObject(position, 0.0f, circleShape, std::move(data));
 }
 
+World::Rope World::CreateRope(const std::vector<Point>& points, const Color& color, Object* leftAttach, Object* rightAttach)
+{
+    // prepare objects
+
+    Object lastObject = leftAttach ? *leftAttach : 0;
+
+    std::vector<Object> objects;
+    for (size_t i = 0; i < points.size() - 1; i++)
+    {
+        Point vector = (points[i + 1] - points[i]).Normalized();
+        float angle = vector.Angle();
+        float distance = (points[i + 1] - points[i]).Length();
+        float centerDistance = RopeData::SegmentHeight * 0.5f;
+        float anchorDistance = 0.0f;
+
+        float ropeY = RopeData::SegmentHeight;
+        if (ropeY > distance)
+            ropeY = distance;
+        else
+            ropeY = distance / (std::roundf(distance / ropeY));
+
+        auto createObject = [&]()
+        {
+            Point center = points[i] + vector * centerDistance;
+            Point anchor = points[i] + vector * anchorDistance;
+            // TODO why pi/2
+            auto object = CreateRectangleEx(center, b2_pi / 2.0f - angle, RopeData::SegmentWidth, ropeY);
+            SetStatic(object, false);
+            SetDensity(object, 0.4f);
+            SetFill(object, Color::BLANK);
+
+            b2Filter filter;
+            filter.categoryBits = 0x2;
+            m_objects[object].body->GetFixtureList()->SetFilterData(filter);
+
+            if (lastObject)
+                CreateRevoluteJoint(lastObject, object, anchor);
+
+            return object;
+        };
+
+        while (centerDistance < distance)
+        {
+            auto object = createObject();
+
+            objects.push_back(object);
+            centerDistance += ropeY;
+            anchorDistance += ropeY;
+            lastObject = object;
+        }
+    }
+
+    if (rightAttach)
+    {
+        CreateRevoluteJoint(objects.back(), *rightAttach, points.back());
+    }
+
+    auto setFilterMask = [this](Object* obj)
+    {
+        if (obj)
+        {
+            b2Filter filter;
+            filter.maskBits = 0xfffd;
+            m_objects[*obj].body->GetFixtureList()->SetFilterData(filter);
+        }
+    };
+    setFilterMask(leftAttach);
+    setFilterMask(rightAttach);
+
+    // prepare distance joints
+
+    // TODO constant increase
+    for (int32_t i = 0; i < objects.size(); i += 3)
+    {
+        Point anchorDown = GetPosition(objects[i]) + Point(0.0f, RopeData::SegmentHeight / 2.0f);
+        for (int32_t j = i + 1; j < objects.size(); j++)
+        {
+            Point anchor = GetPosition(objects[j]) - Point(0.0f, RopeData::SegmentHeight / 2.0f);
+            float length = (float)(std::abs(i - j) + 1) * RopeData::SegmentHeight;
+
+            CreateDistanceJointEx(objects[i], objects[j], anchorDown, anchor, length, 0.0f, length);
+        }
+
+        Point anchorUp = GetPosition(objects[i]) - Point(0.0f, RopeData::SegmentHeight / 2.0f);
+        for (int32_t j = i - 1; j >= 0; j--)
+        {
+            Point anchor = GetPosition(objects[j]) + Point(0.0f, RopeData::SegmentHeight / 2.0f);
+            float length = (float)(std::abs(i - j) + 1) * RopeData::SegmentHeight;
+
+            CreateDistanceJointEx(objects[i], objects[j], anchorUp, anchor, length, 0.0f, length);
+        }
+    }
+
+    RopeData data;
+    data.segments = std::move(objects);
+    data.fillColor = color;
+
+    m_ropes[m_ropeCounter++] = std::move(data);
+    m_layers[LayerDefault].ropes.push_back(m_ropeCounter - 1);
+
+    return m_ropeCounter - 1;
+}
+
 World::Object World::CreateObject(const Point& position, float angle, b2Shape& shape, ObjectData&& data)
 {
     b2BodyDef bodyDef{};
@@ -93,7 +199,7 @@ World::Object World::CreateObject(const Point& position, float angle, b2Shape& s
     m_objects[m_objectCounter++] = std::move(data);
 
     Object handle = m_objectCounter - 1;
-    m_layers[LayerDefault].push_back(handle);
+    m_layers[LayerDefault].objects.push_back(handle);
 
     return handle;
 }
@@ -130,7 +236,7 @@ void World::SetLayer(Object obj, Layer layer)
 {
     RemoveFromLayers(obj);
 
-    m_layers[layer].push_back(obj);
+    m_layers[layer].objects.push_back(obj);
 }
 
 void World::SetBullet(Object obj, bool bullet)
@@ -182,20 +288,27 @@ void World::Update()
 {
     UpdateMouseJoints();
 
-    m_world.Step(1.0f / 60.0f, 8, 3);
+    m_world.Step(1.0f / 60.0f, 32, 16);
 }
 
 void World::Draw(Layer layer)
 {
     assert(m_layers.find(layer) != std::end(m_layers));
 
-    std::vector<Object>& objects = m_layers[layer];
+    auto& layerObjects = m_layers[layer];
 
-    for (const auto& obj : objects)
+    for (const auto& obj : layerObjects.objects)
     {
         assert(m_objects.find(obj) != std::end(m_objects));
 
         DrawObject(m_objects[obj]);
+    }
+
+    for (const auto& rope : layerObjects.ropes)
+    {
+        assert(m_ropes.find(rope) != std::end(m_ropes));
+
+        DrawRope(m_ropes[rope]);
     }
 
     // debug
@@ -223,10 +336,30 @@ void World::DrawObject(const ObjectData& data)
     }
 }
 
+void World::DrawRope(const RopeData& data)
+{
+    for (const auto& rope : m_ropes)
+    {
+        std::vector<Point> points(data.segments.size() + 2);
+
+        points[0] = WorldScalePoint(m_objects[data.segments[0]].body->GetWorldPoint(WorldScalePoint(Point(0.0f, -RopeData::SegmentHeight))));
+
+        for (size_t i = 0; i < data.segments.size(); i++)
+            points[i + 1] = WorldScalePoint(m_objects[data.segments[i]].body->GetPosition());
+
+        points.back() = WorldScalePoint(m_objects[data.segments.back()].body->GetWorldPoint(WorldScalePoint(Point(0.0f, RopeData::SegmentHeight))));;
+
+        frame::draw_curve(points, RopeData::SegmentHeight * 1.0f, data.fillColor);
+    }
+}
+
 void World::DrawJointsDebug()
 {
     for (const auto& joint : m_joints)
     {
+        if (joint.second->GetType() != e_revoluteJoint)
+            continue;
+
         auto p1 = WorldScalePoint(joint.second->GetAnchorA());
         auto p2 = WorldScalePoint(joint.second->GetAnchorB());
 
@@ -236,14 +369,34 @@ void World::DrawJointsDebug()
     }
 }
 
+void World::SetLayerRope(Rope rope, Layer layer)
+{
+    RemoveFromLayersRope(rope);
+
+    m_layers[layer].ropes.push_back(rope);
+}
+
+void World::RemoveFromLayersRope(Rope rope)
+{
+    for (auto& [layer, layerObjects] : m_layers)
+    {
+        auto it = std::find(std::begin(layerObjects.ropes), std::end(layerObjects.ropes), rope);
+        if (it != std::end(layerObjects.ropes))
+        {
+            layerObjects.ropes.erase(it);
+            break;
+        }
+    }
+}
+
 void World::RemoveFromLayers(Object obj)
 {
-    for (auto& [layer, objects] : m_layers)
+    for (auto& [layer, layerObjects] : m_layers)
     {
-        auto it = std::find(std::begin(objects), std::end(objects), obj);
-        if (it != std::end(objects))
+        auto it = std::find(std::begin(layerObjects.objects), std::end(layerObjects.objects), obj);
+        if (it != std::end(layerObjects.objects))
         {
-            objects.erase(it);
+            layerObjects.objects.erase(it);
             break;
         }
     }
