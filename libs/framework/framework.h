@@ -105,6 +105,8 @@ namespace frame
     void draw_curve_quad_ex(const Point& from, const Point& control, const Point& to, float thickness, const Color& color);
     // position is number between 0 and 1 identifying point on line and offset is distance from line
     void draw_line_text(const Point& from, const Point& to, const char* text, float position, float size, float offset, Side side, const Color& color);
+    void draw_curve(const std::vector<Point>& points, const Color& color);
+    void draw_curve(const std::vector<Point>& points, float thickness, const Color& color);
 
     // *** text ***
     float text_width(const char* text, float size);

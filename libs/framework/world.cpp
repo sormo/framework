@@ -21,64 +21,6 @@ Point WorldScalePoint(const b2Vec2& p)
     return { p.x * WorldScale, p.y * WorldScale };
 }
 
-class DebugDraw : public b2Draw
-{
-public:
-    DebugDraw()
-    {
-        SetFlags(e_shapeBit);
-    }
-
-    /// Draw a closed polygon provided in CCW order.
-    void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
-    {
-        std::vector<Point> points(vertexCount);
-        for (int32_t i = 0; i < vertexCount; i++)
-            points[i] = WorldScalePoint(vertices[i]);
-        frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
-    }
-
-    /// Draw a solid closed polygon provided in CCW order.
-    void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
-    {
-        std::vector<Point> points(vertexCount);
-        for (int32_t i = 0; i < vertexCount; i++)
-            points[i] = WorldScalePoint(vertices[i]);
-        frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
-    }
-
-    /// Draw a circle.
-    void DrawCircle(const b2Vec2& center, float radius, const b2Color& color) override
-    {
-        frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
-    }
-
-    /// Draw a solid circle.
-    void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color) override
-    {
-        frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
-    }
-
-    /// Draw a line segment.
-    void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override
-    {
-        frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), Color::RGBf(color.r, color.g, color.b, color.a));
-    }
-
-    /// Draw a transform. Choose your own length scale.
-    /// @param xf a transform.
-    void DrawTransform(const b2Transform& xf) override
-    {
-
-    }
-
-    /// Draw a point.
-    void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override
-    {
-        frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
-    }
-} g_debugDraw;
-
 World::World(const Point& gravity)
     : m_world({ gravity.x(), gravity.y() })
 {
@@ -100,7 +42,20 @@ World::Object World::CreateRectangle(const Point& position, float width, float h
     data.shape.rectangle.width = width;
     data.shape.rectangle.height = height;
 
-    return CreateObject(position, rectangleShape, std::move(data));
+    return CreateObject(position, 0.0f, rectangleShape, std::move(data));
+}
+
+World::Object World::CreateRectangleEx(const Point& position, float angle, float width, float height)
+{
+    b2PolygonShape rectangleShape{};
+    rectangleShape.SetAsBox(width / (2.0f * WorldScale), height / (2.0f * WorldScale));
+
+    ObjectData data;
+    data.type = ObjectData::Type::Rectangle;
+    data.shape.rectangle.width = width;
+    data.shape.rectangle.height = height;
+
+    return CreateObject(position, angle, rectangleShape, std::move(data));
 }
 
 World::Object World::CreateCircle(const Point& position, float radius)
@@ -113,13 +68,14 @@ World::Object World::CreateCircle(const Point& position, float radius)
     data.type = ObjectData::Type::Circle;
     data.shape.circle.radius = radius;
 
-    return CreateObject(position, circleShape, std::move(data));
+    return CreateObject(position, 0.0f, circleShape, std::move(data));
 }
 
-World::Object World::CreateObject(const Point& position, b2Shape& shape, ObjectData&& data)
+World::Object World::CreateObject(const Point& position, float angle, b2Shape& shape, ObjectData&& data)
 {
     b2BodyDef bodyDef{};
     bodyDef.position = WorldScalePoint(position);
+    bodyDef.angle = angle;
 
     b2Body* body = m_world.CreateBody(&bodyDef);
 
@@ -201,6 +157,25 @@ float World::GetMass(Object obj)
 const Color& World::GetFill(Object obj)
 {
     return m_objects[obj].fillColor;
+}
+
+std::pair<Point, Point> World::GetPositions(Joint joint)
+{
+    return { WorldScalePoint(m_joints[joint]->GetAnchorA()), WorldScalePoint(m_joints[joint]->GetAnchorB()) };
+}
+
+void World::SetDensity(Object obj, float density)
+{
+    m_objects[obj].body->GetFixtureList()->SetDensity(density);
+    m_objects[obj].body->ResetMassData();
+}
+
+void World::SetCollisionMask(Object obj, uint16_t mask)
+{
+    b2Filter data = m_objects[obj].body->GetFixtureList()->GetFilterData();
+    data.maskBits = mask;
+
+    m_objects[obj].body->GetFixtureList()->SetFilterData(data);
 }
 
 void World::Update()
@@ -355,6 +330,56 @@ World::Joint World::CreateMouseJoint(Object obj, const Point& target)
     return m_jointCounter - 1;
 }
 
+World::Joint World::CreateRevoluteJoint(Object obj1, Object obj2, const Point& target)
+{
+    b2RevoluteJointDef def;
+    def.bodyA = m_objects[obj1].body;
+    def.bodyB = m_objects[obj2].body;
+    def.collideConnected = false;
+    def.localAnchorA = m_objects[obj1].body->GetLocalPoint(WorldScalePoint(target));
+    def.localAnchorB = m_objects[obj2].body->GetLocalPoint(WorldScalePoint(target));
+
+    m_joints[m_jointCounter++] = m_world.CreateJoint(&def);
+
+    return m_jointCounter - 1;
+}
+
+World::Joint World::CreateDistanceJoint(Object obj1, Object obj2, const Point& point1, const Point& point2, bool allowSmallerDistance)
+{
+    b2DistanceJointDef def;
+    def.bodyA = m_objects[obj1].body;
+    def.bodyB = m_objects[obj2].body;
+    def.collideConnected = false;
+    def.localAnchorA = m_objects[obj1].body->GetLocalPoint(WorldScalePoint(point1));
+    def.localAnchorB = m_objects[obj2].body->GetLocalPoint(WorldScalePoint(point2));
+    def.length = b2Distance(WorldScalePoint(point1), WorldScalePoint(point2));
+    def.maxLength = def.length;
+    def.minLength = allowSmallerDistance ? 0.0f : def.length;
+    //b2LinearStiffness(def.stiffness, def.damping, 1.0f, 1.0f, def.bodyA, def.bodyB);
+
+    m_joints[m_jointCounter++] = m_world.CreateJoint(&def);
+
+    return m_jointCounter - 1;
+}
+
+World::Joint World::CreateDistanceJointEx(Object obj1, Object obj2, const Point& point1, const Point& point2, float length, float minLength, float maxLength)
+{
+    b2DistanceJointDef def;
+    def.bodyA = m_objects[obj1].body;
+    def.bodyB = m_objects[obj2].body;
+    def.collideConnected = false;
+    def.localAnchorA = m_objects[obj1].body->GetLocalPoint(WorldScalePoint(point1));
+    def.localAnchorB = m_objects[obj2].body->GetLocalPoint(WorldScalePoint(point2));
+    def.length = length;
+    def.maxLength = maxLength;
+    def.minLength = minLength;
+    //b2LinearStiffness(def.stiffness, def.damping, 1.0f, 1.0f, def.bodyA, def.bodyB);
+
+    m_joints[m_jointCounter++] = m_world.CreateJoint(&def);
+
+    return m_jointCounter - 1;
+}
+
 void World::DestroyJoint(Joint joint)
 {
     m_world.DestroyJoint(m_joints[joint]);
@@ -371,4 +396,50 @@ void World::UpdateMouseJoints()
             mouseJoint->SetTarget(WorldScalePoint(frame::mouse_canvas_position()));
         }
     }
+}
+
+DebugDraw::DebugDraw()
+{
+    SetFlags(e_shapeBit);
+}
+
+void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+{
+    std::vector<Point> points(vertexCount);
+    for (int32_t i = 0; i < vertexCount; i++)
+        points[i] = WorldScalePoint(vertices[i]);
+    frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+}
+
+void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+{
+    std::vector<Point> points(vertexCount);
+    for (int32_t i = 0; i < vertexCount; i++)
+        points[i] = WorldScalePoint(vertices[i]);
+    frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+}
+
+void DebugDraw::DrawCircle(const b2Vec2& center, float radius, const b2Color& color)
+{
+    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+}
+
+void DebugDraw::DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color)
+{
+    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+}
+
+void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+{
+    frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), Color::RGBf(color.r, color.g, color.b, color.a));
+}
+
+void DebugDraw::DrawTransform(const b2Transform& xf)
+{
+
+}
+
+void DebugDraw::DrawPoint(const b2Vec2& p, float size, const b2Color& color)
+{
+    frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
 }

@@ -1,5 +1,6 @@
 #include "framework.h"
 #include <cmath>
+#include <vector>
 
 void canvas_apply_text();
 
@@ -467,6 +468,39 @@ namespace frame
 
         nvgMoveTo(vg, from.x(), from.y());
         nvgQuadTo(vg, control.x(), control.y(), to.x(), to.y());
+
+        nvgStrokeColor(vg, color.data);
+        nvgStrokeWidth(vg, thickness);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_curve(const std::vector<Point>& points, const Color& color)
+    {
+        nvgSave(vg);
+
+        nvgBeginPath(vg);
+
+        nvgMoveTo(vg, points[0].x(), points[0].y());
+        for (size_t i = 2; i < points.size(); i++)
+            nvgQuadTo(vg, points[i - 1].x(), points[i - 1].y(), points[i].x(), points[i].y());
+
+        nvgStrokeColor(vg, color.data);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_curve(const std::vector<Point>& points, float thickness, const Color& color)
+    {
+        nvgSave(vg);
+
+        nvgBeginPath(vg);
+
+        nvgMoveTo(vg, points[0].x(), points[0].y());
+        for (size_t i = 2; i < points.size(); i++)
+            nvgQuadTo(vg, points[i - 1].x(), points[i - 1].y(), points[i].x(), points[i].y());
 
         nvgStrokeColor(vg, color.data);
         nvgStrokeWidth(vg, thickness);

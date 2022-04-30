@@ -63,7 +63,7 @@ float& Color::Blue()
     return data.b;
 }
 
-const Color Color::BLANK = Color::RGB(0,0,0);
+const Color Color::BLANK = Color::RGB(0, 0, 0, 0);
 const Color Color::WHITE = Color::RGB(255, 255, 255);
 const Color Color::LIGHTGRAY = Color::RGB(200, 200, 200);
 const Color Color::GRAY = Color::RGB(100, 100, 100);
