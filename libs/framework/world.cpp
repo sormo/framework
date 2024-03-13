@@ -1,38 +1,41 @@
 #include "world.h"
 #include "framework.h"
-#include "point.h"
+#include "point_type.h"
 
 // scale from screen to world
 constexpr float WorldScale = 50.0f;
 constexpr float WorldScaleSqrt = 7.0710678f; // std::sqrtf(WorldScale);
 
-b2Vec2 ConvertVector(const Point& v)
+const float World::RopeData::SegmentHeight = 10.0f;
+const float World::RopeData::SegmentWidth = 15.0f;
+
+b2Vec2 ConvertVector(const frame::vec2& v)
 {
-    return { v.x() / WorldScale, -v.y() / WorldScale };
+    return { v.x / WorldScale, -v.y / WorldScale };
 }
 
-b2Vec2 WorldScalePoint(const Point& p)
+b2Vec2 WorldScalePoint(const frame::vec2& p)
 {
-    return { p.x() / WorldScale, p.y() / WorldScale };
+    return { p.x / WorldScale, p.y / WorldScale };
 }
 
-Point WorldScalePoint(const b2Vec2& p)
+frame::vec2 WorldScalePoint(const b2Vec2& p)
 {
     return { p.x * WorldScale, p.y * WorldScale };
 }
 
-World::World(const Point& gravity)
-    : m_world({ gravity.x(), gravity.y() })
+World::World(const frame::vec2& gravity)
+    : m_world({ gravity.x, gravity.y })
 {
 
 }
 
-void World::SetGravity(const Point& gravity)
+void World::SetGravity(const frame::vec2& gravity)
 {
-    m_world.SetGravity(b2Vec2(gravity.x(), gravity.y()));
+    m_world.SetGravity(b2Vec2(gravity.x, gravity.y));
 }
 
-World::Object World::CreateRectangle(const Point& position, float width, float height)
+World::Object World::CreateRectangle(const frame::vec2& position, float width, float height)
 {
     b2PolygonShape rectangleShape{};
     rectangleShape.SetAsBox(width/(2.0f * WorldScale), height/(2.0f * WorldScale));
@@ -45,7 +48,7 @@ World::Object World::CreateRectangle(const Point& position, float width, float h
     return CreateObject(position, 0.0f, rectangleShape, std::move(data));
 }
 
-World::Object World::CreateRectangleEx(const Point& position, float angle, float width, float height)
+World::Object World::CreateRectangleEx(const frame::vec2& position, float angle, float width, float height)
 {
     b2PolygonShape rectangleShape{};
     rectangleShape.SetAsBox(width / (2.0f * WorldScale), height / (2.0f * WorldScale));
@@ -58,7 +61,7 @@ World::Object World::CreateRectangleEx(const Point& position, float angle, float
     return CreateObject(position, angle, rectangleShape, std::move(data));
 }
 
-World::Object World::CreateCircle(const Point& position, float radius)
+World::Object World::CreateCircle(const frame::vec2& position, float radius)
 {
     b2CircleShape circleShape{};
     circleShape.m_radius = radius / WorldScale;
@@ -71,7 +74,110 @@ World::Object World::CreateCircle(const Point& position, float radius)
     return CreateObject(position, 0.0f, circleShape, std::move(data));
 }
 
-World::Object World::CreateObject(const Point& position, float angle, b2Shape& shape, ObjectData&& data)
+World::Rope World::CreateRope(const std::vector<frame::vec2>& points, const color_type& color, Object* leftAttach, Object* rightAttach)
+{
+    // prepare objects
+
+    Object lastObject = leftAttach ? *leftAttach : 0;
+
+    std::vector<Object> objects;
+    for (size_t i = 0; i < points.size() - 1; i++)
+    {
+        frame::vec2 vector = (points[i + 1] - points[i]).normalized();
+        float angle = vector.angle();
+        float distance = (points[i + 1] - points[i]).length();
+        float centerDistance = RopeData::SegmentHeight * 0.5f;
+        float anchorDistance = 0.0f;
+
+        float ropeY = RopeData::SegmentHeight;
+        if (ropeY > distance)
+            ropeY = distance;
+        else
+            ropeY = distance / (std::roundf(distance / ropeY));
+
+        auto createObject = [&]()
+        {
+            frame::vec2 center = points[i] + vector * centerDistance;
+            frame::vec2 anchor = points[i] + vector * anchorDistance;
+            // TODO why pi/2
+            auto object = CreateRectangleEx(center, b2_pi / 2.0f - angle, RopeData::SegmentWidth, ropeY);
+            SetStatic(object, false);
+            SetDensity(object, 0.4f);
+            SetFill(object, color_type::BLANK);
+
+            b2Filter filter;
+            filter.categoryBits = 0x2;
+            m_objects[object].body->GetFixtureList()->SetFilterData(filter);
+
+            if (lastObject)
+                CreateRevoluteJoint(lastObject, object, anchor);
+
+            return object;
+        };
+
+        while (centerDistance < distance)
+        {
+            auto object = createObject();
+
+            objects.push_back(object);
+            centerDistance += ropeY;
+            anchorDistance += ropeY;
+            lastObject = object;
+        }
+    }
+
+    if (rightAttach)
+    {
+        CreateRevoluteJoint(objects.back(), *rightAttach, points.back());
+    }
+
+    auto setFilterMask = [this](Object* obj)
+    {
+        if (obj)
+        {
+            b2Filter filter;
+            filter.maskBits = 0xfffd;
+            m_objects[*obj].body->GetFixtureList()->SetFilterData(filter);
+        }
+    };
+    setFilterMask(leftAttach);
+    setFilterMask(rightAttach);
+
+    // prepare distance joints
+
+    // TODO constant increase
+    for (int32_t i = 0; i < objects.size(); i += 3)
+    {
+        frame::vec2 anchorDown = GetPosition(objects[i]) + frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
+        for (int32_t j = i + 1; j < objects.size(); j++)
+        {
+            frame::vec2 anchor = GetPosition(objects[j]) - frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
+            float length = (float)(std::abs(i - j) + 1) * RopeData::SegmentHeight;
+
+            CreateDistanceJointEx(objects[i], objects[j], anchorDown, anchor, length, 0.0f, length);
+        }
+
+        frame::vec2 anchorUp = GetPosition(objects[i]) - frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
+        for (int32_t j = i - 1; j >= 0; j--)
+        {
+            frame::vec2 anchor = GetPosition(objects[j]) + frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
+            float length = (float)(std::abs(i - j) + 1) * RopeData::SegmentHeight;
+
+            CreateDistanceJointEx(objects[i], objects[j], anchorUp, anchor, length, 0.0f, length);
+        }
+    }
+
+    RopeData data;
+    data.segments = std::move(objects);
+    data.fillColor = color;
+
+    m_ropes[m_ropeCounter++] = std::move(data);
+    m_layers[LayerDefault].ropes.push_back(m_ropeCounter - 1);
+
+    return m_ropeCounter - 1;
+}
+
+World::Object World::CreateObject(const frame::vec2& position, float angle, b2Shape& shape, ObjectData&& data)
 {
     b2BodyDef bodyDef{};
     bodyDef.position = WorldScalePoint(position);
@@ -88,12 +194,12 @@ World::Object World::CreateObject(const Point& position, float angle, b2Shape& s
     body->CreateFixture(&fixtureDef);
 
     data.body = body;
-    data.fillColor = Color::WHITE;
+    data.fillColor = color_type::WHITE;
 
     m_objects[m_objectCounter++] = std::move(data);
 
     Object handle = m_objectCounter - 1;
-    m_layers[LayerDefault].push_back(handle);
+    m_layers[LayerDefault].objects.push_back(handle);
 
     return handle;
 }
@@ -110,27 +216,27 @@ void World::SetStatic(Object obj, bool isStatic)
     m_objects[obj].body->SetType(isStatic ? b2_staticBody : b2_dynamicBody);
 }
 
-void World::SetFill(Object obj, const Color& color)
+void World::SetFill(Object obj, const color_type& color)
 {
     m_objects[obj].fillColor = color;
 }
 
-void World::SetForce(Object obj, const Point& force)
+void World::SetForce(Object obj, const frame::vec2& force)
 {
     // TODO what is the scale factor for force, this is for sure not correct
-    m_objects[obj].body->ApplyForceToCenter(b2Vec2(force.x(), force.y()), true);
+    m_objects[obj].body->ApplyForceToCenter(b2Vec2(force.x, force.y), true);
 }
 
-void World::SetVelocity(Object obj, const Point& velocity)
+void World::SetVelocity(Object obj, const frame::vec2& velocity)
 {
-    m_objects[obj].body->SetLinearVelocity(b2Vec2(velocity.x() / WorldScaleSqrt, velocity.y() / WorldScaleSqrt));
+    m_objects[obj].body->SetLinearVelocity(b2Vec2(velocity.x / WorldScaleSqrt, velocity.y / WorldScaleSqrt));
 }
 
 void World::SetLayer(Object obj, Layer layer)
 {
     RemoveFromLayers(obj);
 
-    m_layers[layer].push_back(obj);
+    m_layers[layer].objects.push_back(obj);
 }
 
 void World::SetBullet(Object obj, bool bullet)
@@ -138,7 +244,7 @@ void World::SetBullet(Object obj, bool bullet)
     m_objects[obj].body->SetBullet(bullet);
 }
 
-Point World::GetPosition(Object obj)
+frame::vec2 World::GetPosition(Object obj)
 {
     return WorldScalePoint(m_objects[obj].body->GetPosition());
 }
@@ -154,12 +260,12 @@ float World::GetMass(Object obj)
     return m_objects[obj].body->GetMass();
 }
 
-const Color& World::GetFill(Object obj)
+const color_type& World::GetFill(Object obj)
 {
     return m_objects[obj].fillColor;
 }
 
-std::pair<Point, Point> World::GetPositions(Joint joint)
+std::pair<frame::vec2, frame::vec2> World::GetPositions(Joint joint)
 {
     return { WorldScalePoint(m_joints[joint]->GetAnchorA()), WorldScalePoint(m_joints[joint]->GetAnchorB()) };
 }
@@ -182,20 +288,27 @@ void World::Update()
 {
     UpdateMouseJoints();
 
-    m_world.Step(1.0f / 60.0f, 8, 3);
+    m_world.Step(1.0f / 60.0f, 32, 16);
 }
 
 void World::Draw(Layer layer)
 {
     assert(m_layers.find(layer) != std::end(m_layers));
 
-    std::vector<Object>& objects = m_layers[layer];
+    auto& layerObjects = m_layers[layer];
 
-    for (const auto& obj : objects)
+    for (const auto& obj : layerObjects.objects)
     {
         assert(m_objects.find(obj) != std::end(m_objects));
 
         DrawObject(m_objects[obj]);
+    }
+
+    for (const auto& rope : layerObjects.ropes)
+    {
+        assert(m_ropes.find(rope) != std::end(m_ropes));
+
+        DrawRope(m_ropes[rope]);
     }
 
     // debug
@@ -212,14 +325,31 @@ void World::DrawObject(const ObjectData& data)
             data.body->GetAngle(),
             data.shape.rectangle.width,
             data.shape.rectangle.height,
-            data.fillColor, 0.0f, Color::BLANK);
+            data.fillColor, 0.0f, color_type::BLANK);
     }
     else
     {
         frame::draw_circle_ex(position,
             data.body->GetAngle(),
             data.shape.circle.radius,
-            data.fillColor, 0.0f, Color::BLANK);
+            data.fillColor, 0.0f, color_type::BLANK);
+    }
+}
+
+void World::DrawRope(const RopeData& data)
+{
+    for (const auto& rope : m_ropes)
+    {
+        std::vector<frame::vec2> points(data.segments.size() + 2);
+
+        points[0] = WorldScalePoint(m_objects[data.segments[0]].body->GetWorldPoint(WorldScalePoint(frame::vec2(0.0f, -RopeData::SegmentHeight))));
+
+        for (size_t i = 0; i < data.segments.size(); i++)
+            points[i + 1] = WorldScalePoint(m_objects[data.segments[i]].body->GetPosition());
+
+        points.back() = WorldScalePoint(m_objects[data.segments.back()].body->GetWorldPoint(WorldScalePoint(frame::vec2(0.0f, RopeData::SegmentHeight))));;
+
+        frame::draw_quad_bezier_polyline_ex(points, RopeData::SegmentHeight * 1.0f, data.fillColor);
     }
 }
 
@@ -227,23 +357,46 @@ void World::DrawJointsDebug()
 {
     for (const auto& joint : m_joints)
     {
+        if (joint.second->GetType() != e_revoluteJoint)
+            continue;
+
         auto p1 = WorldScalePoint(joint.second->GetAnchorA());
         auto p2 = WorldScalePoint(joint.second->GetAnchorB());
 
-        frame::draw_circle_ex(p1, 0.0f, 5.0f, Color::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, Color::BLANK);
-        frame::draw_circle_ex(p2, 0.0f, 5.0f, Color::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, Color::BLANK);
-        frame::draw_line_solid(p1, p2, Color::RGBf(1.0f, 1.0f, 1.0f, 0.5f));
+        frame::draw_circle_ex(p1, 0.0f, 5.0f, color_type::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, color_type::BLANK);
+        frame::draw_circle_ex(p2, 0.0f, 5.0f, color_type::RGBf(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, color_type::BLANK);
+        frame::draw_line_solid(p1, p2, color_type::RGBf(1.0f, 1.0f, 1.0f, 0.5f));
+    }
+}
+
+void World::SetLayerRope(Rope rope, Layer layer)
+{
+    RemoveFromLayersRope(rope);
+
+    m_layers[layer].ropes.push_back(rope);
+}
+
+void World::RemoveFromLayersRope(Rope rope)
+{
+    for (auto& [layer, layerObjects] : m_layers)
+    {
+        auto it = std::find(std::begin(layerObjects.ropes), std::end(layerObjects.ropes), rope);
+        if (it != std::end(layerObjects.ropes))
+        {
+            layerObjects.ropes.erase(it);
+            break;
+        }
     }
 }
 
 void World::RemoveFromLayers(Object obj)
 {
-    for (auto& [layer, objects] : m_layers)
+    for (auto& [layer, layerObjects] : m_layers)
     {
-        auto it = std::find(std::begin(objects), std::end(objects), obj);
-        if (it != std::end(objects))
+        auto it = std::find(std::begin(layerObjects.objects), std::end(layerObjects.objects), obj);
+        if (it != std::end(layerObjects.objects))
         {
-            objects.erase(it);
+            layerObjects.objects.erase(it);
             break;
         }
     }
@@ -282,7 +435,7 @@ public:
     b2Vec2 point;
 };
 
-std::vector<World::Object> World::QueryObjects(const Point& position)
+std::vector<World::Object> World::QueryObjects(const frame::vec2& position)
 {
     QueryObjectsCallback callback;
     callback.point = WorldScalePoint(position);
@@ -309,7 +462,7 @@ void World::EnsureGroundObjectCreated()
     m_ground = m_world.CreateBody(&def);
 }
 
-World::Joint World::CreateMouseJoint(Object obj, const Point& target)
+World::Joint World::CreateMouseJoint(Object obj, const frame::vec2& target)
 {
     EnsureGroundObjectCreated();
 
@@ -330,7 +483,7 @@ World::Joint World::CreateMouseJoint(Object obj, const Point& target)
     return m_jointCounter - 1;
 }
 
-World::Joint World::CreateRevoluteJoint(Object obj1, Object obj2, const Point& target)
+World::Joint World::CreateRevoluteJoint(Object obj1, Object obj2, const frame::vec2& target)
 {
     b2RevoluteJointDef def;
     def.bodyA = m_objects[obj1].body;
@@ -344,7 +497,7 @@ World::Joint World::CreateRevoluteJoint(Object obj1, Object obj2, const Point& t
     return m_jointCounter - 1;
 }
 
-World::Joint World::CreateDistanceJoint(Object obj1, Object obj2, const Point& point1, const Point& point2, bool allowSmallerDistance)
+World::Joint World::CreateDistanceJoint(Object obj1, Object obj2, const frame::vec2& point1, const frame::vec2& point2, bool allowSmallerDistance)
 {
     b2DistanceJointDef def;
     def.bodyA = m_objects[obj1].body;
@@ -362,7 +515,7 @@ World::Joint World::CreateDistanceJoint(Object obj1, Object obj2, const Point& p
     return m_jointCounter - 1;
 }
 
-World::Joint World::CreateDistanceJointEx(Object obj1, Object obj2, const Point& point1, const Point& point2, float length, float minLength, float maxLength)
+World::Joint World::CreateDistanceJointEx(Object obj1, Object obj2, const frame::vec2& point1, const frame::vec2& point2, float length, float minLength, float maxLength)
 {
     b2DistanceJointDef def;
     def.bodyA = m_objects[obj1].body;
@@ -392,8 +545,9 @@ void World::UpdateMouseJoints()
     {
         if (joint->GetType() == e_mouseJoint)
         {
-            b2MouseJoint* mouseJoint = dynamic_cast<b2MouseJoint*>(joint);
-            mouseJoint->SetTarget(WorldScalePoint(frame::mouse_canvas_position()));
+            //b2MouseJoint* mouseJoint = dynamic_cast<b2MouseJoint*>(joint);
+            b2MouseJoint* mouseJoint = (b2MouseJoint*)joint;
+            mouseJoint->SetTarget(WorldScalePoint(frame::get_mouse_world_position()));
         }
     }
 }
@@ -405,33 +559,33 @@ DebugDraw::DebugDraw()
 
 void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    std::vector<Point> points(vertexCount);
+    std::vector<frame::vec2> points(vertexCount);
     for (int32_t i = 0; i < vertexCount; i++)
         points[i] = WorldScalePoint(vertices[i]);
-    frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+    frame::draw_polygon({}, points.data(), points.size(), color_type::RGBf(color.r, color.g, color.b, color.a));
 }
 
 void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    std::vector<Point> points(vertexCount);
+    std::vector<frame::vec2> points(vertexCount);
     for (int32_t i = 0; i < vertexCount; i++)
         points[i] = WorldScalePoint(vertices[i]);
-    frame::draw_polygon({}, points.data(), points.size(), Color::RGBf(color.r, color.g, color.b, color.a));
+    frame::draw_polygon({}, points.data(), points.size(), color_type::RGBf(color.r, color.g, color.b, color.a));
 }
 
 void DebugDraw::DrawCircle(const b2Vec2& center, float radius, const b2Color& color)
 {
-    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }
 
 void DebugDraw::DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color)
 {
-    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }
 
 void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
-    frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), Color::RGBf(color.r, color.g, color.b, color.a));
+    frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), color_type::RGBf(color.r, color.g, color.b, color.a));
 }
 
 void DebugDraw::DrawTransform(const b2Transform& xf)
@@ -441,5 +595,5 @@ void DebugDraw::DrawTransform(const b2Transform& xf)
 
 void DebugDraw::DrawPoint(const b2Vec2& p, float size, const b2Color& color)
 {
-    frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, Color::RGBf(color.r, color.g, color.b, color.a), 0.0f, Color::BLANK);
+    frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }

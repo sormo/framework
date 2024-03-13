@@ -13,7 +13,7 @@ LIST(APPEND CMAKE_PROGRAM_PATH  "data" ...)
 
 fips_setup()
 if (FIPS_EMSCRIPTEN)
-    add_definitions(-DSOKOL_GLES2)
+    add_definitions(-DSOKOL_GLES3)
     set(slang "glsl300es:glsl100")
 else()
     add_definitions(-DSOKOL_GLCORE33)

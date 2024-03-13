@@ -8,58 +8,64 @@ int32_t squares_count = 0;
 World world;
 World::Joint mouse_joint = 0;
 
+bool create_on_hold = false;
+
 void create_square()
 {
-    auto rect = world.CreateRectangle(frame::mouse_screen_position(), 10.0f, 10.0f);
+    auto rect = world.CreateRectangle(frame::get_mouse_world_position(), 10.0f, 10.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, Color::RGB(227, 142, 31));
+    world.SetFill(rect, frame::col4::RGB(227, 142, 31));
 
     squares_count++;
 }
 
 void create_circle()
 {
-    auto rect = world.CreateCircle(frame::mouse_screen_position(), 5.0f);
+    auto rect = world.CreateCircle(frame::get_mouse_world_position(), 5.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, Color::RGB(177, 242, 235));
+    world.SetFill(rect, frame::col4::RGB(177, 242, 235));
 
     circles_count++;
 }
 
 void create_ground()
 {
-    auto ground = world.CreateRectangle(frame::rel_pos(0.5f, 0.0f), frame::screen_width(), 20.0f);
+    auto ground = world.CreateRectangle(frame::get_world_position_screen_relative({ 0.5f, 0.0f }), frame::get_screen_size().x, 20.0f);
     world.SetStatic(ground, true);
-    world.SetFill(ground, Color::RGB(80, 80, 80));
+    world.SetFill(ground, frame::col4::RGB(80, 80, 80));
 }
 
 void setup()
 {
     create_ground();
 
-    frame::mouse_press_register(frame::mouse_button::left, []()
+    frame::set_screen_background(frame::col4::RGBf(0.1f, 0.1f, 0.1f));
+    frame::set_world_transform(frame::translation({ 0.0f, frame::get_screen_size().y }) * frame::scale({ 1.0f, -1.0f }));
+}
+
+void handle_mouse()
+{
+    if (frame::is_mouse_pressed(frame::mouse_button::left))
     {
         if (rand() % 2)
             create_square();
         else
             create_circle();
-    });
+    }
 
-    frame::mouse_press_register(frame::mouse_button::right, []()
+    if (frame::is_mouse_pressed(frame::mouse_button::right))
     {
-        auto objects = world.QueryObjects(frame::mouse_canvas_position());
+        auto objects = world.QueryObjects(frame::get_mouse_world_position());
         if (!objects.empty())
-            mouse_joint = world.CreateMouseJoint(objects[0], frame::mouse_canvas_position());
-    });
+            mouse_joint = world.CreateMouseJoint(objects[0], frame::get_mouse_world_position());
+    }
 
-    frame::mouse_release_register(frame::mouse_button::right, []()
+    if (frame::is_mouse_released(frame::mouse_button::right))
     {
         if (mouse_joint)
             world.DestroyJoint(mouse_joint);
         mouse_joint = 0;
-    });
-
-    frame::canvas_background(Color::RGBf(0.1f, 0.1f, 0.1f));
+    }
 }
 
 void draw_gui()
@@ -81,12 +87,24 @@ void draw_gui()
     ImGui::SameLine();
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+    ImGui::Checkbox("Create while holding button", &create_on_hold);
+
     ImGui::End();
 }
 
 void update()
 {
     draw_gui();
+
+    handle_mouse();
+
+    if (create_on_hold && frame::is_mouse_down(frame::mouse_button::left))
+    {
+        if (rand() % 2)
+            create_square();
+        else
+            create_circle();
+    }
 
     world.Update();
     world.Draw();

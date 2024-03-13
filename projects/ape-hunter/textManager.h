@@ -9,10 +9,9 @@ class TextManager;
 class Text
 {
 public:
-    Text& SetPosition(const Point& position);
-    Text& SetWidth(float width);
+    Text& SetPosition(const frame::vec2& position);
     Text& SetSize(float size);
-    Text& SetColor(const Color& color);
+    Text& SetColor(const frame::col4& color);
     Text& SetHidden(bool hidden);
 
     Text& FadeIn();
@@ -41,10 +40,9 @@ public:
     using Handle = int32_t;
 
     TextManager::Handle Create(const char* text);
-    void SetPosition(Handle text, const Point& position);
-    void SetWidth(Handle text, float width);
+    void SetPosition(Handle text, const frame::vec2& position);
     void SetSize(Handle text, float size);
-    void SetColor(Handle text, const Color& color);
+    void SetColor(Handle text, const frame::col4& color);
     void SetHidden(Handle text, bool hidden);
 
     void FadeIn(Handle text);
@@ -60,10 +58,10 @@ private:
     struct Data
     {
         std::string text;
-        Point position;
+        frame::vec2 position;
         float width = std::numeric_limits<float>::max();
         float size = 12.0f;
-        Color color = Color::WHITE;
+        frame::col4 color = frame::col4::WHITE;
         bool isHidden = false;
     };
 

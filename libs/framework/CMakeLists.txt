@@ -1,17 +1,19 @@
 fips_begin_lib(framework)
     fips_files(framework.h
                framework.cpp
+               utils.h
+               utils.cpp
                world.h
                world.cpp
-               point.h
-               point.cpp
+               point_type.h
+               matrix_type.h
                imgui_impl.h
                imgui_impl.cpp
                drawing.cpp
                events.h
                events.cpp
-               color.h
-               color.cpp)
+               color_type.h
+               color_type.cpp)
     fips_deps(nanovg)
     fips_deps(glad)
     fips_deps(box2d)

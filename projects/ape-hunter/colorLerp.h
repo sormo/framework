@@ -10,19 +10,19 @@ class ColorLerp
 public:
     using FinishedCallback = std::function<void()>;
 
-    void LerpColor(Color& color, const Color& destination, FinishedCallback finished = nullptr);
-    void LerpObject(World::Object object, const Color& destination, FinishedCallback finished = nullptr);
+    void LerpColor(frame::col4& color, const frame::col4& destination, FinishedCallback finished = nullptr);
+    void LerpObject(World::Object object, const frame::col4& destination, FinishedCallback finished = nullptr);
     void Update();
 
 private:
     struct Lerper
     {
-        Lerper(const Color& source, const Color& destination);
+        Lerper(const frame::col4& source, const frame::col4& destination);
         virtual ~Lerper() = default;
         virtual bool Update();
-        Color CurrentColor();
-        Color source;
-        Color destination;
+        frame::col4 CurrentColor();
+        frame::col4 source;
+        frame::col4 destination;
         FinishedCallback finished;
         float time = 0.0f;
     };

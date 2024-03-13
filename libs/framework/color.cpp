@@ -63,6 +63,34 @@ float& Color::Blue()
     return data.b;
 }
 
+float Color::Alpha() const
+{
+    return data.a;
+}
+
+float Color::Red() const
+{
+    return data.r;
+}
+
+float Color::Green() const
+{
+    return data.g;
+}
+
+float Color::Blue() const
+{
+    return data.b;
+}
+
+Color Color::WithAlpha(float alpha) const
+{
+    Color result = *this;
+    result.Alpha() = alpha;
+
+    return result;
+}
+
 const Color Color::BLANK = Color::RGB(0, 0, 0, 0);
 const Color Color::WHITE = Color::RGB(255, 255, 255);
 const Color Color::LIGHTGRAY = Color::RGB(200, 200, 200);

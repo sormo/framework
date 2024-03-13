@@ -8,5 +8,5 @@ namespace imgui
     void setup(void* fontData, size_t fontSize);
     void prepare_render();
     void render();
-    void handle_event(const sapp_event* event);
+    bool handle_event(const sapp_event* event);
 }

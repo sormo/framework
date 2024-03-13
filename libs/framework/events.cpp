@@ -2,205 +2,163 @@
 #include "framework.h"
 #include "imgui.h"
 #include <vector>
+#include <memory>
 #include <cmath>
-#include <map>
+#include <set>
+#include "sokol_app.h"
 
-struct MouseEvent
+using namespace frame;
+
+struct
 {
-    enum class Type
-    {
-        Press,
-        Release
-    };
+    bool screen_resized = false;
 
-    int32_t Register(frame::mouse_button_callback callback, Type type, frame::mouse_button button)
-    {
-        if (type == Type::Press)
-            callbacksPress.insert({ handleCounter++, { button, callback } });
-        else
-            callbacksRelease.insert({ handleCounter++, { button, callback } });
+    bool is_mouse_moved = false;
+    vec2 mouse_delta;
 
-        return handleCounter - 1;
-    }
+    vec2 mouse_position;
 
-    void Unregister(int32_t handle)
-    {
-        if (callbacksPress.count(handle))
-            callbacksPress.erase(handle);
-        else
-            callbacksRelease.erase(handle);
-    }
+    bool is_mouse_scrolled = false;
+    vec2 scroll_delta;
 
-    void Frame()
-    {
-        if (ImGui::GetIO().WantCaptureMouse)
-            return;
+    std::set<mouse_button> mouse_frame_pressed;
+    std::set<mouse_button> mouse_frame_released;
+    std::set<char> key_frame_pressed;
+    std::set<char> key_frame_released;
 
-        auto CheckButton = [this](int32_t index, bool& pressed)
-        {
-            if (pressed)
-            {
-                if (!ImGui::GetIO().MouseDown[index])
-                {
-                    pressed = false;
-                    TriggerEventRelease((frame::mouse_button)index);
-                }
-            }
-            else
-            {
-                if (ImGui::GetIO().MouseDown[index])
-                {
-                    pressed = true;
-                    TriggerEventPress((frame::mouse_button)index);
-                }
-            }
-        };
+    std::set<mouse_button> mouse_pressed;
+    std::set<char> key_pressed;
 
-        CheckButton(0, isLeftPressed);
-        CheckButton(1, isRightPressed);
-        CheckButton(2, isMiddlePressed);
-    }
-
-private:
-    void TriggerEventPress(frame::mouse_button button)
-    {
-        for (auto&[_, registration] : callbacksPress)
-        {
-            if (registration.button == button)
-                registration.callback();
-        }
-    }
-
-    void TriggerEventRelease(frame::mouse_button button)
-    {
-        for (auto& [_, registration] : callbacksRelease)
-        {
-            if (registration.button == button)
-                registration.callback();
-        }
-    }
-
-    bool isLeftPressed = false;
-    bool isRightPressed = false;
-    bool isMiddlePressed = false;
-
-    int32_t handleCounter = 1;
-
-    struct MouseRegistration
-    {
-        frame::mouse_button button;
-        frame::mouse_button_callback callback;
-    };
-
-    std::map<int32_t, MouseRegistration> callbacksPress;
-    std::map<int32_t, MouseRegistration> callbacksRelease;
-};
-
-struct ResizeEvent
-{
-    ResizeEvent()
-    {
-        width = frame::screen_width();
-        height = frame::screen_height();
-    }
-
-    int32_t Register(frame::screen_resize_callback callback)
-    {
-        int32_t handle = ++handleCounter;
-
-        callbacks.insert({ handle, callback });
-        return handle;
-    }
-
-    void Unregister(int32_t handle)
-    {
-        callbacks.erase(handle);
-    }
-
-    void Frame()
-    {
-        if (std::fabsf(width - frame::screen_width()) > 1.0f || std::fabsf(height - frame::screen_height()) > 1.0f)
-        {
-            for (auto&[_, callback] : callbacks)
-                callback();
-
-            width = frame::screen_width();
-            height = frame::screen_height();
-        }
-    }
-
-    float width;
-    float height;
-
-    int32_t handleCounter = 0;
-    std::map<int32_t, frame::screen_resize_callback> callbacks;
-};
-
-MouseEvent mouse_event;
-std::unique_ptr<ResizeEvent> resize_event;
+} events;
 
 namespace frame
 {
-    Point mouse_screen_position()
+    bool is_screen_resized()
     {
-        return Point{ ImGui::GetIO().MousePos.x, frame::screen_height() - ImGui::GetIO().MousePos.y };
+        return events.screen_resized;
     }
 
-    Point mouse_canvas_position()
+    vec2 get_mouse_screen_position()
     {
-        return screen_to_canvas(mouse_screen_position());
+        return events.mouse_position;
     }
 
-    bool mouse_pressed(mouse_button button)
+    bool is_mouse_down(mouse_button button)
     {
-        if (ImGui::GetIO().WantCaptureMouse)
-            return false;
-        return ImGui::GetIO().MouseDown[(int32_t)button];
+        return events.mouse_pressed.count(button);
     }
 
-    int32_t mouse_press_register(mouse_button button, mouse_button_callback callback)
+    bool is_mouse_pressed(mouse_button button)
     {
-        return mouse_event.Register(callback, MouseEvent::Type::Press, button);
+        return events.mouse_frame_pressed.count(button);
     }
 
-    int32_t mouse_release_register(mouse_button button, mouse_button_callback callback)
+    bool is_mouse_released(mouse_button button)
     {
-        return mouse_event.Register(callback, MouseEvent::Type::Release, button);
+        return events.mouse_frame_released.count(button);
     }
 
-    void mouse_unregister(int32_t handle)
+    bool is_mouse_scrolled()
     {
-        mouse_event.Unregister(handle);
+        return events.is_mouse_scrolled;
     }
 
-    int32_t screen_resize_register(screen_resize_callback callback)
+    vec2 get_mouse_screen_delta()
     {
-        if (!resize_event)
-            resize_event = std::make_unique<ResizeEvent>();
-        return resize_event->Register(callback);
+        if (events.is_mouse_moved)
+            return events.mouse_delta;
+        return {};
     }
 
-    void screen_resize_unregister(int32_t handle)
+    float get_mouse_wheel_delta()
     {
-        if (!resize_event)
-            resize_event = std::make_unique<ResizeEvent>();
-        resize_event->Unregister(handle);
+        if (events.is_mouse_scrolled)
+            return events.scroll_delta.y;
+        return {};
     }
 
-    Point mouse_screen_delta()
+    bool is_key_down(char key)
     {
-        return { -ImGui::GetIO().MouseDelta.x, ImGui::GetIO().MouseDelta.y };
+        return events.key_pressed.count(key);
     }
 
-    float mouse_wheel_delta()
+    bool is_key_pressed(char key)
     {
-        return ImGui::GetIO().MouseWheel;
+        return events.key_frame_pressed.count(key);
+    }
+
+    bool is_key_released(char key)
+    {
+        return events.key_frame_released.count(key);
     }
 }
 
-void events_frame()
+void events_end_frame()
 {
-    mouse_event.Frame();
-    if (resize_event)
-        resize_event->Frame();
+    events.screen_resized = false;
+
+    events.is_mouse_moved = false;
+    events.is_mouse_scrolled = false;
+
+    events.key_frame_pressed.clear();
+    events.key_frame_released.clear();
+
+    events.mouse_frame_pressed.clear();
+    events.mouse_frame_released.clear();
+}
+
+mouse_button map_sapp_mouse(sapp_mousebutton b)
+{
+    switch (b)
+    {
+    case SAPP_MOUSEBUTTON_LEFT:
+        return mouse_button::left;
+    case SAPP_MOUSEBUTTON_RIGHT:
+        return mouse_button::right;
+    case SAPP_MOUSEBUTTON_MIDDLE:
+        return mouse_button::middle;
+    }
+    return mouse_button::left;
+}
+
+void handle_event(const sapp_event* event)
+{
+    switch (event->type)
+    {
+    case SAPP_EVENTTYPE_KEY_DOWN:
+        if (event->key_repeat)
+            break;
+        events.key_frame_pressed.insert(event->key_code);
+        events.key_pressed.insert(event->key_code);
+        break;
+    case SAPP_EVENTTYPE_KEY_UP:
+        if (event->key_repeat)
+            break;
+        events.key_frame_released.insert(event->key_code);
+        events.key_pressed.erase(event->key_code);
+        break;
+    case SAPP_EVENTTYPE_MOUSE_DOWN:
+        events.mouse_frame_pressed.insert(map_sapp_mouse(event->mouse_button));
+        events.mouse_pressed.insert(map_sapp_mouse(event->mouse_button));
+        break;
+    case SAPP_EVENTTYPE_MOUSE_UP:
+        events.mouse_frame_released.insert(map_sapp_mouse(event->mouse_button));
+        events.mouse_pressed.erase(map_sapp_mouse(event->mouse_button));
+        break;
+    case SAPP_EVENTTYPE_MOUSE_ENTER:
+        events.mouse_position = { event->mouse_x, event->mouse_y };
+        break;
+    case SAPP_EVENTTYPE_MOUSE_MOVE:
+        events.is_mouse_moved = true;
+        events.mouse_delta = { event->mouse_dx, event->mouse_dy };
+        events.mouse_position = { event->mouse_x, event->mouse_y };
+        break;
+    case SAPP_EVENTTYPE_MOUSE_SCROLL:
+        events.is_mouse_scrolled = true;
+        events.scroll_delta = { event->scroll_x, event->scroll_y };
+        break;
+    case SAPP_EVENTTYPE_RESIZED:
+        events.screen_resized = true;
+        break;
+    }
 }

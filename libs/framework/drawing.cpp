@@ -2,105 +2,15 @@
 #include <cmath>
 #include <vector>
 
-void canvas_apply_text();
-
 namespace frame
 {
-    namespace detail
-    {
-        // return number between 0 to 1 of current eighth
-        float get_angle_eighth(float radians)
-        {
-            return std::fmodf(radians, NVG_PI / 4.0f) / (NVG_PI / 4.0f);
-        }
-
-        Direction get_start(float radians)
-        {
-            if (radians < 1.0f * NVG_PI / 4.0f)
-                return Direction::Right;
-            else if (radians < 2.0f * NVG_PI / 4.0f)
-                return Direction::UpRight;
-            else if (radians < 3.0f * NVG_PI / 4.0f)
-                return Direction::Up;
-            else if (radians < 4.0f * NVG_PI / 4.0f)
-                return Direction::UpLeft;
-            else if (radians < 5.0f * NVG_PI / 4.0f)
-                return Direction::Left;
-            else if (radians < 6.0f * NVG_PI / 4.0f)
-                return Direction::DownLeft;
-            else if (radians < 7.0f * NVG_PI / 4.0f)
-                return Direction::Down;
-            else if (radians < 8.0f * NVG_PI / 4.0f)
-                return Direction::DownRight;
-            return Direction::Right; // never happen
-        }
-
-        Direction get_end(float radians)
-        {
-            radians += NVG_PI / 4.0f;
-            if (radians > 2.0f * NVG_PI)
-                radians -= 2.0f * NVG_PI;
-
-            return get_start(radians);
-        }
-
-        // return point on text rectangle which should match with line on point
-        Point get_rect_point(Direction direction)
-        {
-            switch (direction)
-            {
-            case Direction::Right:
-                return { -0.5f,  0.0f };
-            case Direction::UpRight:
-                return { -1.0f,  0.0f };
-            case Direction::Up:
-                return { -1.0f, -0.5f };
-            case Direction::UpLeft:
-                return { -1.0f, -1.0f };
-            case Direction::Left:
-                return { -0.5f, -1.0f };
-            case Direction::DownLeft:
-                return { 0.0f, -1.0f };
-            case Direction::Down:
-                return { 0.0f, -0.5f };
-            case Direction::DownRight:
-                return { 0.0f,  0.0f };
-            }
-            return {}; // never happen
-        }
-    }
-
-    Point get_direction_vector(Direction direction)
-    {
-        switch (direction)
-        {
-        case Direction::Right:
-            return { 1.0f, 0.0f };
-        case Direction::UpRight:
-            return { 0.5f, 0.5f };
-        case Direction::Up:
-            return { 0.0f, 1.0f };
-        case Direction::UpLeft:
-            return { -0.5f, 0.5f };
-        case Direction::Left:
-            return { -1.0f, 0.0f };
-        case Direction::DownLeft:
-            return { -0.5f, -0.5f };
-        case Direction::Down:
-            return { 0.0f, -1.0f };
-        case Direction::DownRight:
-            return { 0.5f, -0.5f };
-        }
-        return {}; // never happen
-    }
-
-    void draw_rectangle(const Point& position, float width, float height, const Color& color)
+    void draw_rectangle(const vec2& position, float width, float height, const col4& color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
 
         nvgBeginPath(vg);
         nvgMoveTo(vg, -hw, -hh);
@@ -114,19 +24,19 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_rectangle_ex(const Point& position,
+    void draw_rectangle_ex(const vec2& position,
                            float radians,
                            float width,
                            float height,
-                           const Color& fill_color,
+                           const col4& fill_color,
                            const float outline_thickness,
-                           const Color& outline_color)
+                           const col4& outline_color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
@@ -146,13 +56,13 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_rounded_rectangle(const Point& position, float width, float height, float radius, const Color& color)
+    void draw_rounded_rectangle(const vec2& position, float width, float height, float radius, const col4& color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
 
         nvgBeginPath(vg);
         nvgRoundedRect(vg, -hw, -hh, hw, hh, radius);
@@ -163,20 +73,20 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_rounded_rectangle_ex(const Point& position,
+    void draw_rounded_rectangle_ex(const vec2& position,
                                    float radians,
                                    float width,
                                    float height,
                                    float radius,
-                                   const Color& fill_color,
+                                   const col4& fill_color,
                                    const float outline_thickness,
-                                   const Color& outline_color)
+                                   const col4& outline_color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
@@ -192,18 +102,19 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_circle(const Point& position, float radius, const Color& color)
+    void draw_circle(const vec2& position, float radius, const col4& color)
     {
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
 
         nvgBeginPath(vg);
-        nvgMoveTo(vg, -radius, 0.0f);
-        nvgArcTo(vg, -radius, radius, 0.0f, radius, radius);
-        nvgArcTo(vg, radius, radius, radius, 0.0f, radius);
-        nvgArcTo(vg, radius, -radius, 0.0f, -radius, radius);
-        nvgArcTo(vg, -radius, -radius, -radius, 0.0f, radius);
+        //nvgMoveTo(vg, -radius, 0.0f);
+        //nvgArcTo(vg, -radius, radius, 0.0f, radius, radius);
+        //nvgArcTo(vg, radius, radius, radius, 0.0f, radius);
+        //nvgArcTo(vg, radius, -radius, 0.0f, -radius, radius);
+        //nvgArcTo(vg, -radius, -radius, -radius, 0.0f, radius);
+        nvgCircle(vg, 0.0f, 0.0f, radius);
 
         nvgFillColor(vg, color.data);
         nvgFill(vg);
@@ -211,24 +122,25 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_circle_ex(const Point& position,
+    void draw_circle_ex(const vec2& position,
                         float radians,
                         float radius,
-                        const Color& fill_color,
+                        const col4& fill_color,
                         const float outline_thickness,
-                        const Color& outline_color)
+                        const col4& outline_color)
     {
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
-        nvgMoveTo(vg, -radius, 0.0f);
-        nvgArcTo(vg, -radius, radius, 0.0f, radius, radius);
-        nvgArcTo(vg, radius, radius, radius, 0.0f, radius);
-        nvgArcTo(vg, radius, -radius, 0.0f, -radius, radius);
-        nvgArcTo(vg, -radius, -radius, -radius, 0.0f, radius);
+        //nvgMoveTo(vg, -radius, 0.0f);
+        //nvgArcTo(vg, -radius, radius, 0.0f, radius, radius);
+        //nvgArcTo(vg, radius, radius, radius, 0.0f, radius);
+        //nvgArcTo(vg, radius, -radius, 0.0f, -radius, radius);
+        //nvgArcTo(vg, -radius, -radius, -radius, 0.0f, radius);
+        nvgCircle(vg, 0.0f, 0.0f, radius);
 
         nvgFillColor(vg, fill_color.data);
         nvgFill(vg);
@@ -240,16 +152,14 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_polygon(const Point& position, const Point* vertices, size_t count, const Color& color)
+    void draw_ellipse(const vec2& position, float major, float minor, const col4& color)
     {
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
 
         nvgBeginPath(vg);
-        nvgMoveTo(vg, vertices[0].x(), vertices[0].y());
-        for (size_t i = 1; i < count; i++)
-            nvgLineTo(vg, vertices[i].x(), vertices[i].y());
+        nvgEllipse(vg, 0.0f, 0.0f, major, minor);
 
         nvgFillColor(vg, color.data);
         nvgFill(vg);
@@ -257,23 +167,116 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_polygon_ex(const Point& position,
+    void draw_ellipse_ex(const vec2& position,
                          float radians,
-                         const Point* vertices,
-                         size_t count,
-                         const Color& fill_color,
-                         const float outline_thickness,
-                         const Color& outline_color)
+                         float major,
+                         float minor,
+                         const col4& fill_color,
+                         float outline_thickness,
+                         const col4& outline_color)
     {
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x(), position.y());
+        nvgTranslate(vg, position.x, position.y);
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
-        nvgMoveTo(vg, vertices[0].x(), vertices[0].y());
+        nvgEllipse(vg, 0.0f, 0.0f, major, minor);
+
+        nvgFillColor(vg, fill_color.data);
+        nvgFill(vg);
+
+        nvgStrokeWidth(vg, outline_thickness);
+        nvgStrokeColor(vg, outline_color.data);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_hyperbola(const vec2& position,
+                        float radians,
+                        float major,
+                        float minor,
+                        float outline_thickness,
+                        const col4& outline_color)
+    {
+        static const float min_value = -10.0f;
+        static const float max_value =  10.0f;
+        static const float step_value = 0.1f;
+
+        nvgSave(vg);
+
+        nvgTranslate(vg, position.x, position.y);
+        nvgRotate(vg, radians);
+
+        nvgBeginPath(vg);
+
+        vec2 last_point(major * cosh(min_value), minor * sinh(min_value));
+
+        nvgMoveTo(vg, last_point.x, last_point.y);
+
+        for (float theta = min_value + step_value; theta < max_value; theta += step_value)
+        {
+            vec2 new_point(major * cosh(theta), minor * sinh(theta));
+
+            nvgQuadTo(vg, last_point.x, last_point.y, new_point.x, new_point.y);
+
+            last_point = std::move(new_point);
+        }
+
+        // generate two halfs of hyperbola
+        //nvgMoveTo(vg, -major * cosh(min_value), -minor * sinh(min_value));
+
+        //for (float theta = min_value + step_value; theta < max_value; theta += step_value)
+        //{
+        //    vec2 new_point(-major * cosh(theta), -minor * sinh(theta));
+
+        //    nvgQuadTo(vg, last_point.x, last_point.y, new_point.x, new_point.y);
+
+        //    last_point = std::move(new_point);
+        //}
+
+        nvgStrokeWidth(vg, outline_thickness);
+        nvgStrokeColor(vg, outline_color.data);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_polygon(const vec2& position, const vec2* vertices, size_t count, const col4& color)
+    {
+        nvgSave(vg);
+
+        nvgTranslate(vg, position.x, position.y);
+
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, vertices[0].x, vertices[0].y);
         for (size_t i = 1; i < count; i++)
-            nvgLineTo(vg, vertices[i].x(), vertices[i].y());
+            nvgLineTo(vg, vertices[i].x, vertices[i].y);
+
+        nvgFillColor(vg, color.data);
+        nvgFill(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_polygon_ex(const vec2& position,
+                         float radians,
+                         const vec2* vertices,
+                         size_t count,
+                         const col4& fill_color,
+                         const float outline_thickness,
+                         const col4& outline_color)
+    {
+        nvgSave(vg);
+
+        nvgTranslate(vg, position.x, position.y);
+        nvgRotate(vg, radians);
+
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, vertices[0].x, vertices[0].y);
+        for (size_t i = 1; i < count; i++)
+            nvgLineTo(vg, vertices[i].x, vertices[i].y);
         nvgClosePath(vg);
 
         nvgFillColor(vg, fill_color.data);
@@ -286,7 +289,7 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_directed(const Point& from, const Point& to, const Color& color)
+    void draw_line_directed(const vec2& from, const vec2& to, const col4& color)
     {
         static const float arrowLength = 5.0f;
         static const float arrowAngle = nvgDegToRad(45.0f);
@@ -294,12 +297,12 @@ namespace frame
 
         auto vec = to - from;
 
-        float angle = vec.Angle();
-        float length = vec.Length();
+        float angle = vec.angle();
+        float length = vec.length();
 
         nvgSave(vg);
 
-        nvgTranslate(vg, from.x(), from.y());
+        nvgTranslate(vg, from.x, from.y);
         nvgRotate(vg, angle);
 
         nvgBeginPath(vg);
@@ -316,7 +319,7 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_directed_ex(const Point& from, const Point& to, float thickness, const Color& color)
+    void draw_line_directed_ex(const vec2& from, const vec2& to, float thickness, const col4& color)
     {
         static const float arrowLength = 5.0f;
         static const float arrowAngle = nvgDegToRad(45.0f);
@@ -324,12 +327,12 @@ namespace frame
 
         auto vec = to - from;
 
-        float angle = vec.Angle();
-        float length = vec.Length();
+        float angle = vec.angle();
+        float length = vec.length();
 
         nvgSave(vg);
 
-        nvgTranslate(vg, from.x(), from.y());
+        nvgTranslate(vg, from.x, from.y);
         nvgRotate(vg, angle);
 
         nvgBeginPath(vg);
@@ -347,14 +350,14 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_solid(const Point& from, const Point& to, const Color& color)
+    void draw_line_solid(const vec2& from, const vec2& to, const col4& color)
     {
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), from.y());
-        nvgLineTo(vg, to.x(), to.y());
+        nvgMoveTo(vg, from.x, from.y);
+        nvgLineTo(vg, to.x, to.y);
 
         nvgStrokeColor(vg, color.data);
         nvgStroke(vg);
@@ -362,14 +365,14 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_solid_ex(const Point& from, const Point& to, float thickness, const Color& color)
+    void draw_line_solid_ex(const vec2& from, const vec2& to, float thickness, const col4& color)
     {
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), from.y());
-        nvgLineTo(vg, to.x(), to.y());
+        nvgMoveTo(vg, from.x, from.y);
+        nvgLineTo(vg, to.x, to.y);
 
         nvgStrokeWidth(vg, thickness);
         nvgStrokeColor(vg, color.data);
@@ -378,20 +381,20 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_dashed(const Point& from, const Point& to, const Color& color)
+    void draw_line_dashed(const vec2& from, const vec2& to, const col4& color)
     {
         static const float DashLength = 3.0f;
 
-        float m = (to.y() - from.y()) / (to.x() - from.x());
-        float b = to.y() - m * to.x();
+        float m = (to.y - from.y) / (to.x - from.x);
+        float b = to.y - m * to.x;
 
         //nvgBeginPath(vg);
         //nvgStrokeColor(vg, color);
 
         nvgSave(vg);
 
-        float x1 = from.x();
-        while (x1 + DashLength < to.x())
+        float x1 = from.x;
+        while (x1 + DashLength < to.x)
         {
             float y1 = m * x1 + b;
 
@@ -411,20 +414,20 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_dashed_ex(const Point& from, const Point& to, float thickness, const Color& color)
+    void draw_line_dashed_ex(const vec2& from, const vec2& to, float thickness, const col4& color)
     {
         static const float DashLength = 3.0f;
 
-        float m = (to.y() - from.y()) / (to.x() - from.x());
-        float b = to.y() - m * to.x();
+        float m = (to.y - from.y) / (to.x - from.x);
+        float b = to.y - m * to.x;
 
         //nvgBeginPath(vg);
         //nvgStrokeColor(vg, color);
 
         nvgSave(vg);
 
-        float x1 = from.x();
-        while (x1 + DashLength < to.x())
+        float x1 = from.x;
+        while (x1 + DashLength < to.x)
         {
             float y1 = m * x1 + b;
 
@@ -445,14 +448,14 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_curve_quad(const Point& from, const Point& control, const Point& to, const Color& color)
+    void draw_quad_bezier(const vec2& from, const vec2& control, const vec2& to, const col4& color)
     {
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), from.y());
-        nvgQuadTo(vg, control.x(), control.y(), to.x(), to.y());
+        nvgMoveTo(vg, from.x, from.y);
+        nvgQuadTo(vg, control.x, control.y, to.x, to.y);
 
         nvgStrokeColor(vg, color.data);
         nvgStroke(vg);
@@ -460,47 +463,14 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_curve_quad_ex(const Point& from, const Point& control, const Point& to, float thickness, const Color& color)
+    void draw_quad_bezier_ex(const vec2& from, const vec2& control, const vec2& to, float thickness, const col4& color)
     {
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
-        nvgMoveTo(vg, from.x(), from.y());
-        nvgQuadTo(vg, control.x(), control.y(), to.x(), to.y());
-
-        nvgStrokeColor(vg, color.data);
-        nvgStrokeWidth(vg, thickness);
-        nvgStroke(vg);
-
-        nvgRestore(vg);
-    }
-
-    void draw_curve(const std::vector<Point>& points, const Color& color)
-    {
-        nvgSave(vg);
-
-        nvgBeginPath(vg);
-
-        nvgMoveTo(vg, points[0].x(), points[0].y());
-        for (size_t i = 2; i < points.size(); i++)
-            nvgQuadTo(vg, points[i - 1].x(), points[i - 1].y(), points[i].x(), points[i].y());
-
-        nvgStrokeColor(vg, color.data);
-        nvgStroke(vg);
-
-        nvgRestore(vg);
-    }
-
-    void draw_curve(const std::vector<Point>& points, float thickness, const Color& color)
-    {
-        nvgSave(vg);
-
-        nvgBeginPath(vg);
-
-        nvgMoveTo(vg, points[0].x(), points[0].y());
-        for (size_t i = 2; i < points.size(); i++)
-            nvgQuadTo(vg, points[i - 1].x(), points[i - 1].y(), points[i].x(), points[i].y());
+        nvgMoveTo(vg, from.x, from.y);
+        nvgQuadTo(vg, control.x, control.y, to.x, to.y);
 
         nvgStrokeColor(vg, color.data);
         nvgStrokeWidth(vg, thickness);
@@ -509,103 +479,147 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_line_text(const Point& from, const Point& to, const char* text, float position, float size, float offset, Side side, const Color& color)
-    {
-        Point lineVector = to - from;
-        float lineAngle = lineVector.Angle();
-        Point linePoint = from + lineVector * position;
-        Point textSize = frame::text_dimensions(text, size);
-
-        // apply offset
-        linePoint = linePoint + lineVector.Perpendicular(side).Normalized() * offset;
-
-        Point textStart = linePoint, textEnd = linePoint;
-        if (side == Side::Left)
-        {
-            textStart = textStart + textSize * detail::get_rect_point(detail::get_start(lineAngle));
-            textStart = textStart + textSize / 2.0f;
-            textEnd = textEnd + textSize * detail::get_rect_point(detail::get_end(lineAngle));
-            textEnd = textEnd + textSize / 2.0f;
-        }
-        else
-        {
-            textStart = textStart - textSize * detail::get_rect_point(detail::get_start(lineAngle));
-            textStart = textStart - textSize / 2.0f;
-            textEnd = textEnd - textSize * detail::get_rect_point(detail::get_end(lineAngle));
-            textEnd = textEnd - textSize / 2.0f;
-        }
-
-        Point rectPosition = textStart.Interpolate(textEnd, detail::get_angle_eighth(lineAngle));
-        //frame::rectangle(rectPosition, 0.0f, textSize.x(), textSize.y(), nvgRGBA(50, 80, 60, 120));
-        frame::text(text, rectPosition - textSize / 2.0f, size, color);
-    }
-
-    float text_height(const char* text, float width, float size)
-    {
-        float bounds[4];
-        nvgFontSize(vg, size);
-        nvgTextBoxBounds(vg, 0.0f, 0.0f, width, text, nullptr, bounds);
-
-        return bounds[3] - bounds[1];
-    }
-
-    float text_width(const char* text, float size)
-    {
-        float bounds[4];
-        nvgFontSize(vg, size);
-        nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
-
-        return bounds[2] - bounds[0];
-    }
-
-    Point text_dimensions(const char* text, float size)
-    {
-        float bounds[4];
-        nvgFontSize(vg, size);
-        nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
-
-        return { bounds[2] - bounds[0], bounds[3] - bounds[1] };
-    }
-
-    void text(const char* text, const Point& position, float width, float size, const Color& color)
+    void draw_quad_bezier_polyline(const std::vector<vec2>& points, const col4& color)
     {
         nvgSave(vg);
 
-        nvgResetTransform(vg);
-        canvas_apply_text();
+        nvgBeginPath(vg);
 
-        float bounds[4];
-        nvgFontSize(vg, size);
-        nvgTextBoxBounds(vg, 0.0f, 0.0f, width, text, nullptr, bounds);
+        nvgMoveTo(vg, points[0].x, points[0].y);
+        for (size_t i = 2; i < points.size(); i++)
+            nvgQuadTo(vg, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
 
-        float x = position.x() - bounds[0];
-        float y = -bounds[1] - bounds[3] - position.y() - size;
-
-        nvgTextAlign(vg, NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT);
-        nvgFillColor(vg, color.data);
-        nvgTextBox(vg, x, y, width, text, nullptr);
+        nvgStrokeColor(vg, color.data);
+        nvgStroke(vg);
 
         nvgRestore(vg);
     }
 
-    void text(const char* text, const Point& position, float size, const Color& color)
+    void draw_quad_bezier_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color)
     {
         nvgSave(vg);
 
-        nvgResetTransform(vg);
-        canvas_apply_text();
+        nvgBeginPath(vg);
 
-        float bounds[4];
+        nvgMoveTo(vg, points[0].x, points[0].y);
+        for (size_t i = 2; i < points.size(); i++)
+            nvgQuadTo(vg, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
+
+        nvgStrokeColor(vg, color.data);
+        nvgStrokeWidth(vg, thickness);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_polyline(const std::vector<vec2>& points, const col4& color)
+    {
+        nvgSave(vg);
+
+        nvgBeginPath(vg);
+
+        nvgMoveTo(vg, points[0].x, points[0].y);
+        for (size_t i = 1; i < points.size(); i++)
+            nvgLineTo(vg, points[i].x, points[i].y);
+
+        nvgStrokeColor(vg, color.data);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    void draw_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color)
+    {
+        nvgSave(vg);
+
+        nvgBeginPath(vg);
+
+        nvgMoveTo(vg, points[0].x, points[0].y);
+        for (size_t i = 1; i < points.size(); i++)
+            nvgLineTo(vg, points[i].x, points[i].y);
+
+        nvgStrokeColor(vg, color.data);
+        nvgStrokeWidth(vg, thickness);
+        nvgStroke(vg);
+
+        nvgRestore(vg);
+    }
+
+    int map_to_nvg_align(text_align align)
+    {
+        switch (align)
+        {
+        case text_align::top_left: return NVG_ALIGN_TOP | NVG_ALIGN_LEFT;
+        case text_align::top_middle: return NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE;
+        case text_align::top_right: return NVG_ALIGN_TOP | NVG_ALIGN_RIGHT;
+        case text_align::middle_left: return NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT;
+        case text_align::middle_middle: return NVG_ALIGN_MIDDLE | NVG_ALIGN_MIDDLE;
+        case text_align::middle_right: return NVG_ALIGN_MIDDLE | NVG_ALIGN_RIGHT;
+        case text_align::bottom_left: return NVG_ALIGN_BOTTOM | NVG_ALIGN_LEFT;
+        case text_align::bottom_midle: return NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE;
+        case text_align::bottom_right: return NVG_ALIGN_BOTTOM | NVG_ALIGN_RIGHT;
+        }
+        return -1;
+    }
+
+    vec2 get_align_offset_factor(text_align align)
+    {
+        switch (align)
+        {
+        case text_align::top_left: return { -0.5f, -0.5f };
+        case text_align::top_middle: return { 0.0f, -0.5f };
+        case text_align::top_right: return { 0.5f, -0.5f };
+        case text_align::middle_left: return { -0.5f, 0.0f };
+        case text_align::middle_middle: return { 0.0f, 0.0f };
+        case text_align::middle_right: return { 0.5f, 0.0f };
+        case text_align::bottom_left: return { -0.5f, 0.5f };
+        case text_align::bottom_midle: return { 0.0f, 0.5f };
+        case text_align::bottom_right: return { 0.5f, 0.5f };
+        }
+        return {};
+    }
+
+    rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align)
+    {
+        float bounds[4] = {};
+
         nvgFontSize(vg, size);
+        nvgTextAlign(vg, map_to_nvg_align(align));
+
         nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
 
-        float x = position.x() - bounds[0];
-        float y = -bounds[1] - bounds[3] - position.y() - size;
+        vec2 min = vec2{ bounds[0], bounds[1] } / get_world_transform().get_scale();
+        vec2 max = vec2{ bounds[2], bounds[3] } / get_world_transform().get_scale();
+        vec2 rect_size = (max - min);
 
-        nvgTextAlign(vg, NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT);
+        vec2 align_offset = rect_size * 0.5f;
+
+        return rectangle::from_center_size(min + position + align_offset, rect_size.abs());
+    }
+
+    void set_text_transform(const vec2& position)
+    {
+        // TODO
+        auto t = get_world_transform().get_translation();
+        auto s = get_world_transform().get_scale();
+
+        nvgResetTransform(vg);
+        nvgTransform(vg, 1.0f, 0.0f, 0.0f, 1.0f, t.x + position.x * s.x, t.y + position.y * s.y);
+    }
+
+    void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align)
+    {
+        nvgSave(vg);
+
+        set_text_transform(position);
+
         nvgFontSize(vg, size);
         nvgFillColor(vg, color.data);
-        nvgTextBox(vg, x, y, std::numeric_limits<float>::max(), text, nullptr);
+        nvgTextAlign(vg, map_to_nvg_align(align));
+
+        //nvgText(vg, 0.0f, 0.0f, text, nullptr);
+        // to support newline we use this
+        nvgTextBox(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr);
 
         nvgRestore(vg);
     }

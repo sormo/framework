@@ -4,7 +4,7 @@ float LerpTimeIncrement = 0.05f;
 
 extern World world;
 
-ColorLerp::Lerper::Lerper(const Color& source, const Color& destination)
+ColorLerp::Lerper::Lerper(const frame::col4& source, const frame::col4& destination)
     : source(source), destination(destination)
 {
 }
@@ -13,14 +13,14 @@ bool ColorLerp::Lerper::Update()
     time += LerpTimeIncrement;
     return time < 1.0f;
 }
-Color ColorLerp::Lerper::CurrentColor()
+frame::col4 ColorLerp::Lerper::CurrentColor()
 {
-    return source.Lerp(destination, time);
+    return source.lerp(destination, time);
 }
 
 struct ColorLerp::LerperColor : public ColorLerp::Lerper
 {
-    LerperColor(Color& color, const Color& destination)
+    LerperColor(frame::col4& color, const frame::col4& destination)
         : Lerper(color, destination), color(color)
     {
     }
@@ -30,12 +30,12 @@ struct ColorLerp::LerperColor : public ColorLerp::Lerper
 
         return Lerper::Update();
     }
-    Color& color;
+    frame::col4& color;
 };
 
 struct ColorLerp::LerperObject : public ColorLerp::Lerper
 {
-    LerperObject(World::Object object, const Color& destination)
+    LerperObject(World::Object object, const frame::col4& destination)
         : Lerper(world.GetFill(object), destination), object(object)
     {
     }
@@ -47,13 +47,13 @@ struct ColorLerp::LerperObject : public ColorLerp::Lerper
     World::Object object;
 };
 
-void ColorLerp::LerpColor(Color& color, const Color& destination, FinishedCallback finished)
+void ColorLerp::LerpColor(frame::col4& color, const frame::col4& destination, FinishedCallback finished)
 {
     m_lerpers.emplace_back(std::make_unique<LerperColor>(color, destination));
     m_lerpers.back()->finished = finished;
 }
 
-void ColorLerp::LerpObject(World::Object object, const Color& destination, FinishedCallback finished)
+void ColorLerp::LerpObject(World::Object object, const frame::col4& destination, FinishedCallback finished)
 {
     m_lerpers.emplace_back(std::make_unique<LerperObject>(object, destination));
     m_lerpers.back()->finished = finished;

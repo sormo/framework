@@ -14,32 +14,38 @@ extern World world;
 
 void createProjectile(Objects& obj)
 {
-    obj.projectileRadius = ProjectileRelRadius * frame::canvas_width();
-    obj.projectilePosition = { 0.1f * frame::canvas_width(), GroundRelHeight * frame::canvas_height() + obj.projectileRadius };
+    auto world_size = frame::get_world_size();
+
+    obj.projectileRadius = ProjectileRelRadius * world_size.x;
+    obj.projectilePosition = { 0.1f * world_size.x, GroundRelHeight * world_size.y + obj.projectileRadius };
 
     obj.projectile = world.CreateCircle(obj.projectilePosition, obj.projectileRadius);
     world.SetStatic(obj.projectile, false);
-    world.SetFill(obj.projectile, Color::RGB(255, 128, 64));
+    world.SetFill(obj.projectile, frame::col4::RGB(255, 128, 64));
     world.SetBullet(obj.projectile, true);
 }
 
 void createHunter(Objects& obj)
 {
-    obj.hunterSize = HunterRelSize * frame::canvas_width();
-    obj.hunterPosition = { frame::canvas_width() - 0.1f * frame::canvas_width(), frame::canvas_height() - 0.1f * frame::canvas_width() };
+    auto world_size = frame::get_world_size();
+
+    obj.hunterSize = HunterRelSize * world_size.x;
+    obj.hunterPosition = { world_size.x - 0.1f * world_size.x, world_size.y - 0.1f * world_size.x };
 
     obj.hunter = world.CreateRectangle(obj.hunterPosition, obj.hunterSize, obj.hunterSize);
     world.SetStatic(obj.hunter, false);
-    world.SetFill(obj.hunter, Color::RGB(255, 64, 128));
+    world.SetFill(obj.hunter, frame::col4::RGB(255, 64, 128));
 }
 
 void createGround(Objects& obj)
 {
-    obj.ground = world.CreateRectangle(frame::rel_pos(0.5f, GroundRelHeight / 2.0f), frame::canvas_width(), GroundRelHeight * frame::canvas_height());
-    world.SetFill(obj.ground, Color::RGB(100, 100, 90));
+    auto world_size = frame::get_world_size();
+
+    obj.ground = world.CreateRectangle(frame::get_world_position_screen_relative({ 0.5f, GroundRelHeight / 2.0f }), world_size.x, GroundRelHeight * world_size.y);
+    world.SetFill(obj.ground, frame::col4::RGB(100, 100, 90));
     world.SetLayer(obj.ground, Background);
 
-    obj.groundHeight = GroundRelHeight * frame::canvas_height();
+    obj.groundHeight = GroundRelHeight * world_size.y;
 }
 
 Objects createObjects()
@@ -67,7 +73,7 @@ void updateProjectileVelocity(Objects& obj)
     auto p1 = world.GetPosition(obj.projectile);
     auto p2 = world.GetPosition(obj.hunter);
 
-    obj.projectileVelocity = (p2 - p1).Normalized() * ProjectileVelocityFactor;
+    obj.projectileVelocity = (p2 - p1).normalized() * ProjectileVelocityFactor;
 
     obj.velocityLength = 40.0f + 20.0f * (ProjectileVelocityFactor - 50.0f) / 150.0f;
 }

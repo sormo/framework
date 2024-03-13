@@ -2,13 +2,16 @@
 #include "imgui.h"
 #include "world.h"
 
+using namespace frame;
+
 int32_t circles_count = 0;
 int32_t squares_count = 0;
 
+vec2 original_screen_size;
+
 enum class ResizeType
 {
-    None = 0,
-    ResizeWorld,
+    ResizeWorld = 0,
     ResizeScreen
 
 } resize_type;
@@ -17,33 +20,33 @@ World world;
 
 void create_square()
 {
-    auto rect = world.CreateRectangle(frame::mouse_canvas_position(), 10.0f, 10.0f);
+    auto rect = world.CreateRectangle(get_mouse_world_position(), 10.0f, 10.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, Color::RGB(227, 142, 31));
+    world.SetFill(rect, frame::col4::RGB(227, 142, 31));
 
     squares_count++;
 }
 
 void create_circle()
 {
-    auto rect = world.CreateCircle(frame::mouse_canvas_position(), 5.0f);
+    auto rect = world.CreateCircle(get_mouse_world_position(), 5.0f);
     world.SetStatic(rect, false);
-    world.SetFill(rect, Color::RGB(177, 242, 235));
+    world.SetFill(rect, frame::col4::RGB(177, 242, 235));
 
     circles_count++;
 }
 
 void create_ground()
 {
-    auto ground = world.CreateRectangle(frame::rel_pos(0.5f, 0.0f), frame::screen_width(), 20.0f);
+    auto ground = world.CreateRectangle(get_world_position_screen_relative({ 0.5f, 0.0f }), get_screen_size().x, 20.0f);
     world.SetStatic(ground, true);
-    world.SetFill(ground, Color::RGB(80, 80, 80));
+    world.SetFill(ground, frame::col4::RGB(80, 80, 80));
 }
 
 void show_resize_type_combo()
 {
     static int index = 0;
-    ImGui::Combo("##", &index, "None\0ResizeWorld\0ResizeScreen\0");
+    ImGui::Combo("##", &index, "ResizeWorld\0ResizeScreen\0");
 
     resize_type = (ResizeType)index;
 }
@@ -53,18 +56,18 @@ void draw_debug_gui()
     ImGui::BeginMainMenuBar();
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen");
-    auto mouse_screen = frame::mouse_screen_position();
-    ImGui::Text("%.3f %.3f", mouse_screen.x(), mouse_screen.y());
+    auto mouse_screen = get_mouse_screen_position();
+    ImGui::Text("%.3f %.3f", mouse_screen.x, mouse_screen.y);
 
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas");
-    auto mouse_canvas = frame::screen_to_canvas(mouse_screen);
-    ImGui::Text("%.3f %.3f", mouse_canvas.x(), mouse_canvas.y());
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World");
+    auto mouse_canvas = get_world_transform().inverted().transform_point(mouse_screen);
+    ImGui::Text("%.3f %.3f", mouse_canvas.x, mouse_canvas.y);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen Size");
-    ImGui::Text("%.2f %.2f", frame::screen_width(), frame::screen_height());
+    ImGui::Text("%.2f %.2f", get_screen_size().x, get_screen_size().y);
 
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas Size");
-    ImGui::Text("%.2f %.2f ", frame::canvas_width(), frame::canvas_height());
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Size");
+    ImGui::Text("%.2f %.2f ", get_world_size().x, get_world_size().y);
 
     ImGui::EndMainMenuBar();
 }
@@ -94,58 +97,32 @@ void draw_gui()
     ImGui::End();
 }
 
-void apply_resize_none(float width, float height)
+void apply_resize_screen()
 {
-    // move canvas to center of screen
-    Point canvas_position((width - frame::canvas_width()) / 2.0f, (height - frame::canvas_height()) / 2.0f);
-    frame::canvas_set_screen_size(800.0f, 600.0f);
-    frame::canvas_set_screen_position(canvas_position);
-    frame::canvas_set_size(800.0f, 600.0f);
+    set_world_transform(translation({ 0.0f, get_screen_size().y }) * scale({ 1.0f, -1.0f }));
 }
 
-void apply_resize_screen(float width, float height)
+void apply_resize_world()
 {
-    frame::canvas_set_screen_size(width, height);
-    frame::canvas_set_screen_position({ 0.0f, 0.0f });
-    frame::canvas_set_size(800.0f, 600.0f);
-}
-
-void apply_resize_world(float width, float height)
-{
-    frame::canvas_set_screen_size(width, height);
-    frame::canvas_set_screen_position({ 0.0f, 0.0f });
-    frame::canvas_set_size(width, height);
+    vec2 s = get_screen_size() / original_screen_size;
+    set_world_transform(translation({ 0.0f, get_screen_size().y }) * scale({ s.x, -s.y }));
 }
 
 void setup()
 {
     create_ground();
 
-    frame::mouse_press_register(frame::mouse_button::left, []()
-    {
-        if (rand() % 2)
-            create_square();
-        else
-            create_circle();
-    });
+    original_screen_size = get_screen_size();
 
-    frame::screen_resize_register([]()
-    {
-        switch (resize_type)
-        {
-        case ResizeType::None:
-            apply_resize_none(frame::screen_width(), frame::screen_height());
-            break;
-        case ResizeType::ResizeScreen:
-            apply_resize_screen(frame::screen_width(), frame::screen_height());
-            break;
-        case ResizeType::ResizeWorld:
-            apply_resize_world(frame::screen_width(), frame::screen_height());
-            break;
-        }
-    });
+    set_screen_background(frame::col4::RGBf(0.1f, 0.1f, 0.1f));
 
-    frame::canvas_background(Color::RGBf(0.1f, 0.1f, 0.1f));
+    set_world_transform(translation({ 0.0f, get_screen_size().y }) * scale({ 1.0f, -1.0f }));
+
+    auto m = mat3::translation({ 0.0f, 600.0f }) * mat3::scaling({ 1.0f, -1.0f });
+    auto mi = m.inverted();
+    auto p = mi.transform_point(vec2{ 0.0f, 0.0f });
+
+    int i = 0;
 }
 
 void update()
@@ -153,9 +130,30 @@ void update()
     draw_gui();
     draw_debug_gui();
 
-    //auto size = frame::text_dimensions("RESIZE TEST", 60.0f);
-    //frame::rectangle(frame::rel_pos(0.1f, 0.6f) + Point{size.x() / 2.0f, size.y() / 2.0f}, 0.0f, size.x(), size.y(), nvgRGBf(0.0f, 0.0f, 0.0f));
-    frame::text("RESIZE TEST", frame::rel_pos(0.1f, 0.6f), 60.0f, Color::RGBf(0.3f, 0.3f, 0.3f));
+    if (is_mouse_pressed(mouse_button::left))
+    {
+        if (rand() % 2)
+            create_square();
+        else
+            create_circle();
+    }
+
+    if (is_screen_resized())
+    {
+        switch (resize_type)
+        {
+        case ResizeType::ResizeScreen:
+            apply_resize_screen();
+            break;
+        case ResizeType::ResizeWorld:
+            apply_resize_world();
+            break;
+        }
+    }
+
+    auto text_rect = get_text_rectangle("RESIZE TEST", {}, 60.0f);
+    draw_rectangle(get_world_position_screen_relative({ 0.1f, 0.6f }) + vec2{ text_rect.size().x / 2.0f, text_rect.size().y / 2.0f }, text_rect.size().x, text_rect.size().y, rgb(0,0,0));
+    draw_text("RESIZE TEST", get_world_position_screen_relative({ 0.1f, 0.6f }), 60.0f, frame::col4::RGBf(0.3f, 0.3f, 0.3f));
 
     world.Update();
     world.Draw();

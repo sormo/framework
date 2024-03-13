@@ -28,170 +28,258 @@
 #include "events.h"
 
 #include "imgui_font.h"
+#include <chrono>
+#include <vector>
+#include <algorithm>
+
+using namespace frame;
 
 sg_pass_action pass_action;
 NVGcontext* vg;
+col4 background_color;
 
-struct
+std::chrono::time_point<std::chrono::high_resolution_clock> start_application;
+std::chrono::time_point<std::chrono::high_resolution_clock> start_frame;
+float frame_delta = 0.0f;
+
+// TODO store also lazily inversion
+std::vector<mat3> transforms;
+
+void apply_transform(const mat3& m)
 {
-    float width;
-    float height;
-    Point position;
-    Point offset;
-    Point scale = Point(1.0f, 1.0f);
-    NVGcolor color;
-
-} canvas;
-
-void canvas_setup()
-{
-    canvas.width = frame::screen_width();
-    canvas.height = frame::screen_height();
-    canvas.color = nvgRGB(0, 0, 0);
-}
-
-void canvas_apply()
-{
-    nvgTranslate(vg, canvas.position.x(), frame::screen_height() - canvas.position.y() - canvas.height);
-    nvgBeginPath(vg);
-    nvgMoveTo(vg,         0.0f,          0.0f);
-    nvgLineTo(vg, canvas.width,          0.0f);
-    nvgLineTo(vg, canvas.width, canvas.height);
-    nvgLineTo(vg,         0.0f, canvas.height);
-
-    nvgFillColor(vg, canvas.color);
-    nvgFill(vg);
-    nvgScissor(vg, 0.0f, 0.0f, canvas.width, canvas.height);
-
-    nvgResetTransform(vg);
-
-    float transform[6] =
-    {
-        canvas.scale.x(),
-        0.0f,
-        0.0f,
-        -canvas.scale.y(),
-        canvas.position.x() - canvas.offset.x(),
-        canvas.offset.y() - canvas.position.y() + frame::screen_height()
-    };
-    nvgTransform(vg, transform[0], transform[1], transform[2], transform[3], transform[4], transform[5]);
-}
-
-void canvas_apply_text()
-{
-    float transform[6] =
-    {
-        canvas.scale.x(),
-        0.0f,
-        0.0f,
-        canvas.scale.y(),
-        canvas.position.x() - canvas.offset.x(),
-        canvas.offset.y() - canvas.position.y() + frame::screen_height()
-    };
-    nvgTransform(vg, transform[0], transform[1], transform[2], transform[3], transform[4], transform[5]);
+    nvgTransform(vg, m.data[0], m.data[3], m.data[1], m.data[4], m.data[2], m.data[5]);
 }
 
 namespace frame
 {
-    void screen_background(const Color& color)
+    col4 rgb(char r, char g, char b)
     {
-        pass_action.colors[0] = { SG_ACTION_CLEAR, { color.data.r, color.data.g, color.data.b, color.data.a } };
+        return col4::RGB(r, g, b);
     }
 
-    Point rel_pos(float x, float y)
+    col4 rgba(char r, char g, char b, char a)
     {
-        return { x * frame::canvas_width(), y * frame::canvas_height() };
+        return col4::RGB(r, g, b, a);
     }
 
-    float canvas_screen_width()
+    float deg_to_rad(float deg)
     {
-        return canvas.width;
+        return deg * 0.0174533f;
     }
 
-    float canvas_screen_height()
+    float rad_to_deg(float rad)
     {
-        return canvas.height;
+        return rad * 57.2958f;
     }
 
-    void canvas_set_screen_size(float width, float height)
+    void set_screen_background(const col4& color)
     {
-        canvas.width = width;
-        canvas.height = height;
+        pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
+        pass_action.colors[0].clear_value = { color.data.r, color.data.g, color.data.b, color.data.a };
+
+        background_color = color;;
     }
 
-    Point canvas_screen_position()
+    const col4& get_screen_background()
     {
-        return canvas.position;
+        return background_color;
     }
 
-    void canvas_set_screen_position(const Point& position)
+    vec2 get_screen_size()
     {
-        canvas.position = { position.x(), position.y() };
+        return { (float)sapp_width(), (float)sapp_height() };
     }
 
-    void canvas_background(const Color& color)
+    float get_delta_time()
     {
-        canvas.color = color.data;
+        return frame_delta;
     }
 
-    Point gui_to_screen(const Point& position)
+    float get_time()
     {
-        return { position.x(), frame::screen_height() - position.y() };
+        auto now = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(now - start_application).count();
     }
 
-    Point screen_to_gui(const Point& position)
+    mat3 translation(const vec2& translation)
     {
-        return { position.x(), frame::screen_height() - position.y() };
+        return mat3::translation(translation);
     }
 
-    Point canvas_to_screen(const Point& position)
+    mat3 rotation(float rotation)
     {
-        // TODO test
-        return (position + canvas.position - canvas.offset) * canvas.scale;
+        return mat3::rotation(rotation);
     }
 
-    Point screen_to_canvas(const Point& position)
+    mat3 scale(const vec2& scale)
     {
-        return (position - canvas.position + canvas.offset) / canvas.scale;
+        return mat3::scaling(scale);
     }
 
-    Point canvas_offset()
+    mat3 identity()
     {
-        return canvas.offset;
+        return mat3::identity();
     }
 
-    void canvas_set_offset(const Point& offset)
+    void set_world_transform(const mat3& transform)
     {
-        canvas.offset = offset;
+        if (transforms.size() == 1)
+            transforms.push_back(transform);
+        else
+            transforms.back() = transform;
+
+        nvgResetTransform(vg);
+        apply_transform(transform);
     }
 
-    Point canvas_scale()
+    void set_world_transform_multiply(const mat3& transform)
     {
-        return canvas.scale;
+        transforms.back() = transform * transforms.back();
+        apply_transform(transform);
     }
 
-    void canvas_set_scale(const Point& scale)
+    void save_world_transform()
     {
-        canvas.scale = scale;
+        transforms.push_back(transforms.back());
     }
 
-    float canvas_width()
+    void restore_world_transform()
     {
-        return canvas.width / canvas.scale.x();
+        assert(transforms.size());
+        if (transforms.size() == 1) // we do not pop first identity matrix
+            return;
+
+        transforms.pop_back();
+
+        nvgResetTransform(vg);
+        apply_transform(transforms.back());
     }
 
-    float canvas_height()
+    const mat3& get_world_transform()
     {
-        return canvas.height / canvas.scale.y();
+        return transforms.back();
     }
 
-    void canvas_set_size(float width, float height)
+    vec2 get_mouse_world_position()
     {
-        canvas.scale = { canvas.width / width, canvas.height / height };
+        return transforms.back().inverted().transform_point(get_mouse_screen_position());
+    }
+
+    vec2 get_world_position_screen_relative(const vec2& rel)
+    {
+        auto world_rect = get_world_rectangle();
+
+        return world_rect.min + world_rect.size() * rel;
+    }
+
+    vec2 get_world_size()
+    {
+        auto result = get_screen_size() / transforms.back().get_scale();
+        return { std::abs(result.x), std::abs(result.y) };
+    }
+
+    vec2 get_world_translation()
+    {
+        return transforms.back().get_translation();
+    }
+
+    void set_world_translation(const vec2& translation)
+    {
+        transforms.back().set_translation(translation);
+
+        nvgResetTransform(vg);
+        apply_transform(transforms.back());
+    }
+
+    vec2 get_world_scale()
+    {
+        return transforms.back().get_scale();
+    }
+
+    void set_world_scale(const vec2& scale)
+    {
+        transforms.back().set_scale(scale);
+        set_world_transform(transforms.back());
+    }
+
+    void set_world_scale(const vec2& scale, const vec2& stationary_world_point)
+    {
+        mat3 new_transform = mat3::scaling(scale);
+        // find new translation such that we will preserve stationary_world_point(after scale)
+        // what we need to achieve is that current stationary screen position s maps to same world position w (as with current transform)
+        // M * w = s
+        //
+        // |a b c|   |wx|   |sx|
+        // |d e f| * |wy| = |sy|
+        // |0 0 1|   | 1|   | 1|
+        //
+        // we need to find new c,f (translation) for this equation to hold
+        // sx = a*wx + b*wy + c
+        // sy = d*wx + e*wy + f
+        {
+            vec2 s = transforms.back().transform_point(stationary_world_point);
+            const vec2& w = stationary_world_point;
+            float c = s.x - new_transform.data[0] * w.x - new_transform.data[1] * w.y;
+            float f = s.y - new_transform.data[3] * w.x - new_transform.data[4] * w.y;
+
+            new_transform.set_translation({ c,f });
+        }
+        set_world_transform(new_transform);
+    }
+
+    rectangle get_world_rectangle()
+    {
+        vec2 p1 = transforms.back().inverted().transform_point(vec2{ 0.0,0.0 });
+        vec2 p2 = transforms.back().inverted().transform_point(get_screen_size());
+
+        vec2 min_v(min(p1.x, p2.x), min(p1.y, p2.y));
+        vec2 max_v(max(p1.x, p2.x), max(p1.y, p2.y));
+
+        return rectangle::from_min_max(min_v, max_v);
+    }
+
+    rectangle rectangle::from_min_max(const vec2& min, const vec2& max)
+    {
+        return { min, max };
+    }
+
+    rectangle rectangle::from_center_size(const vec2& center, const vec2& size)
+    {
+        return { center - size / 2.0f, center + size / 2.0f };
+    }
+
+    bool rectangle::contains(const vec2& o) const
+    {
+        return o.x >= min.x && o.x < max.x && o.y >= min.y && o.x < max.y;
+    }
+
+    rectangle rectangle::overlap(const rectangle& o) const
+    {
+        rectangle result;
+
+        result.min.x = max(min.x, o.min.x);
+        result.min.y = max(min.y, o.min.y);
+        result.max.x = min(max.x, o.max.x);
+        result.max.y = min(max.y, o.max.y);
+
+        if (result.min.x < result.max.x && result.min.y < result.max.y)
+            return result;
+        else
+            return { {0, 0}, {0, 0} }; // No overlap, return a rectangle with zero area
+    }
+
+    vec2 rectangle::center() const
+    {
+        return min + (max - min) / 2.0f;
+    }
+
+    vec2 rectangle::size() const
+    {
+        return max - min;
     }
 }
 
-char font_buffer[200000];
+char font_buffer[200'000];
 void font_response_callback(const sfetch_response_t* response)
 {
     if (response->finished && !response->failed)
@@ -201,19 +289,27 @@ void font_response_callback(const sfetch_response_t* response)
     }
 }
 
+void frame_delta_update()
+{
+    auto now = std::chrono::high_resolution_clock::now();
+    frame_delta = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_frame).count();
+    start_frame = now;
+}
+
 void frame_update()
 {
+    frame_delta_update();
+
     sfetch_dowork();
 
     imgui::prepare_render();
 
-    events_frame();
+    sg_begin_default_pass(&pass_action, (float)sapp_width(), (float)sapp_height());
 
-    sg_begin_default_pass(&pass_action, frame::screen_width(), frame::screen_height());
+    nvgBeginFrame(vg, (float)sapp_width(), (float)sapp_height(), 1.0f);
 
-    nvgBeginFrame(vg, frame::screen_width(), frame::screen_height(), 1.0f);
-
-    canvas_apply();
+    nvgResetTransform(vg);
+    apply_transform(transforms.back());
 
     update();
 
@@ -225,6 +321,8 @@ void frame_update()
 
     sg_end_pass();
     sg_commit();
+
+    events_end_frame();
 }
 
 void init()
@@ -243,9 +341,8 @@ void init()
 
     imgui::setup(dump_font, sizeof(dump_font));
 
-    canvas_setup();
-
-    pass_action.colors[0] = { SG_ACTION_CLEAR, {0.0f, 0.0f, 0.0f, 0.0f} };
+    pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
+    pass_action.colors[0].clear_value = {0.0f, 0.0f, 0.0f, 0.0f};
 
 #ifdef __EMSCRIPTEN__
     vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
@@ -264,17 +361,10 @@ void init()
         sfetch_request_t request{};
         request.path = "roboto.ttf";
         request.callback = font_response_callback;
-        request.buffer_ptr = font_buffer;
-        request.buffer_size = 200000;
+        request.buffer = SFETCH_RANGE(font_buffer);
 
         sfetch_send(&request);
     }
-}
-
-namespace frame
-{
-    float screen_width()  { return (float)sapp_width(); }
-    float screen_height() { return (float)sapp_height(); }
 }
 
 void cleanup()
@@ -284,13 +374,19 @@ void cleanup()
 
 void input(const sapp_event* event)
 {
-    imgui::handle_event(event);
+    if (!imgui::handle_event(event))
+    {
+        handle_event(event);
+    }
 }
 
 sapp_desc sokol_main(int argc, char* argv[])
 {
     (void)argc;
     (void)argv;
+
+    start_application = start_frame = std::chrono::steady_clock::now();
+    transforms.push_back(mat3::identity());
 
     sapp_desc desc{};
     desc.init_cb = init;
@@ -299,8 +395,8 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.event_cb = input;
     desc.width = 800;
     desc.height = 600;
-    desc.gl_force_gles2 = true;
-    desc.window_title = "Clear (sokol app)";
+    //desc.gl_force_gles2 = true;
+    desc.window_title = "Framework";
 
     return desc;
 }

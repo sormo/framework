@@ -1,6 +1,7 @@
 #pragma once
 
 #include "world.h"
+#include "framework.h"
 
 // physics "constants"
 extern float ProjectileVelocityFactor;
@@ -11,15 +12,15 @@ constexpr World::Layer Background = -5;
 struct Objects
 {
     World::Object projectile;
-    Point projectilePosition;
+    frame::vec2 projectilePosition;
     float projectileRadius;
-    Point projectileVelocity;
+    frame::vec2 projectileVelocity;
 
     float velocityLength = 50.0f;
     float gravityLength = 50.0f;
 
     World::Object hunter;
-    Point hunterPosition;
+    frame::vec2 hunterPosition;
     float hunterSize;
 
     World::Object ground;
