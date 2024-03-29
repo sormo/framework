@@ -479,15 +479,99 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_quad_bezier_polyline(const std::vector<vec2>& points, const col4& color)
+    // https://www.codeproject.com/Articles/31859/Draw-a-Smooth-Curve-through-a-Set-of-2D-Points-wit
+    std::pair<std::vector<vec2>, std::vector<vec2>> get_polyline_bezier_control_points(const std::vector<vec2>& points)
     {
+        auto get_first_control_points = [](const std::vector<double>& rhs) -> std::vector<double>
+        {
+            auto n = rhs.size();
+            std::vector<double> x(n); // Solution vector.
+            std::vector<double> tmp(n); // Temp workspace.
+
+            double b = 2.0;
+            x[0] = rhs[0] / b;
+            for (size_t i = 1; i < n; i++) // Decomposition and forward substitution.
+            {
+                tmp[i] = 1 / b;
+                b = (i < n - 1 ? 4.0 : 3.5) - tmp[i];
+                x[i] = (rhs[i] - x[i - 1]) / b;
+            }
+            for (size_t i = 1; i < n; i++)
+                x[n - i - 1] -= tmp[n - i] * x[n - i]; // Backsubstitution.
+
+            return x;
+        };
+
+        std::vector<vec2> result1, result2;
+
+        auto n = points.size() - 1;
+        if (n < 1)
+            return {};
+
+        if (n == 1)
+        { // Special case: Bezier curve should be a straight line.
+            result1.resize(1);
+            // 3P1 = 2P0 + P3
+            result1[0].x = (2 * points[0].x + points[1].x) / 3;
+            result1[0].y = (2 * points[0].y + points[1].y) / 3;
+
+            result2.resize(1);
+            // P2 = 2P1 – P0
+            result2[0].x = 2 * result1[0].x - points[0].x;
+            result2[0].y = 2 * result1[0].y - points[0].y;
+
+            return { result1, result2 };
+        }
+
+        // Calculate first Bezier control points
+        // Right hand side vector
+        std::vector<double> rhs(n);
+
+        // Set right hand side X values
+        for (int i = 1; i < n - 1; ++i)
+            rhs[i] = 4 * points[i].x + 2 * points[i + 1].x;
+        rhs[0] = points[0].x + 2 * points[1].x;
+        rhs[n - 1] = (8 * points[n - 1].x + points[n].x) / 2.0;
+        // Get first control points X-values
+        auto x = get_first_control_points(rhs);
+
+        // Set right hand side Y values
+        for (int i = 1; i < n - 1; ++i)
+            rhs[i] = 4 * points[i].y + 2 * points[i + 1].y;
+        rhs[0] = points[0].y + 2 * points[1].y;
+        rhs[n - 1] = (8 * points[n - 1].y + points[n].y) / 2.0;
+        // Get first control points Y-values
+        auto y = get_first_control_points(rhs);
+
+        // Fill output arrays.
+        result1.resize(n);
+        result2.resize(n);
+        for (int i = 0; i < n; ++i)
+        {
+            // First control point
+            result1[i] = vec2(x[i], y[i]);
+            // Second control point
+            if (i < n - 1)
+                result2[i] = vec2(2 * points[i + 1].x - x[i + 1], 2 * points[i + 1].y - y[i + 1]);
+            else
+                result2[i] = vec2((points[n].x + x[n - 1]) / 2,
+                    (points[n].y + y[n - 1]) / 2);
+        }
+
+        return { result1, result2 };
+    }
+
+    void draw_bezier_polyline(const std::vector<vec2>& points, const col4& color)
+    {
+        auto [c1, c2] = get_polyline_bezier_control_points(points);
+
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
         nvgMoveTo(vg, points[0].x, points[0].y);
-        for (size_t i = 2; i < points.size(); i++)
-            nvgQuadTo(vg, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
+        for (size_t i = 0; i < points.size() - 1; i++)
+            nvgBezierTo(vg, c1[i].x, c1[i].y, c2[i].x, c2[i].y, points[i + 1].x, points[i + 1].y);
 
         nvgStrokeColor(vg, color.data);
         nvgStroke(vg);
@@ -495,15 +579,17 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_quad_bezier_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color)
+    void draw_bezier_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color)
     {
+        auto [c1, c2] = get_polyline_bezier_control_points(points);
+
         nvgSave(vg);
 
         nvgBeginPath(vg);
 
         nvgMoveTo(vg, points[0].x, points[0].y);
-        for (size_t i = 2; i < points.size(); i++)
-            nvgQuadTo(vg, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
+        for (size_t i = 0; i < points.size() - 1; i++)
+            nvgBezierTo(vg, c1[i].x, c1[i].y, c2[i].x, c2[i].y, points[i+1].x, points[i+1].y);
 
         nvgStrokeColor(vg, color.data);
         nvgStrokeWidth(vg, thickness);

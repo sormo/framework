@@ -13,11 +13,16 @@ extern NVGcontext* vg;
 
 namespace frame
 {
+    static const double PI = 3.1415926535897931;
+
     using vec2 = point_type<float>;
     using vec2d = point_type<double>;
     using col4 = color_type;
     using mat3 = matrix_type<float>;
     using mat3d = matrix_type<double>;
+
+    using vec3 = point_type_3<float>;
+    using vec3d = point_type_3<double>;
 
     // TODO possibly move to separate file
     struct rectangle
@@ -33,6 +38,7 @@ namespace frame
 
         bool contains(const vec2& o) const;
         rectangle overlap(const rectangle& o) const;
+        bool has_overlap(const rectangle& o) const;
     };
 
     col4 rgb(char r, char g, char b);
@@ -150,8 +156,8 @@ namespace frame
     void draw_line_dashed_ex(const vec2& from, const vec2& to, float thickness, const col4& color);
     void draw_quad_bezier(const vec2& from, const vec2& control, const vec2& to, const col4& color);
     void draw_quad_bezier_ex(const vec2& from, const vec2& control, const vec2& to, float thickness, const col4& color);
-    void draw_quad_bezier_polyline(const std::vector<vec2>& points, const col4& color);
-    void draw_quad_bezier_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color);
+    void draw_bezier_polyline(const std::vector<vec2>& points, const col4& color);
+    void draw_bezier_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color);
     void draw_polyline(const std::vector<vec2>& points, const col4& color);
     void draw_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color);
 

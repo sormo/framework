@@ -4,6 +4,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #else
+#define NOMINMAX
 #include <Windows.h>
 #define NANOVG_GL3_IMPLEMENTATION
 #include <glad/glad.h>
@@ -232,8 +233,8 @@ namespace frame
         vec2 p1 = transforms.back().inverted().transform_point(vec2{ 0.0,0.0 });
         vec2 p2 = transforms.back().inverted().transform_point(get_screen_size());
 
-        vec2 min_v(min(p1.x, p2.x), min(p1.y, p2.y));
-        vec2 max_v(max(p1.x, p2.x), max(p1.y, p2.y));
+        vec2 min_v(std::min(p1.x, p2.x), std::min(p1.y, p2.y));
+        vec2 max_v(std::max(p1.x, p2.x), std::max(p1.y, p2.y));
 
         return rectangle::from_min_max(min_v, max_v);
     }
@@ -257,15 +258,22 @@ namespace frame
     {
         rectangle result;
 
-        result.min.x = max(min.x, o.min.x);
-        result.min.y = max(min.y, o.min.y);
-        result.max.x = min(max.x, o.max.x);
-        result.max.y = min(max.y, o.max.y);
+        result.min.x = std::max(min.x, o.min.x);
+        result.min.y = std::max(min.y, o.min.y);
+        result.max.x = std::min(max.x, o.max.x);
+        result.max.y = std::min(max.y, o.max.y);
 
         if (result.min.x < result.max.x && result.min.y < result.max.y)
             return result;
         else
             return { {0, 0}, {0, 0} }; // No overlap, return a rectangle with zero area
+    }
+
+    bool rectangle::has_overlap(const rectangle& o) const
+    {
+        auto over = overlap(o);
+
+        return !(over.min.x == 0 && over.min.y == 0 && over.max.x == 0 && over.max.y == 0);
     }
 
     vec2 rectangle::center() const

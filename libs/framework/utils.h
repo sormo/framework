@@ -5,6 +5,13 @@
 
 namespace frame
 {
+    // https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
+    template <typename T> 
+    int sign(T val)
+    {
+        return (T(0) < val) - (val < T(0));
+    }
+
     enum class direction
     {
         right,
@@ -56,5 +63,5 @@ namespace frame
         float hover_outline_thickness = 1.0f;
     };
     void draw_line_directed_with_handles(const vec2& from, const vec2& to, float thickness, const col4& color, line_handle_config* from_handle, line_handle_config* to_handle);
-    std::pair<vec2, vec2> update_line_with_handles(const vec2& from, const vec2& to, line_handle_config* from_handle, line_handle_config* to_handle);
+    bool update_line_with_handles(vec2& from, vec2& to, line_handle_config* from_handle, line_handle_config* to_handle);
 }

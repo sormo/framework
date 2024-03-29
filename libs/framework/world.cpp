@@ -349,7 +349,7 @@ void World::DrawRope(const RopeData& data)
 
         points.back() = WorldScalePoint(m_objects[data.segments.back()].body->GetWorldPoint(WorldScalePoint(frame::vec2(0.0f, RopeData::SegmentHeight))));;
 
-        frame::draw_quad_bezier_polyline_ex(points, RopeData::SegmentHeight * 1.0f, data.fillColor);
+        frame::draw_bezier_polyline_ex(points, RopeData::SegmentHeight * 1.0f, data.fillColor);
     }
 }
 

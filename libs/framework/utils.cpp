@@ -232,7 +232,7 @@ namespace frame
                 draw_line_solid_ex({ world_rect.min.x, y }, { world_rect.max.x, y }, y == 0.0f ? 2.0f * thickness : thickness, color);
         };
 
-        auto draw_grid = [&world_rect, &color, thickness](float world_size, auto draw_lines)
+        auto draw_grid = [&color, thickness](float world_size, auto draw_lines)
         {
             float major_power = std::floor(log10(world_size));
             float major = std::pow(10.0f, major_power);
@@ -277,18 +277,24 @@ namespace frame
             draw_line_handle(to, *to_handle);
     }
 
-    std::pair<vec2, vec2> update_line_with_handles(const vec2& from, const vec2& to, line_handle_config* from_handle, line_handle_config* to_handle)
+    bool update_line_with_handles(vec2& from, vec2& to, line_handle_config* from_handle, line_handle_config* to_handle)
     {
         if (!is_mouse_down(mouse_button::left))
-            return { from, to };
+            return false;
 
         auto world_dt = get_world_transform().inverted().transform_vector(get_mouse_screen_delta());
         auto position = get_mouse_world_position();
 
         if (is_inside_line_handle(position - world_dt, from, from_handle))
-            return { from + world_dt, to};
+        {
+            from += world_dt;
+            return true;
+        }
         if (is_inside_line_handle(position - world_dt, to, to_handle))
-            return { from, to + world_dt };
-        return { from, to };
+        {
+            to += world_dt;
+            return true;
+        }
+        return false;
     }
 }

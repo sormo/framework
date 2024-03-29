@@ -68,11 +68,18 @@ struct b2BodyUserData
 /// You can define this to inject whatever data you want in b2Fixture
 struct b2FixtureUserData
 {
+	enum class Type
+	{
+		Rope
+	};
+
 	b2FixtureUserData()
 	{
 		pointer = 0;
 	}
 
+	Type type;
+	int ropeIndex;
 	/// For legacy compatibility
 	uintptr_t pointer;
 };

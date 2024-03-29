@@ -25,7 +25,12 @@ set(FIPS_RTTI ON CACHE BOOL "Enable C++ RTTI" FORCE)
 
 set(CMAKE_CXX_STANDARD 17)
 
-fips_include_directories(libs libs/glad/include libs/nanovg libs/box2d/include)
+fips_include_directories(libs
+                         libs/glad/include
+                         libs/nanovg
+                         libs/box2d/include
+                         libs/json
+                         libs/kepler-orbit)
 
 fips_ide_group(libs)
 fips_add_subdirectory(libs/glad)
@@ -36,6 +41,8 @@ fips_import_fips_imgui_imgui()
 
 fips_include_directories(libs/framework)
 fips_add_subdirectory(libs/framework)
+
+fips_add_subdirectory(libs/kepler-orbit)
 
 fips_ide_group("")
 fips_add_subdirectory(projects)

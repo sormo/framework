@@ -2,24 +2,23 @@
 #include <utils.h>
 #include "unit.h"
 #include "imgui.h"
+#include "kepler_orbit.h"
 #include <string>
+#include <fstream>
+#include "json.hpp"
 
 using namespace frame;
 
-const double PI = 3.1415926535897931;
 double GRAVITATIONAL_CONSTANT = 0.8;
 const double DRAW_SIZE_FACTOR = 200.0;
 const double DRAW_VELOCITY_FACTOR = 13.0;
 
+static double time_current = 0.0f;
+static double time_delta = 1.0 / 1000.0;
+
 vec2 float_cast(const vec2d& p)
 {
     return { (float)p.x, (float)p.y };
-}
-
-// TODO not needed
-vec2d double_cast(const vec2& p)
-{
-    return { (double)p.x, (double)p.y };
 }
 
 float scale_independent(float s)
@@ -48,8 +47,80 @@ struct conic
 body SUN;
 body EARTH;
 conic EARTH_CONIC;
+conic SUN_CONIC;
 
 free_move_camera_config free_move_config;
+
+struct planet_data
+{
+    void init(const vec2d& r1_o, double m1_o, const vec2d& r2_o, const vec2d& v2_o, double m2_o)
+    {
+        r2 = r2_o;
+        p2 = v2_o * m2_o;
+        m2 = m2_o;
+
+        r1 = r1_o;
+        m1 = m1_o;
+        p1 = -p2;
+    }
+
+    vec2d r1;
+    vec2d p1;
+    double m1;
+
+    vec2d r2;
+    vec2d p2;
+    double m2;
+
+} planet_data_sim;
+
+
+struct kepler_orbit_two_bodies
+{
+    void initialize(const vec2d& r1, const vec2d& v1, double m1, const vec2d& r2, const vec2d& v2, double m2)
+    {
+        barycenter = (r1 * m1 + r2 * m2) / (m1 + m2);
+
+        vec2d br1 = r1 - barycenter;
+        vec2d br2 = r2 - barycenter;
+        //double bm1 = (m2 * pow(br1.length(), 2.0)) / pow((r1 - r2).length(), 2.0);
+        //double bm2 = (m1 * pow(br2.length(), 2.0)) / pow((r1 - r2).length(), 2.0);
+
+        auto reduced_mass = (m1 * m2) / (m1 + m2);
+        auto barycenter_velocity = (v1 * m1 + v2 * m2) / (m1 + m2);
+
+        double bm1 = m2 + m1;
+        double bm2 = m1 + m2;
+
+        double r = (r2 - r1).length();
+        double v = v2.length();
+
+        double new_r = (r2 - barycenter).length();
+        double new_v = (r * v) / new_r;
+        //vec2d new_vec = v2.normalized() * new_v;
+
+        //vec2d new_vec1(0.0, sqrt((GRAVITATIONAL_CONSTANT * bm1) / br1.length()));
+        //vec2d new_vec2(0.0, sqrt((GRAVITATIONAL_CONSTANT * bm2) / br2.length()));
+        vec2d new_vec2 = v2 + v1;
+        vec2d new_vec1 = new_vec2 * (m1 / m2);
+
+        orbit1.initialize(br1, new_vec1, bm1, reduced_mass, GRAVITATIONAL_CONSTANT);
+        orbit2.initialize(br2, new_vec2, bm2, reduced_mass, GRAVITATIONAL_CONSTANT);
+
+        kepler_orbit reduced_orbit;
+        reduced_orbit.initialize(r2 - r1, v1 + v2, m1 + m2, 0.0, GRAVITATIONAL_CONSTANT);
+        reduced_orbit.center_point -= vec3d(barycenter);
+
+        orbit2 = reduced_orbit;
+    }
+
+    vec2d barycenter;
+
+    kepler_orbit orbit1;
+    kepler_orbit orbit2;
+};
+
+kepler_orbit_two_bodies kepler;
 
 void draw_debug_gui()
 {
@@ -73,148 +144,61 @@ void draw_debug_gui()
     ImGui::Text("%.2f %.2f ", get_world_size().x, get_world_size().y);
 
     ImGui::EndMainMenuBar();
+
+    //ImGui::ShowDemoWindow();
+    static bool is_open = true;
+    ImGui::Begin("Dear ImGui Demo", &is_open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushItemWidth(80.0f);
+    static char earth_weight[128] = "5.974e24";
+    if (ImGui::InputText("Earth weight [kg]", earth_weight, 128, ImGuiInputTextFlags_CharsScientific))
+    {
+        double weight = std::stod(earth_weight);
+        EARTH.mass = weight * unit::kilogram;
+
+        planet_data_sim.init(SUN.position, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+        kepler.initialize(SUN.position, SUN.velocity, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+    }
+    static char sun_weight[128] = "1.989e30";
+    if (ImGui::InputText("Sun weight [kg]", sun_weight, 128, ImGuiInputTextFlags_CharsScientific))
+    {
+        double weight = std::stod(sun_weight);
+        SUN.mass = weight * unit::kilogram;
+
+        planet_data_sim.init(SUN.position, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+        kepler.initialize(SUN.position, SUN.velocity, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+    }
+    ImGui::PopItemWidth();
+
+    ImGui::End();
 }
-
-//template <typename T> int sgn(T val)
-//{
-//    return (T(0) < val) - (val < T(0));
-//}
-//
-//// https://github.com/Karth42/SimpleKeplerOrbits/blob/master/Assets/SimpleKeplerOrbits/Scripts/Utils/KeplerOrbitUtils.cs#L256
-//double kepler_solver(double meanAnomaly, double eccentricity)
-//{
-//    // Iterations count range from 2 to 6 when eccentricity is in range from 0 to 1.
-//    int    iterations = (int)(std::ceil((eccentricity + 0.7) * 1.25)) << 1;
-//    double m = meanAnomaly;
-//    double esinE;
-//    double ecosE;
-//    double deltaE;
-//    double n;
-//    for (int i = 0; i < iterations; i++)
-//    {
-//        esinE = eccentricity * std::sin(m);
-//        ecosE = eccentricity * std::cos(m);
-//        deltaE = m - esinE - meanAnomaly;
-//        n = 1.0 - ecosE;
-//        m += -5.0 * deltaE / (n + sgn(n) * std::sqrt(std::abs(16.0 * n * n - 20.0 * deltaE * esinE)));
-//    }
-//
-//    return m;
-//}
-
-//vec2d compute_kepler_position(const body& body, double time)
-//{
-//    // \theta is the true anomaly, which is the angle between the current position of the orbiting object and the location
-//    // in the orbit at which it is closest to the central body (called the periapsis).
-//
-//    double e = body.eccentricity;
-//    double a = body.semi_major_axis;
-//
-//    // mean anomaly, major axis goes to the left
-//    double mean_anomaly = ((2.0 * PI) / body.period) * time;
-//    if (mean_anomaly > 2.0 * PI)
-//        mean_anomaly = std::fmod(mean_anomaly, 2.0 * PI);
-//
-//    // compute equation M = E - e*sin(E) for E given M (mean anomaly) and e (eccentricity
-//    double eccentricAnomaly = kepler_solver(mean_anomaly, e);
-//
-//    double cosE = std::cos(eccentricAnomaly);
-//    double trueAnomaly = std::acos((cosE - e) / (1 - e * cosE));
-//
-//    if (mean_anomaly > PI)
-//        trueAnomaly = 2.0 * PI - trueAnomaly;
-//
-//    // major axis goes to the left so we will take negative of r
-//    double r = -(a * (1 - e * e)) / (1 + e * std::cos(trueAnomaly));
-//
-//    vec2d rvec = vec2d(r, 0.0);
-//    rvec.rotate(trueAnomaly);
-//
-//    return rvec;
-//
-//}
-
-// general conic section equation
-// Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
-//struct conic
-//{
-//    double A = 0.0;
-//    double B = 0.0;
-//    double C = 0.0;
-//    double D = 0.0;
-//    double E = 0.0;
-//    double F = 0.0;
-//
-//    double discriminant()
-//    {
-//        return B*B - 4.0*A*C;
-//    }
-//
-//    bool is_ellipse()
-//    {
-//        return B*B - 4.0*A*C < 0.0 || 4.0*A*C - B*B > 0.0;
-//    }
-//
-//    // https://math.stackexchange.com/questions/616645/determining-the-major-minor-axes-of-an-ellipse-from-general-form
-//    ellipse get_ellipse()
-//    {
-//        assert(is_ellipse());
-//
-//        double Q = 64.0*((F*(4.0*A*C - B*B) - A*E*E + B*D*E - C*D*D) / pow((4.0*A*C - B*B), 2.0)); // coefficient normalizing factor 
-//        double S = (1.0/4.0)*sqrt(abs(Q)*sqrt(B*B + pow(A-C, 2.0))); // distance between center and focal point
-//
-//        ellipse result;
-//        result.center = { (B*E - 2.0*C*D) / (4.0*A*C - B*B), (B*D - 2.0*A*E) / (4.0*A*C - B*B) };
-//        result.semi_major = (1.0/8.0) * sqrt(2.0*abs(Q)*sqrt(B*B + pow(A-C, 2.0)) - 2.0*Q*(A + C));
-//        //result.semi_major = (1.0 / 8.0) * sqrt(abs(Q) * sqrt(B * B + pow(A - C, 2.0)) - Q * (A + C));
-//        result.semi_minor = sqrt(result.semi_major*result.semi_major - S*S);
-//
-//        if (Q*A - Q*C == 0.0 && Q*B == 0.0)
-//            result.rotation = 0.0;
-//        else if (Q*A - Q*C == 0.0 && Q*B > 0.0)
-//            result.rotation = PI / 4.0;
-//        else if (Q*A - Q*C == 0.0 && Q*B < 0.0)
-//            result.rotation = 3.0*PI/4.0;
-//        //else if (Q * A - Q * C > 0.0)
-//        //    result.rotation = 0.5 * atan2(B, A - C);
-//        //else
-//        //    result.rotation = 0.5 * atan2(B, A - C) + PI;
-//        else if (Q*A - Q*C > 0.0 && Q*B >= 0.0)
-//            result.rotation = 0.5*atan2(B, A - C);
-//        else if (Q*A - Q*C > 0.0 && Q * B < 0.0)
-//            result.rotation = 0.5 * atan2(B, A - C) + PI;
-//        else
-//            result.rotation = 0.5 * atan2(B, A - C) + 0.5*PI;
-//
-//        return result;
-//    }
-//
-//    ellipse get_ellipse_completing_square()
-//    {
-//        assert(B == 0.0);
-//
-//        // convert from general to standard form:
-//        //  (x-h)^2     (y-k)^2
-//        // --------- + --------- = 1
-//        //    a^2         b^2
-//
-//        double h = -D / (2.0 * A);
-//        double k = -E / (2.0 * C);
-//        double a = sqrt((D*D)/(4.0*A*A) + (E*E)/(4.0*A*C) - F*C);
-//        double b = sqrt((D*D)/(4.0*A*C) + (E*E)/(4.0*C*C) - F*A);
-//
-//        ellipse result;
-//        result.center = vec2d(h, k);
-//        result.semi_major = a;
-//        result.semi_minor = b;
-//
-//        return result;
-//    }
-//};
 
 double cross(const vec2d& a, const vec2d& b)
 {
     return a.x * b.y - b.x * a.y;
+}
+
+conic compute_conic(const vec2d& r1, double m1, const vec2d& r2, const vec2d& v2, double m2)
+{
+    vec2d r = r2 - r1;
+    double G = GRAVITATIONAL_CONSTANT;
+    double mu = G * (m1 + m2);
+
+    vec2d e_vec = r * (v2.length_sqr() / mu - 1 / r.length()) - v2 * (r.dot(v2) / mu); // eccentricity vector
+    double e = e_vec.length();
+
+    double h = cross(r, v2); // specific angular momentum
+    double E = v2.length_sqr() / 2.0 - mu / r.length(); // specific orbital energy
+    double a = -mu / (2.0 * E); // semi-major axis
+    double b = e < 1.0 ? a * sqrt(1.0 - e * e) : a * sqrt(e * e - 1.0);
+
+    double true_anomaly = acos(e_vec.dot(r) / (e_vec.length() * r.length()));
+    if (r.dot(v2) < 0.0)
+        true_anomaly = 2.0 * PI - true_anomaly;
+
+    double o = atan2(e_vec.y, e_vec.x); // argument of periapsis
+
+    return { -e_vec * a, o, a, b, e }; // TODO
 }
 
 conic compute_conic(const vec2d& p1, const vec2d& v1, double m1, const vec2d& p2, const vec2d& v2, double m2)
@@ -239,7 +223,6 @@ conic compute_conic(const vec2d& p1, const vec2d& v1, double m1, const vec2d& p2
     //double E = -mu / (2.0 * a); // specific orbital energy
     //double e = sqrt(1.0 - (h * h) / (mu * a));
     double b = e < 1.0 ? a * sqrt(1.0 - e * e) : a * sqrt(e * e - 1.0);
-    double f = 0.0;
 
     double true_anomaly = acos(e_vec.dot(r2)/(e_vec.length() * r2.length()));
     if (r2.dot(vr2) < 0.0)
@@ -250,25 +233,189 @@ conic compute_conic(const vec2d& p1, const vec2d& v1, double m1, const vec2d& p2
     return { -e_vec * a, o, a, b, e }; // TODO
 }
 
-//conic compute_conic(double centralMass, double orbitingMass, const vec2d& distance, const vec2d& velocity)
-//{
-//    double G = GRAVITATIONAL_CONSTANT;
-//    double reduced_mass = (centralMass * orbitingMass) / (centralMass + orbitingMass);
-//    double angular_momentum = reduced_mass * distance.length() * velocity.y; // TODO tangential part of velocity
-//    double energy = 0.5 * reduced_mass * pow(velocity.length(), 2) - (G * centralMass * orbitingMass) / distance.length();
-//    double semilatus_rectum = pow(angular_momentum, 2) / (reduced_mass * G * centralMass * orbitingMass);
-//    double eccentricity = sqrt(1 + (2.0 * energy * pow(angular_momentum, 2)) / (reduced_mass * pow(G * centralMass * orbitingMass, 2)));
-//
-//    conic ret;
-//    ret.A = 1.0 - pow(eccentricity, 2);
-//    ret.B = 0.0;
-//    ret.C = 1.0;
-//    ret.D = -2.0 * eccentricity * semilatus_rectum;
-//    ret.E = 0.0;
-//    ret.F = -pow(semilatus_rectum, 2);
-//
-//    return ret;
-//}
+std::pair<conic, conic> compute_two_conics(const vec2d& r1, const vec2d& v1, double m1, const vec2d& r2, const vec2d& v2, double m2)
+{
+    auto barycenter = (r1 * m1 + r2 * m2) / (m1 + m2);
+    draw_circle(float_cast(barycenter * DRAW_SIZE_FACTOR), 2.0f, col4::BLUE);
+
+    auto reduced_mass = (m1 * m2) / (m1 + m2);
+    auto barycenter_velocity = (v1 * m1 + v2 * m2) / (m1 + m2);
+
+    auto c1 = compute_conic(barycenter, barycenter_velocity, m1 + m2, r2 - barycenter, v2, m2);
+    auto c2 = compute_conic(barycenter, barycenter_velocity, m1 + m2, r1 - barycenter, v1, m1);
+
+    return { c1, c2 };
+}
+
+void draw_conic(const conic& con, const col4& color)
+{
+    if (con.eccentricity < 1.0)
+    {
+        draw_ellipse_ex(float_cast(con.center * DRAW_SIZE_FACTOR),
+            (float)con.rotation,
+            (float)con.semi_major * DRAW_SIZE_FACTOR,
+            (float)con.semi_minor * DRAW_SIZE_FACTOR,
+            col4::BLANK,
+            scale_independent(1.5f),
+            color);
+    }
+    else
+    {
+        draw_hyperbola(float_cast(con.center * DRAW_SIZE_FACTOR),
+            (float)con.rotation,
+            (float)con.semi_major * DRAW_SIZE_FACTOR,
+            (float)con.semi_minor * DRAW_SIZE_FACTOR,
+            scale_independent(1.5f),
+            color);
+    }
+    draw_circle(float_cast(con.center * DRAW_SIZE_FACTOR), scale_independent(2.5f), rgb(255, 0, 0));
+}
+
+std::vector<vec2> float_cast(const std::vector<vec2d>& data)
+{
+    std::vector<vec2> r;
+    r.reserve(data.size());
+    for (const auto& o : data)
+        r.push_back(float_cast(o) * DRAW_SIZE_FACTOR);
+    return r;
+}
+
+std::vector<vec2> float_cast(const std::vector<vec3d>& data)
+{
+    std::vector<vec2> r;
+    r.reserve(data.size());
+    for (const auto& o : data)
+        r.push_back(float_cast(o.xy<double>()) * DRAW_SIZE_FACTOR);
+    return r;
+}
+
+std::vector<vec2>& offset(std::vector<vec2>& data, const vec2& offset)
+{
+    for (auto& d : data)
+        d += offset;
+    return data;
+}
+
+// https://kyleniemeyer.github.io/space-systems-notes/orbital-mechanics/two-body-problems.html
+std::vector<vec2d> compute_orbit_test(double mu, const vec2d& r2, const vec2d& v2)
+{
+    std::vector<vec2d> result;
+
+    double r0_mag = r2.length();
+    double v0_mag = v2.length();
+    double h_mag = r2.cross(v2);
+    double v_r0 = (r2.dot(v2)) / r2.length();
+    //double mu = GRAVITATIONAL_CONSTANT * (m1 + m2);
+
+    double theta_0 = atan(r2.y / r2.x);
+    double e = ((pow(h_mag, 2.0) / (mu * r0_mag)) - 1) / cos(theta_0);
+
+    for (double delta_theta = 0.0f; delta_theta < 2.0 * PI; delta_theta += 0.1)
+    {
+        //3. Get new distance
+        double r_mag = (pow(h_mag, 2.0) / mu) / (1 + ((pow(h_mag, 2.0) / (mu * r0_mag)) - 1) * cos(delta_theta) - h_mag * v_r0 * sin(delta_theta) / mu);
+
+        //4. Get Lagrange coefficients
+        double f = 1 - mu * r_mag * (1 - cos(delta_theta)) / pow(h_mag, 2.0);
+        double g = r_mag * r0_mag * sin(delta_theta) / h_mag;
+        double fdot = (mu / h_mag) * (1 - cos(delta_theta)) * (mu * (1 - cos(delta_theta)) / pow(h_mag, 2.0) - (1 / r0_mag) - (1 / r_mag)) / sin(delta_theta);
+        double gdot = 1 - mu * r0_mag * (1 - cos(delta_theta)) / pow(h_mag, 2.0);
+
+        // 5. Calculate new vectors:
+        vec2d r = r2 * f + v2 * g;
+        vec2d v = r2 * fdot + v2 * gdot;
+
+        result.push_back(r);
+    }
+
+    return result;
+}
+
+conic compute_conic_test(double mu, const vec2d& r2, const vec2d& v2)
+{
+    double r0_mag = r2.length();
+    double v0_mag = v2.length();
+    double h_mag = r2.cross(v2);
+    double v_r0 = (r2.dot(v2)) / r2.length();
+    double theta_0 = atan(r2.y / r2.x);
+    //double e2 = ((pow(h_mag, 2.0) / (mu * r0_mag)) - 1) / cos(theta_0);
+
+    vec2d e_vec = r2 * (v2.length_sqr() / mu - 1 / r2.length()) - v2 * (r2.dot(v2) / mu); // eccentricity vector
+    double e = e_vec.length();
+
+    double E = v2.length_sqr() / 2.0 - mu / r2.length(); // specific orbital energy
+    double a = -mu / (2.0 * E); // semi-major axis
+    double b = e < 1.0 ? a * sqrt(1.0 - e * e) : a * sqrt(e * e - 1.0);
+    double o = atan2(e_vec.y, e_vec.x); // argument of periapsis
+
+    return { -e_vec * a, o, a, b, e }; // TODO
+}
+
+void draw_two_orbits_test(const vec2d& r1, const vec2d& v1, double m1, const vec2d& r2, const vec2d& v2, double m2)
+{
+    auto barycenter = (r1 * m1 + r2 * m2) / (m1 + m2);
+    draw_circle(float_cast(barycenter * DRAW_SIZE_FACTOR), 2.0f, col4::BLUE);
+
+    auto reduced_mass = (m1 * m2) / (m1 + m2);
+    auto barycenter_velocity = (v1 * m1 + v2 * m2) / (m1 + m2);
+    
+    // --
+
+    double mu = GRAVITATIONAL_CONSTANT * (m1 + m2);
+    auto r1b = r1 - barycenter;
+    auto v1b = v1 - v2;
+    auto r2b = r2 - barycenter;
+    auto v2b = v2 - v1;
+
+    // --
+
+    auto earth_test = float_cast(compute_orbit_test(mu, r2b, v2b));
+    draw_polyline(offset(earth_test, float_cast(barycenter * DRAW_SIZE_FACTOR)), col4::GREEN);
+
+    auto earth_conic = compute_conic_test(mu, r2b, v2b);
+    earth_conic.center += barycenter;
+    draw_conic(earth_conic, col4::GRAY);
+
+    auto sun_test = float_cast(compute_orbit_test(mu, r1b, v1b));
+    draw_polyline(offset(sun_test, float_cast(barycenter * DRAW_SIZE_FACTOR)), col4::RED);
+
+    auto sun_conic = compute_conic_test(mu, r1b, v1b);
+    sun_conic.center += barycenter;
+    draw_conic(sun_conic, col4::GRAY);
+}
+
+void simulate_two_orbits_test(planet_data& data)
+{
+    vec2d r = data.r2 - data.r1;
+    vec2d f2 = -r.normalized() * GRAVITATIONAL_CONSTANT * data.m1 * data.m2 / pow(r.length(), 2.0);
+
+    data.p2 = data.p2 + f2 * time_delta; // force applied over time is impulse - change in momentum
+    data.p1 = data.p1 - f2 * time_delta;
+    data.r1 = data.r1 + data.p1 * time_delta / data.m1;
+    data.r2 = data.r2 + data.p2 * time_delta / data.m2;
+
+    draw_circle(float_cast(data.r1) * DRAW_SIZE_FACTOR, 3.0, col4::RED);
+    draw_circle(float_cast(data.r2) * DRAW_SIZE_FACTOR, 3.0, col4::RED);
+}
+
+void kepler_test()
+{
+    kepler.orbit1.update_current_orbit_time_by_delta_time(time_delta);
+    kepler.orbit2.update_current_orbit_time_by_delta_time(time_delta);
+    //orbit_sim.set_current_orbit_time(time);
+
+    vec2 barycenter = float_cast(kepler.barycenter * DRAW_SIZE_FACTOR);
+    draw_circle(barycenter, 5.0f, col4::BLUE);
+
+    draw_circle(float_cast(kepler.orbit1.position.xy<double>() * DRAW_SIZE_FACTOR) + barycenter, 5.0f, col4::GOLD);
+    draw_circle(float_cast(kepler.orbit2.position.xy<double>() * DRAW_SIZE_FACTOR) + barycenter, 5.0f, col4::EARTHBLUE);
+
+    auto points1 = kepler.orbit1.get_orbit_points();
+    draw_polyline(offset(float_cast(points1), barycenter), col4::GREEN);
+
+    auto points2 = kepler.orbit2.get_orbit_points();
+    draw_polyline(offset(float_cast(points2), barycenter), col4::GREEN);
+}
 
 void setup_units()
 {
@@ -306,69 +453,30 @@ void setup()
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
-    free_move_config.min_size = { 150.0f, 150.0f };
-    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 4000.0f, 4000.0f });
+    free_move_config.min_size = { 1.0f, 1.0f };
+    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
 
     setup_units();
     setup_sun();
     setup_earth();
 
-    //EARTH_ELLIPSE = compute_conic(SUN.mass, EARTH.mass, EARTH.position, EARTH.velocity).get_ellipse();
-    //EARTH_ELLIPSE = compute_conic(SUN.mass, EARTH.mass, EARTH.position, EARTH.velocity).get_ellipse_completing_square();
-    EARTH_CONIC = compute_conic({}, {}, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+    std::tie(EARTH_CONIC, SUN_CONIC) = compute_two_conics({}, {}, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+
+    planet_data_sim.init(SUN.position, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
+    kepler.initialize(SUN.position, SUN.velocity, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
 }
 
 void update()
 {
-    // draw
-
     draw_debug_gui();
 
     draw_coordinate_lines(rgb(50,50,50));
 
-    // sun
-    draw_circle({ 0.0f, 0.0f }, scale_independent(5.0f), col4::GOLD);
-    // earth
-    if (EARTH_CONIC.eccentricity < 1.0)
-    {
-        draw_ellipse_ex(float_cast(EARTH_CONIC.center * DRAW_SIZE_FACTOR),
-                        (float)EARTH_CONIC.rotation,
-                        (float)EARTH_CONIC.semi_major * DRAW_SIZE_FACTOR,
-                        (float)EARTH_CONIC.semi_minor * DRAW_SIZE_FACTOR,
-                        col4::BLANK,
-                        scale_independent(1.5f),
-                        col4::LIGHTGRAY);
-    }
-    else
-    {
-        draw_hyperbola(float_cast(EARTH_CONIC.center * DRAW_SIZE_FACTOR),
-                       (float)EARTH_CONIC.rotation,
-                       (float)EARTH_CONIC.semi_major * DRAW_SIZE_FACTOR,
-                       (float)EARTH_CONIC.semi_minor * DRAW_SIZE_FACTOR,
-                       scale_independent(1.5f),
-                       col4::LIGHTGRAY);
-    }
-    draw_circle(float_cast(EARTH_CONIC.center * DRAW_SIZE_FACTOR), 2.5f, rgb(255, 0, 0));
-    draw_circle(float_cast(EARTH.position * DRAW_SIZE_FACTOR), scale_independent(5.0f), col4::EARTHBLUE);
+    kepler_test();
 
-    static line_handle_config handle_config;
-    handle_config.radius = 10.0f;
-    handle_config.outline_color = col4::GREEN;
-    handle_config.hover_outline_color = col4::RED;
-
-    vec2 earth_velocity_from = float_cast(EARTH.position * DRAW_SIZE_FACTOR);
-    vec2 earth_velocity_to = earth_velocity_from + float_cast(EARTH.velocity * DRAW_VELOCITY_FACTOR);
-    draw_line_directed_with_handles(earth_velocity_from, earth_velocity_to, 1.0f, col4::DARKGRAY, &handle_config, &handle_config);
-
-    // update
-
-    auto [new_earth_velocity_from, new_earth_velocity_to] = update_line_with_handles(earth_velocity_from, earth_velocity_to, &handle_config, &handle_config);
-    auto earth_velocity_from_delta = new_earth_velocity_from - earth_velocity_from;
-    EARTH.position = double_cast(new_earth_velocity_from / DRAW_SIZE_FACTOR);
-    EARTH.velocity = double_cast((new_earth_velocity_to - new_earth_velocity_from + earth_velocity_from_delta) / DRAW_VELOCITY_FACTOR);
-
-    EARTH_CONIC = compute_conic({}, {}, SUN.mass, EARTH.position, EARTH.velocity, EARTH.mass);
-
+    simulate_two_orbits_test(planet_data_sim);
 
     free_move_camera_update(free_move_config);
+
+    time_current += time_delta;
 }
