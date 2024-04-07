@@ -1,3 +1,5 @@
 ---
 files:
     - ephemeris.json
+    - small-bodies-sbdb.json
+    - major-bodies.json

@@ -19,15 +19,15 @@ struct kepler_orbit
     // 
 
     double orbit_compression_ratio = 0.0;
-    double semi_minor_axis = 0.0;
-    double semi_major_axis = 0.0;
+    double semi_minor_axis = 0.0; // AU
+    double semi_major_axis = 0.0; // AU
     double focal_parameter = 0.0;
     double eccentricity = 0.0;
     double period = 0.0;
-    double true_anomaly = 0.0;
-    double mean_anomaly = 0.0;
-    double mean_anomaly_initial = 0.0;
-    double eccentric_anomaly = 0.0;
+    double true_anomaly = 0.0; // rad
+    double mean_anomaly = 0.0; // rad
+    double mean_anomaly_initial = 0.0; // rad
+    double eccentric_anomaly = 0.0; // rad
     double mean_motion = 0.0;
     frame::vec3d periapsis;
     double periapsis_distance = 0.0;

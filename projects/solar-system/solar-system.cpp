@@ -13,8 +13,8 @@ double GRAVITATIONAL_CONSTANT = 0.8;
 const double DRAW_SIZE_FACTOR = 200.0;
 const double DRAW_VELOCITY_FACTOR = 13.0;
 
-static double time_current = 0.0f;
-static double time_delta = 1.0 / 1000.0;
+static double time_current = 0.0;
+static double time_delta = 1.0 / 100000.0;
 
 free_move_camera_config free_move_config;
 
@@ -66,28 +66,28 @@ void step_ephemeris_data(ephemeris_data& data)
 void draw_ephemeris_trajectories(ephemeris_data& data)
 {
     std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
+    {
+        vec2 position = draw_cast(data.orbit.position);
+
+        if (std::isnan(position.x) || std::isnan(position.y))
+            position = {};
+
+        draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
+        draw_circle(position, scale_independent(5.0f), col4::RED);
+        //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
+
+        if (!data.childs.empty())
         {
-            vec2 position = draw_cast(data.orbit.position);
+            save_world_transform();
 
-            if (std::isnan(position.x) || std::isnan(position.y))
-                position = {};
+            set_world_translation(get_world_translation() + position * get_world_scale());
 
-            draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
-            draw_circle(position, scale_independent(5.0f), col4::RED);
-            //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
+            for (auto& child : data.childs)
+                draw_recursive(*child);
 
-            if (!data.childs.empty())
-            {
-                save_world_transform();
-
-                set_world_translation(get_world_translation() + position * get_world_scale());
-
-                for (auto& child : data.childs)
-                    draw_recursive(*child);
-
-                restore_world_transform();
-            }
-        };
+            restore_world_transform();
+        }
+    };
 
     draw_recursive(*data.parent);
 }
@@ -135,49 +135,83 @@ void draw_ephemeris_names(ephemeris_data& data)
 
 ephemeris_data load_ephemeris_data()
 {
-    std::ifstream f("ephemeris.json");
-    nlohmann::json data = nlohmann::json::parse(f);
-
-    struct orbit_with_parent
-    {
-        std::string parent;
-        kepler_orbit orbit;
-    };
-
     std::vector<std::pair<std::string, std::string>> parents;
     ephemeris_data result;
 
-    for (const auto& orbit_data : data["OrbitsData"])
+    auto read_file = [&parents, &result](const std::string& file_name)
     {
-        std::string body_name = orbit_data["BodyName"];
-        std::string attractor_name = orbit_data["AttractorName"];
-        double attractor_mass = orbit_data["AttractorMass"];
-        double eccentricity = orbit_data["EC"];
-        double inclination = orbit_data["IN"];
-        double ascending_node_longitude = orbit_data["OM"];
-        double argument_of_periapsis = orbit_data["W"];
-        double mean_anomaly = orbit_data["MA"];
-        double semi_major_axis = orbit_data["A"];
+        std::ifstream f(file_name);
+        nlohmann::json data = nlohmann::json::parse(f);
 
-        // inclination hack, we are showing this in 2d
-        inclination = 0.0;
+        for (const auto& orbit_data : data["OrbitsData"])
+        {
+            std::string body_name = orbit_data["BodyName"];
+            std::string attractor_name = orbit_data["AttractorName"];
+            double attractor_mass = orbit_data["AttractorMass"];
+            double eccentricity = orbit_data["EC"];
+            double inclination = deg_to_rad(orbit_data["IN"]);
+            double ascending_node_longitude = deg_to_rad(orbit_data["OM"]);
+            double argument_of_periapsis = deg_to_rad(orbit_data["W"]);
+            double mean_anomaly = deg_to_rad(orbit_data["MA"]);
+            double semi_major_axis = orbit_data["A"]; // AU
 
-        kepler_orbit orbit;
-        orbit.initialize(eccentricity, semi_major_axis, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass * unit::kilogram, GRAVITATIONAL_CONSTANT);
-        std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points());
+            // inclination hack, we are showing this in 2d
+            inclination = 0.0;
 
-        result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory) });
-        parents.push_back({ std::move(body_name), std::move(attractor_name) });
-    }
+            kepler_orbit orbit;
+            orbit.initialize(eccentricity, semi_major_axis, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass * unit::kilogram, GRAVITATIONAL_CONSTANT);
+            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points());
+
+            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory) });
+            parents.push_back({ std::move(body_name), std::move(attractor_name) });
+        }
+    };
+
+    auto read_file2 = [&parents, &result](const std::string& file_name)
+    {
+        std::ifstream f(file_name);
+        nlohmann::json data = nlohmann::json::parse(f);
+
+        for (const auto& orbit_data : data)
+        {
+            std::string body_name = orbit_data["name"];
+            std::string attractor_name = orbit_data["attractor_name"];
+            double attractor_mass = orbit_data["attractor_mass"]; // kg
+            double eccentricity = orbit_data["EC"];
+            double inclination = deg_to_rad(orbit_data["IN"]);
+            double ascending_node_longitude = deg_to_rad(orbit_data["OM"]);
+            double argument_of_periapsis = deg_to_rad(orbit_data["W"]);
+            double mean_anomaly = deg_to_rad(orbit_data["MA"]);
+            double semi_major_axis = orbit_data["A"]; // AU
+
+            // inclination hack, we are showing this in 2d
+            inclination = 0.0;
+
+            double AU = 1.495978707e11;
+            // TODO G constant is used as free parameter to fixate orbits periods values while SemiMajor axis parameter is adjusted for the scene.
+            double compensatedGConst = GRAVITATIONAL_CONSTANT / pow(AU / unit::AU, 3.0);
+
+            kepler_orbit orbit;
+            orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass * unit::kilogram, GRAVITATIONAL_CONSTANT);
+            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points());
+
+            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory) });
+            parents.push_back({ std::move(body_name), std::move(attractor_name) });
+        }
+    };
+
+    read_file2("major-bodies.json");
+    //read_file("ephemeris.json");
+    //read_file("small-bodies-sbdb.json");
 
     // assign parent-child relationships, can't add anything to this vector
     auto get_body = [&result](const std::string& name) -> body_data*
-        {
-            for (auto& body : result.bodies)
-                if (body.name == name)
-                    return &body;
-            return nullptr;
-        };
+    {
+        for (auto& body : result.bodies)
+            if (body.name == name)
+                return &body;
+        return nullptr;
+    };
     for (const auto& [child, parent] : parents)
     {
         body_data* child_body = get_body(child);
@@ -267,7 +301,7 @@ void update()
 
     // update
 
-    //step_ephemeris_data(ephem_data);
+    step_ephemeris_data(ephem_data);
 
     free_move_camera_update(free_move_config);
 

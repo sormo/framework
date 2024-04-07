@@ -1,0 +1,203 @@
+  ID#      Name                               Designation  IAU/aliases/other   
+  -------  ---------------------------------- -----------  ------------------- 
+        0  Solar-System Barycenter                         SSB                  
+        1  Mercury Barycenter                                                   
+        2  Venus Barycenter                                                     
+        3  Earth-Moon Barycenter                           EMB                  
+        4  Mars Barycenter                                                      
+        5  Jupiter Barycenter                                                   
+        6  Saturn Barycenter                                                    
+        7  Uranus Barycenter                                                    
+        8  Neptune Barycenter                                                   
+        9  Pluto Barycenter                                                     
+       10  Sun                                                                  
+      199  Mercury                                                              
+      299  Venus                                                                
+      301  Moon                                            E                 
+      391  L1                                                                   
+      392  L2                                                                   
+      394  L4                                                                   
+      395  L5                                              E                    
+      399  Earth                                                                
+      401  Phobos                                          MI                   
+      402  Deimos                                          MII                  
+      499  Mars                                            M                    
+      501  Io                                              JI                   
+      502  Europa                                          JII                  
+      503  Ganymede                                        JIII                 
+      504  Callisto                                        JIV                  
+      505  Amalthea                                        JV                   
+      506  Himalia                                         JVI                  
+      507  Elara                                           JVII                 
+      508  Pasiphae                                        JVIII                
+      509  Sinope                                          JIX                  
+      510  Lysithea                                        JX                   
+      511  Carme                                           JXI                  
+      512  Ananke                                          JXII                 
+      513  Leda                                            JXIII                
+      514  Thebe                                           JXIV                 
+      515  Adrastea                                        JXV                  
+      516  Metis                                           JXVI                 
+      517  Callirrhoe                         1999J1       JXVII                
+      518  Themisto                           1975J1       JXVIII 2000J1        
+      519  Megaclite                          2000J8       JXIX                 
+      520  Taygete                            2000J9       JXX                  
+      521  Chaldene                           2000J10      JXXI                 
+      522  Harpalyke                          2000J5       JXXII                
+      523  Kalyke                             2000J2       JXXIII               
+      524  Iocaste                            2000J3       JXXIV                
+      525  Erinome                            2000J4       JXXV                 
+      526  Isonoe                             2000J6       JXXVI                
+      527  Praxidike                          2000J7       JXXVII               
+      528  Autonoe                            2001J1       JXXVIII              
+      529  Thyone                             2001J2       JXXIX                
+      530  Hermippe                           2001J3       JXXX                 
+      531  Aitne                              2001J11      JXXXI                
+      532  Eurydome                           2001J4       JXXXII               
+      533  Euanthe                            2001J7       JXXXIII              
+      534  Euporie                            2001J10      JXXXIV               
+      535  Orthosie                           2001J9       JXXXV                
+      536  Sponde                             2001J5       JXXXVI               
+      537  Kale                               2001J8       JXXXVII              
+      538  Pasithee                           2001J6       JXXXVIII             
+      539  Hegemone                           2003J8       JXXXIX               
+      540  Mneme                              2003J21      JXL                  
+      541  Aoede                              2003J7       JXLI                 
+      542  Thelxinoe                          2003J22      JXLII                
+      543  Arche                              2002J1       JXLIII               
+      544  Kallichore                         2003J11      JXLIV                
+      545  Helike                             2003J6       JXLV                 
+      546  Carpo                              2003J20      JXLVI                
+      547  Eukelade                           2003J1       JXLVII               
+      548  Cyllene                            2003J13      JXLVIII              
+      549  Kore                               2003J14      JXLIX                
+      550  Herse                              2003J17      JXLXII               
+      551                                     2010J1       JLI                  
+      552                                     2010J2       JLII                 
+      553  Dia                                2000J11      JLIII                
+    55060                                     2003J2       J                    
+    55061                                     2003J3       J                    
+    55062                                     2003J4       J                    
+    55063                                     2003J5       J                    
+    55064                                     2003J9       J                    
+    55065                                     2003J10      J                    
+    55066                                     2003J12      J                    
+    55067                                     2003J15      J                   
+    55068                                     2003J16      J                    
+    55069                                     2003J18      J                    
+    55070                                     2003J19      J                    
+    55071                                     2003J23      J                    
+    55074                                     2011J1       J                    
+    55075                                     2011J2       J                    
+      599  Jupiter                                                              
+      601  Mimas                                           SI                   
+      602  Enceladus                                       SII                  
+      603  Tethys                                          SIII                 
+      604  Dione                                           SIV                  
+      605  Rhea                                            SV                   
+      606  Titan                                           SVI                  
+      607  Hyperion                                        SVII                 
+      608  Iapetus                                         SVIII                
+      609  Phoebe                                          SIX                  
+      610  Janus                                           SX                   
+      611  Epimetheus                                      SXI                  
+      612  Helene                                          SXII                 
+      613  Telesto                                         SXIII                
+      614  Calypso                                         SXIV                 
+      615  Atlas                                           SXV                  
+      616  Prometheus                                      SXVI                 
+      617  Pandora                                         SXVII                
+      618  Pan                                             SXVIII               
+      619  Ymir                               2000S1       SXIX                 
+      620  Paaliaq                            2000S2       SXX                  
+      621  Tarvos                             2000S4       SXXI                 
+      622  Ijiraq                             2000S6       SXXII                
+      623  Suttungr                           2000S12      SXXIII               
+      624  Kiviuq                             2000S5       SXXIV                
+      625  Mundilfari                         2000S9       SXXV                 
+      626  Albiorix                           2000S11      SXXVI                
+      627  Skathi                             2000S8       SXXVII               
+      628  Erriapus                           2000S10      SXXVIII              
+      629  Siarnaq                            2000S3       SXXIX                
+      630  Thrymr                             2000S7       SXXX                 
+      631  Narvi                              2003S1       SXXXI                
+      632  Methone                            2004S1       SXXXII               
+      633  Pallene                            2004S2       SXXXIII              
+      634  Polydeuces                         2004S5       SXXXIV               
+      635  Daphnis                            2005S1       SXXXV                
+      636  Aegir                              2004S10      SXXXVI 65038         
+      637  Bebhionn                           2004S11      SXXXVII 65039        
+      638  Bergelmir                          2004S15      SXXXVIII 65043       
+      639  Bestla                             2004S18      SXXXIX 65046         
+      640  Farbauti                           2004S9       SXL 65037            
+      641  Fenrir                             2004S16      SXLI 65044           
+      642  Fornjot                            2004S8       SXLII 65036          
+      643  Hati                               2004S14      SXLIII               
+      644  Hyrrokkin                          2004S19      SXLIV                
+      645  Kari                               2006S2       SXLV                 
+      646  Loge                               2006S5       SXLVI                
+      647  Skoll                              2006S8       SXLVII               
+      648  Surtur                             2006S7       SXLVIII              
+      649  Anthe                              2007S4       SXLIX                
+      650  Jarnsaxa                           2006S6       SL                   
+      651  Greip                              2006S4       SLI                  
+      652  Tarqeq                             2007S1       SLII                 
+      653  Aegaeon                            2008S1       SLIII                
+    65035                                     2004S7       S                    
+    65040                                     2004S12      S                   
+    65041                                     2004S13      S                    
+    65045                                     2004S17      S                    
+    65048                                     2006S1       S                    
+    65050                                     2006S3       S                    
+    65055                                     2007S2       S                    
+    65056                                     2007S3       S                    
+      699  Saturn                                                               
+      701  Ariel                                           UI                   
+      702  Umbriel                                         UII                  
+      703  Titania                                         UIII                 
+      704  Oberon                                          UIV                  
+      705  Miranda                                         UV                   
+      706  Cordelia                                        UVI                  
+      707  Ophelia                                         UVII                 
+      708  Bianca                                          UVIII                
+      709  Cressida                                        UIX                  
+      710  Desdemona                                       UX                   
+      711  Juliet                                          UXI                  
+      712  Portia                                          UXII                 
+      713  Rosalind                                        UXIII                
+      714  Belinda                                         UXIV                 
+      715  Puck                                            UXV                  
+      716  Caliban                                         UXVI                 
+      717  Sycorax                                         UXVII                
+      718  Prospero                           1999U3       UXVIII               
+      719  Setebos                            1999U1       UXIX                 
+      720  Stephano                           1999U2       UXX                  
+      721  Trinculo                           2001U1       UXXI                 
+      722  Francisco                          2001U3       UXXII                
+      723  Margaret                           2003U3       UXXIII               
+      724  Ferdinand                          2001U2       UXXIV                
+      725  Perdita                            1986U10      UXXV                 
+      726  Mab                                2003U1       UXXVI                
+      727  Cupid                              2003U2       UXXVII               
+      799  Uranus                                                               
+      801  Triton                                          NI                   
+      802  Nereid                                          NII                  
+      803  Naiad                                           NIII                 
+      804  Thalassa                                        NIV                  
+      805  Despina                                         NV                   
+      806  Galatea                                         NVI                  
+      807  Larissa                                         NVII                 
+      808  Proteus                                         NVIII                
+      809  Halimede                           2002N1       NIV                  
+      810  Psamathe                           2003N1       NV                   
+      811  Sao                                2002N2       NVI                  
+      812  Laomedeia                          2002N3       NVII                 
+      813  Neso                               2002N4       NVIII                 
+      814  Hippocamp                          2004N1       NIX                                                        
+      899  Neptune                                                              
+      901  Charon                                          PI                   
+      902  Nix                                             PII                  
+      903  Hydra                                           PIII                 
+      904  Kerberos                           2011P1       PIV                  
+      905  Styx                               2012P1       PV                   
+      999  Pluto                              134340                           

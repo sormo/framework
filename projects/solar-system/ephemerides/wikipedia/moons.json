@@ -1,0 +1,2169 @@
+[
+    {
+        "name": "Metis",
+        "diameter": 43.0,
+        "dimensions": [
+            60.0,
+            40.0,
+            34.0
+        ],
+        "mass": 3.6e+16,
+        "group": "Inner",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Adrastea",
+        "diameter": 16.4,
+        "dimensions": [
+            20.0,
+            16.0,
+            14.0
+        ],
+        "mass": 2000000000000000.0,
+        "group": "Inner",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Amalthea",
+        "diameter": 167.0,
+        "dimensions": [
+            250.0,
+            146.0,
+            128.0
+        ],
+        "mass": 2.08e+18,
+        "group": "Inner",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Thebe",
+        "diameter": 98.6,
+        "dimensions": [
+            116.0,
+            98.0,
+            84.0
+        ],
+        "mass": 4.3e+17,
+        "group": "Inner",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Io",
+        "diameter": 3643.2,
+        "dimensions": [
+            3660.0,
+            3637.0,
+            3631.0
+        ],
+        "mass": 8.9319e+22,
+        "group": "Galilean",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Europa",
+        "diameter": 3121.6,
+        "mass": 4.7998e+22,
+        "group": "Galilean",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Ganymede",
+        "diameter": 5268.2,
+        "mass": 1.4819e+23,
+        "group": "Galilean",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Callisto",
+        "diameter": 4820.6,
+        "mass": 1.0759e+23,
+        "group": "Galilean",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Themisto",
+        "diameter": 9.0,
+        "mass": 380000000000000.0,
+        "group": "Themisto",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Leda",
+        "diameter": 21.5,
+        "mass": 5200000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Ersa",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2018 J 2",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Himalia",
+        "diameter": 139.6,
+        "dimensions": [
+            150.0,
+            120.0
+        ],
+        "mass": 4.2e+18,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Pandia",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Lysithea",
+        "diameter": 42.2,
+        "mass": 3.9e+16,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Elara",
+        "diameter": 79.9,
+        "mass": 2.7e+17,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2011 J 3",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Dia",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Himalia",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2018 J 4",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carpo",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Carpo",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Carpo",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Valetudo",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Valetudo",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Euporie",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 18",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Eupheme",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 3",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2010 J 2",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2016 J 1",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Mneme",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Euanthe",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 16",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Harpalyke",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Orthosie",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Helike",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 2",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Praxidike",
+        "diameter": 7.0,
+        "mass": 180000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 3",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 1",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 12",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 7",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Thelxinoe",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Thyone",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 2",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Ananke",
+        "diameter": 29.1,
+        "mass": 1.3e+16,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2022 J 3",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Iocaste",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Hermippe",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 9",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Ananke",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Philophrosyne",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2016 J 3",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2022 J 1",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Pasithee",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 8",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 6",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 24",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Eurydome",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2011 J 2",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 4",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Chaldene",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 2",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Isonoe",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2022 J 2",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 4",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Kallichore",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Erinome",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Kale",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Eirene",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Aitne",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Eukelade",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Arche",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Taygete",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2016 J 4",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2011 J 1",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Carme",
+        "diameter": 46.7,
+        "mass": 5.3e+16,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Herse",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 19",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2010 J 1",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 9",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 5",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 6",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Kalyke",
+        "diameter": 6.9,
+        "mass": 170000000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Hegemone",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2018 J 3",
+        "diameter": 1.0,
+        "mass": 520000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2021 J 5",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Pasiphae",
+        "diameter": 57.8,
+        "mass": 1e+17,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Sponde",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 10",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Carme",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Megaclite",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Cyllene",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Sinope",
+        "diameter": 35.0,
+        "mass": 2.2e+16,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2017 J 1",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Aoede",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Autonoe",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Callirrhoe",
+        "diameter": 9.6,
+        "mass": 460000000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2003 J 23",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "Kore",
+        "diameter": 2.0,
+        "mass": 4200000000000.0,
+        "group": "Pasiphae",
+        "parent": "Jupiter"
+    },
+    {
+        "name": "S/2009 S 1",
+        "diameter": 0.3,
+        "mass": 7100000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Pan",
+        "diameter": 27.4,
+        "dimensions": [
+            34.6,
+            28.2,
+            21.0
+        ],
+        "mass": 4300000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Daphnis",
+        "diameter": 7.8,
+        "dimensions": [
+            9.8,
+            8.4,
+            5.6
+        ],
+        "mass": 68000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Atlas",
+        "diameter": 29.8,
+        "dimensions": [
+            40.8,
+            35.4,
+            18.6
+        ],
+        "mass": 5490000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Prometheus",
+        "diameter": 85.6,
+        "dimensions": [
+            137.0,
+            81.0,
+            56.0
+        ],
+        "mass": 1.5972e+17,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Pandora",
+        "diameter": 80.0,
+        "dimensions": [
+            103.0,
+            79.0,
+            63.0
+        ],
+        "mass": 1.357e+17,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Epimetheus",
+        "diameter": 117.2,
+        "dimensions": [
+            130.0,
+            116.0,
+            107.0
+        ],
+        "mass": 5.25607e+17,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Janus",
+        "diameter": 178.0,
+        "dimensions": [
+            203.0,
+            186.0,
+            149.0
+        ],
+        "mass": 1.89388e+18,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Aegaeon",
+        "diameter": 0.66,
+        "dimensions": [
+            1.4,
+            0.5,
+            0.4
+        ],
+        "mass": 78200000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Mimas",
+        "diameter": 396.4,
+        "dimensions": [
+            416.0,
+            393.0,
+            381.0
+        ],
+        "mass": 3.75094e+19,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Methone",
+        "diameter": 2.9,
+        "dimensions": [
+            3.88,
+            2.58,
+            2.42
+        ],
+        "mass": 3920000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Anthe",
+        "diameter": 1.8,
+        "mass": 1500000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Pallene",
+        "diameter": 4.46,
+        "dimensions": [
+            5.76,
+            4.16,
+            3.68
+        ],
+        "mass": 23000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Enceladus",
+        "diameter": 504.2,
+        "dimensions": [
+            513.0,
+            503.0,
+            497.0
+        ],
+        "mass": 1.080318e+20,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Tethys",
+        "diameter": 1062.2,
+        "dimensions": [
+            1077.0,
+            1057.0,
+            1053.0
+        ],
+        "mass": 6.174959e+20,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Telesto",
+        "diameter": 24.6,
+        "dimensions": [
+            33.2,
+            23.4,
+            19.2
+        ],
+        "mass": 3900000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Calypso",
+        "diameter": 19.0,
+        "dimensions": [
+            29.4,
+            18.6,
+            12.8
+        ],
+        "mass": 1800000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Helene",
+        "diameter": 36.2,
+        "dimensions": [
+            45.2,
+            39.2,
+            26.6
+        ],
+        "mass": 7100000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Polydeuces",
+        "diameter": 3.06,
+        "dimensions": [
+            3.5,
+            3.1,
+            2.62
+        ],
+        "mass": 7500000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Dione",
+        "diameter": 1122.8,
+        "dimensions": [
+            1128.0,
+            1123.0,
+            1119.0
+        ],
+        "mass": 1.0954868e+21,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Rhea",
+        "diameter": 1527.6,
+        "dimensions": [
+            1530.0,
+            1526.0,
+            1525.0
+        ],
+        "mass": 2.3064854e+21,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Titan",
+        "diameter": 5149.46,
+        "dimensions": [
+            5149.0,
+            5149.0,
+            5150.0
+        ],
+        "mass": 1.345180354e+23,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Hyperion",
+        "diameter": 270.0,
+        "dimensions": [
+            360.0,
+            266.0,
+            205.0
+        ],
+        "mass": 5.551e+18,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Iapetus",
+        "diameter": 1468.6,
+        "dimensions": [
+            1491.0,
+            1491.0,
+            1424.0
+        ],
+        "mass": 1.8056591e+21,
+        "group": "Major",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 1",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Kiviuq",
+        "diameter": 19.0,
+        "mass": 3600000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2005 S 4",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 1",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Ijiraq",
+        "diameter": 15.0,
+        "mass": 1800000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Phoebe",
+        "diameter": 213.0,
+        "dimensions": [
+            219.0,
+            217.0,
+            204.0
+        ],
+        "mass": 8.3123e+18,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 20",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 9",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Paaliaq",
+        "diameter": 30.0,
+        "mass": 1.4e+16,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Skathi",
+        "diameter": 9.0,
+        "mass": 380000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 5",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 7",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 2",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 37",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 47",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 40",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Albiorix",
+        "diameter": 28.6,
+        "mass": 1.2e+16,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 2",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Bebhionn",
+        "diameter": 7.0,
+        "mass": 180000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 8",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 29",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 3",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 7",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 31",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "Erriapus",
+        "diameter": 12.0,
+        "mass": 950000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Skoll",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Tarqeq",
+        "diameter": 7.0,
+        "mass": 180000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 14",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 2",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Siarnaq",
+        "diameter": 39.3,
+        "mass": 3.2e+16,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 4",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 3",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 41",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Tarvos",
+        "diameter": 16.0,
+        "mass": 2100000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 4",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Gallic",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 42",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Hyrrokkin",
+        "diameter": 9.0,
+        "mass": 380000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Greip",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 5",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 13",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 6",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Mundilfari",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 1",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 43",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 10",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 5",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Gridr",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Bergelmir",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Jarnsaxa",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Narvi",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Suttungr",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 3",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 44",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 12",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Outlier",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 45",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Hati",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 17",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 11",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 12",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Eggther",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 13",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 6",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Outlier",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2007 S 9",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 7",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 8",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Farbauti",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Thrymr",
+        "diameter": 9.0,
+        "mass": 380000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Bestla",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 9",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 46",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Angrboda",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 11",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Aegir",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Beli",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 10",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 12",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Gerd",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 13",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 14",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Gunnlod",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 15",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 6",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 7",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 3",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2005 S 5",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Skrymir",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 16",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 15",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 28",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 8",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Alvaldi",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Kari",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 48",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Geirrod",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Fenrir",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 50",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 17",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 49",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 17",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Surtur",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 18",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Loge",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Ymir",
+        "diameter": 22.0,
+        "mass": 5600000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 19",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 21",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 18",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 39",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 16",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 53",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 24",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Outlier",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 36",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Thiazzi",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 20",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2006 S 19",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 34",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Fornjot",
+        "diameter": 6.0,
+        "mass": 110000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 51",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 10",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2020 S 9",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 26",
+        "diameter": 5.0,
+        "mass": 65000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2019 S 21",
+        "diameter": 4.0,
+        "mass": 34000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "S/2004 S 52",
+        "diameter": 3.0,
+        "mass": 14000000000000.0,
+        "group": "Norse",
+        "parent": "Saturn"
+    },
+    {
+        "name": "Cordelia",
+        "diameter": 40.0,
+        "dimensions": [
+            50.0,
+            36.0
+        ],
+        "mass": 3.4e+16,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Ophelia",
+        "diameter": 43.0,
+        "dimensions": [
+            54.0,
+            38.0
+        ],
+        "mass": 4.2e+16,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Bianca",
+        "diameter": 51.0,
+        "dimensions": [
+            64.0,
+            46.0
+        ],
+        "mass": 6.9e+16,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Cressida",
+        "diameter": 80.0,
+        "dimensions": [
+            92.0,
+            74.0
+        ],
+        "mass": 2.7e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Desdemona",
+        "diameter": 64.0,
+        "dimensions": [
+            90.0,
+            54.0
+        ],
+        "mass": 1.4e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Juliet",
+        "diameter": 94.0,
+        "dimensions": [
+            150.0,
+            74.0
+        ],
+        "mass": 4.3e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Portia",
+        "diameter": 135.0,
+        "dimensions": [
+            156.0,
+            126.0
+        ],
+        "mass": 1.3e+18,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Rosalind",
+        "diameter": 72.0,
+        "mass": 2e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Cupid",
+        "diameter": 18.0,
+        "mass": 3100000000000000.0,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Belinda",
+        "diameter": 90.0,
+        "dimensions": [
+            128.0,
+            64.0
+        ],
+        "mass": 3.8e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Perdita",
+        "diameter": 30.0,
+        "mass": 1.4e+16,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Puck",
+        "diameter": 162.0,
+        "mass": 1.91e+18,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Mab",
+        "diameter": 18.0,
+        "mass": 3100000000000000.0,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Miranda",
+        "diameter": 471.6,
+        "dimensions": [
+            481.0,
+            468.0,
+            466.0
+        ],
+        "mass": 6.293e+19,
+        "group": "Major",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Ariel",
+        "diameter": 1157.8,
+        "dimensions": [
+            1162.0,
+            1156.0,
+            1155.0
+        ],
+        "mass": 1.2331e+21,
+        "group": "Major",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Umbriel",
+        "diameter": 1169.4,
+        "mass": 1.2885e+21,
+        "group": "Major",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Titania",
+        "diameter": 1576.8,
+        "mass": 3.455e+21,
+        "group": "Major",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Oberon",
+        "diameter": 1522.8,
+        "mass": 3.1104e+21,
+        "group": "Major",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Francisco",
+        "diameter": 22.0,
+        "mass": 5600000000000000.0,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Caliban",
+        "diameter": 42.0,
+        "mass": 3.9e+16,
+        "group": "Caliban",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Stephano",
+        "diameter": 32.0,
+        "mass": 1.7e+16,
+        "group": "Caliban",
+        "parent": "Uranus"
+    },
+    {
+        "name": "S/2023 U 1",
+        "diameter": 8.0,
+        "mass": 270000000000000.0,
+        "group": "Caliban",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Trinculo",
+        "diameter": 18.0,
+        "mass": 3100000000000000.0,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Sycorax",
+        "diameter": 157.0,
+        "mass": 2e+18,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Margaret",
+        "diameter": 20.0,
+        "mass": 4200000000000000.0,
+        "group": "Prograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Prospero",
+        "diameter": 50.0,
+        "mass": 6.5e+16,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Setebos",
+        "diameter": 47.0,
+        "mass": 5.4e+16,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Ferdinand",
+        "diameter": 21.0,
+        "mass": 4800000000000000.0,
+        "group": "Retrograde",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Naiad",
+        "diameter": 60.4,
+        "dimensions": [
+            96.0,
+            60.0,
+            52.0
+        ],
+        "mass": 1.3e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Thalassa",
+        "diameter": 81.4,
+        "dimensions": [
+            108.0,
+            100.0,
+            52.0
+        ],
+        "mass": 3.5e+17,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Despina",
+        "diameter": 156.0,
+        "dimensions": [
+            180.0,
+            148.0,
+            128.0
+        ],
+        "mass": 1.7e+18,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Galatea",
+        "diameter": 174.8,
+        "dimensions": [
+            204.0,
+            184.0,
+            144.0
+        ],
+        "mass": 2.8e+18,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Larissa",
+        "diameter": 194.0,
+        "dimensions": [
+            216.0,
+            204.0,
+            168.0
+        ],
+        "mass": 3.8e+18,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Hippocamp",
+        "diameter": 34.8,
+        "mass": 2.2e+16,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Proteus",
+        "diameter": 420.0,
+        "dimensions": [
+            436.0,
+            416.0,
+            402.0
+        ],
+        "mass": 3.9e+19,
+        "parent": "Uranus"
+    },
+    {
+        "name": "Triton",
+        "diameter": 2705.2,
+        "dimensions": [
+            2709.0,
+            2706.0,
+            2705.0
+        ],
+        "mass": 2.139e+22,
+        "group": "Triton",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Nereid",
+        "diameter": 357.0,
+        "mass": 2.4e+19,
+        "group": "Nereid",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Halimede",
+        "diameter": 62.0,
+        "mass": 1.2e+17,
+        "group": "Halimede",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Sao",
+        "diameter": 44.0,
+        "mass": 3.4e+16,
+        "group": "Sao",
+        "parent": "Uranus"
+    },
+    {
+        "name": "S/2002 N 5",
+        "diameter": 38.0,
+        "mass": 3e+16,
+        "group": "Sao",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Laomedeia",
+        "diameter": 42.0,
+        "mass": 3.4e+16,
+        "group": "Sao",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Psamathe",
+        "diameter": 40.0,
+        "mass": 2.9e+16,
+        "group": "Neso",
+        "parent": "Uranus"
+    },
+    {
+        "name": "Neso",
+        "diameter": 60.0,
+        "mass": 1.1e+17,
+        "group": "Neso",
+        "parent": "Uranus"
+    },
+    {
+        "name": "S/2021 N 1",
+        "diameter": 25.0,
+        "mass": 8000000000000000.0,
+        "group": "Neso",
+        "parent": "Uranus"
+    }
+]
