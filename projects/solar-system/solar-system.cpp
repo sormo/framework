@@ -14,13 +14,14 @@ const double DRAW_SIZE_FACTOR = 200.0;
 const double DRAW_VELOCITY_FACTOR = 13.0;
 
 static double time_current = 0.0;
-static double time_delta = 1.0 / 100000.0;
+static double time_delta = 1.0 / 1000.0;
+//static double time_delta = 0.0;
 
 free_move_camera_config free_move_config;
 
 vec2 draw_cast(const vec3d& p)
 {
-    return { (float)p.x * DRAW_SIZE_FACTOR, (float)p.y * DRAW_SIZE_FACTOR };
+    return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR) };
 }
 
 float scale_independent(float s)
@@ -72,9 +73,13 @@ void draw_ephemeris_trajectories(ephemeris_data& data)
         if (std::isnan(position.x) || std::isnan(position.y))
             position = {};
 
-        draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
+        draw_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GRAY);
+        //draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
         draw_circle(position, scale_independent(5.0f), col4::RED);
-        //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
+        draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
+
+        //for (auto p : data.trajectory)
+        //    draw_circle(p, scale_independent(2.0f), col4::ORANGE);
 
         if (!data.childs.empty())
         {
@@ -175,8 +180,8 @@ ephemeris_data load_ephemeris_data()
         for (const auto& orbit_data : data)
         {
             std::string body_name = orbit_data["name"];
-            std::string attractor_name = orbit_data["attractor_name"];
-            double attractor_mass = orbit_data["attractor_mass"]; // kg
+            std::string parent_name = orbit_data["parent_name"];
+            double period = orbit_data["period"]; // kg
             double eccentricity = orbit_data["EC"];
             double inclination = deg_to_rad(orbit_data["IN"]);
             double ascending_node_longitude = deg_to_rad(orbit_data["OM"]);
@@ -192,17 +197,39 @@ ephemeris_data load_ephemeris_data()
             double compensatedGConst = GRAVITATIONAL_CONSTANT / pow(AU / unit::AU, 3.0);
 
             kepler_orbit orbit;
-            orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass * unit::kilogram, GRAVITATIONAL_CONSTANT);
+            double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, GRAVITATIONAL_CONSTANT);
+
+            orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, GRAVITATIONAL_CONSTANT);
             std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points());
 
             result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory) });
-            parents.push_back({ std::move(body_name), std::move(attractor_name) });
+            parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     };
 
     read_file2("major-bodies.json");
+    //read_file2("major-bodies-earth.json");
     //read_file("ephemeris.json");
-    //read_file("small-bodies-sbdb.json");
+    //read_file2("small-bodies-sbdb-100km.json");
+    //read_file2("small-bodies-sbdb-50km.json");
+
+    // test, dump periods:
+    double period_to_days_factor = 1.0;
+    for (const auto& body : result.bodies)
+    {
+        if (body.name != "Earth")
+            continue;
+        double period = body.orbit.period;
+        period_to_days_factor = 365.0 / period;
+        break;
+    }
+
+    std::ofstream test("periods.txt");
+    for (const auto& body : result.bodies)
+    {
+        double period = body.orbit.period;
+        test << body.name << " " << period << " " << (period * period_to_days_factor) << "\n";
+    }
 
     // assign parent-child relationships, can't add anything to this vector
     auto get_body = [&result](const std::string& name) -> body_data*
@@ -254,7 +281,7 @@ void setup()
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
-    free_move_config.min_size = { 1.0f, 1.0f };
+    free_move_config.min_size = { 0.1f, 0.1f };
     free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
 
     setup_units();
@@ -285,6 +312,30 @@ void draw_debug_gui()
 
     ImGui::EndMainMenuBar();
 
+    static bool is_open = true;
+    ImGui::Begin("Data", &is_open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushItemWidth(80.0f);
+    static float time_delta_float = time_delta;
+    if (ImGui::InputFloat("Delta Time", &time_delta_float))
+    {
+        time_delta = time_delta_float;
+    }
+
+    for (auto& data : ephem_data.bodies)
+    {
+        if (data.name == "Earth-Moon Barycenter")
+        {
+            ImGui::Text("Earth-Moon Barycenter Mean Anomaly %f", data.orbit.mean_anomaly);
+            ImGui::Text("Earth-Moon Barycenter Ecce Anomaly %f", data.orbit.eccentric_anomaly);
+            ImGui::Text("Earth-Moon Barycenter True Anomaly %f", data.orbit.true_anomaly);
+        }
+    }
+
+    ImGui::PopItemWidth();
+
+    ImGui::End();
+
     //ImGui::ShowDemoWindow();
 }
 
@@ -297,7 +348,7 @@ void update()
     draw_coordinate_lines(rgb(50, 50, 50));
 
     draw_ephemeris_trajectories(ephem_data);
-    draw_ephemeris_names(ephem_data);
+    //draw_ephemeris_names(ephem_data);
 
     // update
 

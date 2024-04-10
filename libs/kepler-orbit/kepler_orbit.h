@@ -67,6 +67,8 @@ struct kepler_orbit
     void set_current_orbit_time(double time);
     void update_current_orbit_time_by_delta_time(double delta_time);
 
+    static double compute_mass(double semi_major_axis, double period, double g_constant);
+
 private:
     void calculate_orbit_state_from_orbital_elements();
     void calculate_initial_orbit_state();

@@ -2,14 +2,8 @@ from astroquery.jplhorizons import Horizons
 from astropy.time import Time
 import re, json
 
-with open('major-bodies-final.json', 'r') as file:
+with open('major-bodies-final-2.json', 'r') as file:
     data = json.load(file)
-
-def get_horizon_id(name):
-    target_location = f'500@0'
-    query = Horizons(id=name, location=target_location, epochs=Time(['2018-01-01']))
-
-    return query.id
 
 name_body_map = {}
 id_name_map = {}
@@ -53,9 +47,9 @@ for d in data:
 
     parent = id_name_map[d['parent']]
     parent_mass = total_masses[parent]
-    d['attractor_name'] = parent
+    d['parent_name'] = parent
     # d['attractor_mass'] = parent_mass - d['mass']
-    d['attractor_mass'] = parent_mass
+    #d['attractor_mass'] = parent_mass
 
 with open('major-bodies-final-attractors.json', 'w') as file:
     data = json.dump(data, file, indent=4)

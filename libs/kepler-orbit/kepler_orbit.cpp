@@ -21,7 +21,7 @@ void kepler_orbit::initialize(double eccentricity, vec3d semi_major_axis, vec3d 
     this->semi_major_axis = semi_major_axis.length();
     this->semi_minor_axis = semi_minor_axis.length();
 
-    this->mean_anomaly = mean_anomaly_radians;
+    mean_anomaly_initial = this->mean_anomaly = mean_anomaly_radians;
     this->eccentric_anomaly = convert_mean_to_eccentric_anomaly(mean_anomaly, eccentricity);
     this->true_anomaly = convert_eccentric_to_true_anomaly(eccentric_anomaly, eccentricity);
     this->attractor_mass = attractor_mass;
@@ -43,15 +43,15 @@ void kepler_orbit::initialize(double eccentricity,
     this->semi_major_axis = semi_major_axis;
     if (eccentricity < 1.0)
     {
-        this->semi_minor_axis = semi_major_axis * sqrt(1 - eccentricity * eccentricity);
+        this->semi_minor_axis = semi_major_axis * sqrt(1.0 - eccentricity * eccentricity);
     }
     else if (eccentricity > 1.0)
     {
-        this->semi_minor_axis = semi_major_axis * sqrt(eccentricity * eccentricity - 1);
+        this->semi_minor_axis = semi_major_axis * sqrt(eccentricity * eccentricity - 1.0);
     }
     else
     {
-        this->semi_major_axis = 0;
+        this->semi_major_axis = 0.0;
     }
 
 
@@ -73,7 +73,7 @@ void kepler_orbit::initialize(double eccentricity,
     this->semi_major_axis_basis = periapsis;
     this->semi_minor_axis_basis = periapsis.cross(normal);
 
-    this->mean_anomaly = mean_anomaly_rad;
+    mean_anomaly_initial = this->mean_anomaly = mean_anomaly_rad;
     this->eccentric_anomaly = convert_mean_to_eccentric_anomaly(this->mean_anomaly, this->eccentricity);
     this->true_anomaly = convert_eccentric_to_true_anomaly(this->eccentric_anomaly, this->eccentricity);
     this->attractor_mass = attractor_mass;
@@ -110,7 +110,7 @@ std::vector<vec3d> kepler_orbit::get_orbit_points(int points_count, const vec3d&
         {
             for (int i = 0; i < points_count; i++)
             {
-                result[i] = get_focal_position_at_eccentric_anomaly(i * (2.0 * PI) / (points_count - 1.0)) + origin;
+                result[i] = get_focal_position_at_eccentric_anomaly(((double)i) * (2.0 * PI) / (points_count - 1.0)) + origin;
             }
         }
         else if (eccentricity > 1.0)
@@ -118,7 +118,7 @@ std::vector<vec3d> kepler_orbit::get_orbit_points(int points_count, const vec3d&
             double max_angle = calc_true_anomaly_for_distance(max_distance, eccentricity, semi_major_axis, periapsis_distance);
             for (int i = 0; i < points_count; i++)
             {
-                result[i] = get_focal_position_at_true_anomaly(-max_angle + i * 2.0 * max_angle / (points_count - 1.0)) + origin;
+                result[i] = get_focal_position_at_true_anomaly(-max_angle + ((double)i) * 2.0 * max_angle / (points_count - 1.0)) + origin;
             }
         }
         else
@@ -126,7 +126,7 @@ std::vector<vec3d> kepler_orbit::get_orbit_points(int points_count, const vec3d&
             double max_angle = calc_true_anomaly_for_distance(max_distance, eccentricity, periapsis_distance, periapsis_distance);
             for (int i = 0; i < points_count; i++)
             {
-                result[i] = get_focal_position_at_true_anomaly(-max_angle + i * 2.0 * max_angle / (points_count - 1.0)) + origin;
+                result[i] = get_focal_position_at_true_anomaly(-max_angle + ((double)i) * 2.0 * max_angle / (points_count - 1.0)) + origin;
             }
         }
     }
@@ -141,7 +141,7 @@ std::vector<vec3d> kepler_orbit::get_orbit_points(int points_count, const vec3d&
 
         for (int i = 0; i < points_count; i++)
         {
-            result[i] = get_focal_position_at_true_anomaly(-max_angle + i * 2.0 * max_angle / (points_count - 1.0)) + origin;
+            result[i] = get_focal_position_at_true_anomaly(-max_angle + ((double)i) * 2.0 * max_angle / (points_count - 1.0)) + origin;
         }
     }
 
@@ -232,7 +232,7 @@ void kepler_orbit::calculate_orbit_state_from_orbital_elements()
 
     if (eccentricity < 1.0)
     {
-        orbit_compression_ratio = 1 - eccentricity * eccentricity;
+        orbit_compression_ratio = 1.0 - eccentricity * eccentricity;
         center_point = -semi_major_axis_basis * semi_major_axis * eccentricity;
         if (mu != 0.0)
         {
@@ -270,7 +270,7 @@ void kepler_orbit::calculate_orbit_state_from_orbital_elements()
     }
 
     position = get_focal_position_at_eccentric_anomaly(eccentric_anomaly);
-    double compresion = eccentricity < 1 ? (1 - eccentricity * eccentricity) : (eccentricity * eccentricity - 1);
+    double compresion = eccentricity < 1.0 ? (1.0 - eccentricity * eccentricity) : (eccentricity * eccentricity - 1.0);
     focal_parameter = semi_major_axis * compresion;
     velocity = get_velocity_at_true_anomaly(true_anomaly);
     attractor_distance = position.length();
@@ -477,7 +477,7 @@ double kepler_orbit::convert_mean_to_eccentric_anomaly(double mean_anomaly, doub
     }
     else
     {
-        double m = mean_anomaly * 2;
+        double m = mean_anomaly * 2.0;
         double v = 12.0 * m + 4.0 * sqrt(4.0 + 9.0 * m * m);
         double p = pow(v, 1.0 / 3.0);
         double t = 0.5 * p - 2.0 / p;
@@ -579,4 +579,12 @@ void kepler_orbit::process_updated_mean_anomaly()
         eccentric_anomaly = convert_mean_to_eccentric_anomaly(mean_anomaly, eccentricity);
         true_anomaly = eccentric_anomaly;
     }
+}
+
+double kepler_orbit::compute_mass(double semi_major_axis, double period, double g_constant)
+{
+    if (period == 0.0)
+        return 0.0;
+
+    return 4.0 * PI * PI * pow(semi_major_axis, 3.0) / (period * period * g_constant);
 }

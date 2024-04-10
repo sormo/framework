@@ -85,6 +85,7 @@ float color_type::blue() const
 
 const color_type color_type::BLANK = color_type::RGB(0, 0, 0, 0);
 const color_type color_type::WHITE = color_type::RGB(255, 255, 255);
+const color_type color_type::BLACK = color_type::RGB(0, 0, 0);
 const color_type color_type::LIGHTGRAY = color_type::RGB(200, 200, 200);
 const color_type color_type::GRAY = color_type::RGB(100, 100, 100);
 const color_type color_type::DARKGRAY = color_type::RGB(80, 80, 80);

@@ -28,6 +28,7 @@ struct color_type
 
     static const color_type BLANK;           // Blank (Transparent)
     static const color_type WHITE;
+    static const color_type BLACK;
     static const color_type LIGHTGRAY;       // Light Gray
     static const color_type GRAY;            // Gray
     static const color_type DARKGRAY;        // Dark Gray

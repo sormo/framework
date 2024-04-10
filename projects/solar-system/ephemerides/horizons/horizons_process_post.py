@@ -79,16 +79,23 @@ def get_orbital_elements_empty():
     result['W'] = 0.0
     result['MA'] = 0.0
     result['A'] = 0.0
+    result['period'] = 0.0
+    result['position'] = [0.0,0.0,0.0]
+    result['velocity'] = [0.0,0.0,0.0]
 
     return result
 
-def get_orbital_elements(elems):
-    # print('eccentricity:', elems['e'].value[0])
-    # print('semi-major axis:', elems['a'].value[0], 'AU')
-    # print('inclination', elems['incl'].value[0], 'deg')
-    # print('longitude of ascending node', elems['Omega'].value[0], 'deg')
-    # print('argunment of perifocus', elems['w'].value[0], 'deg')
-    # print('mean anomaly', elems['M'].value[0], 'deg')
+def get_orbital_elements(elems, vectors):
+    print('eccentricity:', elems['e'].value[0])
+    print('semi-major axis:', elems['a'].value[0], 'AU')
+    print('inclination', elems['incl'].value[0], 'deg')
+    print('longitude of ascending node', elems['Omega'].value[0], 'deg')
+    print('argument of perifocus', elems['w'].value[0], 'deg')
+    print('mean anomaly', elems['M'].value[0], 'deg')
+    print('period', elems['P'].value[0], 'days')
+    if vectors:
+        print('position', vectors['x'].value[0], vectors['y'].value[0], vectors['z'].value[0], 'AU')
+        print('velocity', vectors['vx'].value[0], vectors['vy'].value[0], vectors['vz'].value[0], 'AU/d')
 
     result = {}
     result['EC'] = elems['e'].value[0]
@@ -97,32 +104,37 @@ def get_orbital_elements(elems):
     result['W'] = elems['w'].value[0]
     result['MA'] = elems['M'].value[0]
     result['A'] = elems['a'].value[0]
+    result['period'] = elems['P'].value[0]
+    if vectors:
+        result['position'] = [vectors['x'].value[0], vectors['y'].value[0], vectors['z'].value[0]]
+        result['velocity'] = [vectors['vx'].value[0], vectors['vy'].value[0], vectors['vz'].value[0]]
 
     return result
 
-def get_horizons_body(body_id, parent_id, time):
+def get_horizons_body(body_id, parent_id, time, with_phys_data=True):
     target_location = f'500@{parent_id}'
 
     query = Horizons(id=body_id, location=target_location, epochs=time)
 
     id = query.id
 
-    raw_data = str(query.elements_async().content)
     if body_id == 0:
         orbit_data = get_orbital_elements_empty()
     else:
         try:
-            #elements = query.elements(cache=False)
             elements = query.elements(cache=True)
+            vectors = query.vectors(cache=True)
         except Exception as e:
             print('Exception: ', e)
             return {}
-        orbit_data = get_orbital_elements(elements)
-
-    phys_data = parse_phys_data(raw_data)
+        orbit_data = get_orbital_elements(elements, vectors)
 
     result = orbit_data
-    result.update(phys_data)
+
+    if with_phys_data:
+        raw_data = str(query.elements_async().content)
+        phys_data = parse_phys_data(raw_data)
+        result.update(phys_data)
 
     return result
 
@@ -148,55 +160,45 @@ def process_horizon_major_bodies(time):
     with open('horizons-major-bodies.json', 'w') as file:
         json.dump(result, file, indent=4)
 
-def process_missing_bodies():
-    data = ['Ersa', 'S/2018 J 2', 'Pandia', 'S/2011 J 3', 'S/2018 J 4', 'Valetudo', 'S/2021 J 3', 'S/2016 J 1', 'S/2021 J 2', 'S/2017 J 3', 'S/2021 J 1', 'S/2017 J 7', 'S/2022 J 3', 'S/2017 J 9', 'S/2016 J 3', 'S/2022 J 1', 'S/2017 J 8', 'S/2021 J 6', 'S/2003 J 24', 'S/2017 J 2', 'S/2022 J 2', 'S/2021 J 4', 'S/2016 J 4', 'S/2017 J 5', 'S/2017 J 6', 'S/2018 J 3', 'S/2021 J 5', 'S/2017 J 1', 'S/2009 S 1', 'S/2019 S 1', 'S/2005 S 4', 'S/2020 S 1', 'S/2006 S 20', 'S/2006 S 9', 'S/2007 S 5', 'S/2007 S 7', 'S/2004 S 37', 'S/2004 S 47', 'S/2004 S 40', 'S/2019 S 2', 'S/2007 S 8', 'S/2004 S 29', 'S/2019 S 3', 'S/2020 S 7', 'S/2004 S 31', 'S/2019 S 14', 'S/2020 S 2', 'S/2019 S 4', 'S/2020 S 3', 'S/2004 S 41', 'S/2020 S 4', 'S/2004 S 42', 'S/2020 S 5', 'S/2007 S 6', 'S/2004 S 43', 'S/2006 S 10', 'S/2019 S 5', 'Gridr', 'S/2004 S 44', 'S/2006 S 12', 'S/2004 S 45', 'S/2006 S 11', 'Eggther', 'S/2006 S 13', 'S/2019 S 6', 'S/2007 S 9', 'S/2019 S 7', 'S/2019 S 8', 'S/2019 S 9', 'S/2004 S 46', 'Angrboda', 'S/2019 S 11', 'Beli', 'S/2019 S 10', 'S/2019 S 12', 'Gerd', 'S/2019 S 13', 'S/2006 S 14', 'Gunnlod', 'S/2019 S 15', 'S/2020 S 6', 'S/2005 S 5', 'Skrymir', 'S/2006 S 16', 'S/2006 S 15', 'S/2004 S 28', 'S/2020 S 8', 'Alvaldi', 'S/2004 S 48', 'Geirrod', 'S/2004 S 50', 'S/2006 S 17', 'S/2004 S 49', 'S/2019 S 17', 'S/2006 S 18', 'S/2019 S 19', 'S/2004 S 21', 'S/2019 S 18', 'S/2004 S 39', 'S/2019 S 16', 'S/2004 S 53', 'S/2004 S 24', 'S/2004 S 36', 'Thiazzi', 'S/2019 S 20', 'S/2006 S 19', 'S/2004 S 34', 'S/2004 S 51', 'S/2020 S 10', 'S/2020 S 9', 'S/2004 S 26', 'S/2019 S 21', 'S/2004 S 52', 'S/2023 U 1', 'S/2002 N 5', 'S/2021 N 1']
+def update_horizons_major_bodies(file_in, file_out, time):
+    with open(file_in, 'r') as file:
+        bodies = json.load(file)
+    
+    for body in bodies:
+        id = body['horizons_id'] if 'horizons_id' in body else body['name']
+        parent = body['parent']
 
-    jupiter_moons= ['Ersa', 'Pandia', 'Valetudo']
+        if parent == -1:
+            continue
 
-    def normalize_name(name):
-        if '/' in name:
-            name = name[2:6]+name[7] + name[9:]
-        return name
+        print('Processing', body['name'])
 
-    result = []
-    for body in data:
-        if '/' in body:
-            parent = 5 if 'J' in body else 6
-        elif body in jupiter_moons:
-            parent = 5
-        else:
-            parent = 6
+        horizons_body = get_horizons_body(id, parent, Time([time]), False)
+        for k,v in horizons_body.items():
+            body[k] = v
+    
+    with open(file_out, 'w') as file:
+        json.dump(bodies, file, indent=4)
 
-        body_name = normalize_name(body)
-
-        print(f'Processing {body_name}')
-
-        horizons_body = get_horizons_body(body_name, parent, Time(['2018-01-01']))
-        
-        horizons_body['name'] = body_name
-        horizons_body['parent'] = parent
-        #horizons_body['horizons_id'] = body['id']
-        horizons_body['time'] = '2018-01-01'
-        
-        result.append(horizons_body)
-
-    with open('missing-bodies.json', 'w') as file:
-        json.dump(result, file, indent=4)
-
+#update_horizons_major_bodies('major-bodies-final.json', 'major-bodies-final-2.json', '2018-01-01')
 
 #process_horizon_major_bodies('2018-01-01')
+#quaoar = get_horizons_body(399, 0, Time(['2018-01-01']))
+# print(quaoar)
 
-#jupiter = get_horizons_body(599, 0, Time(['2018-01-01']))
-#himalaia = get_horizons_body(506, 5, Time(['2018-01-01']))
-#telesto = get_horizons_body(613, 6, Time(['2018-01-01']))
-#philophrosyne = get_horizons_body(558, 5, Time(['2018-01-01']))
-# barycenter = get_horizons_body(53092511, 0, Time(['2018-01-01']))
-# print(barycenter)
-# primary = get_horizons_body(953092511, 53092511, Time(['2018-01-01']))
-# print(primary)
-# secondary = get_horizons_body(153092511, 53092511, Time(['2018-01-01']))
-# print(secondary)
+# test
 
-quaoar = get_horizons_body(599, 5, Time(['2018-01-01']))
-print(quaoar)
+query = Horizons(id='3', location='500@0', epochs=Time(['2018-01-01']))
 
+print('elem01', query.elements(refsystem='ICRF', refplane='ecliptic', tp_type='absolute')['P'].value[0])
+print('elem02', query.elements(refsystem='ICRF', refplane='ecliptic', tp_type='relative')['P'].value[0])
+print('elem03', query.elements(refsystem='ICRF', refplane='earth', tp_type='absolute')['P'].value[0])
+print('elem04', query.elements(refsystem='ICRF', refplane='earth', tp_type='relative')['P'].value[0])
+#print('elem05', query.elements(refsystem='ICRF', refplane='body', tp_type='absolute')['P'].value[0])
+#print('elem06', query.elements(refsystem='ICRF', refplane='body', tp_type='relative')['P'].value[0])
+print('elem07', query.elements(refsystem='B1950', refplane='ecliptic', tp_type='absolute')['P'].value[0])
+print('elem08', query.elements(refsystem='B1950', refplane='ecliptic', tp_type='relative')['P'].value[0])
+print('elem09', query.elements(refsystem='B1950', refplane='earth', tp_type='absolute')['P'].value[0])
+print('elem10', query.elements(refsystem='B1950', refplane='earth', tp_type='relative')['P'].value[0])
+#print('elem11', query.elements(refsystem='B1950', refplane='body', tp_type='absolute')['P'].value[0])
+#print('elem12', query.elements(refsystem='B1950', refplane='body', tp_type='relative')['P'].value[0])

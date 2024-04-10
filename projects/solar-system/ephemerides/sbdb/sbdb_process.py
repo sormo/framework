@@ -50,14 +50,17 @@ def get_body_from_sbdb(spkid):
 
     print_body(data)
 
+    if data['orbit']['two_body']:
+        print('found two-body!')
+
     body = {}
     body['Spkid'] = spkid
     if 'shortname' in data['object']:
-        body['BodyName'] = data['object']['shortname']
+        body['name'] = data['object']['shortname']
     else:
-        body['BodyName'] = data['object']['fullname']
-    body['AttractorName'] = 'Solar system barycenter'
-    body['AttractorMass'] = 1.9884999721201209e30
+        body['name'] = data['object']['fullname']
+    body['parent_name'] = 'Solar-System Barycenter'
+    body['period'] = data['orbit']['elements']['per'].value # orbit period [days]
     body['EC'] = data['orbit']['elements']['e'] # eccentricity
     body['IN'] = data['orbit']['elements']['i'].value # inclination [deg]
     body['OM'] = data['orbit']['elements']['om'].value # ascending node longitude [deg]
@@ -66,27 +69,35 @@ def get_body_from_sbdb(spkid):
     body['A'] = data['orbit']['elements']['a'].value # semi-major axis [AU]
     if 'diameter' in data['phys_par']:
         if type(data['phys_par']['diameter']) == str:
-            body['Diameter'] = float(data['phys_par']['diameter']) # diameter [km]
+            body['radius'] = float(data['phys_par']['diameter']) / 2.0 # diameter [km]
         else:
-            body['Diameter'] = data['phys_par']['diameter'].value # diameter [km]
+            body['radius'] = data['phys_par']['diameter'].value  / 2.0 # diameter [km]
     if 'GM' in data['phys_par']:
-        body['GM'] = data['phys_par']['GM'].value # GM km3/s2
+        body['gm'] = data['phys_par']['GM'].value # GM km3/s2
     if 'density' in data['phys_par']:
         if type(data['phys_par']['density']) == str:
-            body['Density'] = float(data['phys_par']['density']) # density g/cm3
+            body['density'] = float(data['phys_par']['density']) # density g/cm3
         else:
-            body['Density'] = data['phys_par']['density'].value # density g/cm3
+            body['density'] = data['phys_par']['density'].value # density g/cm3
+    if 'rot_per' in data['phys_par']:
+        if type(data['phys_par']['rot_per']) == str:
+            body['rotation_period'] = float(data['phys_par']['rot_per']) # rotation period [hours]
+        else:
+            body['rotation_period'] = data['phys_par']['rot_per'].value # rotation period [hours]
+    
+    if 'orbit_class' in data['object']:
+        body['group'] = data['object']['orbit_class']['name']
+
     return body
 
 def process_bodies_from_csv(csvfile):
     spkids, names = read_input_file(csvfile)
 
-    result = {}
-    result['OrbitsData'] = []
+    result = []
     for spkid in spkids:
-        result['OrbitsData'].append(get_body_from_sbdb(spkid))
+        result.append(get_body_from_sbdb(spkid))
 
-    with open('..\data\small-bodies-sbdb.json', 'w') as file:
+    with open('..\..\data\small-bodies-sbdb-50km.json', 'w') as file:
         json.dump(result, file)
 
-process_bodies_from_csv('sbdb_query_diameter_100km.csv')
+process_bodies_from_csv('sbdb_query_diameter_50km.csv')
