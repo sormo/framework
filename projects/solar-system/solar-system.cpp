@@ -213,24 +213,6 @@ ephemeris_data load_ephemeris_data()
     //read_file2("small-bodies-sbdb-100km.json");
     //read_file2("small-bodies-sbdb-50km.json");
 
-    // test, dump periods:
-    double period_to_days_factor = 1.0;
-    for (const auto& body : result.bodies)
-    {
-        if (body.name != "Earth")
-            continue;
-        double period = body.orbit.period;
-        period_to_days_factor = 365.0 / period;
-        break;
-    }
-
-    std::ofstream test("periods.txt");
-    for (const auto& body : result.bodies)
-    {
-        double period = body.orbit.period;
-        test << body.name << " " << period << " " << (period * period_to_days_factor) << "\n";
-    }
-
     // assign parent-child relationships, can't add anything to this vector
     auto get_body = [&result](const std::string& name) -> body_data*
     {
@@ -311,30 +293,6 @@ void draw_debug_gui()
     ImGui::Text("%.2f %.2f ", get_world_size().x, get_world_size().y);
 
     ImGui::EndMainMenuBar();
-
-    static bool is_open = true;
-    ImGui::Begin("Data", &is_open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
-
-    ImGui::PushItemWidth(80.0f);
-    static float time_delta_float = time_delta;
-    if (ImGui::InputFloat("Delta Time", &time_delta_float))
-    {
-        time_delta = time_delta_float;
-    }
-
-    for (auto& data : ephem_data.bodies)
-    {
-        if (data.name == "Earth-Moon Barycenter")
-        {
-            ImGui::Text("Earth-Moon Barycenter Mean Anomaly %f", data.orbit.mean_anomaly);
-            ImGui::Text("Earth-Moon Barycenter Ecce Anomaly %f", data.orbit.eccentric_anomaly);
-            ImGui::Text("Earth-Moon Barycenter True Anomaly %f", data.orbit.true_anomaly);
-        }
-    }
-
-    ImGui::PopItemWidth();
-
-    ImGui::End();
 
     //ImGui::ShowDemoWindow();
 }
