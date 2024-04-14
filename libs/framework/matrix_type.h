@@ -122,17 +122,16 @@ matrix_type<M> matrix_type<M>::projection(const point_type<M>& size)
     return scaling(size / 2.0f);
 }
 
-// Magnum matrix projection
 template<typename M>
 matrix_type<M> matrix_type<M>::projection(const point_type<M>& bottom_left, const point_type<M>& upper_right)
 {
     const point_type<M> difference = upper_right - bottom_left;
-    const point_type<M> scale = M(2.0) / difference;
+    const point_type<M> scale = { M(2.0) / difference.x, M(2.0) / difference.y };
     const point_type<M> offset = (upper_right + bottom_left) / difference;
 
-    return { {  scale.x(),        M(0), M(0)},
-             {       M(0),   scale.y(), M(0)},
-             {-offset.x(), -offset.y(), M(1)} };
+    return {   scale.x,      M(0), M(0),
+                  M(0),   scale.y, M(0),
+             -offset.x, -offset.y, M(1) };
 }
 
 template<typename M>

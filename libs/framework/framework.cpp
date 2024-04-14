@@ -17,6 +17,7 @@
 #include "sokol_glue.h"
 #include "sokol_fetch.h"
 #include "sokol_time.h"
+#include "sokol_log.h"
 #include "imgui.h"
 #undef SOKOL_IMPL
 
@@ -327,7 +328,10 @@ void frame_update()
 
     imgui::render();
 
+    update_sg();
+
     sg_end_pass();
+
     sg_commit();
 
     events_end_frame();
@@ -342,6 +346,9 @@ void init()
     {
         sg_desc desc{};
         desc.context = sapp_sgcontext();
+#ifdef _DEBUG
+        desc.logger.func = slog_func;
+#endif
         sg_setup(&desc);
     }
 
@@ -403,7 +410,15 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.event_cb = input;
     desc.width = 800;
     desc.height = 600;
+    desc.sample_count = 8; // antialiasing
     //desc.gl_force_gles2 = true;
+
+#ifdef _DEBUG
+    desc.win32_console_create = true;
+    desc.win32_console_utf8 = true;
+    desc.logger.func = slog_func;
+#endif
+
     desc.window_title = "Framework";
 
     return desc;

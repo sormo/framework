@@ -1,4 +1,7 @@
 #include "utils.h"
+#include <random>
+
+std::mt19937_64 g_random_generator;
 
 namespace frame
 {
@@ -64,6 +67,26 @@ namespace frame
             }
             return {}; // never happen
         }
+    }
+
+    float randf()
+    {
+        return std::uniform_real_distribution<float>(0.0f, 1.0f)(g_random_generator);
+    }
+
+    double rand()
+    {
+        return std::uniform_real_distribution<double>(0.0, 1.0)(g_random_generator);
+    }
+
+    float randf(float min, float max)
+    {
+        return std::uniform_real_distribution<float>(min, max)(g_random_generator);
+    }
+
+    double rand(double min, double max)
+    {
+        return std::uniform_real_distribution<float>(min, max)(g_random_generator);
     }
 
     vec2 get_direction_vector(direction direction)

@@ -25,6 +25,13 @@ namespace frame
     };
     vec2 get_direction_vector(direction direction);
 
+    // random value between 0 to 1
+    float randf();
+    double rand();
+
+    float randf(float min, float max);
+    double rand(double min, double max);
+
     //enum class side
     //{
     //    left,

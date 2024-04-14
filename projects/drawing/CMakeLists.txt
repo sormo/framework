@@ -1,4 +1,5 @@
 fips_begin_app(drawing windowed)
-    fips_files(drawing.cpp)
+    fips_files(drawing.cpp drawing_sg.h drawing_sg.cpp)
     fips_deps(framework)
+    sokol_shader(basic_instanced.glsl ${slang})
 fips_end_app()
