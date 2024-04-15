@@ -21,8 +21,10 @@ struct
 {
     std::vector<rect> rects;
 
-    frame::instanced_id rectangle;
-    frame::instanced_id circle;
+    frame::draw_buffer_id rectangle;
+    frame::draw_buffer_id circle;
+
+    frame::draw_buffer_id polyline;
 
 } state;
 
@@ -38,21 +40,26 @@ frame::vec2 get_random_position()
 
 void setup()
 {
-    frame::setup_instanced();
+    frame::setup_draw_sg();
 
-    //state.rectangle = frame::create_instanced_rectangle();
+    state.rectangle = frame::create_instanced_rectangle();
     state.circle = frame::create_instanced_circle(60);
 
-    for (size_t i = 0; i < 1000; i++)
-        frame::add_instanced(state.circle, get_random_position(), 0.0f, { 10.0f, 10.0f }, get_random_color());
+    for (size_t i = 0; i < 10; i++)
+        frame::add_draw_instance(state.circle, get_random_position(), 0.0f, { 10.0f, 10.0f }, get_random_color());
 
-    //for (size_t i = 0; i < 500; i++)
-    //{
-    //    rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), {10.0f, 20.0f}, get_random_color() };
-    //    tr.index = frame::add_instanced(state.rectangle, tr.position, tr.rotation, tr.scale, get_random_color());
+    for (size_t i = 0; i < 10; i++)
+    {
+        rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), {10.0f, 20.0f}, get_random_color() };
+        tr.index = frame::add_draw_instance(state.rectangle, tr.position, tr.rotation, tr.scale, get_random_color());
 
-    //    state.rects.push_back(std::move(tr));
-    //}
+        state.rects.push_back(std::move(tr));
+    }
+
+    std::vector<frame::vec2> vertices{ {0.0f, 0.0f}, {100.0f, 100.0f}, {-100.0f, 100.0f}, {0.0f, 0.0f} };
+
+
+    state.polyline = frame::create_draw_buffer("polyline", { (float*)vertices.data(), vertices.size() * 2, nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP);
 
     //sg_range update_range;
     //update_range.ptr = state.rect.array;
@@ -79,10 +86,11 @@ void update_sg()
     for (auto& tr : state.rects)
     {
         tr.rotation += 0.5f;
-        frame::update_instanced(state.rectangle, tr.index, tr.position, tr.rotation, tr.scale, tr.color);
+        frame::update_draw_instance(state.rectangle, tr.index, tr.position, tr.rotation, tr.scale, tr.color);
     }
 
-    //frame::draw_instanced(state.rectangle);
+    frame::draw_buffer_instanced(state.rectangle);
+    frame::draw_buffer_instanced(state.circle);
 
-    frame::draw_instanced(state.circle);
+    frame::draw_buffer(state.polyline, {}, 0.0f, {1.0f, 1.0f}, frame::col4::WHITE);
 }

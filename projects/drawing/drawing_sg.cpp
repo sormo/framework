@@ -6,12 +6,13 @@
 #include <string>
 #include <vector>
 #include "basic_instanced.glsl.h"
+#include "basic.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "HandmadeMath.h"
 
 namespace frame
 {
-	static uint32_t instance_id_counter = 1;
+	static uint32_t draw_buffer_id_counter = 1;
 
 	struct instanced_element
 	{
@@ -19,7 +20,7 @@ namespace frame
 		float color[4];
 	};
 
-	struct instanced_data
+	struct buffer_data_instanced
 	{
 		sg_pipeline pipeline = {};
 		sg_bindings bindings = {};
@@ -30,33 +31,43 @@ namespace frame
 		bool is_dirty = false; // signalizes whether buffer should be updated before drawing
 	};
 
+	struct buffer_data
+	{
+		sg_pipeline pipeline = {};
+		sg_bindings bindings = {};
+		size_t draw_elements = 0;
+	};
+
 	struct
 	{
 		sg_shader basic_instanced;
-		std::map<instanced_id, instanced_data> instanced;
+		sg_shader basic;
+		std::map<draw_buffer_id, buffer_data_instanced> buffer_data_instanced;
+		std::map<draw_buffer_id, buffer_data> buffer_data;
 		sg_pass_action pass_action;
 
 	} state;
 
-	void setup_instanced()
+	void setup_draw_sg()
 	{
 		state.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
+		state.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
 
 		state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
 		state.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
 	}
 
-	instanced_data create_instanced_data(char* name,
-		                                 int32_t draw_elements,
-		                                 float* vertices,
-		                                 size_t vertices_count,
-		                                 uint16_t* indices,
-		                                 size_t indices_count,
-										 sg_primitive_type type,
-		                                 sg_usage usage,
-		                                 size_t instances_max)
+	buffer_data_instanced create_buffer_data_instanced(const char* name,
+		                                               int32_t draw_elements,
+		                                               float* vertices,
+		                                               size_t vertices_count,
+		                                               uint16_t* indices,
+		                                               size_t indices_count,
+										               sg_primitive_type type,
+		                                               sg_usage usage,
+		                                               size_t instances_max)
 	{
-		instanced_data result{};
+		buffer_data_instanced result{};
 
 		result.instances_max = instances_max;
 		result.array.resize(result.instances_max);
@@ -82,30 +93,34 @@ namespace frame
 
 		result.bindings.vertex_buffers[1] = sg_make_buffer(adesc);
 
-		sg_buffer_desc idesc = {};
-		idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
-		idesc.size = sizeof(float) * indices_count;
-		idesc.data = { indices, sizeof(float) * indices_count };
-		idesc.label = name_indices.c_str();
+		if (indices)
+		{
+			sg_buffer_desc idesc = {};
+			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
+			idesc.size = sizeof(float) * indices_count;
+			idesc.data = { indices, sizeof(float) * indices_count };
+			idesc.label = name_indices.c_str();
 
-		result.bindings.index_buffer = sg_make_buffer(idesc);
+			result.bindings.index_buffer = sg_make_buffer(idesc);
+		}
 
 		sg_pipeline_desc pip_desc = {};
 		pip_desc.primitive_type = type;
 		pip_desc.shader = state.basic_instanced;
-		pip_desc.index_type = SG_INDEXTYPE_UINT16;
-		pip_desc.layout.attrs[ATTR_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-		pip_desc.layout.attrs[ATTR_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_vs_model0].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_vs_model1].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_vs_model2].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_vs_model3].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_vs_color].buffer_index = 1;
+		if (indices)
+			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].buffer_index = 1;
 		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
 		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
 		pip_desc.label = name_pipeline.c_str();
@@ -117,38 +132,81 @@ namespace frame
 		return result;
 	}
 
-	instanced_id create_instanced_rectangle()
+	buffer_data create_buffer_data(const char* name,
+				                   int32_t draw_elements,
+						           float* vertices,
+						           size_t vertices_count,
+							       uint16_t* indices,
+							       size_t indices_count,
+							       sg_primitive_type type)
 	{
-		float vertices[] =
+		buffer_data result{};
+
+		std::string name_str(name);
+		std::string name_vertex = name_str + "-vertices";
+		std::string name_indices = name_str + "-indices";
+		std::string name_pipeline = name_str + "-pipeline";
+
+		sg_buffer_desc vdesc = {};
+		vdesc.size = sizeof(float) * vertices_count;
+		vdesc.data = { vertices, sizeof(float) * vertices_count };
+		vdesc.label = name_vertex.c_str();
+
+		result.bindings.vertex_buffers[0] = sg_make_buffer(vdesc);
+
+		if (indices)
 		{
-			0.5f,  0.5f, 0.0f,  // top right
-			0.5f, -0.5f, 0.0f,  // bottom right
-		   -0.5f, -0.5f, 0.0f,  // bottom left
-		   -0.5f,  0.5f, 0.0f,  // top left
-		};
+			sg_buffer_desc idesc = {};
+			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
+			idesc.size = sizeof(float) * indices_count;
+			idesc.data = { indices, sizeof(float) * indices_count };
+			idesc.label = name_indices.c_str();
 
-		uint16_t indices[] =
-		{
-			0, 1, 3, 2
-		};
+			result.bindings.index_buffer = sg_make_buffer(idesc);
+		}
 
-		instanced_id id{ instance_id_counter++ };
+		sg_pipeline_desc pip_desc = {};
+		pip_desc.primitive_type = type;
+		pip_desc.shader = state.basic;
+		if (indices)
+			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
+		pip_desc.label = name_pipeline.c_str();
 
-		state.instanced[id] = std::move(create_instanced_data("rectangle", 4, vertices, 12, indices, 4, SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000));
+		result.pipeline = sg_make_pipeline(pip_desc);
 
-		return id;
+		result.draw_elements = draw_elements;
+
+		return result;
 	}
 
-	instanced_id create_instanced_circle(size_t count)
+	mesh_data create_mesh_rectangle()
 	{
-		std::vector<float> vertices(count * 3);
+		mesh_data result;
+		result.vertices.assign({
+			0.5f,  0.5f, // top right
+			0.5f, -0.5f, // bottom right
+			-0.5f, -0.5f, // bottom left
+			-0.5f,  0.5f, // top left
+		});
+
+		result.indices.assign({ 0, 1, 3, 2 });
+
+		return result;
+	}
+
+	mesh_data create_mesh_circle(size_t count)
+	{
+		mesh_data result;
+
+		result.vertices.resize(count * 2);
 		for (size_t i = 0; i < count; i++)
 		{
 			float angle = 2.0f * frame::PI * (float)i / (float)(count);
 
-			vertices[i * 3] = std::cos(angle);
-			vertices[i * 3 + 1] = std::sin(angle);
-			vertices[i * 3 + 2] = 0.0f;
+			result.vertices[i * 2] = std::cos(angle);
+			result.vertices[i * 2 + 1] = std::sin(angle);
 		}
 		//vertices.assign({ 
 		//	0.5f,  0.5f, 0.0f,  // top right
@@ -160,24 +218,44 @@ namespace frame
 		std::vector<uint16_t> indices;
 		for (uint16_t i = 0; i < count - 2; i++)
 		{
-			indices.push_back(0);
-			indices.push_back(i + 1);
-			indices.push_back(i + 2);
+			result.indices.push_back(0);
+			result.indices.push_back(i + 1);
+			result.indices.push_back(i + 2);
 		}
-		//indices.assign({
-		//	0, 1, 3, 2
-		//});
 
-		//std::reverse(std::begin(indices), std::end(indices));
+		return result;
+	}
 
-		instanced_id id{ instance_id_counter++ };
+	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t max_count)
+	{
+		draw_buffer_id id{ draw_buffer_id_counter++ };
 
-		state.instanced[id] = std::move(create_instanced_data("circle", (count - 2)*3, vertices.data(), vertices.size(), indices.data(), indices.size(), SG_PRIMITIVETYPE_TRIANGLES, SG_USAGE_DYNAMIC, 10'000));
+		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
+
+		state.buffer_data_instanced[id] = std::move(create_buffer_data_instanced(name,
+			                                                                     elements_count,
+																				 mesh.vertices, 
+																				 mesh.vertices_count,
+																			     mesh.indices,
+																				 mesh.indices_count,
+																				 type,
+																				 usage,
+																				 max_count));
 
 		return id;
 	}
 
-	hmm_mat4 create_model_matrix(frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	draw_buffer_id create_instanced_rectangle()
+	{
+		return create_draw_buffer_instanced("rectangle", create_mesh_rectangle(), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000);
+	}
+
+	draw_buffer_id create_instanced_circle(size_t count)
+	{
+		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000);
+	}
+
+	hmm_mat4 create_model_matrix(frame::vec2 position, float rotation, frame::vec2 size)
 	{
 		auto scale = HMM_Scale({ size.x, size.y, 0.0f });
 		auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
@@ -185,11 +263,19 @@ namespace frame
 		return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
 	}
 
-	size_t add_instanced(instanced_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	hmm_mat4 create_projection_view_matrix()
 	{
-		auto& data = state.instanced[id];
+		hmm_mat4 view = HMM_Translate(HMM_Vec3(sapp_width() / 2.0f, sapp_height() / 2.0f, 0.0f));
+		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_width(), 0.0f, sapp_height(), 0.0f, 100.0f);
 
-		hmm_mat4 model = create_model_matrix(position, rotation, size, color);
+		return HMM_MultiplyMat4(projection, view);
+	}
+
+	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		auto& data = state.buffer_data_instanced[id];
+
+		hmm_mat4 model = create_model_matrix(position, rotation, size);
 
 		auto index = data.instances;
 		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
@@ -201,19 +287,19 @@ namespace frame
 		return index;
 	}
 
-	void remove_instanced(instanced_id id, size_t index)
+	void remove_draw_instance(draw_buffer_id id, size_t index)
 	{
-		auto& data = state.instanced[id];
+		auto& data = state.buffer_data_instanced[id];
 
 		data.array.erase(std::begin(data.array) + index);
 		data.is_dirty = true;
 	}
 
-	void update_instanced(instanced_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		auto& data = state.instanced[id];
+		auto& data = state.buffer_data_instanced[id];
 
-		hmm_mat4 model = create_model_matrix(position, rotation, size, color);
+		hmm_mat4 model = create_model_matrix(position, rotation, size);
 
 		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
 		memcpy(data.array[index].color, &color, sizeof(color));
@@ -221,7 +307,7 @@ namespace frame
 		data.is_dirty = true;
 	}
 
-	void draw_instanced_data(instanced_data& data)
+	void draw_buffer_data_instanced(buffer_data_instanced& data)
 	{
 		if (data.instances == 0)
 			return;
@@ -240,20 +326,58 @@ namespace frame
 			data.is_dirty = false;
 		}
 
-		hmm_mat4 view = HMM_Translate(HMM_Vec3(sapp_width() / 2.0f, sapp_height() / 2.0f, 0.0f));
-		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_width(), 0.0f, sapp_height(), 0.0f, 100.0f);
+		auto projection_view = create_projection_view_matrix();
 
-		vs_params_t vs_params;
-		memcpy(vs_params.view_projection, HMM_MultiplyMat4(projection, view).Elements, sizeof(projection.Elements));
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &SG_RANGE(vs_params));
+		basic_instanced_vs_params_t vs_params;
+		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
+		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, &SG_RANGE(vs_params));
 
 		sg_draw(0, data.draw_elements, data.instances);
 
 		//state.rect.instances = 0;
 	}
 
-	void draw_instanced(instanced_id id)
+	void draw_buffer_instanced(draw_buffer_id id)
 	{
-		draw_instanced_data(state.instanced[id]);
+		draw_buffer_data_instanced(state.buffer_data_instanced[id]);
+	}
+
+	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type)
+	{
+		draw_buffer_id id{ draw_buffer_id_counter++ };
+
+		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
+
+		state.buffer_data[id] = std::move(create_buffer_data(name,
+								        					 elements_count,
+															 mesh.vertices,
+															 mesh.vertices_count,
+															 mesh.indices,
+															 mesh.indices_count,
+															 type));
+
+		return id;
+	}
+
+	void draw_buffer_data(buffer_data& data, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		sg_apply_pipeline(data.pipeline);
+		sg_apply_bindings(&data.bindings);
+
+		hmm_mat4 model = create_model_matrix(position, rotation, size);
+		hmm_mat4 projection_view = create_projection_view_matrix();
+
+		basic_vs_params_t vs_params;
+		memcpy(vs_params.mvp, HMM_MultiplyMat4(projection_view, model).Elements, sizeof(model.Elements));
+		memcpy(vs_params.color, color.data.rgba, sizeof(color.data.rgba));
+		
+		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, &SG_RANGE(vs_params));
+
+		sg_draw(0, data.draw_elements, 1);
+	}
+
+	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		draw_buffer_data(state.buffer_data[id], position, rotation, size, color);
 	}
 }
