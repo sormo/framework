@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "drawing_sg.h"
 
+frame::free_move_camera_config free_move_config;
+
 struct rect
 {
     frame::vec2 position;
@@ -25,6 +27,8 @@ struct
     frame::draw_buffer_id circle;
 
     frame::draw_buffer_id polyline;
+
+    frame::draw_buffer_id center;
 
 } state;
 
@@ -58,20 +62,42 @@ void setup()
 
     std::vector<frame::vec2> vertices{ {0.0f, 0.0f}, {100.0f, 100.0f}, {-100.0f, 100.0f}, {0.0f, 0.0f} };
 
-
-    state.polyline = frame::create_draw_buffer("polyline", { (float*)vertices.data(), vertices.size() * 2, nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP);
+    state.polyline = frame::create_draw_buffer("polyline", { (float*)vertices.data(), vertices.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP);
+    state.center = frame::create_draw_buffer("center", frame::create_mesh_rectangle(), sg_primitive_type::SG_PRIMITIVETYPE_TRIANGLE_STRIP);
 
     //sg_range update_range;
     //update_range.ptr = state.rect.array;
     //update_range.size = sizeof(instanced_element) * state.rect.instances;
 
     //sg_update_buffer(state.rect.bind.vertex_buffers[1], &update_range);
+
+    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
+    free_move_config.min_size = { 0.1f, 0.1f };
+    free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
 }
 
 void update()
 {
+    ImGui::BeginMainMenuBar();
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen");
+    auto mouse_screen = frame::get_mouse_screen_position();
+    ImGui::Text("%.3f %.3f", mouse_screen.x, mouse_screen.y);
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World");
+    auto mouse_canvas = frame::get_world_transform().inverted().transform_point(mouse_screen);
+    ImGui::Text("%.3f %.3f", mouse_canvas.x, mouse_canvas.y);
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen Size");
+    ImGui::Text("%.2f %.2f", frame::get_screen_size().x, frame::get_screen_size().y);
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Size");
+    ImGui::Text("%.2f %.2f ", frame::get_world_size().x, frame::get_world_size().y);
+
+    ImGui::EndMainMenuBar();
+
     bool open = true;
-    ImGui::SetNextWindowPos({ 10.0f, 10.0f });
+    ImGui::SetNextWindowPos({ 0.0f, 20.0f });
     ImGui::Begin("Settings", &open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
@@ -79,6 +105,10 @@ void update()
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     ImGui::End();
+
+    frame::draw_rectangle({}, 20.0f, 20.0f, frame::col4::RED);
+
+    frame::free_move_camera_update(free_move_config);
 }
 
 void update_sg()
@@ -92,5 +122,6 @@ void update_sg()
     frame::draw_buffer_instanced(state.rectangle);
     frame::draw_buffer_instanced(state.circle);
 
-    frame::draw_buffer(state.polyline, {}, 0.0f, {1.0f, 1.0f}, frame::col4::WHITE);
+    frame::draw_buffer(state.polyline, {200.0f, 200.0f}, 90.0f, {0.5f, 0.5f}, frame::col4::WHITE);
+    frame::draw_buffer(state.center, frame::translation({ 0.0f, 100.0f }) * frame::scale({ 20.0f, 20.0f }), frame::col4::WHITE);
 }

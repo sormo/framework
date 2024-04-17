@@ -79,8 +79,8 @@ namespace frame
 		std::string name_pipeline = name_str + "-pipeline";
 
 		sg_buffer_desc vdesc = {};
-		vdesc.size = sizeof(float) * vertices_count;
-		vdesc.data = { vertices, sizeof(float) * vertices_count };
+		vdesc.size = 2 * sizeof(float) * vertices_count;
+		vdesc.data = { vertices, 2 * sizeof(float) * vertices_count };
 		vdesc.label = name_vertex.c_str();
 
 		result.bindings.vertex_buffers[0] = sg_make_buffer(vdesc);
@@ -97,8 +97,8 @@ namespace frame
 		{
 			sg_buffer_desc idesc = {};
 			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
-			idesc.size = sizeof(float) * indices_count;
-			idesc.data = { indices, sizeof(float) * indices_count };
+			idesc.size = 2 * sizeof(float) * indices_count;
+			idesc.data = { indices, 2 * sizeof(float) * indices_count };
 			idesc.label = name_indices.c_str();
 
 			result.bindings.index_buffer = sg_make_buffer(idesc);
@@ -148,8 +148,8 @@ namespace frame
 		std::string name_pipeline = name_str + "-pipeline";
 
 		sg_buffer_desc vdesc = {};
-		vdesc.size = sizeof(float) * vertices_count;
-		vdesc.data = { vertices, sizeof(float) * vertices_count };
+		vdesc.size = 2 * sizeof(float) * vertices_count;
+		vdesc.data = { vertices, 2 * sizeof(float) * vertices_count };
 		vdesc.label = name_vertex.c_str();
 
 		result.bindings.vertex_buffers[0] = sg_make_buffer(vdesc);
@@ -158,8 +158,8 @@ namespace frame
 		{
 			sg_buffer_desc idesc = {};
 			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
-			idesc.size = sizeof(float) * indices_count;
-			idesc.data = { indices, sizeof(float) * indices_count };
+			idesc.size = 2 * sizeof(float) * indices_count;
+			idesc.data = { indices, 2 * sizeof(float) * indices_count };
 			idesc.label = name_indices.c_str();
 
 			result.bindings.index_buffer = sg_make_buffer(idesc);
@@ -205,8 +205,8 @@ namespace frame
 		{
 			float angle = 2.0f * frame::PI * (float)i / (float)(count);
 
-			result.vertices[i * 2] = std::cos(angle);
-			result.vertices[i * 2 + 1] = std::sin(angle);
+			result.vertices[i * 2] = std::cos(angle) * 0.5f;
+			result.vertices[i * 2 + 1] = std::sin(angle) * 0.5f;
 		}
 		//vertices.assign({ 
 		//	0.5f,  0.5f, 0.0f,  // top right
@@ -255,7 +255,7 @@ namespace frame
 		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000);
 	}
 
-	hmm_mat4 create_model_matrix(frame::vec2 position, float rotation, frame::vec2 size)
+	hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
 	{
 		auto scale = HMM_Scale({ size.x, size.y, 0.0f });
 		auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
@@ -263,19 +263,36 @@ namespace frame
 		return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
 	}
 
+	hmm_mat4 create_hmm_transform(const frame::mat3& transform)
+	{
+		hmm_mat4 result = HMM_Mat4d(1.0f);
+
+		result.Elements[0][0] = transform.data[0];
+		result.Elements[0][1] = transform.data[3];
+		result.Elements[0][3] = transform.data[6];
+
+		result.Elements[1][0] = transform.data[1];
+		result.Elements[1][1] = transform.data[4];
+		result.Elements[1][3] = transform.data[7];
+
+		result.Elements[3][0] = transform.data[2];
+		result.Elements[3][1] = transform.data[5];
+		result.Elements[3][3] = transform.data[8];
+
+		return result;
+	}
+
 	hmm_mat4 create_projection_view_matrix()
 	{
-		hmm_mat4 view = HMM_Translate(HMM_Vec3(sapp_width() / 2.0f, sapp_height() / 2.0f, 0.0f));
-		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_width(), 0.0f, sapp_height(), 0.0f, 100.0f);
+		hmm_mat4 view = create_hmm_transform(frame::get_world_transform());
+		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
 
 		return HMM_MultiplyMat4(projection, view);
 	}
 
-	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	size_t add_draw_instance(draw_buffer_id id, const hmm_mat4& model, frame::col4 color)
 	{
 		auto& data = state.buffer_data_instanced[id];
-
-		hmm_mat4 model = create_model_matrix(position, rotation, size);
 
 		auto index = data.instances;
 		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
@@ -287,6 +304,17 @@ namespace frame
 		return index;
 	}
 
+
+	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		return add_draw_instance(id, create_hmm_transform(position, rotation, size), color);
+	}
+
+	size_t add_draw_instance(draw_buffer_id id, const frame::mat3& transform, frame::col4 color)
+	{
+		return add_draw_instance(id, create_hmm_transform(transform), color);
+	}
+
 	void remove_draw_instance(draw_buffer_id id, size_t index)
 	{
 		auto& data = state.buffer_data_instanced[id];
@@ -295,16 +323,24 @@ namespace frame
 		data.is_dirty = true;
 	}
 
-	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	void update_draw_instance(draw_buffer_id id, size_t index, const hmm_mat4& model, frame::col4 color)
 	{
 		auto& data = state.buffer_data_instanced[id];
-
-		hmm_mat4 model = create_model_matrix(position, rotation, size);
 
 		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
 		memcpy(data.array[index].color, &color, sizeof(color));
 
 		data.is_dirty = true;
+	}
+
+	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		update_draw_instance(id, index, create_hmm_transform(position, rotation, size), color);
+	}
+
+	void update_draw_instance(draw_buffer_id id, size_t index, const frame::mat3& transform, frame::col4 color)
+	{
+		update_draw_instance(id, index, create_hmm_transform(transform), color);
 	}
 
 	void draw_buffer_data_instanced(buffer_data_instanced& data)
@@ -359,12 +395,13 @@ namespace frame
 		return id;
 	}
 
-	void draw_buffer_data(buffer_data& data, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	void draw_buffer(draw_buffer_id id, const hmm_mat4& model , frame::col4 color)
 	{
+		auto& data = state.buffer_data[id];
+
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
-		hmm_mat4 model = create_model_matrix(position, rotation, size);
 		hmm_mat4 projection_view = create_projection_view_matrix();
 
 		basic_vs_params_t vs_params;
@@ -378,6 +415,11 @@ namespace frame
 
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		draw_buffer_data(state.buffer_data[id], position, rotation, size, color);
+		draw_buffer(id, create_hmm_transform(position, rotation, size), color);
+	}
+
+	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color)
+	{
+		draw_buffer(id, create_hmm_transform(transform), color);
 	}
 }
