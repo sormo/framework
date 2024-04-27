@@ -54,6 +54,8 @@ void apply_transform(const mat3& m)
 
 namespace frame
 {
+    void setup_draw_sg();
+
     col4 rgb(char r, char g, char b)
     {
         return col4::RGB(r, g, b);
@@ -369,6 +371,8 @@ void init()
         sfetch_desc_t desc{};
         sfetch_setup(&desc);
     }
+
+    setup_draw_sg();
 
     setup();
 

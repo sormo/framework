@@ -10,6 +10,8 @@ fips_begin_lib(framework)
                imgui_impl.h
                imgui_impl.cpp
                drawing.cpp
+               drawing_sg.h
+               drawing_sg.cpp
                events.h
                events.cpp
                color_type.h
@@ -18,4 +20,6 @@ fips_begin_lib(framework)
     fips_deps(glad)
     fips_deps(box2d)
     fips_deps(imgui)
+    sokol_shader(basic_instanced.glsl ${slang})
+    sokol_shader(basic.glsl ${slang})
 fips_end_lib()

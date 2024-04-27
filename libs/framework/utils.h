@@ -71,4 +71,6 @@ namespace frame
     };
     void draw_line_directed_with_handles(const vec2& from, const vec2& to, float thickness, const col4& color, line_handle_config* from_handle, line_handle_config* to_handle);
     bool update_line_with_handles(vec2& from, vec2& to, line_handle_config* from_handle, line_handle_config* to_handle);
+
+    // std::vector<vec2> create_bezier_curve(const std::vector<vec2>& polyline); TODO
 }

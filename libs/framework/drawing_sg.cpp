@@ -38,6 +38,41 @@ namespace frame
 		size_t draw_elements = 0;
 	};
 
+	enum class shader_type
+	{
+		basic,
+		basic_instanced
+	};
+
+	struct pipeline_desc
+	{
+		sg_primitive_type type;
+		bool index_buffer = false;
+		shader_type shader;
+
+		bool operator<(const pipeline_desc& o) const
+		{
+			if (o.type != type)
+				return type < o.type;
+			if (o.index_buffer != index_buffer)
+				return index_buffer < o.index_buffer;
+			return shader < o.shader;
+		}
+	};
+
+	struct buffer_desc // TODO
+	{
+		sg_usage usage;
+		sg_buffer_type type;
+
+		bool operator<(const buffer_desc& o) const
+		{
+			if (o.type != type)
+				return type < o.type;
+			return usage < o.usage;
+		}
+	};
+
 	struct
 	{
 		sg_shader basic_instanced;
@@ -46,7 +81,99 @@ namespace frame
 		std::map<draw_buffer_id, buffer_data> buffer_data;
 		sg_pass_action pass_action;
 
+		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
+
+		std::map<buffer_desc, sg_buffer> buffer_cache; // TODO use sg_append_buffer and set offset to sg_bindings stored in buffer_data*
+
 	} state;
+
+	sg_pipeline_desc get_pipeline_desc_basic_instanced(sg_primitive_type type, bool index_buffer)
+	{
+		sg_pipeline_desc pip_desc = {};
+		pip_desc.primitive_type = type;
+		pip_desc.shader = state.basic_instanced;
+		if (index_buffer)
+			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].buffer_index = 1;
+		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
+		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
+
+		return pip_desc;
+	}
+
+	sg_pipeline_desc get_pipeline_desc_basic(sg_primitive_type type, bool index_buffer)
+	{
+		sg_pipeline_desc pip_desc = {};
+		pip_desc.primitive_type = type;
+		pip_desc.shader = state.basic;
+		if (index_buffer)
+			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
+
+		return pip_desc;
+	}
+
+	sg_pipeline_desc get_pipeline_desc(pipeline_desc desc)
+	{
+		switch (desc.shader)
+		{
+		case shader_type::basic:
+			return get_pipeline_desc_basic(desc.type, desc.index_buffer);
+		case shader_type::basic_instanced:
+			return get_pipeline_desc_basic_instanced(desc.type, desc.index_buffer);
+		}
+		return {};
+	}
+
+	sg_pipeline create_pipeline(pipeline_desc desc)
+	{
+		if (state.pipeline_cache.count(desc))
+			return state.pipeline_cache[desc];
+
+		state.pipeline_cache[desc] = sg_make_pipeline(get_pipeline_desc(desc));
+
+		return state.pipeline_cache[desc];
+	}
+
+	std::pair<sg_buffer, int> create_buffer(buffer_desc desc, const void* data, size_t size)
+	{
+		sg_buffer buffer{};
+
+		if (!state.buffer_cache.count(desc))
+		{
+			sg_buffer_desc sg_desc = {};
+			sg_desc.type = desc.type;
+			sg_desc.usage = desc.usage;
+			sg_desc.size = 20'000'000; // TODO
+			sg_desc.data = { nullptr, 20'000'000 };
+
+			auto buffer = sg_make_buffer(sg_desc);
+
+			state.buffer_cache[desc] = sg_make_buffer(sg_desc);
+
+			sg_update_buffer(buffer, { data, size });
+
+			return { buffer, 0 };
+		}
+		else
+		{
+			auto buffer = state.buffer_cache[desc];
+
+			return { buffer, sg_append_buffer(buffer, { data, size }) };
+		}
+	}
 
 	void setup_draw_sg()
 	{
@@ -64,7 +191,7 @@ namespace frame
 		                                               uint16_t* indices,
 		                                               size_t indices_count,
 										               sg_primitive_type type,
-		                                               sg_usage usage,
+		                                               sg_usage usage, // TODO same usage for both vertex and instance buffer
 		                                               size_t instances_max)
 	{
 		buffer_data_instanced result{};
@@ -72,61 +199,39 @@ namespace frame
 		result.instances_max = instances_max;
 		result.array.resize(result.instances_max);
 
-		std::string name_str(name);
-		std::string name_vertex = name_str + "-vertices";
-		std::string name_instanced = name_str + "-instanced-array";
-		std::string name_indices = name_str + "-indices";
-		std::string name_pipeline = name_str + "-pipeline";
+		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
+		auto [vertex_buffer, vertex_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, vertices, vertex_buffer_size);
 
-		sg_buffer_desc vdesc = {};
-		vdesc.size = 2 * sizeof(float) * vertices_count;
-		vdesc.data = { vertices, 2 * sizeof(float) * vertices_count };
-		vdesc.label = name_vertex.c_str();
+		result.bindings.vertex_buffers[0] = vertex_buffer;
+		result.bindings.vertex_buffer_offsets[0] = vertex_buffer_offset;
 
-		result.bindings.vertex_buffers[0] = sg_make_buffer(vdesc);
+		size_t instance_buffer_size = result.array.size() * sizeof(instanced_element);
+		//auto [instance_buffer, instance_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, nullptr, instance_buffer_size);
 
-		sg_buffer_desc adesc = {};
-		adesc.usage = usage;
-		adesc.size = result.array.size() * sizeof(instanced_element);
-		//adesc.data = SG_RANGE(state.rect.array);
-		adesc.label = name_instanced.c_str();
+		//result.bindings.vertex_buffers[1] = instance_buffer;
+		//result.bindings.vertex_buffer_offsets[1] = instance_buffer_offset;
 
-		result.bindings.vertex_buffers[1] = sg_make_buffer(adesc);
+		sg_buffer_desc instance_buffer_desc = {};
+		instance_buffer_desc.type = SG_BUFFERTYPE_VERTEXBUFFER;
+		instance_buffer_desc.usage = usage;
+		instance_buffer_desc.size = instance_buffer_size;
+		instance_buffer_desc.data = { nullptr, instance_buffer_size };
+
+		auto instance_buffer = sg_make_buffer(instance_buffer_desc);
+
+		result.bindings.vertex_buffers[1] = instance_buffer;
+		result.bindings.vertex_buffer_offsets[1] = 0;
 
 		if (indices)
 		{
-			sg_buffer_desc idesc = {};
-			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
-			idesc.size = 2 * sizeof(float) * indices_count;
-			idesc.data = { indices, 2 * sizeof(float) * indices_count };
-			idesc.label = name_indices.c_str();
+			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
+			auto [index_buffer, index_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, indices, index_buffer_size);
 
-			result.bindings.index_buffer = sg_make_buffer(idesc);
+			result.bindings.index_buffer = index_buffer;
+			result.bindings.index_buffer_offset = index_buffer_offset;
 		}
 
-		sg_pipeline_desc pip_desc = {};
-		pip_desc.primitive_type = type;
-		pip_desc.shader = state.basic_instanced;
-		if (indices)
-			pip_desc.index_type = SG_INDEXTYPE_UINT16;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].buffer_index = 1;
-		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
-		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
-		pip_desc.label = name_pipeline.c_str();
-
-		result.pipeline = sg_make_pipeline(pip_desc);
-
+		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic_instanced });
 		result.draw_elements = draw_elements;
 
 		return result;
@@ -138,44 +243,31 @@ namespace frame
 						           size_t vertices_count,
 							       uint16_t* indices,
 							       size_t indices_count,
-							       sg_primitive_type type)
+							       sg_primitive_type type,
+		                           sg_usage usage)
 	{
 		buffer_data result{};
 
 		std::string name_str(name);
 		std::string name_vertex = name_str + "-vertices";
 		std::string name_indices = name_str + "-indices";
-		std::string name_pipeline = name_str + "-pipeline";
 
-		sg_buffer_desc vdesc = {};
-		vdesc.size = 2 * sizeof(float) * vertices_count;
-		vdesc.data = { vertices, 2 * sizeof(float) * vertices_count };
-		vdesc.label = name_vertex.c_str();
+		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
+		auto [vertex_buffer, vertex_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, vertices, vertex_buffer_size);
 
-		result.bindings.vertex_buffers[0] = sg_make_buffer(vdesc);
+		result.bindings.vertex_buffers[0] = vertex_buffer;
+		result.bindings.vertex_buffer_offsets[0] = vertex_buffer_offset;
 
 		if (indices)
 		{
-			sg_buffer_desc idesc = {};
-			idesc.type = SG_BUFFERTYPE_INDEXBUFFER;
-			idesc.size = 2 * sizeof(float) * indices_count;
-			idesc.data = { indices, 2 * sizeof(float) * indices_count };
-			idesc.label = name_indices.c_str();
+			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
+			auto [index_buffer, index_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, indices, index_buffer_size);
 
-			result.bindings.index_buffer = sg_make_buffer(idesc);
+			result.bindings.index_buffer = index_buffer;
+			result.bindings.index_buffer_offset = index_buffer_offset;
 		}
 
-		sg_pipeline_desc pip_desc = {};
-		pip_desc.primitive_type = type;
-		pip_desc.shader = state.basic;
-		if (indices)
-			pip_desc.index_type = SG_INDEXTYPE_UINT16;
-		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
-		pip_desc.label = name_pipeline.c_str();
-
-		result.pipeline = sg_make_pipeline(pip_desc);
-
+		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic });
 		result.draw_elements = draw_elements;
 
 		return result;
@@ -208,12 +300,6 @@ namespace frame
 			result.vertices[i * 2] = std::cos(angle) * 0.5f;
 			result.vertices[i * 2 + 1] = std::sin(angle) * 0.5f;
 		}
-		//vertices.assign({ 
-		//	0.5f,  0.5f, 0.0f,  // top right
-		//	0.5f, -0.5f, 0.0f,  // bottom right
-		//	-0.5f, -0.5f, 0.0f,  // bottom left
-		//	-0.5f,  0.5f, 0.0f,  // top left
-		//});
 
 		std::vector<uint16_t> indices;
 		for (uint16_t i = 0; i < count - 2; i++)
@@ -378,7 +464,7 @@ namespace frame
 		draw_buffer_data_instanced(state.buffer_data_instanced[id]);
 	}
 
-	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type)
+	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage)
 	{
 		draw_buffer_id id{ draw_buffer_id_counter++ };
 
@@ -390,7 +476,8 @@ namespace frame
 															 mesh.vertices_count,
 															 mesh.indices,
 															 mesh.indices_count,
-															 type));
+															 type,
+			                                                 usage));
 
 		return id;
 	}

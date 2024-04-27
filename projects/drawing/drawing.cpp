@@ -44,8 +44,6 @@ frame::vec2 get_random_position()
 
 void setup()
 {
-    frame::setup_draw_sg();
-
     state.rectangle = frame::create_instanced_rectangle();
     state.circle = frame::create_instanced_circle(60);
 
@@ -54,7 +52,7 @@ void setup()
 
     for (size_t i = 0; i < 10; i++)
     {
-        rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), {10.0f, 20.0f}, get_random_color() };
+        rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), { 10.0f, 20.0f }, get_random_color() };
         tr.index = frame::add_draw_instance(state.rectangle, tr.position, tr.rotation, tr.scale, get_random_color());
 
         state.rects.push_back(std::move(tr));
@@ -62,8 +60,8 @@ void setup()
 
     std::vector<frame::vec2> vertices{ {0.0f, 0.0f}, {100.0f, 100.0f}, {-100.0f, 100.0f}, {0.0f, 0.0f} };
 
-    state.polyline = frame::create_draw_buffer("polyline", { (float*)vertices.data(), vertices.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP);
-    state.center = frame::create_draw_buffer("center", frame::create_mesh_rectangle(), sg_primitive_type::SG_PRIMITIVETYPE_TRIANGLE_STRIP);
+    state.polyline = frame::create_draw_buffer("polyline", { (float*)vertices.data(), vertices.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
+    state.center = frame::create_draw_buffer("center", frame::create_mesh_rectangle(), sg_primitive_type::SG_PRIMITIVETYPE_TRIANGLE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
 
     //sg_range update_range;
     //update_range.ptr = state.rect.array;
@@ -74,6 +72,8 @@ void setup()
     frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
     free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
+
+
 }
 
 void update()
@@ -123,5 +123,6 @@ void update_sg()
     frame::draw_buffer_instanced(state.circle);
 
     frame::draw_buffer(state.polyline, {200.0f, 200.0f}, 90.0f, {0.5f, 0.5f}, frame::col4::WHITE);
-    frame::draw_buffer(state.center, frame::translation({ 0.0f, 100.0f }) * frame::scale({ 20.0f, 20.0f }), frame::col4::WHITE);
+    //frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 200.0f, 200.0f }), frame::col4::WHITE);
+    frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 5.0f, 5.0f }), frame::col4::WHITE);
 }
