@@ -77,7 +77,7 @@ void draw_ephemeris_trajectories(ephemeris_data& data)
 
         //auto bezier_poly_test = frame::create_bezier_curve(data.trajectory);
         //draw_polyline_ex(bezier_poly_test, scale_independent(1.0f), col4::GREEN);
-        frame::draw_buffer(data.trajectory_polyline, {}, 0.0f, { 1.0f, 1.0f }, frame::col4::WHITE);
+        frame::draw_buffer(data.trajectory_polyline, {}, 0.0f, { 1.0f, 1.0f }, frame::col4::GRAY);
 
         //draw_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GRAY);
         //draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);

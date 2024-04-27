@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <cassert>
 #include "basic_instanced.glsl.h"
 #include "basic.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
@@ -12,6 +13,202 @@
 
 namespace frame
 {
+	///////////////////////////////////////////
+	/// BUFFERS ///////////////////////////////
+	///////////////////////////////////////////
+
+	class buffer
+	{
+		sg_buffer buffer_id = {};
+		sg_usage usage = sg_usage::_SG_USAGE_DEFAULT;
+		sg_buffer_type type = sg_buffer_type::_SG_BUFFERTYPE_DEFAULT;
+
+		struct buffer_range
+		{
+			int offset;
+			size_t size;
+		};
+		std::vector<buffer_range> ranges;
+
+		std::vector<char> buffer_data;
+
+		bool is_appended = false; // TODO can't update buffer while appending to it in the same frame
+
+		struct
+		{
+			int offset = 0;
+			size_t size = 0;
+
+		} update_range;
+		bool is_dirty = false;
+
+		int append_buffer_data(char* data, size_t size)
+		{
+			size_t required_size = buffer_data.size() + size;
+			int offset = buffer_data.size();
+
+			buffer_data.resize(required_size);
+			memcpy(&buffer_data[offset], data, size);
+
+			return offset;
+		}
+
+		void create_buffer(char* data, size_t size)
+		{
+			if (buffer_id.id != 0)
+				sg_destroy_buffer(buffer_id);
+
+			sg_buffer_desc desc{};
+			desc.data = { data, size };
+			desc.size = size;
+			desc.type = type;
+			desc.usage = usage;
+
+			buffer_id = sg_make_buffer(desc);
+		}
+
+		void merge_update_range(int offset, size_t size)
+		{
+			// Calculate the end points of the intervals
+			int end1 = offset + size;
+			int end2 = update_range.offset + update_range.size;
+
+			// Find the new offset as the minimum of the current and updated offsets
+			int new_offset = std::min(offset, update_range.offset);
+
+			// Find the new size as the difference between the maximum end points and the new offset
+			size_t new_size = std::max(end1, end2) - new_offset;
+
+			// Update the update_range with the new merged interval
+			update_range.offset = new_offset;
+			update_range.size = new_size;
+		}
+
+	public:
+
+		using range_id = size_t;
+
+		buffer() = default;
+		buffer(sg_usage usage, sg_buffer_type type) : usage(usage), type(type) {}
+
+		operator bool() const
+		{
+			return buffer_id.id != 0;
+		}
+
+		void apply(range_id range_id, sg_bindings& bindings, size_t vertex_bindings_index = 0)
+		{
+			if (type == SG_BUFFERTYPE_INDEXBUFFER)
+			{
+				bindings.index_buffer = buffer_id;
+				bindings.index_buffer_offset = ranges[range_id].offset;
+			}
+			else
+			{
+				bindings.vertex_buffers[vertex_bindings_index] = buffer_id;
+				bindings.vertex_buffer_offsets[vertex_bindings_index] = ranges[range_id].offset;
+			}
+		}
+
+		range_id append(char* data, size_t size)
+		{
+			buffer_range range{ -1, size };
+
+			if (usage == SG_USAGE_IMMUTABLE)
+			{
+				range.offset = append_buffer_data(data, size);
+
+				create_buffer(buffer_data.data(), buffer_data.size());
+			}
+			else
+			{
+				bool is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
+
+				if (is_over_capacity)
+				{
+					if (buffer_data.capacity() == 0)
+					{
+						buffer_data.reserve(256);
+						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
+					}
+
+					while (is_over_capacity)
+					{
+						buffer_data.reserve(buffer_data.capacity() * 2);
+						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
+					}
+
+					range.offset = append_buffer_data(data, size);
+
+					create_buffer(nullptr, buffer_data.capacity());
+
+					sg_append_buffer(buffer_id, { buffer_data.data(), buffer_data.size() });
+				}
+				else
+				{
+					range.offset = append_buffer_data(data, size);
+					int sg_offset = sg_append_buffer(buffer_id, { data, size });
+
+					assert(sg_offset == range.offset);
+				}
+			}
+
+			range_id result = ranges.size();
+			ranges.push_back(std::move(range));
+
+			is_appended = true;
+
+			return result;
+		}
+
+		size_t get_data_size(range_id range_id)
+		{
+			return ranges[range_id].size;
+		}
+
+		// provide data pointer for in-place update
+		void update_inplace(range_id range_id, char** data_ptr)
+		{
+			assert(usage != SG_USAGE_IMMUTABLE);
+
+			auto [offset, size] = ranges[range_id];
+
+			*data_ptr = &buffer_data[offset];
+
+			is_dirty = true;
+
+			merge_update_range(offset, size);
+		}
+
+		void update(range_id range_id, char* data)
+		{
+			assert(usage != SG_USAGE_IMMUTABLE);
+
+			auto [offset, size] = ranges[range_id];
+
+			memcpy(&buffer_data[offset], data, size);
+
+			is_dirty = true;
+
+			merge_update_range(offset, size);
+		}
+
+		void remove(range_id range_id)
+		{
+			// TODO
+		}
+
+		void flush()
+		{
+			if (is_dirty && !is_appended)
+			{
+				sg_update_buffer(buffer_id, { &buffer_data[update_range.offset], update_range.size });
+				is_dirty = false;
+			}
+			is_appended = false;
+		}
+	};
+
 	static uint32_t draw_buffer_id_counter = 1;
 
 	struct instanced_element
@@ -20,22 +217,23 @@ namespace frame
 		float color[4];
 	};
 
-	struct buffer_data_instanced
-	{
-		sg_pipeline pipeline = {};
-		sg_bindings bindings = {};
-		std::vector<instanced_element> array;
-		size_t instances_max = 100;
-		size_t instances = 0;
-		size_t draw_elements = 0;
-		bool is_dirty = false; // signalizes whether buffer should be updated before drawing
-	};
-
 	struct buffer_data
 	{
 		sg_pipeline pipeline = {};
 		sg_bindings bindings = {};
 		size_t draw_elements = 0;
+
+		buffer* vertex_buffer = nullptr;
+		buffer::range_id vertex_buffer_id = 0;
+
+		buffer* index_buffer = nullptr;
+		buffer::range_id index_buffer_id = 0;
+	};
+
+	struct buffer_data_instanced : public buffer_data
+	{
+		buffer instance_buffer;
+		std::vector<buffer::range_id> instances;
 	};
 
 	enum class shader_type
@@ -83,7 +281,7 @@ namespace frame
 
 		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
 
-		std::map<buffer_desc, sg_buffer> buffer_cache; // TODO use sg_append_buffer and set offset to sg_bindings stored in buffer_data*
+		std::map<buffer_desc, buffer> buffer_cache;
 
 	} state;
 
@@ -147,32 +345,14 @@ namespace frame
 		return state.pipeline_cache[desc];
 	}
 
-	std::pair<sg_buffer, int> create_buffer(buffer_desc desc, const void* data, size_t size)
+	std::pair<buffer*, buffer::range_id> create_buffer(buffer_desc desc, char* data, size_t size)
 	{
-		sg_buffer buffer{};
-
 		if (!state.buffer_cache.count(desc))
-		{
-			sg_buffer_desc sg_desc = {};
-			sg_desc.type = desc.type;
-			sg_desc.usage = desc.usage;
-			sg_desc.size = 20'000'000; // TODO
-			sg_desc.data = { nullptr, 20'000'000 };
+			state.buffer_cache[desc] = buffer(desc.usage, desc.type);
 
-			auto buffer = sg_make_buffer(sg_desc);
+		buffer& buffer = state.buffer_cache[desc];
 
-			state.buffer_cache[desc] = sg_make_buffer(sg_desc);
-
-			sg_update_buffer(buffer, { data, size });
-
-			return { buffer, 0 };
-		}
-		else
-		{
-			auto buffer = state.buffer_cache[desc];
-
-			return { buffer, sg_append_buffer(buffer, { data, size }) };
-		}
+		return { &buffer, buffer.append(data, size) };
 	}
 
 	void setup_draw_sg()
@@ -196,40 +376,16 @@ namespace frame
 	{
 		buffer_data_instanced result{};
 
-		result.instances_max = instances_max;
-		result.array.resize(result.instances_max);
-
 		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
-		auto [vertex_buffer, vertex_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, vertices, vertex_buffer_size);
-
-		result.bindings.vertex_buffers[0] = vertex_buffer;
-		result.bindings.vertex_buffer_offsets[0] = vertex_buffer_offset;
-
-		size_t instance_buffer_size = result.array.size() * sizeof(instanced_element);
-		//auto [instance_buffer, instance_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, nullptr, instance_buffer_size);
-
-		//result.bindings.vertex_buffers[1] = instance_buffer;
-		//result.bindings.vertex_buffer_offsets[1] = instance_buffer_offset;
-
-		sg_buffer_desc instance_buffer_desc = {};
-		instance_buffer_desc.type = SG_BUFFERTYPE_VERTEXBUFFER;
-		instance_buffer_desc.usage = usage;
-		instance_buffer_desc.size = instance_buffer_size;
-		instance_buffer_desc.data = { nullptr, instance_buffer_size };
-
-		auto instance_buffer = sg_make_buffer(instance_buffer_desc);
-
-		result.bindings.vertex_buffers[1] = instance_buffer;
-		result.bindings.vertex_buffer_offsets[1] = 0;
+		std::tie(result.vertex_buffer, result.vertex_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, (char*)vertices, vertex_buffer_size);
 
 		if (indices)
 		{
 			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
-			auto [index_buffer, index_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, indices, index_buffer_size);
-
-			result.bindings.index_buffer = index_buffer;
-			result.bindings.index_buffer_offset = index_buffer_offset;
+			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
+
+		result.instance_buffer = buffer(SG_USAGE_DYNAMIC, SG_BUFFERTYPE_VERTEXBUFFER);
 
 		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic_instanced });
 		result.draw_elements = draw_elements;
@@ -248,23 +404,13 @@ namespace frame
 	{
 		buffer_data result{};
 
-		std::string name_str(name);
-		std::string name_vertex = name_str + "-vertices";
-		std::string name_indices = name_str + "-indices";
-
 		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
-		auto [vertex_buffer, vertex_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, vertices, vertex_buffer_size);
-
-		result.bindings.vertex_buffers[0] = vertex_buffer;
-		result.bindings.vertex_buffer_offsets[0] = vertex_buffer_offset;
+		std::tie(result.vertex_buffer, result.vertex_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, (char*)vertices, vertex_buffer_size);
 
 		if (indices)
 		{
 			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
-			auto [index_buffer, index_buffer_offset] = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, indices, index_buffer_size);
-
-			result.bindings.index_buffer = index_buffer;
-			result.bindings.index_buffer_offset = index_buffer_offset;
+			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
 
 		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic });
@@ -380,14 +526,14 @@ namespace frame
 	{
 		auto& data = state.buffer_data_instanced[id];
 
-		auto index = data.instances;
-		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
-		memcpy(data.array[index].color, &color, sizeof(color));
+		instanced_element instance{};
 
-		data.instances++;
-		data.is_dirty = true;
+		memcpy(instance.model, model.Elements, sizeof(model.Elements));
+		memcpy(instance.color, &color, sizeof(color));
 
-		return index;
+		data.instances.push_back(data.instance_buffer.append((char*)&instance, sizeof(instanced_element)));
+
+		return data.instances.size() - 1;
 	}
 
 
@@ -403,20 +549,18 @@ namespace frame
 
 	void remove_draw_instance(draw_buffer_id id, size_t index)
 	{
-		auto& data = state.buffer_data_instanced[id];
-
-		data.array.erase(std::begin(data.array) + index);
-		data.is_dirty = true;
+		// TODO
 	}
 
 	void update_draw_instance(draw_buffer_id id, size_t index, const hmm_mat4& model, frame::col4 color)
 	{
 		auto& data = state.buffer_data_instanced[id];
 
-		memcpy(data.array[index].model, model.Elements, sizeof(model.Elements));
-		memcpy(data.array[index].color, &color, sizeof(color));
+		instanced_element* instance;
+		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
 
-		data.is_dirty = true;
+		memcpy(instance->model, model.Elements, sizeof(model.Elements));
+		memcpy(instance->color, &color, sizeof(color));
 	}
 
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
@@ -431,22 +575,23 @@ namespace frame
 
 	void draw_buffer_data_instanced(buffer_data_instanced& data)
 	{
-		if (data.instances == 0)
+		if (data.instances.size() == 0)
 			return;
+
+		data.vertex_buffer->flush();
+		data.vertex_buffer->apply(data.vertex_buffer_id, data.bindings, 0);
+
+		data.instance_buffer.flush();
+		data.instance_buffer.apply(data.instances[0], data.bindings, 1);
+
+		if (data.index_buffer)
+		{
+			data.index_buffer->flush();
+			data.index_buffer->apply(data.index_buffer_id, data.bindings);
+		}
 
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
-
-		if (data.is_dirty)
-		{
-			sg_range update_range;
-			update_range.ptr = data.array.data();
-			update_range.size = sizeof(instanced_element) * data.instances;
-
-			sg_update_buffer(data.bindings.vertex_buffers[1], &update_range);
-
-			data.is_dirty = false;
-		}
 
 		auto projection_view = create_projection_view_matrix();
 
@@ -454,7 +599,7 @@ namespace frame
 		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, &SG_RANGE(vs_params));
 
-		sg_draw(0, data.draw_elements, data.instances);
+		sg_draw(0, data.draw_elements, data.instances.size());
 
 		//state.rect.instances = 0;
 	}
@@ -485,6 +630,15 @@ namespace frame
 	void draw_buffer(draw_buffer_id id, const hmm_mat4& model , frame::col4 color)
 	{
 		auto& data = state.buffer_data[id];
+
+		data.vertex_buffer->flush();
+		data.vertex_buffer->apply(data.vertex_buffer_id, data.bindings, 0);
+
+		if (data.index_buffer)
+		{
+			data.index_buffer->flush();
+			data.index_buffer->apply(data.index_buffer_id, data.bindings);
+		}
 
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
