@@ -5,6 +5,7 @@
 namespace frame
 {
 	using draw_buffer_id = uint32_t;
+	constexpr draw_buffer_id draw_buffer_id_invalid = 0;
 
 	struct mesh
 	{

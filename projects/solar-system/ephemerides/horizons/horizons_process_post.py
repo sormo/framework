@@ -183,22 +183,7 @@ def update_horizons_major_bodies(file_in, file_out, time):
 #update_horizons_major_bodies('major-bodies-final.json', 'major-bodies-final-2.json', '2018-01-01')
 
 #process_horizon_major_bodies('2018-01-01')
-#quaoar = get_horizons_body(399, 0, Time(['2018-01-01']))
-# print(quaoar)
+test = get_horizons_body(65091, 6, Time(['2018-01-01']))
 
-# test
-
-query = Horizons(id='3', location='500@0', epochs=Time(['2018-01-01']))
-
-print('elem01', query.elements(refsystem='ICRF', refplane='ecliptic', tp_type='absolute')['P'].value[0])
-print('elem02', query.elements(refsystem='ICRF', refplane='ecliptic', tp_type='relative')['P'].value[0])
-print('elem03', query.elements(refsystem='ICRF', refplane='earth', tp_type='absolute')['P'].value[0])
-print('elem04', query.elements(refsystem='ICRF', refplane='earth', tp_type='relative')['P'].value[0])
-#print('elem05', query.elements(refsystem='ICRF', refplane='body', tp_type='absolute')['P'].value[0])
-#print('elem06', query.elements(refsystem='ICRF', refplane='body', tp_type='relative')['P'].value[0])
-print('elem07', query.elements(refsystem='B1950', refplane='ecliptic', tp_type='absolute')['P'].value[0])
-print('elem08', query.elements(refsystem='B1950', refplane='ecliptic', tp_type='relative')['P'].value[0])
-print('elem09', query.elements(refsystem='B1950', refplane='earth', tp_type='absolute')['P'].value[0])
-print('elem10', query.elements(refsystem='B1950', refplane='earth', tp_type='relative')['P'].value[0])
-#print('elem11', query.elements(refsystem='B1950', refplane='body', tp_type='absolute')['P'].value[0])
-#print('elem12', query.elements(refsystem='B1950', refplane='body', tp_type='relative')['P'].value[0])
+for key, value in test.items():
+    print(f'        "{key}": {value},')

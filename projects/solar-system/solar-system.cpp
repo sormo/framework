@@ -77,7 +77,8 @@ void draw_ephemeris_trajectories(ephemeris_data& data)
 
         //auto bezier_poly_test = frame::create_bezier_curve(data.trajectory);
         //draw_polyline_ex(bezier_poly_test, scale_independent(1.0f), col4::GREEN);
-        frame::draw_buffer(data.trajectory_polyline, {}, 0.0f, { 1.0f, 1.0f }, frame::col4::GRAY);
+        if (data.trajectory_polyline != frame::draw_buffer_id_invalid)
+            frame::draw_buffer(data.trajectory_polyline, {}, 0.0f, { 1.0f, 1.0f }, frame::col4::GRAY);
 
         //draw_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GRAY);
         //draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
@@ -144,6 +145,11 @@ void draw_ephemeris_names(ephemeris_data& data)
     draw_recursive(*data.parent, rectangles);
 }
 
+int ellipse_point_count(double semi_major_axis)
+{
+    return std::max((int)(semi_major_axis * 1000.0), 100);
+}
+
 ephemeris_data load_ephemeris_data()
 {
     std::vector<std::pair<std::string, std::string>> parents;
@@ -206,8 +212,11 @@ ephemeris_data load_ephemeris_data()
             double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, GRAVITATIONAL_CONSTANT);
 
             orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, GRAVITATIONAL_CONSTANT);
-            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points(1600));
-            auto trajectory_polyline = frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
+            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points(ellipse_point_count(semi_major_axis)));
+            
+            auto trajectory_polyline = frame::draw_buffer_id_invalid;
+            if (trajectory.size() > 1)
+                trajectory_polyline = frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
 
             result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory), trajectory_polyline });
             parents.push_back({ std::move(body_name), std::move(parent_name) });
@@ -217,7 +226,7 @@ ephemeris_data load_ephemeris_data()
     read_file2("major-bodies.json");
     //read_file2("major-bodies-earth.json");
     //read_file("ephemeris.json");
-    read_file2("small-bodies-sbdb-100km.json");
+    //read_file2("small-bodies-sbdb-100km.json");
     //read_file2("small-bodies-sbdb-50km.json");
 
     // assign parent-child relationships, can't add anything to this vector
@@ -271,7 +280,7 @@ void setup()
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
     free_move_config.min_size = { 0.1f, 0.1f };
-    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
+    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 1000000.0f, 1000000.0f });
 
     setup_units();
 
@@ -312,7 +321,7 @@ void update()
 
     draw_debug_gui();
 
-    draw_coordinate_lines(rgb(50, 50, 50));
+    draw_coordinate_lines(rgb(15, 15, 15));
 
     draw_ephemeris_trajectories(ephem_data);
     //draw_ephemeris_names(ephem_data);
