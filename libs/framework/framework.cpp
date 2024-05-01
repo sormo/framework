@@ -254,7 +254,7 @@ namespace frame
 
     bool rectangle::contains(const vec2& o) const
     {
-        return o.x >= min.x && o.x < max.x && o.y >= min.y && o.x < max.y;
+        return o.x >= min.x && o.x < max.x && o.y >= min.y && o.y < max.y;
     }
 
     rectangle rectangle::overlap(const rectangle& o) const

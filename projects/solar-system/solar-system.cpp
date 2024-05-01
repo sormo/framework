@@ -7,12 +7,14 @@
 #include <fstream>
 #include "json.hpp"
 #include "drawing_sg.h"
+#include "trajectory_resolutions.h"
+#include "commons.h"
+#include "bodies_tree.h"
+#include "quadtree.h"
 
 using namespace frame;
 
 double GRAVITATIONAL_CONSTANT = 0.8;
-const double DRAW_SIZE_FACTOR = 200.0;
-const double DRAW_VELOCITY_FACTOR = 13.0;
 
 static double time_current = 0.0;
 static double time_delta = 1.0 / 1000.0;
@@ -20,73 +22,43 @@ static double time_delta = 1.0 / 1000.0;
 
 free_move_camera_config free_move_config;
 
-vec2 draw_cast(const vec3d& p)
+bodies_tree bodies;
+quadtree tree;
+
+void create_world_points_in_body_trajectories(bodies_tree& data)
 {
-    return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR) };
+    std::function<void(body_data&, vec2)> create_recursive = [&create_recursive](body_data& data, vec2 parent_position)
+    {
+        for (auto& p : data.trajectory.get_points())
+            p += parent_position;
+            
+        vec2 position = commons::draw_cast(data.orbit.position);
+        for (auto& child : data.childs)
+            create_recursive(*child, parent_position + position);
+    };
+
+    create_recursive(*data.parent, {});
 }
 
-float scale_independent(float s)
-{
-    return s / get_world_scale().x;
-}
-
-std::vector<vec2> draw_cast(const std::vector<vec3d>& data)
-{
-    std::vector<vec2> r;
-    r.reserve(data.size());
-    for (const auto& o : data)
-        r.push_back(draw_cast(o));
-    return r;
-}
-
-struct body_data
-{
-    std::string name;
-    kepler_orbit orbit;
-
-    body_data* parent = nullptr;
-    std::vector<body_data*> childs;
-
-    // trajectory
-    std::vector<vec2> trajectory;
-    frame::draw_buffer_id trajectory_polyline;
-};
-
-struct ephemeris_data
-{
-    std::vector<body_data> bodies;
-    body_data* parent;
-};
-
-ephemeris_data ephem_data;
-
-void step_ephemeris_data(ephemeris_data& data)
+void step_bodies_tree(bodies_tree& data)
 {
     for (auto& data : data.bodies)
         data.orbit.update_current_orbit_time_by_delta_time(time_delta);
 }
 
-void draw_ephemeris_trajectories(ephemeris_data& data)
+void draw_ephemeris_trajectories(bodies_tree& data)
 {
     std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
     {
-        vec2 position = draw_cast(data.orbit.position);
+        vec2 position = commons::draw_cast(data.orbit.position);
 
         if (std::isnan(position.x) || std::isnan(position.y))
             position = {};
 
-        //auto bezier_poly_test = frame::create_bezier_curve(data.trajectory);
-        //draw_polyline_ex(bezier_poly_test, scale_independent(1.0f), col4::GREEN);
-        if (data.trajectory_polyline != frame::draw_buffer_id_invalid)
-            frame::draw_buffer(data.trajectory_polyline, {}, 0.0f, { 1.0f, 1.0f }, frame::col4::GRAY);
+        data.trajectory.draw(data.orbit.semi_major_axis);
 
-        //draw_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GRAY);
-        //draw_bezier_polyline_ex(data.trajectory, scale_independent(1.0f), col4::GREEN);
-        draw_circle(position, scale_independent(5.0f), col4::RED);
-        draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
-
-        //for (auto p : data.trajectory)
-        //    draw_circle(p, scale_independent(2.0f), col4::ORANGE);
+        draw_circle(position, commons::scale_independent(5.0f), col4::RED);
+        //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
 
         if (!data.childs.empty())
         {
@@ -104,11 +76,11 @@ void draw_ephemeris_trajectories(ephemeris_data& data)
     draw_recursive(*data.parent);
 }
 
-void draw_ephemeris_names(ephemeris_data& data)
+void draw_ephemeris_names(bodies_tree& data)
 {
     std::function<void(body_data&, std::vector<rectangle>&)> draw_recursive = [&draw_recursive](body_data& data, std::vector<rectangle>& parent_rects)
     {
-        vec2 position = draw_cast(data.orbit.position);
+        vec2 position = commons::draw_cast(data.orbit.position);
         rectangle rect = get_text_rectangle(data.name.c_str(), position, 15.0f, frame::text_align::bottom_left);
 
         bool do_draw = true;
@@ -145,46 +117,12 @@ void draw_ephemeris_names(ephemeris_data& data)
     draw_recursive(*data.parent, rectangles);
 }
 
-int ellipse_point_count(double semi_major_axis)
-{
-    return std::max((int)(semi_major_axis * 1000.0), 100);
-}
-
-ephemeris_data load_ephemeris_data()
+bodies_tree load_bodies_tree()
 {
     std::vector<std::pair<std::string, std::string>> parents;
-    ephemeris_data result;
+    bodies_tree result;
 
     auto read_file = [&parents, &result](const std::string& file_name)
-    {
-        std::ifstream f(file_name);
-        nlohmann::json data = nlohmann::json::parse(f);
-
-        for (const auto& orbit_data : data["OrbitsData"])
-        {
-            std::string body_name = orbit_data["BodyName"];
-            std::string attractor_name = orbit_data["AttractorName"];
-            double attractor_mass = orbit_data["AttractorMass"];
-            double eccentricity = orbit_data["EC"];
-            double inclination = deg_to_rad(orbit_data["IN"]);
-            double ascending_node_longitude = deg_to_rad(orbit_data["OM"]);
-            double argument_of_periapsis = deg_to_rad(orbit_data["W"]);
-            double mean_anomaly = deg_to_rad(orbit_data["MA"]);
-            double semi_major_axis = orbit_data["A"]; // AU
-
-            // inclination hack, we are showing this in 2d
-            inclination = 0.0;
-
-            kepler_orbit orbit;
-            orbit.initialize(eccentricity, semi_major_axis, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass * unit::kilogram, GRAVITATIONAL_CONSTANT);
-            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points());
-
-            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory) });
-            parents.push_back({ std::move(body_name), std::move(attractor_name) });
-        }
-    };
-
-    auto read_file2 = [&parents, &result](const std::string& file_name)
     {
         std::ifstream f(file_name);
         nlohmann::json data = nlohmann::json::parse(f);
@@ -202,7 +140,7 @@ ephemeris_data load_ephemeris_data()
             double semi_major_axis = orbit_data["A"]; // AU
 
             // inclination hack, we are showing this in 2d
-            inclination = 0.0;
+            //inclination = 0.0;
 
             double AU = 1.495978707e11;
             // TODO G constant is used as free parameter to fixate orbits periods values while SemiMajor axis parameter is adjusted for the scene.
@@ -212,24 +150,21 @@ ephemeris_data load_ephemeris_data()
             double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, GRAVITATIONAL_CONSTANT);
 
             orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, GRAVITATIONAL_CONSTANT);
-            std::vector<vec2> trajectory = draw_cast(orbit.get_orbit_points(ellipse_point_count(semi_major_axis)));
-            
-            auto trajectory_polyline = frame::draw_buffer_id_invalid;
-            if (trajectory.size() > 1)
-                trajectory_polyline = frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
 
-            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, std::move(trajectory), trajectory_polyline });
+            trajectory_resolutions trajectory;
+            trajectory.init(orbit);
+
+            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, trajectory });
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     };
 
-    read_file2("major-bodies.json");
-    //read_file2("major-bodies-earth.json");
-    //read_file("ephemeris.json");
-    //read_file2("small-bodies-sbdb-100km.json");
-    //read_file2("small-bodies-sbdb-50km.json");
+    read_file("major-bodies.json");
+    //read_file("test-bodies.json");
+    read_file("small-bodies-sbdb-100km.json");
+    //read_file("small-bodies-sbdb-50km.json");
 
-    // assign parent-child relationships, can't add anything to this vector
+    // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [&result](const std::string& name) -> body_data*
     {
         for (auto& body : result.bodies)
@@ -272,19 +207,24 @@ void setup_units()
     //GRAVITATIONAL_CONSTANT = 6.6743e-11 * (unit::meter * unit::meter * unit::meter) / (unit::kilogram * unit::second * unit::second);
 }
 
-
 void setup()
 {
     auto size = get_screen_size();
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
-    free_move_config.min_size = { 0.1f, 0.1f };
-    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, { 1000000.0f, 1000000.0f });
+    frame::vec2 world_size{ 1000000.0f, 1000000.0f };
+
+    free_move_config.min_size = { (float)commons::MIN_ZOOMED_SIZE, (float)commons::MIN_ZOOMED_SIZE };
+    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, world_size);
 
     setup_units();
 
-    ephem_data = load_ephemeris_data();
+    bodies = load_bodies_tree();
+
+    //tree.construct(frame::rectangle::from_min_max(-world_size/2.0f, world_size/2.0f), MIN_ZOOMED_SIZE);
+    //create_world_points_in_body_trajectories(bodies);
+    //tree.construct(frame::rectangle::from_min_max(-frame::vec2(10'000, 10'000) / 2.0f, frame::vec2(10'000, 10'000) / 2.0f), 1.0f, bodies);
 }
 
 void draw_debug_gui()
@@ -308,6 +248,12 @@ void draw_debug_gui()
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Size");
     ImGui::Text("%.2f %.2f ", get_world_size().x, get_world_size().y);
 
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Scale");
+    ImGui::Text("%.2f %.2f ", get_world_scale().x, get_world_scale().y);
+
+    //ImGui::TextColored(ImVec4(1, 1, 0, 1), "Jupiter Point Count");
+    //ImGui::Text("%d", ellipse_point_count(5.0, frame::get_world_scale().x));
+
     ImGui::EndMainMenuBar();
 
     //ImGui::ShowDemoWindow();
@@ -323,12 +269,14 @@ void update()
 
     draw_coordinate_lines(rgb(15, 15, 15));
 
-    draw_ephemeris_trajectories(ephem_data);
-    //draw_ephemeris_names(ephem_data);
+    //tree.draw();
+
+    draw_ephemeris_trajectories(bodies);
+    draw_ephemeris_names(bodies);
 
     // update
 
-    step_ephemeris_data(ephem_data);
+    step_bodies_tree(bodies);
 
     free_move_camera_update(free_move_config);
 
