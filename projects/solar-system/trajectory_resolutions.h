@@ -118,6 +118,10 @@ private:
         for (size_t i = 0; i < points.size(); i += step)
             trajectory.push_back(points[i]);
 
+        // add last point that will close the ellipse (if last point is not added in for loop)
+        if (points.size() % step != 0)
+            trajectory.push_back(points.back());
+
         // TODO fix SG_USAGE_IMMUTABLE, problem is that we are re-creating buffer each time (in a case of immutable buffer)
         return frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
     }
