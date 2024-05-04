@@ -173,4 +173,9 @@ namespace frame
     rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align = text_align::top_left);
 
     void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align = text_align::top_left);
+
+    // flush draw calls of nanovg otherwise drawing is done at the end of update, this is hackish solution used to correctly layer
+    // draws when drawing with both nanovg and sokol_gfx
+    // TODO make clear distinction in api between nanovg and sokol_gfx
+    void nanovg_flush();
 }

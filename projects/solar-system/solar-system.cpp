@@ -296,7 +296,9 @@ void update()
 
     draw_debug_gui();
 
-    draw_coordinate_lines(rgb(15, 15, 15));
+    draw_coordinate_lines(rgb(40, 40, 40));
+
+    frame::nanovg_flush();
 
     //tree.draw_debug();
 

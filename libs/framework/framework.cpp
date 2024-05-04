@@ -293,6 +293,12 @@ namespace frame
     {
         return max - min;
     }
+
+    void nanovg_flush()
+    {
+        nvgEndFrame(vg);
+        sg_reset_state_cache();
+    }
 }
 
 char font_buffer[200'000];
