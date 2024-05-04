@@ -120,6 +120,58 @@ void draw_ephemeris_names(std::set<body_data*>& parents)
         draw_recursive(*parent, rectangles);
 }
 
+void draw_distance_legend()
+{
+    auto screen = frame::get_screen_size();
+
+    const float line_size = screen.x / 8.0f;
+    const float line_offset = screen.x / 20.0f;
+    const float vertical_line_offset = commons::scale_independent(5.0f);
+    const float line_thickness = commons::scale_independent(1.5f);
+
+    vec2 left_point_screen = { screen.x - line_offset - line_size, screen.y - line_offset };
+    vec2 right_point_screen = { screen.x - line_offset, screen.y - line_offset };
+
+    vec2 left_point = frame::get_screen_to_world(left_point_screen);
+    vec2 right_point = frame::get_screen_to_world(right_point_screen);
+
+    frame::draw_line_solid_ex(left_point, right_point, line_thickness, frame::col4::WHITE);
+
+    auto draw_vertical_line = [vertical_line_offset, line_thickness](const vec2& center)
+    {
+        frame::draw_line_solid_ex(frame::vec2(center.x, center.y - vertical_line_offset),
+                                  frame::vec2(center.x, center.y + vertical_line_offset),
+                                  line_thickness,
+                                  frame::col4::WHITE);
+    };
+
+    draw_vertical_line(left_point);
+    draw_vertical_line(right_point);
+
+    vec2 center_point = left_point + (right_point - left_point) / 2.0f;
+
+    double legend_size = (right_point - left_point).length();
+    double value_au = unit::AU * legend_size / commons::DRAW_SIZE_FACTOR;
+    double value_km = value_au * 1.496e+8;
+
+    auto convert_value = [](double num) -> std::string
+    {
+        std::string text(256, '\0');
+        if (num < 0.000'001 || num > 100'000.0)
+            std::sprintf(text.data(), "%1.2e", num);
+        else
+            std::sprintf(text.data(), "%.3f", num);
+        text.resize(strlen(text.data()));
+        return text;
+    };
+
+    auto text_au = convert_value(value_au);
+    auto text_km = convert_value(value_km);
+
+    frame::draw_text((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, text_align::bottom_middle);
+    frame::draw_text((text_km + "km").c_str(), center_point - vec2(0.0f, commons::scale_independent(2.5f)), 15.0f, col4::WHITE, text_align::top_middle);
+}
+
 bodies_tree load_bodies_tree()
 {
     std::vector<std::pair<std::string, std::string>> parents;
@@ -164,7 +216,7 @@ bodies_tree load_bodies_tree()
 
     read_file("major-bodies.json");
     //read_file("test-bodies.json");
-    read_file("small-bodies-sbdb-100km.json");
+    //read_file("small-bodies-sbdb-100km.json");
     //read_file("small-bodies-sbdb-50km.json");
 
     // TODO assign parent-child relationships, can't add anything to this vector
@@ -211,19 +263,22 @@ void create_quadtree(float max_size, float min_size)
 
 void setup_quadtree()
 {
-    std::ifstream cache_file_in("quadtree_cache_100.cbor", std::ios_base::binary);
+    static const char* cache_filename = "quadtree_cache_100.cbor";
+    static const float tree_min_size = 100.0f;
+
+    std::ifstream cache_file_in(cache_filename, std::ios_base::binary);
     if (cache_file_in)
     {
         tree.deserialize(nlohmann::json::from_cbor(cache_file_in), bodies.bodies);
     }
     else
     {
-        create_quadtree(100'000.0f, 100.0f);
+        create_quadtree(100'000.0f, tree_min_size);
 
         auto json_tree = tree.serialize();
 
         std::vector<std::uint8_t> cbor_data = nlohmann::json::to_cbor(json_tree);
-        std::ofstream cache_file_out("quadtree_cache_100.json", std::ios_base::binary);
+        std::ofstream cache_file_out(cache_filename, std::ios_base::binary);
         cache_file_out.write((const char*)cbor_data.data(), cbor_data.size());
     }
 }
@@ -244,7 +299,7 @@ void setup()
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
-    frame::vec2 world_size{ 1000000.0f, 1000000.0f };
+    frame::vec2 world_size{ 1'000'000.0f, 1'000'000.0f };
 
     free_move_config.min_size = { (float)commons::MIN_ZOOMED_SIZE, (float)commons::MIN_ZOOMED_SIZE };
     free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, world_size);
@@ -306,6 +361,8 @@ void update()
 
     draw_ephemeris_trajectories(parents);
     draw_ephemeris_names(parents);
+
+    draw_distance_legend();
 
     // update
 

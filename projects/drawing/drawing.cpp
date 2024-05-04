@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "drawing_sg.h"
 
+using namespace frame;
+
 frame::free_move_camera_config free_move_config;
 
 struct rect
@@ -107,6 +109,16 @@ void update()
     ImGui::End();
 
     frame::draw_rectangle({}, 20.0f, 20.0f, frame::col4::RED);
+
+    auto text_center = vec2(100.0f, 100.0f);
+    auto text_align = text_align::top_middle;
+    auto text_size = 15.0f;
+    auto text = "test text first line\nsecond line";
+    frame::draw_circle(text_center, 3.0f / frame::get_world_scale().x, col4::RED);
+    
+    auto rect = frame::get_text_rectangle(text, text_center, text_size, text_align);
+    frame::draw_rectangle(rect.center(), rect.size().x, rect.size().y, frame::col4::ORANGE);
+    frame::draw_text(text, text_center, text_size, col4::GRAY, text_align);
 
     frame::free_move_camera_update(free_move_config);
 }

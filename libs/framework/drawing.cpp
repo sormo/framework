@@ -636,13 +636,13 @@ namespace frame
         switch (align)
         {
         case text_align::top_left: return NVG_ALIGN_TOP | NVG_ALIGN_LEFT;
-        case text_align::top_middle: return NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE;
+        case text_align::top_middle: return NVG_ALIGN_TOP | NVG_ALIGN_CENTER;
         case text_align::top_right: return NVG_ALIGN_TOP | NVG_ALIGN_RIGHT;
         case text_align::middle_left: return NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT;
-        case text_align::middle_middle: return NVG_ALIGN_MIDDLE | NVG_ALIGN_MIDDLE;
+        case text_align::middle_middle: return NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER;
         case text_align::middle_right: return NVG_ALIGN_MIDDLE | NVG_ALIGN_RIGHT;
         case text_align::bottom_left: return NVG_ALIGN_BOTTOM | NVG_ALIGN_LEFT;
-        case text_align::bottom_midle: return NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE;
+        case text_align::bottom_middle: return NVG_ALIGN_BOTTOM | NVG_ALIGN_CENTER;
         case text_align::bottom_right: return NVG_ALIGN_BOTTOM | NVG_ALIGN_RIGHT;
         }
         return -1;
@@ -659,7 +659,7 @@ namespace frame
         case text_align::middle_middle: return { 0.0f, 0.0f };
         case text_align::middle_right: return { 0.5f, 0.0f };
         case text_align::bottom_left: return { -0.5f, 0.5f };
-        case text_align::bottom_midle: return { 0.0f, 0.5f };
+        case text_align::bottom_middle: return { 0.0f, 0.5f };
         case text_align::bottom_right: return { 0.5f, 0.5f };
         }
         return {};
@@ -667,12 +667,19 @@ namespace frame
 
     rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align)
     {
-        float bounds[4] = {};
+        nvgSave(vg);
+        nvgResetTransform(vg);
 
         nvgFontSize(vg, size);
         nvgTextAlign(vg, map_to_nvg_align(align));
 
-        nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
+        float bounds[4] = {};
+        if (align == text_align::bottom_left || align == text_align::middle_left || align == text_align::top_left)
+            nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
+        else
+            nvgTextBounds(vg, 0.0f, 0.0f, text, nullptr, bounds);
+
+        nvgRestore(vg);
 
         vec2 min = vec2{ bounds[0], bounds[1] } / get_world_transform().get_scale();
         vec2 max = vec2{ bounds[2], bounds[3] } / get_world_transform().get_scale();
@@ -703,9 +710,11 @@ namespace frame
         nvgFillColor(vg, color.data);
         nvgTextAlign(vg, map_to_nvg_align(align));
 
-        //nvgText(vg, 0.0f, 0.0f, text, nullptr);
-        // to support newline we use this
-        nvgTextBox(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr);
+        // to support newline we use nvgTextBox, problem is that textbox needs line width if align is not to the left
+        if (align == text_align::bottom_left || align == text_align::middle_left || align == text_align::top_left)
+            nvgTextBox(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr);
+        else
+            nvgText(vg, 0.0f, 0.0f, text, nullptr);
 
         nvgRestore(vg);
     }

@@ -59,6 +59,8 @@ namespace frame
     vec2 get_screen_size();
     bool is_screen_resized();
 
+    vec2 get_screen_to_world(const vec2& screen_position);
+
     // *** transform ***
     mat3 translation(const vec2& translation);
     mat3 rotation(float rotation);
@@ -168,8 +170,9 @@ namespace frame
     // *** text ***
     enum class text_align { top_left,    top_middle,    top_right, 
                             middle_left, middle_middle, middle_right,
-                            bottom_left, bottom_midle,  bottom_right };
+                            bottom_left, bottom_middle, bottom_right };
 
+    // TODO right now we do not support multiline string which is not aligned to the left !!!
     rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align = text_align::top_left);
 
     void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align = text_align::top_left);

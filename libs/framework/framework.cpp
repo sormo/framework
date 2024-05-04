@@ -164,6 +164,11 @@ namespace frame
         return transforms.back();
     }
 
+    vec2 get_screen_to_world(const vec2& screen_position)
+    {
+        return transforms.back().inverted().transform_point(screen_position);
+    }
+
     vec2 get_mouse_world_position()
     {
         return transforms.back().inverted().transform_point(get_mouse_screen_position());
