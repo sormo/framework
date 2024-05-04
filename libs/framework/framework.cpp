@@ -257,7 +257,7 @@ namespace frame
         return o.x >= min.x && o.x < max.x && o.y >= min.y && o.y < max.y;
     }
 
-    rectangle rectangle::overlap(const rectangle& o) const
+    rectangle rectangle::get_overlap(const rectangle& o) const
     {
         rectangle result;
 
@@ -274,9 +274,14 @@ namespace frame
 
     bool rectangle::has_overlap(const rectangle& o) const
     {
-        auto over = overlap(o);
+        auto over = get_overlap(o);
 
         return !(over.min.x == 0 && over.min.y == 0 && over.max.x == 0 && over.max.y == 0);
+    }
+
+    bool rectangle::contains(const rectangle& o) const
+    {
+        return o.min.x >= min.x && o.min.y >= min.y && o.max.x < max.x && o.max.y < max.y;
     }
 
     vec2 rectangle::center() const

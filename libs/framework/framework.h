@@ -38,8 +38,10 @@ namespace frame
         vec2 size() const;
 
         bool contains(const vec2& o) const;
-        rectangle overlap(const rectangle& o) const;
+        rectangle get_overlap(const rectangle& o) const;
         bool has_overlap(const rectangle& o) const;
+
+        bool contains(const rectangle& o) const; // return true if rectangle o is completly inside this rect
     };
 
     col4 rgb(char r, char g, char b);
@@ -103,6 +105,7 @@ namespace frame
     bool is_key_released(char key);
 
     // *** drawing ***
+    // TODO position of rectangle is actually center, either rename, or change to to use frame::rectangle
     void draw_rectangle(const vec2& position, float width, float height, const col4& color);
     void draw_rectangle_ex(const vec2& position, 
                            float radians,

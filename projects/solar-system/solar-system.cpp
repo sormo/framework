@@ -46,7 +46,7 @@ void step_bodies_tree(bodies_tree& data)
         data.orbit.update_current_orbit_time_by_delta_time(time_delta);
 }
 
-void draw_ephemeris_trajectories(bodies_tree& data)
+void draw_ephemeris_trajectories(std::set<body_data*>& parents)
 {
     std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
     {
@@ -73,10 +73,11 @@ void draw_ephemeris_trajectories(bodies_tree& data)
         }
     };
 
-    draw_recursive(*data.parent);
+    for (auto parent : parents)
+        draw_recursive(*parent);
 }
 
-void draw_ephemeris_names(bodies_tree& data)
+void draw_ephemeris_names(std::set<body_data*>& parents)
 {
     std::function<void(body_data&, std::vector<rectangle>&)> draw_recursive = [&draw_recursive](body_data& data, std::vector<rectangle>& parent_rects)
     {
@@ -114,7 +115,9 @@ void draw_ephemeris_names(bodies_tree& data)
     };
 
     std::vector<rectangle> rectangles;
-    draw_recursive(*data.parent, rectangles);
+
+    for (auto parent : parents)
+        draw_recursive(*parent, rectangles);
 }
 
 bodies_tree load_bodies_tree()
@@ -197,6 +200,34 @@ bodies_tree load_bodies_tree()
     return result;
 }
 
+void create_quadtree(float max_size, float min_size)
+{
+    // Creating world points is not neede. Tree is created only from parent bodies (which has parent Solar-System Barycenter)
+    // because their trajectory points does not move. We don't care if childs has trajectory relative to parent as we don't add
+    // their points to tree.
+    //create_world_points_in_body_trajectories(bodies);
+    tree.construct(frame::rectangle::from_min_max(-frame::vec2(max_size, max_size) / 2.0f, frame::vec2(max_size, max_size) / 2.0f), min_size, bodies);
+}
+
+void setup_quadtree()
+{
+    std::ifstream cache_file_in("quadtree_cache_100.cbor", std::ios_base::binary);
+    if (cache_file_in)
+    {
+        tree.deserialize(nlohmann::json::from_cbor(cache_file_in), bodies.bodies);
+    }
+    else
+    {
+        create_quadtree(100'000.0f, 100.0f);
+
+        auto json_tree = tree.serialize();
+
+        std::vector<std::uint8_t> cbor_data = nlohmann::json::to_cbor(json_tree);
+        std::ofstream cache_file_out("quadtree_cache_100.json", std::ios_base::binary);
+        cache_file_out.write((const char*)cbor_data.data(), cbor_data.size());
+    }
+}
+
 void setup_units()
 {
     unit::set_base_meter((1.0 / 1.5e8) * 1e-3);
@@ -222,9 +253,7 @@ void setup()
 
     bodies = load_bodies_tree();
 
-    //tree.construct(frame::rectangle::from_min_max(-world_size/2.0f, world_size/2.0f), MIN_ZOOMED_SIZE);
-    //create_world_points_in_body_trajectories(bodies);
-    //tree.construct(frame::rectangle::from_min_max(-frame::vec2(10'000, 10'000) / 2.0f, frame::vec2(10'000, 10'000) / 2.0f), 1.0f, bodies);
+    setup_quadtree();
 }
 
 void draw_debug_gui()
@@ -269,10 +298,12 @@ void update()
 
     draw_coordinate_lines(rgb(15, 15, 15));
 
-    //tree.draw();
+    //tree.draw_debug();
 
-    draw_ephemeris_trajectories(bodies);
-    draw_ephemeris_names(bodies);
+    auto parents = tree.query(frame::get_world_rectangle());
+
+    draw_ephemeris_trajectories(parents);
+    draw_ephemeris_names(parents);
 
     // update
 
