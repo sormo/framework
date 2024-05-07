@@ -90,14 +90,14 @@ def get_body_from_sbdb(spkid):
 
     return body
 
-def process_bodies_from_csv(csvfile):
+def process_bodies_from_csv(csvfile, output_jsonfile):
     spkids, names = read_input_file(csvfile)
 
     result = []
     for spkid in spkids:
         result.append(get_body_from_sbdb(spkid))
 
-    with open('..\..\data\small-bodies-sbdb-50km.json', 'w') as file:
+    with open(output_jsonfile, 'w') as file:
         json.dump(result, file)
 
-process_bodies_from_csv('sbdb_query_diameter_50km.csv')
+process_bodies_from_csv('sbdb_query_diameter_10km.csv', '..\..\data\small-bodies-sbdb-10km.json')
