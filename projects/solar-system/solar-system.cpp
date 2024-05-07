@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "kepler_orbit.h"
 #include <string>
+#include <queue>
 #include <fstream>
 #include "json.hpp"
 #include "drawing_sg.h"
@@ -24,6 +25,21 @@ free_move_camera_config free_move_config;
 
 bodies_tree bodies;
 quadtree tree;
+
+double convert_world_size_to_AU(double world_size)
+{
+    return unit::AU * world_size / commons::DRAW_SIZE_FACTOR;
+}
+
+double convert_km_to_world_size(double value_km)
+{
+    return value_km * commons::DRAW_SIZE_FACTOR * unit::kilometer;
+}
+
+double convert_AU_to_km(double value_au)
+{
+    return value_au * 1.496e+8;
+}
 
 void create_world_points_in_body_trajectories(bodies_tree& data)
 {
@@ -46,7 +62,7 @@ void step_bodies_tree(bodies_tree& data)
         data.orbit.update_current_orbit_time_by_delta_time(time_delta);
 }
 
-void draw_ephemeris_trajectories(std::set<body_data*>& parents)
+void draw_body_trajectories(std::set<body_data*>& parents)
 {
     std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
     {
@@ -57,7 +73,12 @@ void draw_ephemeris_trajectories(std::set<body_data*>& parents)
 
         data.trajectory.draw(data.orbit.semi_major_axis);
 
-        draw_circle(position, commons::scale_independent(5.0f), col4::RED);
+        float default_radius = commons::scale_independent(5.0f);
+        draw_circle(position, default_radius, col4::RED);
+
+        double body_radius = convert_km_to_world_size(data.radius);
+        if (body_radius > default_radius)
+            draw_circle(position, body_radius, col4::ORANGE);
         //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
 
         if (!data.childs.empty())
@@ -77,47 +98,66 @@ void draw_ephemeris_trajectories(std::set<body_data*>& parents)
         draw_recursive(*parent);
 }
 
-void draw_ephemeris_names(std::set<body_data*>& parents)
+void draw_body_names(std::set<body_data*>& parents)
 {
-    std::function<void(body_data&, std::vector<rectangle>&)> draw_recursive = [&draw_recursive](body_data& data, std::vector<rectangle>& parent_rects)
+    std::vector<rectangle> rectangles;
+    auto check_overlap = [&rectangles](const frame::rectangle& rect)
     {
-        vec2 position = commons::draw_cast(data.orbit.position);
-        rectangle rect = get_text_rectangle(data.name.c_str(), position, 15.0f, frame::text_align::bottom_left);
-
-        bool do_draw = true;
-        for (auto& parent_rect : parent_rects)
+        for (const auto& rect_overlap : rectangles)
         {
-            if (parent_rect.has_overlap(rect))
+            if (rect_overlap.has_overlap(rect))
+                return true;
+        }
+        return false;
+    };
+
+    auto check_draw = [](const body_data* body)
+    {
+        return body->name.find("Barycenter") == std::string::npos;
+    };
+
+    auto get_draw_data = [](const body_data* body) -> std::pair<float, frame::text_align>
+    {
+        double body_radius = convert_km_to_world_size(body->radius) * frame::get_world_scale().x;
+        double body_diameter = body_radius * 2.0;
+        double max_char_size = body_diameter / body->name.size();
+        auto computed_font_size = (float)std::min(body_diameter / 4.0, max_char_size);
+
+        return { std::max(15.0f, computed_font_size), (computed_font_size > 15.0f ? frame::text_align::middle_middle : frame::text_align::bottom_left) };
+    };
+
+    std::queue<body_data*> Q; // BFS
+    std::map<body_data*, vec2> parent_translations;
+
+    parent_translations[nullptr] = vec2();
+
+    Q.push(bodies.parent);
+
+    while (!Q.empty())
+    {
+        body_data* body = Q.front();
+        Q.pop();
+
+        vec2 position = parent_translations[body->parent] + commons::draw_cast(body->orbit.position);
+
+        if (check_draw(body))
+        {
+            auto [text_size, text_align] = get_draw_data(body);
+
+            auto rect = get_text_rectangle(body->name.c_str(), position, text_size, text_align);
+
+            if (!check_overlap(rect))
             {
-                do_draw = false;
-                break;
+                rectangles.push_back(rect);
+                // TODO looks like rendering text with larger font size is super slow
+                draw_text(body->name.c_str(), position, text_size, col4::GRAY, text_align);
             }
         }
 
-        if (do_draw)
-            draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
-
-        if (!data.childs.empty())
-        {
-            parent_rects.push_back(rect);
-
-            save_world_transform();
-
-            set_world_translation(get_world_translation() + position * get_world_scale());
-
-            for (auto& child : data.childs)
-                draw_recursive(*child, parent_rects);
-
-            restore_world_transform();
-
-            parent_rects.pop_back();
-        }
-    };
-
-    std::vector<rectangle> rectangles;
-
-    for (auto parent : parents)
-        draw_recursive(*parent, rectangles);
+        parent_translations[body] = position;
+        for (auto* child : body->childs)
+            Q.push(child);
+    }
 }
 
 void draw_distance_legend()
@@ -151,8 +191,8 @@ void draw_distance_legend()
     vec2 center_point = left_point + (right_point - left_point) / 2.0f;
 
     double legend_size = (right_point - left_point).length();
-    double value_au = unit::AU * legend_size / commons::DRAW_SIZE_FACTOR;
-    double value_km = value_au * 1.496e+8;
+    double value_au = convert_world_size_to_AU(legend_size);
+    double value_km = convert_AU_to_km(value_au);
 
     auto convert_value = [](double num) -> std::string
     {
@@ -193,6 +233,7 @@ bodies_tree load_bodies_tree()
             double argument_of_periapsis = deg_to_rad(orbit_data["W"]);
             double mean_anomaly = deg_to_rad(orbit_data["MA"]);
             double semi_major_axis = orbit_data["A"]; // AU
+            double radius = orbit_data["radius"];
 
             // inclination hack, we are showing this in 2d
             //inclination = 0.0;
@@ -209,14 +250,14 @@ bodies_tree load_bodies_tree()
             trajectory_resolutions trajectory;
             trajectory.init(orbit);
 
-            result.bodies.push_back({ body_name, std::move(orbit), nullptr, {}, trajectory });
+            result.bodies.push_back({ body_name, std::move(orbit), radius, nullptr, {}, trajectory });
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     };
 
     read_file("major-bodies.json");
     //read_file("test-bodies.json");
-    //read_file("small-bodies-sbdb-100km.json");
+    read_file("small-bodies-sbdb-100km.json");
     //read_file("small-bodies-sbdb-50km.json");
 
     // TODO assign parent-child relationships, can't add anything to this vector
@@ -239,6 +280,10 @@ bodies_tree load_bodies_tree()
         parent_body->childs.push_back(child_body);
     }
 
+    // sort childs by radius decreasing
+    for (auto& body : result.bodies)
+        std::sort(std::begin(body.childs), std::end(body.childs), [](const body_data* a, const body_data* b) { return a->radius > b->radius; });
+
     // assume single top-most parent
     for (auto& data : result.bodies)
     {
@@ -254,7 +299,7 @@ bodies_tree load_bodies_tree()
 
 void create_quadtree(float max_size, float min_size)
 {
-    // Creating world points is not neede. Tree is created only from parent bodies (which has parent Solar-System Barycenter)
+    // Creating world points is not needed. Tree is created only from parent bodies (which has parent Solar-System Barycenter)
     // because their trajectory points does not move. We don't care if childs has trajectory relative to parent as we don't add
     // their points to tree.
     //create_world_points_in_body_trajectories(bodies);
@@ -359,8 +404,8 @@ void update()
 
     auto parents = tree.query(frame::get_world_rectangle());
 
-    draw_ephemeris_trajectories(parents);
-    draw_ephemeris_names(parents);
+    draw_body_trajectories(parents);
+    draw_body_names(parents);
 
     draw_distance_legend();
 
