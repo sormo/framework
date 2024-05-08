@@ -8,7 +8,7 @@ struct trajectory_resolutions
         auto get_color = [](int point_count)
         {
             if (point_count < 200)
-                return frame::col4::GRAY;
+                return frame::col4::DARKGRAY;
             else if (point_count < 1000)
                 return frame::col4::BLUE;
             else if (point_count < 4000)

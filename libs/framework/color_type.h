@@ -12,6 +12,7 @@ struct color_type
     static color_type RGBf(float r, float g, float b, float a = 1.0f);
     static color_type HSL(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
     static color_type HSLf(float r, float g, float b, float a = 1.0f);
+    static color_type HEX(uint32_t number);
 
     color_type lerp(const color_type& destination, float time) const;
     color_type transparency(uint8_t value) const;

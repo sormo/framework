@@ -73,8 +73,8 @@ void draw_body_trajectories(std::set<body_data*>& parents)
 
         data.trajectory.draw(data.orbit.semi_major_axis);
 
-        float default_radius = commons::scale_independent(5.0f);
-        draw_circle(position, default_radius, col4::RED);
+        float default_radius = commons::scale_independent(3.5f);
+        draw_circle(position, default_radius, col4::RGB(137, 187, 215, 255));
 
         double body_radius = convert_km_to_world_size(data.radius);
         if (body_radius > default_radius)
@@ -150,7 +150,7 @@ void draw_body_names(std::set<body_data*>& parents)
             {
                 rectangles.push_back(rect);
                 // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position, text_size, col4::GRAY, "roboto-bold", text_align);
+                draw_text_ex(body->name.c_str(), position, text_size, col4::LIGHTGRAY, "roboto-bold", text_align);
             }
         }
 

@@ -28,6 +28,15 @@ color_type color_type::HSLf(float r, float g, float b, float a)
     return result;
 }
 
+color_type color_type::HEX(uint32_t number)
+{
+    uint8_t alpha = 255;
+    if (number > 0xffffff)
+        alpha = number & 0xff;
+
+    return RGB((number >> 24) & 0xff, (number >> 16) & 0xff, (number >> 8) & 0xff, alpha);
+}
+
 color_type color_type::lerp(const color_type& destination, float time) const
 {
     color_type result;
