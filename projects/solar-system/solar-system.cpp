@@ -144,13 +144,13 @@ void draw_body_names(std::set<body_data*>& parents)
         {
             auto [text_size, text_align] = get_draw_data(body);
 
-            auto rect = get_text_rectangle(body->name.c_str(), position, text_size, text_align);
+            auto rect = get_text_rectangle_ex(body->name.c_str(), position, text_size, "roboto-bold", text_align);
 
             if (!check_overlap(rect))
             {
                 rectangles.push_back(rect);
                 // TODO looks like rendering text with larger font size is super slow
-                draw_text(body->name.c_str(), position, text_size, col4::GRAY, text_align);
+                draw_text_ex(body->name.c_str(), position, text_size, col4::GRAY, "roboto-bold", text_align);
             }
         }
 
@@ -208,8 +208,8 @@ void draw_distance_legend()
     auto text_au = convert_value(value_au);
     auto text_km = convert_value(value_km);
 
-    frame::draw_text((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, text_align::bottom_middle);
-    frame::draw_text((text_km + "km").c_str(), center_point - vec2(0.0f, commons::scale_independent(2.5f)), 15.0f, col4::WHITE, text_align::top_middle);
+    frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, "roboto", text_align::bottom_middle);
+    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::scale_independent(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
 }
 
 bodies_tree load_bodies_tree()
@@ -354,6 +354,11 @@ void setup()
     bodies = load_bodies_tree();
 
     setup_quadtree();
+
+    frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
+    frame::load_font("roboto-black", "fonts/roboto-black.ttf");
+    frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
+    frame::load_font("roboto", "fonts/roboto.ttf");
 }
 
 void draw_debug_gui()

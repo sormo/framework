@@ -665,11 +665,8 @@ namespace frame
         return {};
     }
 
-    rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align)
+    rectangle get_text_rectangle_common(const char* text, const vec2& position, float size, text_align align)
     {
-        nvgSave(vg);
-        nvgResetTransform(vg);
-
         nvgFontSize(vg, size);
         nvgTextAlign(vg, map_to_nvg_align(align));
 
@@ -678,8 +675,6 @@ namespace frame
             nvgTextBoxBounds(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr, bounds);
         else
             nvgTextBounds(vg, 0.0f, 0.0f, text, nullptr, bounds);
-
-        nvgRestore(vg);
 
         vec2 min = vec2{ bounds[0], bounds[1] } / get_world_transform().get_scale();
         vec2 max = vec2{ bounds[2], bounds[3] } / get_world_transform().get_scale();
@@ -690,21 +685,49 @@ namespace frame
         return rectangle::from_center_size(min + position + align_offset, rect_size.abs());
     }
 
-    void set_text_transform(const vec2& position)
+    rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align)
+    {
+        nvgSave(vg);
+        nvgResetTransform(vg);
+
+        auto result = get_text_rectangle_common(text, position, size, align);
+
+        nvgRestore(vg);
+
+        return result;
+    }
+
+    rectangle get_text_rectangle_ex(const char* text, const vec2& position, float size, const char* font_name, text_align align)
+    {
+        nvgSave(vg);
+        nvgResetTransform(vg);
+
+        nvgFontFace(vg, font_name);
+
+        auto result = get_text_rectangle_common(text, position, size, align);
+
+        nvgRestore(vg);
+
+        return result;
+    }
+
+    void set_text_transform(const vec2& position, float scale = 1.0f)
     {
         // TODO
         auto t = get_world_transform().get_translation();
         auto s = get_world_transform().get_scale();
 
         nvgResetTransform(vg);
-        nvgTransform(vg, 1.0f, 0.0f, 0.0f, 1.0f, t.x + position.x * s.x, t.y + position.y * s.y);
+        nvgTransform(vg, scale, 0.0f, 0.0f, scale, t.x + position.x * s.x, t.y + position.y * s.y);
     }
 
-    void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align)
+    void draw_text_common(const char* text, const vec2& position, float size, const col4& color, text_align align)
     {
-        nvgSave(vg);
+        // this is attempt to fix slow text rendering when size is big, but doesn't look to help
+        float sizeDiscrete = std::roundf(size);
+        float scale = size / sizeDiscrete;
 
-        set_text_transform(position);
+        set_text_transform(position, scale);
 
         nvgFontSize(vg, size);
         nvgFillColor(vg, color.data);
@@ -715,7 +738,39 @@ namespace frame
             nvgTextBox(vg, 0.0f, 0.0f, std::numeric_limits<float>::max(), text, nullptr);
         else
             nvgText(vg, 0.0f, 0.0f, text, nullptr);
+    }
+
+    void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align)
+    {
+        nvgSave(vg);
+
+        draw_text_common(text, position, size, color, align);
 
         nvgRestore(vg);
+    }
+
+    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align)
+    {
+        nvgSave(vg);
+
+        nvgFontFace(vg, font_name);
+
+        draw_text_common(text, position, size, color, align);
+
+        nvgRestore(vg);
+    }
+
+    void load_font(const char* font_name, const char* file_path)
+    {
+        fetch_file(file_path, [font_name](std::vector<char> data)
+        {
+            if (!data.empty())
+            {
+                unsigned char* malloc_data = (unsigned char*)malloc(data.size());
+                memcpy(malloc_data, data.data(), data.size());
+
+                nvgCreateFontMem(vg, font_name, malloc_data, data.size(), 1);
+            }
+        });
     }
 }

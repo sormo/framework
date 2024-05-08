@@ -167,6 +167,11 @@ namespace frame
     void draw_polyline(const std::vector<vec2>& points, const col4& color);
     void draw_polyline_ex(const std::vector<vec2>& points, float thickness, const col4& color);
 
+    // flush draw calls of nanovg otherwise drawing is done at the end of update, this is hackish solution used to correctly layer
+    // draws when drawing with both nanovg and sokol_gfx
+    // TODO make clear distinction in api between nanovg and sokol_gfx
+    void nanovg_flush();
+
     // *** text ***
     enum class text_align { top_left,    top_middle,    top_right, 
                             middle_left, middle_middle, middle_right,
@@ -174,11 +179,15 @@ namespace frame
 
     // TODO right now we do not support multiline string which is not aligned to the left !!!
     rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align = text_align::top_left);
+    rectangle get_text_rectangle_ex(const char* text, const vec2& position, float size, const char* font_name, text_align align = text_align::top_left);
 
     void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align = text_align::top_left);
+    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align = text_align::top_left);
+    // TODO font won't be available right away because reading files is asynchronous, not sure whether this will be a problem
+    void load_font(const char* font_name, const char* file_path);
 
-    // flush draw calls of nanovg otherwise drawing is done at the end of update, this is hackish solution used to correctly layer
-    // draws when drawing with both nanovg and sokol_gfx
-    // TODO make clear distinction in api between nanovg and sokol_gfx
-    void nanovg_flush();
+    // *** file ***
+    using fetch_callback = std::function<void(std::vector<char>)>;
+
+    void fetch_file(const char* file_path, fetch_callback callback, size_t file_size_hint = 0);
 }

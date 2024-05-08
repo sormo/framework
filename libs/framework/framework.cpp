@@ -304,15 +304,74 @@ namespace frame
         nvgEndFrame(vg);
         sg_reset_state_cache();
     }
-}
 
-char font_buffer[200'000];
-void font_response_callback(const sfetch_response_t* response)
-{
-    if (response->finished && !response->failed)
+    using fetch_id = int;
+
+    struct fetch_user_data
     {
-        //nvgCreateFontMem(vg, "roboto", (unsigned char*)font_buffer, response->fetched_size, 0);
-        nvgCreateFontMem(vg, "roboto", dump_font, sizeof(dump_font), 0);
+        fetch_callback callback;
+        std::vector<char> buffer;
+    };
+    std::unordered_map<fetch_id, fetch_user_data> fetches;
+
+
+    std::vector<char> pick_buffer(size_t file_size_hint)
+    {
+        if (file_size_hint == 0)
+            file_size_hint = 100'000;
+
+        return std::vector<char>(file_size_hint);
+    }
+
+    void fetch_response_callback(const sfetch_response_t* response)
+    {
+        fetch_id id = *(fetch_id*)response->user_data;
+
+        fetch_user_data user_data = std::move(fetches[id]);
+        fetches.erase(id);
+
+        if (response->fetched)
+        {
+            size_t data_size = response->data.size;
+            user_data.buffer.resize(data_size);
+
+            user_data.callback(std::move(user_data.buffer));
+        }
+        else if (response->failed)
+        {
+            if (response->error_code == SFETCH_ERROR_BUFFER_TOO_SMALL)
+            {
+                size_t file_size_hint = 2 * user_data.buffer.size();
+                fetch_file(response->path, user_data.callback, file_size_hint);
+            }
+            else
+            {
+                user_data.callback({});
+            }
+        }
+    }
+
+    void fetch_file(const char* file_path, fetch_callback callback, size_t file_size_hint)
+    {
+        static fetch_id fetch_id_counter = 1;
+
+        fetch_user_data user_data;
+        user_data.buffer = pick_buffer(file_size_hint);
+        user_data.callback = callback;
+        
+        auto fetch_id = fetch_id_counter++;
+
+        fetches[fetch_id] = std::move(user_data);
+
+        auto& buffer = fetches[fetch_id].buffer;
+
+        sfetch_request_t request{};
+        request.path = file_path;
+        request.callback = fetch_response_callback;
+        request.user_data = { &fetch_id, sizeof(fetch_id) };
+        request.buffer = { buffer.data(), buffer.size() };
+
+        sfetch_send(&request);
     }
 }
 
@@ -388,18 +447,11 @@ void init()
         sfetch_setup(&desc);
     }
 
+    nvgCreateFontMem(vg, "default", dump_font, sizeof(dump_font), 0);
+
     setup_draw_sg();
 
     setup();
-
-    {
-        sfetch_request_t request{};
-        request.path = "roboto.ttf";
-        request.callback = font_response_callback;
-        request.buffer = SFETCH_RANGE(font_buffer);
-
-        sfetch_send(&request);
-    }
 }
 
 void cleanup()

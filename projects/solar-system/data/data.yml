@@ -1,5 +1,9 @@
 ---
 files:
+    - fonts/roboto.ttf
+    - fonts/roboto-medium.ttf
+    - fonts/roboto-bold.ttf
+    - fonts/roboto-black.ttf
     - small-bodies-sbdb-100km.json
     - small-bodies-sbdb-50km.json
     - major-bodies.json
