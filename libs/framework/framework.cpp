@@ -200,6 +200,29 @@ namespace frame
         apply_transform(transforms.back());
     }
 
+    void set_world_translation(const vec2& screen_point, const vec2& world_point)
+    {
+        // find new translation such that world_point is transformed to screen_point
+        //
+        // |a b c|   |wx|   |sx|
+        // |d e f| * |wy| = |sy|
+        // |0 0 1|   | 1|   | 1|
+        // 
+        // we need to find new c,f (translation) such that {wx,wy} is known world_point and {sx,sy} is known screen_point
+        // sx = a*wx + b*wy + c
+        // sy = d*wx + e*wy + f
+        // then
+        // c = sx - a*wx - b*wy
+        // f = sy - d*wx - e*wy
+
+        const auto& M = transforms.back().data;
+
+        float c = screen_point.x - M[0] * world_point.x - M[1] * world_point.y;
+        float f = screen_point.y - M[3] * world_point.x - M[4] * world_point.y;
+
+        set_world_translation({ c,f });
+    }
+
     vec2 get_world_scale()
     {
         return transforms.back().get_scale();

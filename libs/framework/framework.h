@@ -54,6 +54,8 @@ namespace frame
     float rad_to_deg(float rad);
 
     // *** screen ***
+    // SCREEN COORDINATES - screen coordinates has origin in upper-left and extends to right (x) and down (y)
+    // screen has size get_screen_size()
     void set_screen_background(const col4& color);
     const col4& get_screen_background();
     vec2 get_screen_size();
@@ -62,12 +64,17 @@ namespace frame
     vec2 get_screen_to_world(const vec2& screen_position);
 
     // *** transform ***
+
     mat3 translation(const vec2& translation);
     mat3 rotation(float rotation);
     mat3 scale(const vec2& scale);
     mat3 identity();
 
     // *** world ***
+    // WORLD COORDINATES - world transform is transformation matrix that transforms world to screen
+    //
+    // ! world transform ! - transforms world -> screen
+    //
     void set_world_transform(const mat3& transform); // reset the last transform
     void set_world_transform_multiply(const mat3& transform); // reset the last transform
 
@@ -88,6 +95,7 @@ namespace frame
 
     // pos x and y is between 0 and 1, returns world position on screen at these coordinate offsets
     vec2 get_world_position_screen_relative(const vec2& rel);
+    void set_world_translation(const vec2& screen_point, const vec2& world_point); // modify world translation such that scree_point match the world point
 
     // *** mouse ***
     enum class mouse_button { left, right, middle };

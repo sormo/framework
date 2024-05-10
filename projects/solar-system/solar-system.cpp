@@ -12,6 +12,7 @@
 #include "commons.h"
 #include "bodies_tree.h"
 #include "quadtree.h"
+#include "camera.h"
 
 using namespace frame;
 
@@ -21,10 +22,9 @@ static double time_current = 0.0;
 static double time_delta = 1.0 / 1000.0;
 //static double time_delta = 0.0;
 
-free_move_camera_config free_move_config;
-
 bodies_tree bodies;
 quadtree tree;
+camera_type camera;
 
 double convert_world_size_to_AU(double world_size)
 {
@@ -344,10 +344,7 @@ void setup()
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
-    frame::vec2 world_size{ 1'000'000.0f, 1'000'000.0f };
-
-    free_move_config.min_size = { (float)commons::MIN_ZOOMED_SIZE, (float)commons::MIN_ZOOMED_SIZE };
-    free_move_config.boundary = rectangle::from_center_size({ 400.0f, 300.0f }, world_size);
+    camera.setup();
 
     setup_units();
 
@@ -381,6 +378,9 @@ void draw_debug_gui()
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Size");
     ImGui::Text("%.2f %.2f ", get_world_size().x, get_world_size().y);
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Translation");
+    ImGui::Text("%.2f %.2f ", get_world_translation().x, get_world_translation().y);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Scale");
     ImGui::Text("%.2f %.2f ", get_world_scale().x, get_world_scale().y);
@@ -418,7 +418,7 @@ void update()
 
     step_bodies_tree(bodies);
 
-    free_move_camera_update(free_move_config);
+    camera.update();
 
     time_current += time_delta;
 }

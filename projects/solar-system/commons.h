@@ -24,4 +24,10 @@ namespace commons
             r.push_back(draw_cast(o));
         return r;
     }
+
+    // https://easings.net/#easeOutCubic
+    float easing_cubic_out(float x)
+    {
+        return 1.0f - std::pow(1.0f - x, 3.0f);
+    }
 }
