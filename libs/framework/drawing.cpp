@@ -4,13 +4,13 @@
 
 namespace frame
 {
-    void draw_rectangle(const vec2& position, float width, float height, const col4& color)
+    void draw_rectangle(const vec2& center, float width, float height, const col4& color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x, position.y);
+        nvgTranslate(vg, center.x, center.y);
 
         nvgBeginPath(vg);
         nvgMoveTo(vg, -hw, -hh);
@@ -24,7 +24,12 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_rectangle_ex(const vec2& position,
+    void draw_rectangle(const rectangle& rect, const col4& color)
+    {
+        draw_rectangle(rect.center(), rect.max.x - rect.min.x, rect.max.y - rect.min.y, color);
+    }
+
+    void draw_rectangle_ex(const vec2& center,
                            float radians,
                            float width,
                            float height,
@@ -36,7 +41,7 @@ namespace frame
 
         nvgSave(vg);
 
-        nvgTranslate(vg, position.x, position.y);
+        nvgTranslate(vg, center.x, center.y);
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
@@ -54,6 +59,15 @@ namespace frame
         nvgStroke(vg);
 
         nvgRestore(vg);
+    }
+
+    void draw_rectangle_ex(const rectangle& rect,
+                           float radians,
+                           const col4& fill_color,
+                           const float outline_thickness,
+                           const col4& outline_color)
+    {
+        draw_rectangle_ex(rect.center(), radians, rect.max.x - rect.min.x, rect.max.y - rect.min.y, fill_color, outline_thickness, outline_color);
     }
 
     void draw_rounded_rectangle(const vec2& position, float width, float height, float radius, const col4& color)

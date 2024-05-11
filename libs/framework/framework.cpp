@@ -506,6 +506,7 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.width = 800;
     desc.height = 600;
     desc.sample_count = 8; // antialiasing
+    desc.alpha = true; // TODO test, what is doing this
     //desc.gl_force_gles2 = true;
 
 #ifdef _DEBUG

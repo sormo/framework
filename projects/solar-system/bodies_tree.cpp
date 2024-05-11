@@ -11,10 +11,10 @@
 
 using namespace frame;
 
-vec3d body_data::get_absolute_position()
+vec3d body_node::get_absolute_position()
 {
     vec3d result = orbit.position;
-    body_data* current_parent = parent;
+    body_node* current_parent = parent;
     while (current_parent)
     {
         result += current_parent->orbit.position;
@@ -23,13 +23,13 @@ vec3d body_data::get_absolute_position()
     return result;
 }
 
-std::vector<body_data*> bodies_tree::query(const frame::vec2& query_point, float query_radius)
+std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float query_radius)
 {
-    std::vector<body_data*> result;
+    std::vector<body_node*> result;
 
     float query_radius_sqr = query_radius * query_radius;
 
-    std::function<void(vec2, body_data&)> query_recursive = [this, &query_recursive, &result, query_point, query_radius_sqr](vec2 parent_position, body_data& body)
+    std::function<void(vec2, body_node&)> query_recursive = [this, &query_recursive, &result, query_point, query_radius_sqr](vec2 parent_position, body_node& body)
     {
         auto position = commons::draw_cast(body.orbit.position) + parent_position;
 
@@ -57,6 +57,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
         for (const auto& orbit_data : data)
         {
             std::string body_name = orbit_data["name"];
+            std::string body_group = orbit_data["group"];
             std::string parent_name = orbit_data["parent_name"];
             double period = orbit_data["period"]; // kg
             double eccentricity = orbit_data["EC"];
@@ -82,7 +83,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
             trajectory_resolutions trajectory;
             trajectory.init(orbit);
 
-            bodies.push_back({ body_name, std::move(orbit), radius, nullptr,{}, trajectory });
+            bodies.push_back({ body_name, body_group, std::move(orbit), radius, nullptr,{}, trajectory });
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     };
@@ -91,7 +92,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
         read_file(file_path.c_str());
 
     // TODO assign parent-child relationships, can't add anything to this vector
-    auto get_body = [this](const std::string& name) -> body_data*
+    auto get_body = [this](const std::string& name) -> body_node*
     {
         for (auto& body : bodies)
             if (body.name == name)
@@ -100,8 +101,8 @@ void bodies_tree::load(const std::vector<std::string>& files)
     };
     for (const auto& [child, parent] : parents)
     {
-        body_data* child_body = get_body(child);
-        body_data* parent_body = get_body(parent);
+        body_node* child_body = get_body(child);
+        body_node* parent_body = get_body(parent);
 
         if (!child_body || !parent_body)
             continue;
@@ -112,7 +113,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
 
     // sort childs by radius decreasing
     for (auto& body : bodies)
-        std::sort(std::begin(body.childs), std::end(body.childs), [](const body_data* a, const body_data* b) { return a->radius > b->radius; });
+        std::sort(std::begin(body.childs), std::end(body.childs), [](const body_node* a, const body_node* b) { return a->radius > b->radius; });
 
     // assume single top-most parent
     for (auto& data : bodies)
@@ -125,7 +126,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
     }
 }
 
-void bodies_tree::draw_names(std::set<body_data*>& parents)
+void bodies_tree::draw_names(std::set<body_node*>& parents)
 {
     std::vector<rectangle> rectangles;
     auto check_overlap = [&rectangles](const frame::rectangle& rect)
@@ -138,7 +139,7 @@ void bodies_tree::draw_names(std::set<body_data*>& parents)
         return false;
     };
 
-    auto get_draw_data = [](const body_data* body) -> std::pair<float, frame::text_align>
+    auto get_draw_data = [](const body_node* body) -> std::pair<float, frame::text_align>
     {
         double body_radius = commons::convert_km_to_world_size(body->radius) * frame::get_world_scale().x;
         double body_diameter = body_radius * 2.0;
@@ -148,8 +149,8 @@ void bodies_tree::draw_names(std::set<body_data*>& parents)
         return { std::max(15.0f, computed_font_size), (computed_font_size > 15.0f ? frame::text_align::middle_middle : frame::text_align::bottom_left) };
     };
 
-    std::queue<body_data*> Q; // BFS
-    std::map<body_data*, vec2> parent_translations;
+    std::queue<body_node*> Q; // BFS
+    std::map<body_node*, vec2> parent_translations;
 
     parent_translations[nullptr] = vec2();
 
@@ -157,7 +158,7 @@ void bodies_tree::draw_names(std::set<body_data*>& parents)
 
     while (!Q.empty())
     {
-        body_data* body = Q.front();
+        body_node* body = Q.front();
         Q.pop();
 
         vec2 position = parent_translations[body->parent] + commons::draw_cast(body->orbit.position);
@@ -182,9 +183,9 @@ void bodies_tree::draw_names(std::set<body_data*>& parents)
     }
 }
 
-void bodies_tree::draw_trajectories(std::set<body_data*>& parents)
+void bodies_tree::draw_trajectories(std::set<body_node*>& parents)
 {
-    std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
+    std::function<void(body_node&)> draw_recursive = [&draw_recursive](body_node& data)
     {
         vec2 position = commons::draw_cast(data.orbit.position);
 
@@ -224,7 +225,7 @@ void bodies_tree::step(double time_delta)
         data.orbit.update_current_orbit_time_by_delta_time(time_delta);
 }
 
-bool bodies_tree::is_barycenter(const body_data& body)
+bool bodies_tree::is_barycenter(const body_node& body)
 {
     return body.name.find("Barycenter") != std::string::npos;
 }
@@ -232,7 +233,7 @@ bool bodies_tree::is_barycenter(const body_data& body)
 // TODO not needed 
 void create_world_points_in_body_trajectories(bodies_tree& data)
 {
-    std::function<void(body_data&, vec2)> create_recursive = [&create_recursive](body_data& data, vec2 parent_position)
+    std::function<void(body_node&, vec2)> create_recursive = [&create_recursive](body_node& data, vec2 parent_position)
     {
         for (auto& p : data.trajectory.get_points())
             p += parent_position;

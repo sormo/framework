@@ -116,16 +116,22 @@ namespace frame
 
     // *** drawing ***
     // TODO position of rectangle is actually center, either rename, or change to to use frame::rectangle
-    void draw_rectangle(const vec2& position, float width, float height, const col4& color);
-    void draw_rectangle_ex(const vec2& position, 
+    void draw_rectangle(const vec2& center, float width, float height, const col4& color);
+    void draw_rectangle(const rectangle& rect, const col4& color);
+    void draw_rectangle_ex(const vec2& center, 
                            float radians,
                            float width,
                            float height,
                            const col4& fill_color,
                            const float outline_thickness,
                            const col4& outline_color);
-    void draw_rounded_rectangle(const vec2& position, float width, float height, float radius, const col4& color);
-    void draw_rounded_rectangle_ex(const vec2& position, 
+    void draw_rectangle_ex(const rectangle& rect,
+                           float radians,
+                           const col4& fill_color,
+                           const float outline_thickness,
+                           const col4& outline_color);
+    void draw_rounded_rectangle(const vec2& center, float width, float height, float radius, const col4& color);
+    void draw_rounded_rectangle_ex(const vec2& center,
                                    float radians,
                                    float width,
                                    float height,

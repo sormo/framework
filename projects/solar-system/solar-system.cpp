@@ -25,6 +25,35 @@ quadtree tree;
 camera_type camera;
 click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
+struct body_info
+{
+    void draw()
+    {
+        static const vec2 offset(20.0f, 20.0f);
+        static const vec2 size(300.0f, 400.0f);
+
+        if (body == nullptr)
+            return;
+
+        frame::save_world_transform();
+        frame::set_world_transform(frame::mat3::identity());
+        frame::set_world_translation(offset);
+
+        frame::draw_rectangle(frame::rectangle::from_min_max({}, size), col4::RGBf(0.0f, 0.0f, 0.0f, 0.65f));
+
+        // constants
+        static const float boundary = 10.0f;
+
+        // draw name
+        frame::draw_text_ex(body->name.c_str(), { boundary, boundary }, 30.0f, col4::LIGHTGRAY, "roboto-black", frame::text_align::top_left);
+        frame::draw_text_ex(body->group.c_str(), { boundary + 30.0f, boundary + 12.0f }, 20.0f, col4::GRAY, "roboto-bold", frame::text_align::top_left);
+
+        frame::restore_world_transform();
+    }
+
+    body_node* body = nullptr;
+} info;
+
 void step_bodies_tree(bodies_tree& data)
 {
     bodies.step(time_delta);
@@ -194,7 +223,7 @@ void draw_debug_gui()
     //ImGui::ShowDemoWindow();
 }
 
-body_data* get_clicked_body()
+body_node* get_clicked_body()
 {
     static const float query_radius_pixels = 15.0f;
     static const float min_body_distance = 6.0f;
@@ -211,7 +240,7 @@ body_data* get_clicked_body()
     {
         float distance_world_sqr;
         vec2 position;
-        body_data* data;
+        body_node* data;
     };
     std::vector<clicked_body> clicked_bodies;
 
@@ -260,10 +289,12 @@ void handle_left_click()
 
     if (auto clicked_body = get_clicked_body())
     {
+        info.body = clicked_body;
         camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
     }
     else
     {
+        info.body = nullptr;
         camera.follow(nullptr);
     }
 }
@@ -274,7 +305,7 @@ void update()
 {
     // draw
 
-    draw_debug_gui();
+    //draw_debug_gui();
 
     draw_coordinate_lines(rgb(40, 40, 40));
 
@@ -285,6 +316,8 @@ void update()
     draw_bodies_tree(bodies);
 
     draw_distance_legend();
+
+    info.draw();
 
     // update
 

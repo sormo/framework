@@ -12,7 +12,7 @@ struct quadtree
 
         frame::rectangle rect;
 
-        std::vector<body_data*> bodies;
+        std::vector<body_node*> bodies;
 
         std::array<std::unique_ptr<quadnode>, 4> childs;
 
@@ -50,9 +50,9 @@ struct quadtree
         construct_recursive(root.get(), min_size, indices);
     }
 
-    std::set<body_data*> query(const frame::rectangle& rect)
+    std::set<body_node*> query(const frame::rectangle& rect)
     {
-        std::set<body_data*> result;
+        std::set<body_node*> result;
 
         query_recursive(root.get(), rect, result);
 
@@ -69,9 +69,9 @@ struct quadtree
         return serialize_recursive(*root);
     }
 
-    bool deserialize(nlohmann::json& json, std::vector<body_data>& bodies)
+    bool deserialize(nlohmann::json& json, std::vector<body_node>& bodies)
     {
-        std::map<std::string, body_data*> bodies_map;
+        std::map<std::string, body_node*> bodies_map;
         for (auto& body : bodies)
             bodies_map.emplace(body.name, &body);
 
@@ -81,7 +81,7 @@ struct quadtree
     }
 
 private:
-    void query_recursive(quadnode* node, const frame::rectangle& rect, std::set<body_data*>& result)
+    void query_recursive(quadnode* node, const frame::rectangle& rect, std::set<body_node*>& result)
     {
         if (!node)
             return;
@@ -151,7 +151,7 @@ private:
         return result;
     }
 
-    bool deserialize_recursive(nlohmann::json& json, quadnode& node, std::map<std::string, body_data*>& bodies)
+    bool deserialize_recursive(nlohmann::json& json, quadnode& node, std::map<std::string, body_node*>& bodies)
     {
         if (!json.contains("minx") || !json.contains("miny") || !json.contains("maxx") || !json.contains("maxy") || !json.contains("bodies"))
             return false;
@@ -166,7 +166,7 @@ private:
                 node.bodies.push_back(bodies[name]);
         }
 
-        auto deserialize_child = [this](const char* name, nlohmann::json& json, std::unique_ptr<quadnode>& node, std::map<std::string, body_data*>& bodies)
+        auto deserialize_child = [this](const char* name, nlohmann::json& json, std::unique_ptr<quadnode>& node, std::map<std::string, body_node*>& bodies)
         {
             if (!json.contains(name))
                 return true;
@@ -186,7 +186,7 @@ private:
         return true;
     }
 
-    std::unique_ptr<quadnode> construct_child(frame::rectangle rect, float min_size, std::vector<body_data*>& parent_bodies, const std::vector<size_t>& parent_indices)
+    std::unique_ptr<quadnode> construct_child(frame::rectangle rect, float min_size, std::vector<body_node*>& parent_bodies, const std::vector<size_t>& parent_indices)
     {
         std::unique_ptr<quadnode> result = std::make_unique<quadnode>(std::move(rect));
 
