@@ -1,22 +1,28 @@
 #pragma once
+#include "unit.h"
 
 namespace commons
 {
-	const double MIN_ZOOMED_SIZE = 0.1;
-	const double DRAW_SIZE_FACTOR = 200.0;
-	const double DRAW_VELOCITY_FACTOR = 13.0;
+    static const double MIN_ZOOMED_SIZE = 0.1;
+    static const double DRAW_SIZE_FACTOR = 200.0;
+    static const double DRAW_VELOCITY_FACTOR = 13.0;
 
-    frame::vec2 draw_cast(const frame::vec3d& p)
+    static frame::vec2 draw_cast(const frame::vec3d& p)
     {
         return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR) };
     }
 
-    float scale_independent(float s)
+    static float pixel_to_world(float s)
     {
         return s / frame::get_world_scale().x;
     }
 
-    std::vector<frame::vec2> draw_cast(const std::vector<frame::vec3d>& data)
+    static float world_to_pixel(float s)
+    {
+        return s * frame::get_world_scale().x;
+    }
+
+    static std::vector<frame::vec2> draw_cast(const std::vector<frame::vec3d>& data)
     {
         std::vector<frame::vec2> r;
         r.reserve(data.size());
@@ -25,8 +31,23 @@ namespace commons
         return r;
     }
 
+    static double convert_world_size_to_AU(double world_size)
+    {
+        return unit::AU * world_size / commons::DRAW_SIZE_FACTOR;
+    }
+
+    static double convert_km_to_world_size(double value_km)
+    {
+        return value_km * commons::DRAW_SIZE_FACTOR * unit::kilometer;
+    }
+
+    static double convert_AU_to_km(double value_au)
+    {
+        return value_au * 1.496e+8;
+    }
+
     // https://easings.net/#easeOutCubic
-    float easing_cubic_out(float x)
+    static float easing_cubic_out(float x)
     {
         return 1.0f - std::pow(1.0f - x, 3.0f);
     }

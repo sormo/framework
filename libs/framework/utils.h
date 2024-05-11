@@ -1,6 +1,7 @@
 #pragma once
 
 #include "framework.h"
+#include <sokol_time.h>
 #include <optional>
 
 namespace frame
@@ -73,4 +74,22 @@ namespace frame
     bool update_line_with_handles(vec2& from, vec2& to, line_handle_config* from_handle, line_handle_config* to_handle);
 
     // std::vector<vec2> create_bezier_curve(const std::vector<vec2>& polyline); TODO
+
+    struct click_handler
+    {
+        static constexpr float max_click_duration = 500.0f; // milliseconds
+        static constexpr float max_click_distance = 5.0f; // pixels
+
+        click_handler(frame::mouse_button button);
+
+        void update();
+        bool is_clicked();
+
+    private:
+        const frame::mouse_button button;
+
+        uint64_t press_ticks = 0;
+        vec2 press_position_screen;
+        bool clicked = false;
+    };
 }

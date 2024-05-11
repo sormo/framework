@@ -114,7 +114,7 @@ private:
             return;
 
         //if (!node->childs[0] || !node->childs[1] || !node->childs[2] || !node->childs[3])
-        frame::draw_rectangle_ex(node->rect.center(), 0.0f, node->rect.size().x, node->rect.size().y, frame::col4::BLANK, commons::scale_independent(1.0f), frame::col4::RED);
+        frame::draw_rectangle_ex(node->rect.center(), 0.0f, node->rect.size().x, node->rect.size().y, frame::col4::BLANK, commons::pixel_to_world(1.0f), frame::col4::RED);
         if (node->has_any_child())
         {
             draw_debug_recursive(node->childs[0].get());

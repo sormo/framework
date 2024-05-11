@@ -1,5 +1,7 @@
 #pragma once
 #include "commons.h"
+#include "framework.h"
+#include "drawing_sg.h"
 
 struct trajectory_resolutions
 {

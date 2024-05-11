@@ -320,4 +320,32 @@ namespace frame
         }
         return false;
     }
+
+    click_handler::click_handler(frame::mouse_button button)
+        : button(button)
+    {
+    }
+
+    void click_handler::update()
+    {
+        clicked = false;
+
+        if (frame::is_mouse_pressed(button))
+        {
+            press_ticks = stm_now();
+            press_position_screen = frame::get_mouse_screen_position();
+        }
+        else if (frame::is_mouse_released(button))
+        {
+            auto duration_ms = stm_ms(stm_since(press_ticks));
+            auto distance_px = (frame::get_mouse_screen_position() - press_position_screen).length();
+
+            clicked = duration_ms < max_click_duration && distance_px < max_click_distance;
+        }
+    }
+
+    bool click_handler::is_clicked()
+    {
+        return clicked;
+    }
 }

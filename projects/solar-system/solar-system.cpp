@@ -16,8 +16,6 @@
 
 using namespace frame;
 
-double GRAVITATIONAL_CONSTANT = 0.8;
-
 static double time_current = 0.0;
 static double time_delta = 1.0 / 1000.0;
 //static double time_delta = 0.0;
@@ -25,139 +23,19 @@ static double time_delta = 1.0 / 1000.0;
 bodies_tree bodies;
 quadtree tree;
 camera_type camera;
-
-double convert_world_size_to_AU(double world_size)
-{
-    return unit::AU * world_size / commons::DRAW_SIZE_FACTOR;
-}
-
-double convert_km_to_world_size(double value_km)
-{
-    return value_km * commons::DRAW_SIZE_FACTOR * unit::kilometer;
-}
-
-double convert_AU_to_km(double value_au)
-{
-    return value_au * 1.496e+8;
-}
-
-void create_world_points_in_body_trajectories(bodies_tree& data)
-{
-    std::function<void(body_data&, vec2)> create_recursive = [&create_recursive](body_data& data, vec2 parent_position)
-    {
-        for (auto& p : data.trajectory.get_points())
-            p += parent_position;
-            
-        vec2 position = commons::draw_cast(data.orbit.position);
-        for (auto& child : data.childs)
-            create_recursive(*child, parent_position + position);
-    };
-
-    create_recursive(*data.parent, {});
-}
+click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
 void step_bodies_tree(bodies_tree& data)
 {
-    for (auto& data : data.bodies)
-        data.orbit.update_current_orbit_time_by_delta_time(time_delta);
+    bodies.step(time_delta);
 }
 
-void draw_body_trajectories(std::set<body_data*>& parents)
+void draw_bodies_tree(bodies_tree& data)
 {
-    std::function<void(body_data&)> draw_recursive = [&draw_recursive](body_data& data)
-    {
-        vec2 position = commons::draw_cast(data.orbit.position);
+    auto parents = tree.query(frame::get_world_rectangle());
 
-        if (std::isnan(position.x) || std::isnan(position.y))
-            position = {};
-
-        data.trajectory.draw(data.orbit.semi_major_axis);
-
-        float default_radius = commons::scale_independent(3.5f);
-        draw_circle(position, default_radius, col4::RGB(137, 187, 215, 255));
-
-        double body_radius = convert_km_to_world_size(data.radius);
-        if (body_radius > default_radius)
-            draw_circle(position, body_radius, col4::ORANGE);
-        //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
-
-        if (!data.childs.empty())
-        {
-            save_world_transform();
-
-            set_world_translation(get_world_translation() + position * get_world_scale());
-
-            for (auto& child : data.childs)
-                draw_recursive(*child);
-
-            restore_world_transform();
-        }
-    };
-
-    for (auto parent : parents)
-        draw_recursive(*parent);
-}
-
-void draw_body_names(std::set<body_data*>& parents)
-{
-    std::vector<rectangle> rectangles;
-    auto check_overlap = [&rectangles](const frame::rectangle& rect)
-    {
-        for (const auto& rect_overlap : rectangles)
-        {
-            if (rect_overlap.has_overlap(rect))
-                return true;
-        }
-        return false;
-    };
-
-    auto check_draw = [](const body_data* body)
-    {
-        return body->name.find("Barycenter") == std::string::npos;
-    };
-
-    auto get_draw_data = [](const body_data* body) -> std::pair<float, frame::text_align>
-    {
-        double body_radius = convert_km_to_world_size(body->radius) * frame::get_world_scale().x;
-        double body_diameter = body_radius * 2.0;
-        double max_char_size = body_diameter / body->name.size();
-        auto computed_font_size = (float)std::min(body_diameter / 4.0, max_char_size);
-
-        return { std::max(15.0f, computed_font_size), (computed_font_size > 15.0f ? frame::text_align::middle_middle : frame::text_align::bottom_left) };
-    };
-
-    std::queue<body_data*> Q; // BFS
-    std::map<body_data*, vec2> parent_translations;
-
-    parent_translations[nullptr] = vec2();
-
-    Q.push(bodies.parent);
-
-    while (!Q.empty())
-    {
-        body_data* body = Q.front();
-        Q.pop();
-
-        vec2 position = parent_translations[body->parent] + commons::draw_cast(body->orbit.position);
-
-        if (check_draw(body))
-        {
-            auto [text_size, text_align] = get_draw_data(body);
-
-            auto rect = get_text_rectangle_ex(body->name.c_str(), position, text_size, "roboto-bold", text_align);
-
-            if (!check_overlap(rect))
-            {
-                rectangles.push_back(rect);
-                // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position, text_size, col4::LIGHTGRAY, "roboto-bold", text_align);
-            }
-        }
-
-        parent_translations[body] = position;
-        for (auto* child : body->childs)
-            Q.push(child);
-    }
+    data.draw_trajectories(parents);
+    data.draw_names(parents);
 }
 
 void draw_distance_legend()
@@ -166,8 +44,8 @@ void draw_distance_legend()
 
     const float line_size = screen.x / 8.0f;
     const float line_offset = screen.x / 20.0f;
-    const float vertical_line_offset = commons::scale_independent(5.0f);
-    const float line_thickness = commons::scale_independent(1.5f);
+    const float vertical_line_offset = commons::pixel_to_world(5.0f);
+    const float line_thickness = commons::pixel_to_world(1.5f);
 
     vec2 left_point_screen = { screen.x - line_offset - line_size, screen.y - line_offset };
     vec2 right_point_screen = { screen.x - line_offset, screen.y - line_offset };
@@ -191,8 +69,8 @@ void draw_distance_legend()
     vec2 center_point = left_point + (right_point - left_point) / 2.0f;
 
     double legend_size = (right_point - left_point).length();
-    double value_au = convert_world_size_to_AU(legend_size);
-    double value_km = convert_AU_to_km(value_au);
+    double value_au = commons::convert_world_size_to_AU(legend_size);
+    double value_km = commons::convert_AU_to_km(value_au);
 
     auto convert_value = [](double num) -> std::string
     {
@@ -209,92 +87,15 @@ void draw_distance_legend()
     auto text_km = convert_value(value_km);
 
     frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, "roboto", text_align::bottom_middle);
-    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::scale_independent(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
+    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
 }
 
-bodies_tree load_bodies_tree()
+void load_bodies_tree()
 {
-    std::vector<std::pair<std::string, std::string>> parents;
-    bodies_tree result;
-
-    auto read_file = [&parents, &result](const std::string& file_name)
-    {
-        std::ifstream f(file_name);
-        nlohmann::json data = nlohmann::json::parse(f);
-
-        for (const auto& orbit_data : data)
-        {
-            std::string body_name = orbit_data["name"];
-            std::string parent_name = orbit_data["parent_name"];
-            double period = orbit_data["period"]; // kg
-            double eccentricity = orbit_data["EC"];
-            double inclination = deg_to_rad(orbit_data["IN"]);
-            double ascending_node_longitude = deg_to_rad(orbit_data["OM"]);
-            double argument_of_periapsis = deg_to_rad(orbit_data["W"]);
-            double mean_anomaly = deg_to_rad(orbit_data["MA"]);
-            double semi_major_axis = orbit_data["A"]; // AU
-            double radius = orbit_data["radius"];
-
-            // inclination hack, we are showing this in 2d
-            //inclination = 0.0;
-
-            double AU = 1.495978707e11;
-            // TODO G constant is used as free parameter to fixate orbits periods values while SemiMajor axis parameter is adjusted for the scene.
-            double compensatedGConst = GRAVITATIONAL_CONSTANT / pow(AU / unit::AU, 3.0);
-
-            kepler_orbit orbit;
-            double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, GRAVITATIONAL_CONSTANT);
-
-            orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, GRAVITATIONAL_CONSTANT);
-
-            trajectory_resolutions trajectory;
-            trajectory.init(orbit);
-
-            result.bodies.push_back({ body_name, std::move(orbit), radius, nullptr, {}, trajectory });
-            parents.push_back({ std::move(body_name), std::move(parent_name) });
-        }
-    };
-
-    read_file("major-bodies.json");
-    //read_file("test-bodies.json");
-    read_file("small-bodies-sbdb-100km.json");
-    //read_file("small-bodies-sbdb-50km.json");
-
-    // TODO assign parent-child relationships, can't add anything to this vector
-    auto get_body = [&result](const std::string& name) -> body_data*
-    {
-        for (auto& body : result.bodies)
-            if (body.name == name)
-                return &body;
-        return nullptr;
-    };
-    for (const auto& [child, parent] : parents)
-    {
-        body_data* child_body = get_body(child);
-        body_data* parent_body = get_body(parent);
-
-        if (!child_body || !parent_body)
-            continue;
-
-        child_body->parent = parent_body;
-        parent_body->childs.push_back(child_body);
-    }
-
-    // sort childs by radius decreasing
-    for (auto& body : result.bodies)
-        std::sort(std::begin(body.childs), std::end(body.childs), [](const body_data* a, const body_data* b) { return a->radius > b->radius; });
-
-    // assume single top-most parent
-    for (auto& data : result.bodies)
-    {
-        if (!data.parent)
-        {
-            result.parent = &data;
-            break;
-        }
-    }
-
-    return result;
+    bodies.load({ "major-bodies.json", "small-bodies-sbdb-100km.json" });
+    //bodies.load({ "major-bodies.json", "small-bodies-sbdb-50km.json" });
+    //bodies.load({ "major-bodies.json" });
+    //bodies.load({ "test-bodies.json" });
 }
 
 void create_quadtree(float max_size, float min_size)
@@ -334,7 +135,7 @@ void setup_units()
     unit::set_base_kilogram(1.0 / 2e30);
     unit::set_base_second(1e-7 / PI);
 
-    GRAVITATIONAL_CONSTANT = 4.0 * PI * PI;
+    unit::GRAVITATIONAL_CONSTANT = 4.0 * PI * PI;
     //GRAVITATIONAL_CONSTANT = 6.6743e-11 * (unit::meter * unit::meter * unit::meter) / (unit::kilogram * unit::second * unit::second);
 }
 
@@ -348,7 +149,7 @@ void setup()
 
     setup_units();
 
-    bodies = load_bodies_tree();
+    load_bodies_tree();
 
     setup_quadtree();
 
@@ -393,6 +194,80 @@ void draw_debug_gui()
     //ImGui::ShowDemoWindow();
 }
 
+body_data* get_clicked_body()
+{
+    static const float query_radius_pixels = 15.0f;
+    static const float min_body_distance = 6.0f;
+
+    auto mouse_position = frame::get_mouse_world_position();
+    auto queried_bodies = bodies.query(mouse_position, commons::pixel_to_world(query_radius_pixels));
+    if (queried_bodies.empty())
+        return nullptr;
+
+    if (queried_bodies.size() == 1)
+        return queried_bodies[0];
+
+    struct clicked_body
+    {
+        float distance_world_sqr;
+        vec2 position;
+        body_data* data;
+    };
+    std::vector<clicked_body> clicked_bodies;
+
+    for (auto body : queried_bodies)
+    {
+        auto position = commons::draw_cast(body->get_absolute_position());
+        clicked_bodies.push_back({ (position - mouse_position).length_sqr(), position, body });
+    }
+
+    // merge bodies which are too close together
+    bool updated = true;
+    while (updated)
+    {
+        std::set<size_t> delete_indices;
+        updated = false;
+        for (size_t i = 0; i < clicked_bodies.size(); i++)
+        {
+            for (size_t j = i + 1; j < clicked_bodies.size(); j++)
+            {
+                auto& body_i = clicked_bodies[i];
+                auto& body_j = clicked_bodies[j];
+
+                if ((body_i.position - body_j.position).length() < commons::pixel_to_world(min_body_distance))
+                {
+                    updated = true;
+                    delete_indices.insert(body_i.data->radius > body_j.data->radius ? j : i);
+                }
+            }
+        }
+
+        // delete indices from last to first
+        for (auto it = delete_indices.rbegin(); it != delete_indices.rend(); it++)
+            clicked_bodies.erase(clicked_bodies.begin() + *it);
+    }
+
+    // pick the closest
+    std::sort(std::begin(clicked_bodies), std::end(clicked_bodies), [](const clicked_body& a, const clicked_body& b) { return a.distance_world_sqr < b.distance_world_sqr; });
+
+    return clicked_bodies.back().data;
+}
+
+void handle_left_click()
+{
+    if (!left_mouse_click.is_clicked())
+        return;
+
+    if (auto clicked_body = get_clicked_body())
+    {
+        camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
+    }
+    else
+    {
+        camera.follow(nullptr);
+    }
+}
+
 void update_sg() {}
 
 void update()
@@ -407,16 +282,17 @@ void update()
 
     //tree.draw_debug();
 
-    auto parents = tree.query(frame::get_world_rectangle());
-
-    draw_body_trajectories(parents);
-    draw_body_names(parents);
+    draw_bodies_tree(bodies);
 
     draw_distance_legend();
 
     // update
 
     step_bodies_tree(bodies);
+
+    left_mouse_click.update();
+
+    handle_left_click();
 
     camera.update();
 
