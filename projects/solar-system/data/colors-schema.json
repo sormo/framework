@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "string"
+    },
+    "body_group": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "format": "color-hex"
+      }
+    },
+    "body_type": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "format": "color-hex"
+      }
+    }
+  },
+  "required": ["$schema", "body_type", "body_group"]
+}

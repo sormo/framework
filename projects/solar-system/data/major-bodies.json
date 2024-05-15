@@ -14,9 +14,18 @@
         "period": 0.0,
         "group": "",
         "radius": 0.0,
-        "position": [ 0.0, 0.0, 0.0 ],
-        "velocity": [ 0.0, 0.0, 0.0 ],
-        "parent_name": ""
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "velocity": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "parent_name": "",
+        "type": "Barycenter"
     },
     {
         "A": 0.3827939457596414,
@@ -32,7 +41,7 @@
         "mass": 0.0,
         "time": "2018-01-01",
         "period": 86.44799877757008,
-        "group": "Barycenter",
+        "group": "",
         "position": [
             -0.3859061964640049,
             -0.00165460485597911,
@@ -43,7 +52,8 @@
             -0.02691453996342552,
             -0.001714386714936744
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 0.7104324388903179,
@@ -59,7 +69,7 @@
         "mass": 0.0,
         "time": "2018-01-01",
         "period": 218.571238490989,
-        "group": "Barycenter",
+        "group": "",
         "position": [
             0.07293095580278088,
             -0.717559378731765,
@@ -70,7 +80,8 @@
             0.001911135265032358,
             -0.001127428709480718
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 1.011059113960953,
@@ -86,7 +97,7 @@
         "mass": 0.0,
         "time": "2018-01-01",
         "period": 371.0855523289945,
-        "group": "Barycenter",
+        "group": "",
         "position": [
             -0.1734153024726174,
             0.9737222876467911,
@@ -97,7 +108,8 @@
             -0.003124640465692143,
             3.414833260188678e-07
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 1.515089656112226,
@@ -108,7 +120,7 @@
         "W": 286.9638265935309,
         "horizons_id": 4,
         "name": "Mars Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -124,7 +136,8 @@
             -0.01238923953248545,
             -0.0003543305643217691
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 5.194502603330236,
@@ -135,7 +148,7 @@
         "W": 273.4599410860203,
         "horizons_id": 5,
         "name": "Jupiter Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -151,7 +164,8 @@
             -0.005565072018748021,
             -7.947229996655882e-05
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 9.542690206283298,
@@ -162,7 +176,7 @@
         "W": 339.1036395838538,
         "horizons_id": 6,
         "name": "Saturn Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -178,7 +192,8 @@
             8.600931207069148e-06,
             -0.0002099978496821737
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 19.18703102139998,
@@ -189,7 +204,7 @@
         "W": 97.09888360921184,
         "horizons_id": 7,
         "name": "Uranus Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -205,7 +220,8 @@
             0.00331847311680119,
             3.589840038715608e-05
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 30.07448999226001,
@@ -216,7 +232,7 @@
         "W": 272.4671125818896,
         "horizons_id": 8,
         "name": "Neptune Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -232,7 +248,8 @@
             0.003025773050063635,
             -8.258822478846619e-05
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 39.48893381304043,
@@ -243,7 +260,7 @@
         "W": 113.7722176204085,
         "horizons_id": 9,
         "name": "Pluto Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -259,7 +276,8 @@
             0.0003535660484430592,
             -0.0009169340321722654
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 43.10262753945711,
@@ -270,7 +288,7 @@
         "W": 239.9469335694413,
         "horizons_id": 20136108,
         "name": "Haumea Barycenter",
-        "group": "Barycenter",
+        "group": "",
         "parent": 0,
         "radius": 0.0,
         "mass": 0.0,
@@ -286,7 +304,8 @@
             -0.001896288778696099,
             2.741276679542278e-05
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
     },
     {
         "A": 0.004356103859659833,
@@ -300,7 +319,7 @@
         "horizons_id": 10,
         "mass": 1.9885e+30,
         "name": "Sun",
-        "group": "Star",
+        "group": "",
         "parent": 0,
         "radius": 695700.0,
         "time": "2018-01-01",
@@ -315,7 +334,8 @@
             5.023550523654301e-06,
             1.417568565982513e-07
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Star"
     },
     {
         "A": 0.3827939457596414,
@@ -329,7 +349,7 @@
         "horizons_id": 199,
         "mass": 3.302e+23,
         "name": "Mercury",
-        "group": "Planet",
+        "group": "Terestrial",
         "parent": 0,
         "radius": 2439.4,
         "time": "2018-01-01",
@@ -344,7 +364,8 @@
             -0.02691453996342552,
             -0.001714386714936744
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.7104324388903179,
@@ -358,7 +379,7 @@
         "horizons_id": 299,
         "mass": 4.8685e+24,
         "name": "Venus",
-        "group": "Planet",
+        "group": "Terestrial",
         "parent": 0,
         "radius": 6051.84,
         "time": "2018-01-01",
@@ -373,7 +394,8 @@
             0.001911135265032358,
             -0.001127428709480718
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.002547969172484881,
@@ -387,7 +409,7 @@
         "horizons_id": 301,
         "mass": 7.349e+22,
         "name": "Moon",
-        "group": "Moon",
+        "group": "",
         "parent": 3,
         "radius": 1737.53,
         "time": "2018-01-01",
@@ -402,7 +424,8 @@
             5.025235314795017e-05,
             3.687703625982373e-05
         ],
-        "parent_name": "Earth-Moon Barycenter"
+        "parent_name": "Earth-Moon Barycenter",
+        "type": "Moon"
     },
     {
         "A": 2.301258289233742,
@@ -413,7 +436,7 @@
         "W": 147.4532510863845,
         "horizons_id": 391,
         "name": "L1",
-        "group": "Lagrange",
+        "group": "",
         "parent": 0,
         "radius": 7.8755,
         "mass": 0.0,
@@ -429,7 +452,8 @@
             0.008997971775663123,
             -0.0007724057777272601
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Lagrange Point"
     },
     {
         "A": 2.893159617351091,
@@ -440,7 +464,7 @@
         "W": 174.6517339913093,
         "horizons_id": 392,
         "name": "L2",
-        "group": "Lagrange",
+        "group": "",
         "parent": 0,
         "radius": 30.375,
         "mass": 0.0,
@@ -456,7 +480,8 @@
             -0.001623677705681657,
             -0.0009534791207611668
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Lagrange Point"
     },
     {
         "A": 2.745878258974363,
@@ -467,7 +492,7 @@
         "W": 271.1419107877158,
         "horizons_id": 394,
         "name": "L4",
-        "group": "Lagrange",
+        "group": "",
         "parent": 0,
         "radius": 14.985,
         "mass": 0.0,
@@ -483,7 +508,8 @@
             0.00901305968660871,
             -0.0005234882896186796
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Lagrange Point"
     },
     {
         "A": 2.764260964762196,
@@ -494,7 +520,7 @@
         "W": 13.58701413503372,
         "horizons_id": 395,
         "name": "L5",
-        "group": "Lagrange",
+        "group": "",
         "parent": 0,
         "radius": 22.0945,
         "mass": 0.0,
@@ -510,7 +536,8 @@
             -0.006975779528753377,
             0.0005656424365018887
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Lagrange Point"
     },
     {
         "EC": 0.07618173759077548,
@@ -524,7 +551,7 @@
         "horizons_id": 399,
         "mass": 5.97219e+24,
         "name": "Earth",
-        "group": "Planet",
+        "group": "Terestrial",
         "parent": 3,
         "radius": 6371.01,
         "time": "2018-01-01",
@@ -539,7 +566,8 @@
             -6.18105804759463e-07,
             -4.535889116956113e-07
         ],
-        "parent_name": "Earth-Moon Barycenter"
+        "parent_name": "Earth-Moon Barycenter",
+        "type": "Planet"
     },
     {
         "A": 6.268743762228779e-05,
@@ -551,7 +579,7 @@
         "density": 1.861,
         "horizons_id": 401,
         "name": "Phobos",
-        "group": "Moon",
+        "group": "",
         "parent": 4,
         "radius": 11.08,
         "mass": 1.06e+16,
@@ -572,7 +600,8 @@
             2.701239201835171e-05,
             0.0005433909821233214
         ],
-        "parent_name": "Mars Barycenter"
+        "parent_name": "Mars Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0001568139429120066,
@@ -584,7 +613,7 @@
         "density": 1.465,
         "horizons_id": 402,
         "name": "Deimos",
-        "group": "Moon",
+        "group": "",
         "parent": 4,
         "radius": 6.27,
         "mass": 1510000000000000.0,
@@ -605,7 +634,8 @@
             -0.0006095358671090592,
             -0.000250687510948586
         ],
-        "parent_name": "Mars Barycenter"
+        "parent_name": "Mars Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5384162049391723,
@@ -619,7 +649,7 @@
         "horizons_id": 499,
         "mass": 6.4171e+23,
         "name": "Mars",
-        "group": "Planet",
+        "group": "Terestrial",
         "parent": 4,
         "radius": 3389.92,
         "time": "2018-01-01",
@@ -634,7 +664,8 @@
             9.214729679196078e-13,
             -8.429594660688161e-12
         ],
-        "parent_name": "Mars Barycenter"
+        "parent_name": "Mars Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.002819524408274245,
@@ -668,7 +699,8 @@
             -0.001065829006503094,
             -0.0001778220683439523
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.004487334912512039,
@@ -697,7 +729,8 @@
             0.007503694612587359,
             0.0003723378227233017
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.007156600243239952,
@@ -726,7 +759,8 @@
             -0.006114547809879095,
             -0.0002125114893866671
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0125856139295384,
@@ -755,7 +789,8 @@
             0.002481451155506502,
             2.427348184477551e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001215184409787785,
@@ -789,7 +824,8 @@
             0.00420513377283798,
             -1.62104534561108e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.07682375474517242,
@@ -821,7 +857,8 @@
             -0.001529683521919574,
             -0.0007598695938266702
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0783737344241972,
@@ -848,7 +885,8 @@
             0.001984728336743279,
             -0.0001054827241185609
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1512149570854384,
@@ -875,7 +913,8 @@
             -0.0002337399653795901,
             6.790151450698052e-06
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1603142936100962,
@@ -902,7 +941,8 @@
             0.0003352322332206588,
             -0.0002120973561574477
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.07823144781511294,
@@ -929,7 +969,8 @@
             -0.001633815279147655,
             -0.0008513452158490458
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1593758610729049,
@@ -956,7 +997,8 @@
             0.0006225092031345901,
             0.0002061843945203929
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1430159224683293,
@@ -983,7 +1025,8 @@
             0.00112317842331249,
             -0.0004633641911747378
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.07441964145862473,
@@ -1010,7 +1053,8 @@
             -0.0002729578025917486,
             -0.0001494668085099771
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001485110615707029,
@@ -1042,7 +1086,8 @@
             0.002538408021588564,
             5.482136250754098e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0008671352298741228,
@@ -1074,7 +1119,8 @@
             -0.0151855400661059,
             -0.0006903524955121167
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0008620242452310108,
@@ -1107,7 +1153,8 @@
             -0.01330516256967146,
             -0.0002954147909630715
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1592278443892304,
@@ -1134,7 +1181,8 @@
             0.0002678858421968296,
             0.0002655494377449235
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.04951846895024905,
@@ -1161,7 +1209,8 @@
             -0.001001254736132666,
             0.001235737893182841
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1548492456418798,
@@ -1188,7 +1237,8 @@
             -0.0007557281022912731,
             0.0006356658854615883
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1496679847722652,
@@ -1215,7 +1265,8 @@
             -0.001047939556655662,
             0.0002183364092899739
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1503399853009436,
@@ -1242,7 +1293,8 @@
             -0.001181794635313478,
             -0.0001579097021693171
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1400689929450983,
@@ -1269,7 +1321,8 @@
             0.001394667188334363,
             -0.0001649107262887715
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1540219291234709,
@@ -1296,7 +1349,8 @@
             -0.0009623836377259852,
             -0.0002067709137532411
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1413630590379216,
@@ -1323,7 +1377,8 @@
             0.001531069345096401,
             -0.0006200603947945022
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1582482669918792,
@@ -1350,7 +1405,8 @@
             -0.0008170289639657574,
             0.000261330322970628
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1597315258996029,
@@ -1377,7 +1433,8 @@
             0.0008496214646579896,
             0.0002997721535140422
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1403855597568182,
@@ -1404,7 +1461,8 @@
             0.001304958347545802,
             -0.0008496629184445956
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1586491316957967,
@@ -1431,7 +1489,8 @@
             0.001423925636089821,
             -0.00071456514441062
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1420026604075807,
@@ -1458,7 +1517,8 @@
             -0.0005582407826656031,
             -0.0005610410213441036
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1378388860365643,
@@ -1485,7 +1545,8 @@
             0.0009044731918556743,
             -0.0001706986932764876
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1493223952039093,
@@ -1512,7 +1573,8 @@
             0.0009650843558794593,
             0.0001172726798413701
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1530455356560102,
@@ -1539,7 +1601,8 @@
             -0.0001843632978241803,
             0.00029470798061662
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1370881121092061,
@@ -1566,7 +1629,8 @@
             0.0002063621362695748,
             -0.0006744494761558655
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1286717128831883,
@@ -1593,7 +1657,8 @@
             -2.777015605953433e-05,
             -0.0008120958654672984
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1386282681180647,
@@ -1620,7 +1685,8 @@
             -0.0006302425791678293,
             0.0008467393314930795
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1516145748006663,
@@ -1647,7 +1713,8 @@
             -0.0005250680496340964,
             -0.0001046714304495029
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1534052198417785,
@@ -1674,7 +1741,8 @@
             0.001006252468196286,
             0.0002486157324378485
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.158042761640373,
@@ -1701,7 +1769,8 @@
             0.001169221021309681,
             -0.0002937568963755569
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1513504081763166,
@@ -1728,7 +1797,8 @@
             -0.0002234585280699921,
             -0.0001099811209521259
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1421285601599999,
@@ -1755,7 +1825,8 @@
             0.0009802356140349838,
             -0.0003996598881240092
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1595922068682775,
@@ -1782,7 +1853,8 @@
             -0.001193220082580392,
             -0.0002056117935686927
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1367022164338127,
@@ -1809,7 +1881,8 @@
             0.0009005776153311753,
             -0.0001113099564660366
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1511140744955722,
@@ -1836,7 +1909,8 @@
             0.001010798370843216,
             9.261914864141172e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1502442297636112,
@@ -1863,7 +1937,8 @@
             -0.0007574185314676921,
             -0.0003345790061150878
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1370945385725313,
@@ -1890,7 +1965,8 @@
             -0.0003673706583276801,
             -0.0004573829683923642
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1130380152674368,
@@ -1917,7 +1993,8 @@
             9.44113078261718e-05,
             -0.0001893468873591776
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.161042820811558,
@@ -1944,7 +2021,8 @@
             -0.0008558454661219404,
             -0.0002308490853061381
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1551899461141745,
@@ -1971,7 +2049,8 @@
             -0.001413618894999552,
             0.0006569730851251752
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1601908957280134,
@@ -1998,7 +2077,8 @@
             -0.0008238160218091719,
             0.0005445762416353224
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1569010622678609,
@@ -2025,7 +2105,8 @@
             0.001085940888043804,
             -0.0002978789136869568
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1496135209387315,
@@ -2052,7 +2133,8 @@
             -0.0006023457098806702,
             0.0002016713661129135
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.138296342610592,
@@ -2079,7 +2161,8 @@
             0.0009925051428959339,
             -0.0002101178474000926
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.08147836327263637,
@@ -2106,7 +2189,8 @@
             0.000596892268356405,
             0.0006442951319597972
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1377164669393541,
@@ -2133,7 +2217,8 @@
             -0.0009453360794403086,
             0.0001635086793954703
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3030191498022614,
@@ -2160,7 +2245,8 @@
             -0.0007473387961118201,
             0.0005884038516675706
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1519624898434358,
@@ -2187,7 +2273,8 @@
             -0.0003289213856314843,
             -0.0006517726705413691
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2008967285084758,
@@ -2214,7 +2301,8 @@
             0.0008077522272906265,
             -0.0003483359475232404
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1540566737934154,
@@ -2241,7 +2329,8 @@
             0.00147383678723807,
             0.0003544324908901279
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1541525993187952,
@@ -2268,7 +2357,8 @@
             0.0008710159292862582,
             5.979651112325661e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1394726371017744,
@@ -2295,7 +2385,8 @@
             -0.001732963146090994,
             -0.0003860834166328897
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1742960697545529,
@@ -2322,7 +2413,8 @@
             -0.0010767503604143,
             -5.437389630881778e-06
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1383252183269632,
@@ -2349,7 +2441,8 @@
             0.0009707869875190366,
             4.116495397373714e-06
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1380156769855077,
@@ -2376,7 +2469,8 @@
             0.001251354744156093,
             0.0007485805849634694
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1589984670147372,
@@ -2403,7 +2497,8 @@
             -0.001060825810096823,
             3.385813946281051e-06
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1594023756454497,
@@ -2430,7 +2525,8 @@
             -6.82706382181546e-05,
             0.0006753429477849533
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1557151464550578,
@@ -2457,7 +2553,8 @@
             -0.001098893249553024,
             0.0002715488723939562
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1515016767635219,
@@ -2484,7 +2581,8 @@
             0.001312496796918471,
             0.0008192767697656698
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "A": 3.02450215435968e-07,
@@ -2498,7 +2596,7 @@
         "horizons_id": 599,
         "mass": 1.89818722e+27,
         "name": "Jupiter",
-        "group": "Planet",
+        "group": "Gas Giant",
         "parent": 5,
         "radius": 69911.0,
         "time": "2018-01-01",
@@ -2513,7 +2611,8 @@
             1.970504247856853e-07,
             1.416346997378761e-08
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.001241853522025144,
@@ -2546,7 +2645,8 @@
             0.00526894343038443,
             -0.003367036434405887
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001595323324560743,
@@ -2579,7 +2679,8 @@
             0.006499440913748011,
             -0.00336128883576083
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001969227828744906,
@@ -2612,7 +2713,8 @@
             -0.00575322611196552,
             0.003103614681702964
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.00252592609482539,
@@ -2645,7 +2747,8 @@
             0.005122948299747563,
             -0.002645483354250597
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.003520780514625391,
@@ -2679,7 +2782,8 @@
             0.002353443042897056,
             -0.001586989410464316
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.008166140735391505,
@@ -2713,7 +2817,8 @@
             -0.001143231727511242,
             0.0002927907621606296
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.00993434673570509,
@@ -2747,7 +2852,8 @@
             0.001462125429828576,
             -0.0004598046280613806
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.02380132246304924,
@@ -2781,7 +2887,8 @@
             -0.001769453082487412,
             0.0004482525477329856
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.08635656874636097,
@@ -2793,7 +2900,7 @@
         "density": 1.633,
         "horizons_id": 609,
         "name": "Phoebe",
-        "group": "Inuit",
+        "group": "Norse",
         "parent": 6,
         "radius": 106.5,
         "time": "2018-01-01",
@@ -2803,7 +2910,6 @@
             217.0,
             204.0
         ],
-        "group": "Norse",
         "period": 548.2079248525766,
         "position": [
             -0.05702435147163635,
@@ -2815,7 +2921,8 @@
             0.0007921950646645049,
             9.855532315285482e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001013006574787052,
@@ -2848,7 +2955,8 @@
             -0.007571810106040445,
             0.003632451144160853
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001012918845856842,
@@ -2881,7 +2989,8 @@
             -0.007233268989547311,
             0.003404072391725637
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.002527816230764845,
@@ -2915,7 +3024,8 @@
             0.001203518045315385,
             -5.947094119803575e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001966827493260299,
@@ -2949,7 +3059,8 @@
             -0.002723698799280737,
             0.000813923202344171
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001973855304286327,
@@ -2983,7 +3094,8 @@
             -0.003055831255019191,
             0.00208990770288975
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0009278819708453593,
@@ -3015,7 +3127,8 @@
             0.007378047768104173,
             -0.003365439696345793
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0009355213715383107,
@@ -3048,7 +3161,8 @@
             0.007285526229428391,
             -0.004251864465200425
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.000949372424209303,
@@ -3081,7 +3195,8 @@
             0.00480608813377097,
             -0.003244687185901271
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0008931637266621987,
@@ -3113,7 +3228,8 @@
             -0.004268524393072941,
             0.001397598881681607
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1534544611177758,
@@ -3140,7 +3256,8 @@
             -0.0003393900426006815,
             8.89670445435665e-06
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.09983403961535771,
@@ -3167,7 +3284,8 @@
             0.0003977181857379052,
             0.000232195356300241
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1234228715713866,
@@ -3194,7 +3312,8 @@
             0.0002179519950526006,
             -0.0004102730554693211
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.07591672410759062,
@@ -3221,7 +3340,8 @@
             0.0002306145024711958,
             0.0002674459489408868
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1301576900948433,
@@ -3248,7 +3368,8 @@
             -0.000385325959906114,
             -6.847588516196244e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.07559155763705624,
@@ -3275,7 +3396,8 @@
             -0.0004641688329561415,
             -0.0007131907206275739
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1243538617337241,
@@ -3302,7 +3424,8 @@
             -0.0004309403675343251,
             0.0001242142687190753
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1083620040136194,
@@ -3329,7 +3452,8 @@
             0.0004509764744677838,
             -0.0001135137048279906
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.104624844082002,
@@ -3356,7 +3480,8 @@
             -0.0004032497691542268,
             0.0003952291793713558
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1170507735657785,
@@ -3383,7 +3508,8 @@
             -0.0004268043248569318,
             -6.09251506914642e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1191113202495739,
@@ -3410,7 +3536,8 @@
             0.0004077483698569485,
             0.0007574967765399718
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1356741281094307,
@@ -3437,7 +3564,8 @@
             0.00115388370914151,
             -6.294286756855647e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1296402195407878,
@@ -3464,7 +3592,8 @@
             -0.0001895571078971808,
             -0.00032411906896905
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001303320133349827,
@@ -3496,7 +3625,8 @@
             0.007127847159454251,
             -0.003613092361594644
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001425702029956725,
@@ -3528,7 +3658,8 @@
             0.004255600702294999,
             -0.001633217042914837
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.002521400123294689,
@@ -3560,7 +3691,8 @@
             0.004008429139967209,
             -0.00242968260585723
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0009155126478184235,
@@ -3592,7 +3724,8 @@
             -0.008426382744665077,
             0.004536106845979452
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1372600995462093,
@@ -3619,7 +3752,8 @@
             -0.0007626674935992938,
             -0.000101123277696086
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1129335344082474,
@@ -3646,7 +3780,8 @@
             0.0005183504579038727,
             -0.0004153149774511146
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1300725101034607,
@@ -3673,7 +3808,8 @@
             -0.0002099796546771392,
             0.0001311602298720081
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.13478200670711,
@@ -3700,7 +3836,8 @@
             -0.0003399719541851582,
             0.0003143145286536672
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1359667410482278,
@@ -3727,7 +3864,8 @@
             0.0005711740495635342,
             0.0001224415957630552
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1519804463191508,
@@ -3754,7 +3892,8 @@
             0.0001276651047811583,
             0.0001949095714099207
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1675801768720885,
@@ -3781,7 +3920,8 @@
             -0.0003770215430446223,
             0.0001756710103644336
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1314371735354648,
@@ -3808,7 +3948,8 @@
             -0.000684052659940629,
             0.0001306735770274877
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1224686660310108,
@@ -3835,7 +3976,8 @@
             0.0009093268426013147,
             -0.0003466676978354308
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1453011944607072,
@@ -3862,7 +4004,8 @@
             -0.0006232514000399567,
             -9.762650468162283e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1516976291415616,
@@ -3889,7 +4032,8 @@
             -0.0007584836752801629,
             0.0001953577804569814
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1191385089306112,
@@ -3916,7 +4060,8 @@
             0.0001846496492662126,
             0.00013815264002808
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1551700139209438,
@@ -3943,7 +4088,8 @@
             0.000208413100954147,
             -0.0001091731070905133
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001320035781809442,
@@ -3970,7 +4116,8 @@
             -0.004825362960859201,
             0.001941319830450685
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1296107191371991,
@@ -3997,7 +4144,8 @@
             0.0002849074899530842,
             5.118972505420319e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1237751503185014,
@@ -4024,7 +4172,8 @@
             0.000228486885415794,
             -5.908821389301302e-06
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1193603612900265,
@@ -4051,7 +4200,8 @@
             0.00023490856569284,
             0.0006655473194183993
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001126346874915734,
@@ -4083,7 +4233,8 @@
             -0.001094327314856209,
             0.001398955489856389
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1400815899923754,
@@ -4110,7 +4261,8 @@
             -0.0006886865710717837,
             0.0001762775467640382
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1342324267883286,
@@ -4137,7 +4289,8 @@
             4.797836149205327e-05,
             -0.0001208433749066664
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1226973055067906,
@@ -4164,7 +4317,8 @@
             0.001008015531972491,
             0.0001144876906579149
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1311002891039394,
@@ -4191,7 +4345,8 @@
             0.0008117097406746361,
             -0.0001930679476772582
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.0867313212673612,
@@ -4218,7 +4373,8 @@
         "mass": 65000000000000.0,
         "radius": 2.5,
         "group": "Norse",
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1438120514228872,
@@ -4245,7 +4401,8 @@
             -0.0003707561093955203,
             -0.0004412599387308752
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.23611785165853,
@@ -4272,7 +4429,8 @@
         "mass": 65000000000000.0,
         "radius": 2.5,
         "group": "Norse",
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1504649849737077,
@@ -4299,7 +4457,8 @@
         "mass": 65000000000000.0,
         "radius": 2.5,
         "group": "Norse",
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 1.818899371474924e-06,
@@ -4313,7 +4472,7 @@
         "horizons_id": 699,
         "mass": 5.6834e+26,
         "name": "Saturn",
-        "group": "Planet",
+        "group": "Gas Giant",
         "parent": 6,
         "radius": 58232.0,
         "time": "2018-01-01",
@@ -4328,7 +4487,8 @@
             2.614350973225921e-07,
             -6.169419414774964e-08
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.001275961240781169,
@@ -4361,7 +4521,8 @@
             7.795236560413186e-06,
             0.002704169303412126
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.001777450336324453,
@@ -4389,7 +4550,8 @@
             -0.0001655681007341646,
             0.001871710327064254
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.002916379508165293,
@@ -4417,7 +4579,8 @@
             0.0004075020590469634,
             0.001978625370136088
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.003900269677110298,
@@ -4445,7 +4608,8 @@
             -0.0004398831950906557,
             -0.0005004635432743756
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0008676976173505332,
@@ -4478,7 +4642,8 @@
             -0.0003150444992036168,
             0.001361329644627804
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003346445413655806,
@@ -4509,7 +4674,8 @@
             0.001336842423866199,
             0.000133273433921631
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003619196637822179,
@@ -4540,7 +4706,8 @@
             -0.001468839012816846,
             -0.004310565908285226
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003963253982110836,
@@ -4571,7 +4738,8 @@
             7.038539596788001e-05,
             0.004974375267681417
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004130172574242859,
@@ -4602,7 +4770,8 @@
             -0.0006964756100246446,
             0.002645452250480081
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004187529659966922,
@@ -4633,7 +4802,8 @@
             -0.001267618073741434,
             -0.0006152684515929453
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004303936869392059,
@@ -4664,7 +4834,8 @@
             2.031907937957502e-05,
             0.004678364998910622
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004422438581333452,
@@ -4695,7 +4866,8 @@
             0.001343680724817768,
             0.002029838665245601
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004683421437875986,
@@ -4722,7 +4894,8 @@
             0.0006192165765684625,
             -0.002643388238835356
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0005031112371552386,
@@ -4753,7 +4926,8 @@
             -0.0006168694977845507,
             0.002466817576813817
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0005756658800163949,
@@ -4780,7 +4954,8 @@
             -9.922834679983823e-05,
             -0.004244549409802964
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.04792476886603961,
@@ -4807,7 +4982,8 @@
             -0.0002693217144121654,
             -0.0002021634765564266
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.08148227504357416,
@@ -4834,7 +5010,8 @@
             -0.0003514905973723335,
             7.451083418709163e-05
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1084285920177672,
@@ -4861,7 +5038,8 @@
             0.0003612660047200897,
             -0.0002930740254124404
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.117258085260717,
@@ -4888,7 +5066,8 @@
             -2.881620567233391e-05,
             -9.895274734893702e-05
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.05318683911557554,
@@ -4915,7 +5094,8 @@
             -0.0003381551423346077,
             -0.0002669284334882829
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.05679492064652816,
@@ -4942,7 +5122,8 @@
             -0.0001190598005956655,
             7.191557040268594e-06
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.02857904141693731,
@@ -4969,7 +5150,8 @@
             0.0001147868271938476,
             0.0003349846606440273
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.09652896471003064,
@@ -4996,7 +5178,8 @@
             0.0002742197882064326,
             0.0003234422759066421
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1362746790065166,
@@ -5023,7 +5206,8 @@
             2.399673627203338e-05,
             3.657456779927791e-05
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0005116742355805995,
@@ -5050,7 +5234,8 @@
             -0.001182451892106917,
             -0.0009351300613542833
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0006531769258930576,
@@ -5077,7 +5262,8 @@
             0.0007627168679452292,
             0.004325026031601527
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004981304544704432,
@@ -5104,7 +5290,8 @@
             0.0002688859756520773,
             0.004737830696673445
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "A": 9.454989258572548e-08,
@@ -5118,7 +5305,7 @@
         "horizons_id": 799,
         "mass": 8.6813e+25,
         "name": "Uranus",
-        "group": "Planet",
+        "group": "Ice Giant",
         "parent": 7,
         "radius": 25362.0,
         "time": "2018-01-01",
@@ -5133,7 +5320,8 @@
             2.181155191476269e-09,
             -1.272241335230958e-07
         ],
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.002370972771475618,
@@ -5166,7 +5354,8 @@
             0.0003861896098885234,
             0.001764600987375097
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.03686035507852608,
@@ -5193,7 +5382,8 @@
             -0.0005841420267529828,
             -4.908431000733182e-05
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003224390620153088,
@@ -5226,7 +5416,8 @@
             0.00474108828195334,
             0.0002954169790140669
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.000335055147609134,
@@ -5259,7 +5450,8 @@
             0.005893641309815192,
             0.0008147487403168226
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003517449342706549,
@@ -5292,7 +5484,8 @@
             0.006252195406230084,
             0.001815434222375303
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004135704837144407,
@@ -5325,7 +5518,8 @@
             -0.004030912738798893,
             -0.002876843414704048
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004918726441620356,
@@ -5358,7 +5552,8 @@
             -0.0048413232591582,
             -0.0006497530004075471
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0007859062240187757,
@@ -5392,7 +5587,8 @@
             0.001842262734553604,
             -0.0009439432178770872
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1109502033784156,
@@ -5419,7 +5615,8 @@
             -0.0002621069054092039,
             -0.0002837422280845905
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.3131524717779026,
@@ -5446,7 +5643,8 @@
             5.41811372661098e-06,
             -0.0001663813838514384
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.1484208789176209,
@@ -5473,7 +5671,8 @@
             -0.0001038177822435193,
             -0.0002416465607733937
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.157731939787281,
@@ -5500,7 +5699,8 @@
             0.0001818185798134058,
             9.220145211184328e-05
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.3413856608541861,
@@ -5527,7 +5727,8 @@
             0.0001177751200855453,
             -7.97041018691336e-05
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0007031350995126693,
@@ -5554,7 +5755,8 @@
             -0.003470673254515867,
             -0.0021748948253867
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "A": 8.245542547347411e-07,
@@ -5568,7 +5770,7 @@
         "horizons_id": 899,
         "mass": 1.02409e+26,
         "name": "Neptune",
-        "group": "Planet",
+        "group": "Ice Giant",
         "parent": 8,
         "radius": 24624.0,
         "time": "2018-01-01",
@@ -5583,7 +5785,8 @@
             -3.673982425655583e-07,
             -2.900093255827375e-07
         ],
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Planet"
     },
     {
         "A": 0.0001167435279931215,
@@ -5595,7 +5798,7 @@
         "gm": 106.1,
         "horizons_id": 901,
         "name": "Charon",
-        "group": "Moon",
+        "group": "",
         "parent": 9,
         "radius": 606.0,
         "density": 1.702,
@@ -5612,7 +5815,8 @@
             8.921103008582838e-05,
             2.434156413341914e-05
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003293088307217532,
@@ -5624,7 +5828,7 @@
         "gm": 0.001496,
         "horizons_id": 902,
         "name": "Nix",
-        "group": "Moon",
+        "group": "",
         "parent": 9,
         "radius": 37.6,
         "dimensions": [
@@ -5646,7 +5850,8 @@
             -4.573484091469728e-05,
             3.221900884366947e-05
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0004351939517724417,
@@ -5658,7 +5863,7 @@
         "gm": 0.00201,
         "horizons_id": 903,
         "name": "Hydra",
-        "group": "Moon",
+        "group": "",
         "parent": 9,
         "radius": 39.3,
         "mass": 3.01e+16,
@@ -5680,7 +5885,8 @@
             -4.571439667260035e-05,
             1.704810706381011e-05
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0003875378448750868,
@@ -5692,7 +5898,7 @@
         "gm": 6.038e-05,
         "horizons_id": 904,
         "name": "Kerberos",
-        "group": "Moon",
+        "group": "",
         "parent": 9,
         "radius": 12.6,
         "mass": 1.65e+16,
@@ -5713,7 +5919,8 @@
             5.828228534738324e-05,
             3.264338547881244e-05
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Moon"
     },
     {
         "A": 0.0002862175823172137,
@@ -5725,7 +5932,7 @@
         "gm": 4.05e-05,
         "horizons_id": 905,
         "name": "Styx",
-        "group": "Moon",
+        "group": "",
         "parent": 9,
         "radius": 11.0,
         "mass": 7500000000000000.0,
@@ -5746,7 +5953,8 @@
             -6.721230475214242e-05,
             -4.216557722191762e-05
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Moon"
     },
     {
         "A": 1.424413132435089e-05,
@@ -5759,7 +5967,7 @@
         "horizons_id": 999,
         "mass": 1.307e+22,
         "name": "Pluto",
-        "group": "Dwarf Planet",
+        "group": "",
         "parent": 9,
         "radius": 1188.3,
         "time": "2018-01-01",
@@ -5774,7 +5982,8 @@
             -1.088801109445939e-05,
             -2.970979832227748e-06
         ],
-        "parent_name": "Pluto Barycenter"
+        "parent_name": "Pluto Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "EC": 0.09636389389845072,
@@ -5800,7 +6009,8 @@
             -0.000530111478804387,
             0.001043938554777893
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1410708276854673,
@@ -5826,7 +6036,8 @@
             -0.0006987596240413664,
             -0.0008356589673987263
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1779205934910944,
@@ -5852,7 +6063,8 @@
             0.0002279407347400364,
             0.0005236833669278236
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1498440210019012,
@@ -5878,7 +6090,8 @@
             0.001934058142496215,
             5.269484320533586e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.03222615193539527,
@@ -5904,7 +6117,8 @@
             -9.086529644773744e-05,
             -0.0009587547066764278
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2610972040729308,
@@ -5930,7 +6144,8 @@
             -0.001025869926176192,
             -2.613589678825418e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3736101405432143,
@@ -5956,7 +6171,8 @@
             0.0009023141102579072,
             0.0007189928602967415
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1564382081457345,
@@ -5982,7 +6198,8 @@
             0.001067589604586592,
             0.0002645392785446339
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.266818018987142,
@@ -6008,7 +6225,8 @@
             -0.001109037210995918,
             0.000842473618969276
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1483939813363865,
@@ -6034,7 +6252,8 @@
             0.001187284255742221,
             -0.0006338398386572983
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2227253197556145,
@@ -6060,7 +6279,8 @@
             -0.0005388942879107695,
             0.0007769855894657672
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1871957893076701,
@@ -6086,7 +6306,8 @@
             0.00101179322172645,
             -0.0005964286959352073
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1870357176244142,
@@ -6112,7 +6333,8 @@
             0.001183384166739126,
             -0.0005336474988070661
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2184214217012891,
@@ -6138,7 +6360,8 @@
             0.0008248902995911572,
             -0.0005091129392402615
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3228637364512311,
@@ -6164,7 +6387,8 @@
             0.0009519389535094007,
             0.0002136135792625031
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2540620332188543,
@@ -6190,7 +6414,8 @@
             -0.0007869776175061451,
             8.900235536634997e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.288585443150856,
@@ -6216,7 +6441,8 @@
             -0.0005858822611740984,
             8.291057594800722e-06
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3090330261820957,
@@ -6242,7 +6468,8 @@
             -0.0005320905599396592,
             1.833889684955438e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3499252447134376,
@@ -6268,7 +6495,8 @@
             -0.0006595755637204152,
             0.0002683239460811003
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2281433502423007,
@@ -6294,7 +6522,8 @@
             -4.094570871962716e-05,
             -0.0003314318060223327
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2047721511523432,
@@ -6320,7 +6549,8 @@
             -0.0007931318264420709,
             -0.0003417683747001299
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2729683345776227,
@@ -6346,7 +6576,8 @@
             0.0006204718054578417,
             0.0001085349678159891
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3847349621754074,
@@ -6372,7 +6603,8 @@
             0.0001160513556712181,
             -0.0006366513342657746
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2697258065304207,
@@ -6398,7 +6630,8 @@
             -0.0009637347327413648,
             0.0002058528606142048
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5483217689530474,
@@ -6424,7 +6657,8 @@
             0.0007148132589951045,
             -0.000233816098878925
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3984135678008837,
@@ -6450,7 +6684,8 @@
             0.000400692679009986,
             -1.023816022443266e-05
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1610744491395553,
@@ -6476,7 +6711,8 @@
             -0.0003993628188735569,
             -0.0002874632276137
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3236200978143796,
@@ -6502,7 +6738,8 @@
             -0.0006861332159540666,
             0.0001865980575307198
         ],
-        "parent_name": "Jupiter Barycenter"
+        "parent_name": "Jupiter Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.6584680980518025,
@@ -6528,7 +6765,8 @@
             -0.0008256300342512086,
             0.0007308061022124488
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.190134811181245,
@@ -6554,7 +6792,8 @@
             0.0005878322105840459,
             -0.0005022950402798986
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4737117224024781,
@@ -6580,7 +6819,8 @@
             0.0002164362026967711,
             0.0001265030974095755
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2183436296440418,
@@ -6595,7 +6835,6 @@
         "time": "2018-01-01",
         "mass": 65000000000000.0,
         "radius": 2.5,
-        "group": "Norse",
         "period": 564.581965025929,
         "position": [
             0.06074547504955089,
@@ -6607,7 +6846,8 @@
             -0.001098007549720154,
             -1.553080300327333e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2425225770921356,
@@ -6633,7 +6873,8 @@
             -0.0002170257346935579,
             -4.359136356764287e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.09978604613217415,
@@ -6659,7 +6900,8 @@
             0.0006440800309084603,
             0.0003235207179425017
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2259586979839603,
@@ -6685,7 +6927,8 @@
             6.558861537938849e-05,
             -6.284835418109812e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4624121214543925,
@@ -6711,7 +6954,8 @@
             -0.0005892478556138739,
             -0.0002205713227020915
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3302740201262428,
@@ -6737,7 +6981,8 @@
             0.0003816607497791992,
             -0.0002604354765718939
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2528144034820185,
@@ -6763,7 +7008,8 @@
             0.0003100772435954221,
             5.167192924952411e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3107657028734768,
@@ -6789,7 +7035,8 @@
             0.0001589962088074206,
             5.191231212274195e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5918760295590678,
@@ -6815,7 +7062,8 @@
             0.0007022398723616096,
             -0.0004285932127253383
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.415220386857116,
@@ -6841,7 +7089,8 @@
             -0.0001222841138562091,
             -0.0002245574775684466
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2217971608472126,
@@ -6867,7 +7116,8 @@
             -0.000818871036950322,
             -8.479597008878101e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4852911374958867,
@@ -6893,7 +7143,8 @@
             0.0004832006821441801,
             8.486878728287203e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2146020858294272,
@@ -6919,7 +7170,8 @@
             -0.0001410076165817803,
             0.0005173258004989755
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.07974687086220693,
@@ -6945,7 +7197,8 @@
             -5.766359831611216e-05,
             0.000576377376768968
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1690490235576266,
@@ -6971,7 +7224,8 @@
             0.000728639521756478,
             2.984326748781509e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4200736741052798,
@@ -6997,7 +7251,8 @@
             0.0004730701745317709,
             -0.0001602535211189984
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.02656183306124837,
@@ -7023,7 +7278,8 @@
             0.0004291177115102903,
             -0.0005877817098273218
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3474188134669108,
@@ -7049,7 +7305,8 @@
             0.0001607087476275531,
             0.0001419561932756546
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4210800875192534,
@@ -7075,7 +7332,8 @@
             3.56041390513256e-05,
             0.0003694039137801095
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1451993610522719,
@@ -7101,7 +7359,8 @@
             0.0001895904099006333,
             -0.0001242716135318782
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1517058754003338,
@@ -7127,7 +7386,8 @@
             0.0005074102576945868,
             -0.0005919637312467332
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1491670109730358,
@@ -7153,7 +7413,8 @@
             -0.0008706058415339888,
             0.0002321593667017988
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4219055402096303,
@@ -7179,7 +7440,8 @@
             -0.0002543873124563598,
             -8.223243129056357e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.134967734908987,
@@ -7205,7 +7467,8 @@
             0.0007498913196666008,
             -0.0002759952751221645
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1744333824451158,
@@ -7231,7 +7494,8 @@
             -0.0006953161975177502,
             -0.0001180681498234875
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1938141124398828,
@@ -7257,7 +7521,8 @@
             9.717873347529867e-05,
             -8.505674775777109e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1092561357077339,
@@ -7283,7 +7548,8 @@
             0.0006025945229506697,
             1.990570282406646e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.6173081897121351,
@@ -7309,7 +7575,8 @@
             -0.0006849100963656968,
             -0.0008705236895952187
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4820579072837657,
@@ -7335,7 +7602,8 @@
             0.0001689509238658422,
             -0.0002433310114750131
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1182667529660887,
@@ -7361,7 +7629,8 @@
             -0.0007466072226035783,
             1.837875393170663e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1387168599866453,
@@ -7387,7 +7656,8 @@
             -0.0005231210524367434,
             -0.0001795507225159854
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3464993851483781,
@@ -7413,7 +7683,8 @@
             0.0008823246795846275,
             -0.0001928767814161483
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1898886482624037,
@@ -7439,7 +7710,8 @@
             0.0004818948811953274,
             -0.0004601100731515149
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3569475177876866,
@@ -7465,7 +7737,8 @@
             0.000268496487731216,
             0.0002329682061426255
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2301304275640051,
@@ -7491,7 +7764,8 @@
             0.0007894521704574082,
             0.0001090711491151695
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.32848885130921,
@@ -7517,7 +7791,8 @@
             -0.0007800481776145528,
             -6.932097064220375e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4553712834848007,
@@ -7543,7 +7818,8 @@
             -0.000125710880085365,
             -0.000172862785454037
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3028472902915992,
@@ -7569,7 +7845,8 @@
             0.0005386254460817963,
             -2.627485268928653e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2430498434022033,
@@ -7595,7 +7872,8 @@
             9.237617874333934e-05,
             -3.753588353655642e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5626146493352526,
@@ -7621,7 +7899,8 @@
             0.0002591800468734741,
             -0.0001966757207789897
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1965205432143341,
@@ -7647,7 +7926,8 @@
             0.0007734653958953995,
             -0.0001062536895219009
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4162011724494545,
@@ -7673,7 +7953,8 @@
             -0.0002350951496691711,
             6.008808157405916e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5099379296775879,
@@ -7699,7 +7980,8 @@
             0.0005081623689273067,
             -1.102967736291633e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2844949411591946,
@@ -7725,7 +8007,8 @@
             -0.0008288388812446394,
             -1.058186654318311e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.05595660673804324,
@@ -7751,7 +8034,8 @@
             -0.0006883109419105435,
             0.0001247246309163976
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2236640356533509,
@@ -7777,7 +8061,8 @@
             0.000825439294051829,
             -0.0001239760654136352
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3018326995784994,
@@ -7803,7 +8088,8 @@
             0.0005384937239099048,
             -0.0001835349626825618
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5670660290627366,
@@ -7829,7 +8115,8 @@
             0.0004165886610026263,
             -8.273861269323231e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.6497622738462046,
@@ -7855,7 +8142,8 @@
             -0.0002298458550946845,
             -5.694077065050988e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3570517138898393,
@@ -7881,7 +8169,8 @@
             0.0004172471399180777,
             3.021050935955473e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2132256463265385,
@@ -7907,7 +8196,8 @@
             -0.0005409183176745241,
             -0.0001593161696936052
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1496530728438203,
@@ -7933,7 +8223,8 @@
             -0.0005402139608460657,
             0.0002274815168937908
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1142883274763965,
@@ -7959,7 +8250,8 @@
             -0.0002742476805185609,
             6.828911763799581e-06
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.291459967169028,
@@ -7985,7 +8277,8 @@
             -0.0004594126225154455,
             0.0002493433207695526
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2382229142813551,
@@ -8011,7 +8304,8 @@
             -0.0005889990172955467,
             1.828146641629603e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3319053079346787,
@@ -8037,7 +8331,8 @@
             -0.0006468934376575596,
             -0.0001503979946386538
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4691941253367803,
@@ -8063,7 +8358,8 @@
             -0.0002057306018944892,
             -0.0001991246309774918
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5188233024997433,
@@ -8089,7 +8385,8 @@
             0.0004148590003668221,
             0.0001239142523242431
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3457142568907389,
@@ -8115,7 +8412,8 @@
             0.0004066945180131088,
             8.68365534028499e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4929978954536572,
@@ -8141,7 +8439,8 @@
             -1.511878882736565e-05,
             0.000202882380088925
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5975688254918263,
@@ -8167,7 +8466,8 @@
             -0.0002508342236672522,
             -6.70118474705096e-07
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1444360866120422,
@@ -8193,7 +8493,8 @@
             -0.0004311386118474019,
             -7.222810950444281e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3638294170156074,
@@ -8219,7 +8520,8 @@
             -0.0009244085105374027,
             4.205704991523719e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2898362078144694,
@@ -8245,7 +8547,8 @@
             0.0001890750426872582,
             0.0002198511403845214
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3984736566347644,
@@ -8271,7 +8574,8 @@
             -0.0007750272682403255,
             -6.395458558475235e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1154696889676307,
@@ -8297,7 +8601,8 @@
             0.0003186077304370757,
             0.0001111413955038566
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2066784630643872,
@@ -8323,7 +8628,8 @@
             -0.0007578627121020489,
             -9.710854005295742e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2146066198501315,
@@ -8349,7 +8655,8 @@
             -0.0003582763792651572,
             0.0001596758227117049
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.05544715582797181,
@@ -8375,7 +8682,8 @@
             0.0003247221062528501,
             -3.739723224654928e-07
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.7439456153871556,
@@ -8401,7 +8709,8 @@
             0.0001609667284255681,
             0.0001930451332650502
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4663489661191028,
@@ -8427,7 +8736,8 @@
             -0.0005447996918155138,
             0.0001630026330306708
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3973983295403581,
@@ -8453,7 +8763,8 @@
             0.0003624598842278758,
             0.0001196097635676541
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.3996727064273571,
@@ -8479,7 +8790,8 @@
             0.0006125635516618728,
             -7.048616384875926e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2062222216617367,
@@ -8505,7 +8817,8 @@
             -0.0003309955141808523,
             -4.903421631861782e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2583577243079022,
@@ -8531,7 +8844,8 @@
             -0.0005044256571448063,
             4.341778113261346e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.351469598383183,
@@ -8557,7 +8871,8 @@
             0.0004446607470092001,
             -9.458069205065595e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.6015990993369589,
@@ -8583,7 +8898,8 @@
             -0.0002342825360917116,
             0.0001365240493075828
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2069777449832385,
@@ -8609,7 +8925,8 @@
             -0.0005468781992818568,
             8.227145487486922e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1351270078447889,
@@ -8635,7 +8952,8 @@
             -0.0007029834707109612,
             0.0001040627306950602
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2409067048257634,
@@ -8661,7 +8979,8 @@
             -0.0004395482277331042,
             7.289601249805671e-05
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1893773583136334,
@@ -8688,7 +9007,8 @@
         "mass": 270000000000000.0,
         "radius": 4.0,
         "group": "Caliban",
-        "parent_name": "Uranus Barycenter"
+        "parent_name": "Uranus Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.5465824006434854,
@@ -8715,7 +9035,8 @@
         "mass": 3e+16,
         "radius": 19.0,
         "group": "Sao",
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.4679273801784951,
@@ -8742,7 +9063,8 @@
         "mass": 8000000000000000.0,
         "radius": 12.5,
         "group": "Neso",
-        "parent_name": "Neptune Barycenter"
+        "parent_name": "Neptune Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.1038812218741623,
@@ -8769,7 +9091,8 @@
             -0.000386984688891212,
             -0.0002696732326692782
         ],
-        "parent_name": "Saturn Barycenter"
+        "parent_name": "Saturn Barycenter",
+        "type": "Moon"
     },
     {
         "A": 67.83624429965595,
@@ -8780,7 +9103,7 @@
         "W": 151.2203676038188,
         "horizons_id": 20136199,
         "name": "Eris",
-        "group": "Dwarf Planet",
+        "group": "",
         "parent": 0,
         "radius": 1163.0,
         "mass": 0.0,
@@ -8796,7 +9119,8 @@
             0.000895193730135404,
             0.000918760167624365
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "EC": 0.006122878180190032,
@@ -8806,7 +9130,7 @@
         "MA": 287.75987409074,
         "A": 0.0002491644324763172,
         "name": "Dysnomia",
-        "group": "Moon",
+        "group": "",
         "horizons_id": 120136199,
         "parent": 20136199,
         "time": "2018-01-01",
@@ -8824,7 +9148,8 @@
             -6.909454471531958e-05,
             1.121857010831747e-05
         ],
-        "parent_name": "Eris"
+        "parent_name": "Eris",
+        "type": "Moon"
     },
     {
         "EC": 0.05902425803025385,
@@ -8835,7 +9160,7 @@
         "A": 0.0003289235851183293,
         "gm": 1.151,
         "name": "Hi'iaka",
-        "group": "Moon",
+        "group": "",
         "horizons_id": 120136108,
         "parent": 20136108,
         "radius": 160,
@@ -8852,7 +9177,8 @@
             7.460187650243916e-06,
             -1.575393701836612e-05
         ],
-        "parent_name": "Haumea Barycenter"
+        "parent_name": "Haumea Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.2171716493979385,
@@ -8863,7 +9189,7 @@
         "A": 0.0001677818985130895,
         "gm": "0.036",
         "name": "Namaka",
-        "group": "Moon",
+        "group": "",
         "horizons_id": 220136108,
         "parent": 20136108,
         "radius": 85,
@@ -8879,7 +9205,8 @@
             5.224034494570907e-06,
             -3.876026561402534e-05
         ],
-        "parent_name": "Haumea Barycenter"
+        "parent_name": "Haumea Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.06192705779544893,
@@ -8890,7 +9217,7 @@
         "A": 1.452387936931924e-06,
         "gm": "264.413",
         "name": "Haumea",
-        "group": "Dwarf Planet",
+        "group": "",
         "horizons_id": 920136108,
         "parent": 20136108,
         "radius": 780,
@@ -8912,7 +9239,8 @@
             -3.317937905586456e-08,
             7.379224259415466e-08
         ],
-        "parent_name": "Haumea Barycenter"
+        "parent_name": "Haumea Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "EC": 0.8495368517703398,
@@ -8922,7 +9250,7 @@
         "MA": 358.162650703605,
         "A": 506.3808866486861,
         "name": "Sedna",
-        "group": "Dwarf Planet",
+        "group": "",
         "horizons_id": 90377,
         "parent": 0,
         "radius": 453,
@@ -8938,7 +9266,8 @@
             0.0007034292670849371,
             0.0001764524146651602
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "EC": 0.1603880607701627,
@@ -8948,7 +9277,7 @@
         "MA": 161.2367170995159,
         "A": 45.49865528031665,
         "name": "Makemake",
-        "group": "Dwarf Planet",
+        "group": "",
         "horizons_id": 136472,
         "parent": 0,
         "mass": 3.1e+21,
@@ -8965,7 +9294,8 @@
             -0.002176281940368958,
             -0.0001778642031738375
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "EC": 0.5034099876039825,
@@ -8975,7 +9305,7 @@
         "MA": 105.4589657747936,
         "A": 67.06628339316904,
         "name": "Gonggong",
-        "group": "Dwarf Planet",
+        "group": "",
         "horizons_id": 225088,
         "parent": 0,
         "mass": 1.75e+21,
@@ -8992,11 +9322,12 @@
             0.0007648755490262547,
             0.000683521302266874
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "name": "Quaoar",
-        "group": "Dwarf Planet",
+        "group": "",
         "EC": 0.03692851920338398,
         "IN": 7.990828065254245,
         "OM": 188.913295329341,
@@ -9015,7 +9346,7 @@
             4.231980990528203e-05
         ],
         "radius": 545,
-        "mass": 1.2e21,
+        "mass": 1.2e+21,
         "gm": 95.6,
         "dimensions": [
             1286,
@@ -9024,11 +9355,12 @@
         ],
         "horizons_id": 920050000,
         "parent": 0,
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet"
     },
     {
         "name": "Weywot",
-        "group": "Moon",
+        "group": "",
         "EC": 0.254002552687917,
         "IN": 154.3219749375013,
         "OM": 330.9953501190485,
@@ -9050,6 +9382,8 @@
         "radius": 100.0,
         "horizons_id": 120050000,
         "parent": 920050000,
-        "parent_name": "Quaoar"
+        "parent_name": "Quaoar",
+        "type": "Moon",
+        "mass": 1.8e15
     }
 ]

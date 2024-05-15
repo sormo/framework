@@ -7,7 +7,11 @@ fips_begin_app(solar-system windowed)
                commons.h
                bodies_tree.h
                bodies_tree.cpp
-               quadtree.h)
+               quadtree.h
+               body.h
+               body.cpp
+               body_info.h
+               body_info.cpp)
     fips_dir(data)
     fipsutil_copy(data.yml)
     fips_deps(framework)

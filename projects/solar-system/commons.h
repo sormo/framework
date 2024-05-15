@@ -41,9 +41,25 @@ namespace commons
         return value_km * commons::DRAW_SIZE_FACTOR * unit::kilometer;
     }
 
+    static double convert_AU_to_world_size(double value_au)
+    {
+        return value_au * commons::DRAW_SIZE_FACTOR * unit::AU;
+    }
+
     static double convert_AU_to_km(double value_au)
     {
         return value_au * 1.496e+8;
+    }
+
+    static std::string convert_double_to_string(double num)
+    {
+        std::string text(256, '\0');
+        if (num < 0.000'001 || num > 100'000.0)
+            std::sprintf(text.data(), "%1.2e", num);
+        else
+            std::sprintf(text.data(), "%.3f", num);
+        text.resize(strlen(text.data()));
+        return text;
     }
 
     // https://easings.net/#easeOutCubic

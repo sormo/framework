@@ -1,4 +1,5 @@
 #include "color_type.h"
+#include <string>
 
 color_type color_type::RGB(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
@@ -30,11 +31,15 @@ color_type color_type::HSLf(float r, float g, float b, float a)
 
 color_type color_type::HEX(uint32_t number)
 {
-    uint8_t alpha = 255;
     if (number > 0xffffff)
-        alpha = number & 0xff;
+        return RGB((number >> 24) & 0xff, (number >> 16) & 0xff, (number >> 8) & 0xff, number & 0xff);
+    return RGB((number >> 16) & 0xff, (number >> 8) & 0xff, number & 0xff, 255);
+}
 
-    return RGB((number >> 24) & 0xff, (number >> 16) & 0xff, (number >> 8) & 0xff, alpha);
+color_type color_type::HEXs(std::string_view number_string)
+{
+    uint32_t number = std::strtoul(&number_string[1], nullptr, 16);
+    return HEX(number);
 }
 
 color_type color_type::lerp(const color_type& destination, float time) const

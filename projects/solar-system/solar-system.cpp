@@ -13,6 +13,7 @@
 #include "bodies_tree.h"
 #include "quadtree.h"
 #include "camera.h"
+#include "body_info.h"
 
 using namespace frame;
 
@@ -24,35 +25,8 @@ bodies_tree bodies;
 quadtree tree;
 camera_type camera;
 click_handler left_mouse_click = click_handler(frame::mouse_button::left);
-
-struct body_info
-{
-    void draw()
-    {
-        static const vec2 offset(20.0f, 20.0f);
-        static const vec2 size(300.0f, 400.0f);
-
-        if (body == nullptr)
-            return;
-
-        frame::save_world_transform();
-        frame::set_world_transform(frame::mat3::identity());
-        frame::set_world_translation(offset);
-
-        frame::draw_rectangle(frame::rectangle::from_min_max({}, size), col4::RGBf(0.0f, 0.0f, 0.0f, 0.65f));
-
-        // constants
-        static const float boundary = 10.0f;
-
-        // draw name
-        frame::draw_text_ex(body->name.c_str(), { boundary, boundary }, 30.0f, col4::LIGHTGRAY, "roboto-black", frame::text_align::top_left);
-        frame::draw_text_ex(body->group.c_str(), { boundary + 30.0f, boundary + 12.0f }, 20.0f, col4::GRAY, "roboto-bold", frame::text_align::top_left);
-
-        frame::restore_world_transform();
-    }
-
-    body_node* body = nullptr;
-} info;
+body_color body_color_data;
+body_info info;
 
 void step_bodies_tree(bodies_tree& data)
 {
@@ -63,7 +37,7 @@ void draw_bodies_tree(bodies_tree& data)
 {
     auto parents = tree.query(frame::get_world_rectangle());
 
-    data.draw_trajectories(parents);
+    data.draw_trajectories(parents, body_color_data);
     data.draw_names(parents);
 }
 
@@ -101,19 +75,8 @@ void draw_distance_legend()
     double value_au = commons::convert_world_size_to_AU(legend_size);
     double value_km = commons::convert_AU_to_km(value_au);
 
-    auto convert_value = [](double num) -> std::string
-    {
-        std::string text(256, '\0');
-        if (num < 0.000'001 || num > 100'000.0)
-            std::sprintf(text.data(), "%1.2e", num);
-        else
-            std::sprintf(text.data(), "%.3f", num);
-        text.resize(strlen(text.data()));
-        return text;
-    };
-
-    auto text_au = convert_value(value_au);
-    auto text_km = convert_value(value_km);
+    auto text_au = commons::convert_double_to_string(value_au);
+    auto text_km = commons::convert_double_to_string(value_km);
 
     frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, "roboto", text_align::bottom_middle);
     frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
@@ -186,6 +149,8 @@ void setup()
     frame::load_font("roboto-black", "fonts/roboto-black.ttf");
     frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
     frame::load_font("roboto", "fonts/roboto.ttf");
+
+    body_color_data.setup();
 }
 
 void draw_debug_gui()
@@ -317,7 +282,7 @@ void update()
 
     draw_distance_legend();
 
-    info.draw();
+    info.draw(body_color_data);
 
     // update
 

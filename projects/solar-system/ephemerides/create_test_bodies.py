@@ -1,7 +1,7 @@
 import json
 
 #bodies_to_add = [ 0, 2, 5, 7, 90377 ]
-bodies_to_add = [ 0, 3, 301, 399 ]
+bodies_to_add = [ 0, 10, 3, 301, 399 ]
 
 data = {}
 

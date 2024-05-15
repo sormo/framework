@@ -100,4 +100,6 @@ def process_bodies_from_csv(csvfile, output_jsonfile):
     with open(output_jsonfile, 'w') as file:
         json.dump(result, file)
 
-process_bodies_from_csv('sbdb_query_diameter_10km.csv', '..\..\data\small-bodies-sbdb-10km.json')
+test = get_body_from_sbdb('20000003')
+
+#process_bodies_from_csv('sbdb_query_diameter_10km.csv', '..\..\data\small-bodies-sbdb-10km.json')

@@ -12,6 +12,7 @@
         "mass": 0.0,
         "time": "2018-01-01",
         "period": 0.0,
+        "group": "",
         "radius": 0.0,
         "position": [
             0.0,
@@ -23,7 +24,8 @@
             0.0,
             0.0
         ],
-        "parent_name": ""
+        "parent_name": "",
+        "type": "Barycenter"
     },
     {
         "A": 1.011059113960953,
@@ -39,6 +41,7 @@
         "mass": 0.0,
         "time": "2018-01-01",
         "period": 371.0855523289945,
+        "group": "",
         "position": [
             -0.1734153024726174,
             0.9737222876467911,
@@ -49,7 +52,38 @@
             -0.003124640465692143,
             3.414833260188678e-07
         ],
-        "parent_name": "Solar-System Barycenter"
+        "parent_name": "Solar-System Barycenter",
+        "type": "Barycenter"
+    },
+    {
+        "A": 0.004356103859659833,
+        "EC": 0.5916203793381365,
+        "IN": 1.962576484455997,
+        "MA": 121.3266528983336,
+        "OM": 106.8895201018965,
+        "W": 166.4279429050116,
+        "density": 1.408,
+        "gm": 132712440041.93938,
+        "horizons_id": 10,
+        "mass": 1.9885e+30,
+        "name": "Sun",
+        "group": "",
+        "parent": 0,
+        "radius": 695700.0,
+        "time": "2018-01-01",
+        "period": 2139.327757029531,
+        "position": [
+            0.001802001225709274,
+            0.006130129498853198,
+            -0.0001201135893203325
+        ],
+        "velocity": [
+            -5.848601432719817e-06,
+            5.023550523654301e-06,
+            1.417568565982513e-07
+        ],
+        "parent_name": "Solar-System Barycenter",
+        "type": "Star"
     },
     {
         "A": 0.002547969172484881,
@@ -63,6 +97,7 @@
         "horizons_id": 301,
         "mass": 7.349e+22,
         "name": "Moon",
+        "group": "",
         "parent": 3,
         "radius": 1737.53,
         "time": "2018-01-01",
@@ -77,7 +112,8 @@
             5.025235314795017e-05,
             3.687703625982373e-05
         ],
-        "parent_name": "Earth-Moon Barycenter"
+        "parent_name": "Earth-Moon Barycenter",
+        "type": "Moon"
     },
     {
         "EC": 0.07618173759077548,
@@ -91,6 +127,7 @@
         "horizons_id": 399,
         "mass": 5.97219e+24,
         "name": "Earth",
+        "group": "Terestrial",
         "parent": 3,
         "radius": 6371.01,
         "time": "2018-01-01",
@@ -105,6 +142,7 @@
             -6.18105804759463e-07,
             -4.535889116956113e-07
         ],
-        "parent_name": "Earth-Moon Barycenter"
+        "parent_name": "Earth-Moon Barycenter",
+        "type": "Planet"
     }
 ]

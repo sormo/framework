@@ -1,6 +1,7 @@
 #pragma once
 #include <nanovg.h>
 #include <stdint.h>
+#include <string_view>
 
 #ifdef RGB
 #undef RGB
@@ -13,6 +14,7 @@ struct color_type
     static color_type HSL(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
     static color_type HSLf(float r, float g, float b, float a = 1.0f);
     static color_type HEX(uint32_t number);
+    static color_type HEXs(std::string_view number); // "#aabbcc or #11223344
 
     color_type lerp(const color_type& destination, float time) const;
     color_type transparency(uint8_t value) const;

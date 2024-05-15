@@ -79,7 +79,7 @@ namespace frame
         nvgTranslate(vg, position.x, position.y);
 
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, -hw, -hh, hw, hh, radius);
+        nvgRoundedRect(vg, -hw, -hh, width, height, radius);
 
         nvgFillColor(vg, color.data);
         nvgFill(vg);

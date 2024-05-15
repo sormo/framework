@@ -8,3 +8,4 @@ files:
     - small-bodies-sbdb-50km.json
     - major-bodies.json
     - test-bodies.json
+    - colors.json
