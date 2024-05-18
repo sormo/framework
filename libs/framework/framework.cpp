@@ -115,6 +115,11 @@ namespace frame
         return mat3::rotation(rotation);
     }
 
+    mat3 rotation(const vec2& center, float rotation)
+    {
+        return mat3::rotation(center, rotation);
+    }
+
     mat3 scale(const vec2& scale)
     {
         return mat3::scaling(scale);

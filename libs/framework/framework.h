@@ -67,6 +67,7 @@ namespace frame
 
     mat3 translation(const vec2& translation);
     mat3 rotation(float rotation);
+    mat3 rotation(const vec2& center, float rotation);
     mat3 scale(const vec2& scale);
     mat3 identity();
 

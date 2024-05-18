@@ -8,6 +8,7 @@ public:
     static matrix_type translation(M x, M y);
     static matrix_type translation(const point_type<M>& translation);
     static matrix_type rotation(M radians);
+    static matrix_type rotation(const point_type<M>& center, M radians);
     static matrix_type scaling(M x, M y);
     static matrix_type scaling(const point_type<M>& scale);
     static matrix_type identity();
@@ -92,6 +93,16 @@ matrix_type<M> matrix_type<M>::rotation(M radians)
     return { cosine,   sine, M(0),
               -sine, cosine, M(0),
                M(0),   M(0), M(1) };
+}
+
+template<typename M>
+matrix_type<M> matrix_type<M>::rotation(const point_type<M>& center, M radians)
+{
+    auto T_origin = translation(-center);
+    auto R = rotation(radians);
+    auto T_center = translation(center);
+
+    return T_center * R * T_origin;
 }
 
 template<typename M>

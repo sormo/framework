@@ -15,8 +15,11 @@ fips_begin_lib(framework)
                events.h
                events.cpp
                color_type.h
-               color_type.cpp)
+               color_type.cpp
+               svg.h
+               svg.cpp)
     fips_deps(nanovg)
+    #fips_deps(nanosvg)
     fips_deps(glad)
     fips_deps(box2d)
     fips_deps(imgui)
