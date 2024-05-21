@@ -2,8 +2,32 @@
 #include <json.hpp>
 #include <framework.h>
 #include <fstream>
+#include "svg.h"
 
 using namespace frame;
+
+void body_info::set_body(body_node* body)
+{
+    if (icon)
+    {
+        frame::svg_delete(icon);
+    }
+
+    this->body = body;
+
+    // TODO just temporary
+    if (body)
+    {
+        static const char earth_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
+                                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" version="1.1" style="fill:none;stroke-width:0.6;stroke:#ffffff">
+	                                         <circle cx="6" cy="6" r="5"/>
+	                                         <path d="M 6 1 L 6 11" />
+	                                         <path d="M 1 6 L 11 6" />
+                                           </svg>)";
+
+        icon = frame::svg_parse(earth_svg);
+    }
+}
 
 void body_info::draw(body_color& colors)
 {
@@ -28,7 +52,13 @@ void body_info::draw(body_color& colors)
     static const float type_size = 20.0f;
     static const float group_size = 13.0f;
 
-    frame::draw_text_ex(body->name.c_str(), { boundary, boundary }, name_size, col4::LIGHTGRAY, "roboto-black", frame::text_align::top_left);
+
+    if (icon)
+    {
+        frame::svg_draw_ex_size(icon, { boundary, boundary }, 0.0f, { name_size - 6.0f , name_size - 6.0f });
+    }
+
+    frame::draw_text_ex(body->name.c_str(), { boundary + name_size, boundary }, name_size, col4::LIGHTGRAY, "roboto-black", frame::text_align::top_left);
     frame::draw_text_ex(get_body_type_to_string(body->type).c_str(), { boundary, boundary + name_size - 2.0f }, type_size, colors.get(body->type), "roboto-bold", frame::text_align::top_left);
     frame::draw_text_ex(body->group.c_str(), { size.x - boundary, boundary + name_size + 2.0f }, group_size, colors.get(body->group), "roboto-bold", frame::text_align::top_right);
 
@@ -54,7 +84,7 @@ void body_info::draw(body_color& colors)
     {
         frame::draw_text_ex(name, { boundary, y }, property_size, colors.get(body->type), "roboto-medium");
         frame::draw_line_solid_ex({ boundary, y + property_size - 1.0f }, { boundary + size.x - 2.0f * boundary, y + property_size - 1.0f }, 2.0f, colors.get(body->type));
-        frame::draw_line_solid_ex({ boundary, y + property_size + 1.0f }, { boundary + size.x - 2.0f * boundary, y + property_size - 1.0f }, 1.0f, colors.get(body->group));
+        frame::draw_line_solid_ex({ boundary, y + property_size + 1.0f }, { boundary + size.x - 2.0f * boundary, y + property_size - 1.0f }, 3.0f, colors.get(body->group));
         y += property_size + 0.5f * property_size + 3.0f;
     };
 

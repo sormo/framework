@@ -1,3 +1,4 @@
+#pragma once
 #include "nanosvg.h"
 #include "framework.h"
 
@@ -6,8 +7,9 @@ namespace frame
     using svg_image = NSVGimage;
 
     svg_image* svg_parse_from_file(const char* filename);
-    svg_image* svg_parse(char* input);
+    svg_image* svg_parse(const char* input);
 
+    // TODO possibly get rid of delete
     void svg_delete(svg_image* image);
     frame::vec2 get_svg_image_size(svg_image* image);
 

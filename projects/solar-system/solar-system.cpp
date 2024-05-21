@@ -254,12 +254,12 @@ void handle_left_click()
 
     if (auto clicked_body = get_clicked_body())
     {
-        info.body = clicked_body;
+        info.set_body(clicked_body);
         camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
     }
     else
     {
-        info.body = nullptr;
+        info.set_body(nullptr);
         camera.follow(nullptr);
     }
 }

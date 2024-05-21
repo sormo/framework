@@ -1,5 +1,6 @@
 #pragma once
 #include "body.h"
+#include <svg.h>
 #include <map>
 #include <string>
 
@@ -19,5 +20,9 @@ struct body_info
 {
     void draw(body_color& colors);
 
+    void set_body(body_node* body);
+
+private:
     body_node* body = nullptr;
+    frame::svg_image* icon;
 };

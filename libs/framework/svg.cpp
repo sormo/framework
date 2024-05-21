@@ -224,9 +224,11 @@ namespace frame
         return nsvgParseFromFile(filename, "px", 1.0f);
     }
 
-    svg_image* svg_parse(char* input)
+    svg_image* svg_parse(const char* input)
     {
-        return nsvgParse(input, "px", 1.0f);
+        std::string copy = input;
+
+        return nsvgParse(copy.data(), "px", 1.0f);
     }
 
     frame::vec2 get_svg_image_size(svg_image* image)
