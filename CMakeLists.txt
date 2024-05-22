@@ -31,13 +31,15 @@ fips_include_directories(libs
                          libs/nanosvg
                          libs/box2d/include
                          libs/json
-                         libs/kepler-orbit)
+                         libs/kepler-orbit
+                         libs/miniz)
 
 fips_ide_group(libs)
 fips_add_subdirectory(libs/glad)
 fips_add_subdirectory(libs/nanovg)
 #fips_add_subdirectory(libs/nanosvg)
 fips_add_subdirectory(libs/box2d/src)
+fips_add_subdirectory(libs/miniz)
 
 fips_import_fips_imgui_imgui()
 

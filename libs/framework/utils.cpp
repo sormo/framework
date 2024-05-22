@@ -321,6 +321,16 @@ namespace frame
         return false;
     }
 
+    std::string make_lower_case_string(const std::string& str)
+    {
+        std::string result;
+        result.resize(str.size());
+
+        std::transform(str.begin(), str.end(), result.begin(), std::tolower);
+
+        return result;
+    }
+
     click_handler::click_handler(frame::mouse_button button)
         : button(button)
     {

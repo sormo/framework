@@ -1,0 +1,11 @@
+fips_begin_lib(miniz)
+    fips_files(miniz.h
+               miniz.c
+               miniz_common.h
+               miniz_tdef.h
+               miniz_tdef.c
+               miniz_tinfl.h
+               miniz_tinfl.c
+               miniz_zip.h
+               miniz_zip.c)
+fips_end_lib(miniz)

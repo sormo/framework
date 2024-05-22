@@ -22,7 +22,10 @@ struct body_info
 
     void set_body(body_node* body);
 
+    void setup();
+
 private:
     body_node* body = nullptr;
     frame::svg_image* icon;
+    std::map<std::string, frame::svg_image*> icons;
 };

@@ -17,12 +17,15 @@ fips_begin_lib(framework)
                color_type.h
                color_type.cpp
                svg.h
-               svg.cpp)
+               svg.cpp
+               zip.h
+               zip.cpp)
     fips_deps(nanovg)
     #fips_deps(nanosvg)
     fips_deps(glad)
     fips_deps(box2d)
     fips_deps(imgui)
+    fips_deps(miniz)
     sokol_shader(basic_instanced.glsl ${slang})
     sokol_shader(basic.glsl ${slang})
 fips_end_lib()

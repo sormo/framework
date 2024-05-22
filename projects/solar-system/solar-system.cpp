@@ -151,6 +151,7 @@ void setup()
     frame::load_font("roboto", "fonts/roboto.ttf");
 
     body_color_data.setup();
+    info.setup();
 }
 
 void draw_debug_gui()

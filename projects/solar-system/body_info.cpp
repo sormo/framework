@@ -3,29 +3,71 @@
 #include <framework.h>
 #include <fstream>
 #include "svg.h"
+#include "zip.h"
 
 using namespace frame;
 
+// TODO move
+// https://stackoverflow.com/questions/24716250/c-store-read-binary-file-into-buffer
+static std::vector<char> read_binary_file(const std::string filename)
+{
+    // binary mode is only for switching off newline translation
+    std::ifstream file(filename, std::ios::binary);
+    file.unsetf(std::ios::skipws);
+
+    std::streampos file_size;
+    file.seekg(0, std::ios::end);
+    file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<char> vec;
+    vec.reserve(file_size);
+    vec.insert(vec.begin(), std::istream_iterator<char>(file), std::istream_iterator<char>());
+    return (vec);
+}
+
+void body_info::setup()
+{
+    auto zip_file_data = read_binary_file("icons/body_icons.zip");
+    auto zip = frame::open_zip(zip_file_data);
+
+    auto zip_files = frame::list_zip_files(*zip);
+    for (const auto& file : zip_files)
+    {
+        auto data = frame::get_zip_file(*zip, file);
+        icons[file] = frame::svg_parse(data.data());
+    }
+}
+
 void body_info::set_body(body_node* body)
 {
-    if (icon)
-    {
-        frame::svg_delete(icon);
-    }
-
     this->body = body;
+    icon = nullptr;
 
-    // TODO just temporary
     if (body)
     {
-        static const char earth_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
-                                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" version="1.1" style="fill:none;stroke-width:0.6;stroke:#ffffff">
-	                                         <circle cx="6" cy="6" r="5"/>
-	                                         <path d="M 6 1 L 6 11" />
-	                                         <path d="M 1 6 L 11 6" />
-                                           </svg>)";
+        // TODO this is ugly
+        for (const auto& [name, icon] : icons)
+        {
+            auto body_icon_name = name.substr(0, name.find('.'));
+            auto body_name_lower_case = make_lower_case_string(body->name);
 
-        icon = frame::svg_parse(earth_svg);
+            if (body_name_lower_case.find(body_icon_name) != std::string::npos)
+            {
+                this->icon = icon;
+                break;
+            }
+        }
+
+        if (!icon)
+        {
+            if (body->type == body_type::comet)
+                icon = icons["comet.svg"];
+            else if (body->type == body_type::minor_planet)
+                icon = icons["asteroid.svg"];
+            else if (body->type == body_type::moon)
+                icon = icons["moon_decrescent.svg"];
+        }
     }
 }
 
@@ -51,7 +93,6 @@ void body_info::draw(body_color& colors)
     static const float name_size = 30.0f;
     static const float type_size = 20.0f;
     static const float group_size = 13.0f;
-
 
     if (icon)
     {
@@ -102,7 +143,7 @@ void body_info::draw(body_color& colors)
         draw_property_num(y_value, "Density", body->density, "g/cm^3");
 
     if (!body->dimensions_str.empty())
-        draw_property_str(y_value, "Density", body->dimensions_str.c_str(), "g/cm^3");
+        draw_property_str(y_value, "Dimensions", body->dimensions_str.c_str(), "km");
 
     // orbit properties
     draw_separator(y_value, "Orbit Properties:");
