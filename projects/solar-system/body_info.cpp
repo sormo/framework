@@ -26,10 +26,9 @@ static std::vector<char> read_binary_file(const std::string filename)
     return (vec);
 }
 
-void body_info::setup()
+void body_info::setup(const std::vector<char>& body_icons_zip)
 {
-    auto zip_file_data = read_binary_file("icons/body_icons.zip");
-    auto zip = frame::open_zip(zip_file_data);
+    auto zip = frame::open_zip(body_icons_zip);
 
     auto zip_files = frame::list_zip_files(*zip);
     for (const auto& file : zip_files)
@@ -160,16 +159,15 @@ void body_info::draw(body_color& colors)
     frame::restore_world_transform();
 }
 
-void body_color::setup()
+void body_color::setup(const char* colors_json)
 {
-    std::ifstream colors_file("colors.json");
-    nlohmann::json data = nlohmann::json::parse(colors_file);
+    nlohmann::json data = nlohmann::json::parse(colors_json);
 
     for (const auto& body_type : data["body_type"].items())
-        type_colors[get_body_type_from_string(body_type.key())] = col4::HEXs(body_type.value());
+        type_colors[get_body_type_from_string(body_type.key())] = col4::HEXs(std::string{ body_type.value() });
 
     for (const auto& group : data["body_group"].items())
-        group_colors[group.key()] = col4::HEXs(group.value());
+        group_colors[group.key()] = col4::HEXs(std::string{ group.value() });
 }
 
 col4 body_color::get(body_type type)

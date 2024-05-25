@@ -69,7 +69,7 @@ struct quadtree
         return serialize_recursive(*root);
     }
 
-    bool deserialize(nlohmann::json& json, std::vector<body_node>& bodies)
+    bool deserialize(nlohmann::json json, std::vector<body_node>& bodies)
     {
         std::map<std::string, body_node*> bodies_map;
         for (auto& body : bodies)

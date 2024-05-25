@@ -81,7 +81,7 @@ namespace frame
         pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
         pass_action.colors[0].clear_value = { color.data.r, color.data.g, color.data.b, color.data.a };
 
-        background_color = color;;
+        background_color = color;
     }
 
     const col4& get_screen_background()
@@ -433,8 +433,6 @@ void frame_update()
 
     imgui::render();
 
-    update_sg();
-
     sg_end_pass();
 
     sg_commit();
@@ -461,8 +459,7 @@ void init()
 
     imgui::setup(dump_font, sizeof(dump_font));
 
-    pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
-    pass_action.colors[0].clear_value = {0.0f, 0.0f, 0.0f, 0.0f};
+    set_screen_background(frame::col4::RGBf(0.0f, 0.0f, 0.0f));
 
 #ifdef __EMSCRIPTEN__
     vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);

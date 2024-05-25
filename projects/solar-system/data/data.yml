@@ -10,3 +10,4 @@ files:
     - test-bodies.json
     - colors.json
     - icons/body_icons.zip
+    - cache/quadtree_cache_100.cbor

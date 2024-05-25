@@ -14,7 +14,7 @@ struct bodies_tree
     body_node* parent;
 
     std::vector<body_node*> query(const frame::vec2& query_point, float query_radius);
-    void load(const std::vector<std::string>& files);
+    void load(std::vector<const char*> json_datas);
     void draw_names(std::set<body_node*>& parents);
     void draw_trajectories(std::set<body_node*>& parents, body_color& colors);
     void step(double time_delta);

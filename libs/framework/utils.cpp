@@ -323,10 +323,8 @@ namespace frame
 
     std::string make_lower_case_string(const std::string& str)
     {
-        std::string result;
-        result.resize(str.size());
-
-        std::transform(str.begin(), str.end(), result.begin(), std::tolower);
+        std::string result(str);
+        std::transform(result.begin(), result.end(), result.begin(), ::tolower);
 
         return result;
     }

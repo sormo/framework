@@ -410,11 +410,11 @@ void kepler_test()
     draw_circle(float_cast(kepler.orbit1.position.xy<double>() * DRAW_SIZE_FACTOR) + barycenter, 5.0f, col4::GOLD);
     draw_circle(float_cast(kepler.orbit2.position.xy<double>() * DRAW_SIZE_FACTOR) + barycenter, 5.0f, col4::EARTHBLUE);
 
-    auto points1 = kepler.orbit1.get_orbit_points();
-    draw_polyline(offset(float_cast(points1), barycenter), col4::GREEN);
+    auto points1 = float_cast(kepler.orbit1.get_orbit_points());
+    draw_polyline(offset(points1, barycenter), col4::GREEN);
 
-    auto points2 = kepler.orbit2.get_orbit_points();
-    draw_polyline(offset(float_cast(points2), barycenter), col4::GREEN);
+    auto points2 = float_cast(kepler.orbit2.get_orbit_points());
+    draw_polyline(offset(points2, barycenter), col4::GREEN);
 }
 
 void setup_units()
@@ -451,6 +451,7 @@ void setup()
 {
     auto size = get_screen_size();
 
+    set_screen_background(frame::col4::RGBf(0.1f, 0.1f, 0.1f));
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
 
     free_move_config.min_size = { 1.0f, 1.0f };

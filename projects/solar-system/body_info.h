@@ -6,7 +6,7 @@
 
 struct body_color
 {
-    void setup();
+    void setup(const char* colors_json);
 
     frame::col4 get(body_type type);
     frame::col4 get(const std::string& group);
@@ -22,7 +22,7 @@ struct body_info
 
     void set_body(body_node* body);
 
-    void setup();
+    void setup(const std::vector<char>& body_icons_zip);
 
 private:
     body_node* body = nullptr;

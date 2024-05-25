@@ -360,8 +360,8 @@ namespace frame
 		state.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
 		state.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
 
-		state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
-		state.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
+		//state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
+		//state.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
 	}
 
 	buffer_data_instanced create_buffer_data_instanced(const char* name,
@@ -597,7 +597,7 @@ namespace frame
 
 		basic_instanced_vs_params_t vs_params;
 		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, &SG_RANGE(vs_params));
+		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, SG_RANGE(vs_params));
 
 		sg_draw(0, data.draw_elements, data.instances.size());
 
@@ -649,7 +649,7 @@ namespace frame
 		memcpy(vs_params.mvp, HMM_MultiplyMat4(projection_view, model).Elements, sizeof(model.Elements));
 		memcpy(vs_params.color, color.data.rgba, sizeof(color.data.rgba));
 		
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, &SG_RANGE(vs_params));
+		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, SG_RANGE(vs_params));
 
 		sg_draw(0, data.draw_elements, 1);
 	}

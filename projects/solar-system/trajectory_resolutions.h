@@ -2,6 +2,7 @@
 #include "commons.h"
 #include "framework.h"
 #include "drawing_sg.h"
+#include <kepler_orbit.h>
 
 struct trajectory_resolutions
 {
@@ -26,7 +27,7 @@ struct trajectory_resolutions
         if (draw_size <= 1.0)
             return;
         
-        auto& res = get_resolution(semi_major_axis, world_scale);
+        auto res = get_resolution(semi_major_axis, world_scale);
 
         if (res.draw_id == frame::draw_buffer_id_invalid)
             return;

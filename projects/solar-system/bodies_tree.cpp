@@ -45,14 +45,13 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
     return result;
 }
 
-void bodies_tree::load(const std::vector<std::string>& files)
+void bodies_tree::load(std::vector<const char*> json_datas)
 {
     std::vector<std::pair<std::string, std::string>> parents;
 
-    auto read_file = [this, &parents](const std::string& file_name)
+    for (auto json_data : json_datas)
     {
-        std::ifstream f(file_name);
-        nlohmann::json data = nlohmann::json::parse(f);
+        nlohmann::json data = nlohmann::json::parse(json_data);
 
         for (const auto& orbit_data : data)
         {
@@ -115,10 +114,7 @@ void bodies_tree::load(const std::vector<std::string>& files)
             bodies.push_back(std::move(node));
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
-    };
-
-    for (const auto& file_path : files)
-        read_file(file_path.c_str());
+    }
 
     // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [this](const std::string& name) -> body_node*
@@ -208,7 +204,8 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
 
     parent_translations[nullptr] = vec2();
 
-    Q.push(parent);
+    for (auto parent : parents)
+        Q.push(parent);
 
     while (!Q.empty())
     {

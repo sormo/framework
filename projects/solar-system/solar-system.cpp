@@ -1,13 +1,6 @@
 #include <framework.h>
-#include <utils.h>
-#include "unit.h"
 #include "imgui.h"
-#include "kepler_orbit.h"
-#include <string>
-#include <queue>
 #include <fstream>
-#include "json.hpp"
-#include "drawing_sg.h"
 #include "trajectory_resolutions.h"
 #include "commons.h"
 #include "bodies_tree.h"
@@ -27,6 +20,20 @@ camera_type camera;
 click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 body_color body_color_data;
 body_info info;
+
+void fetch_files(const std::vector<std::string>& files, std::function<void(std::map<std::string, std::vector<char>> file_data)> finished_callback)
+{
+    std::shared_ptr<std::map<std::string, std::vector<char>>> file_data = std::make_shared<std::map<std::string, std::vector<char>>>();
+    for (const auto& file : files)
+    {
+        frame::fetch_file(file.c_str(), [files, file, finished_callback, file_data](std::vector<char> data)
+        {
+            file_data->insert({ file, std::move(data) });
+            if (file_data->size() == files.size())
+                finished_callback(std::move(*file_data));
+        });
+    }
+}
 
 void step_bodies_tree(bodies_tree& data)
 {
@@ -82,12 +89,21 @@ void draw_distance_legend()
     frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
 }
 
-void load_bodies_tree()
+void load_bodies_tree(std::map<std::string, std::vector<char>>& files)
 {
-    bodies.load({ "major-bodies.json", "small-bodies-sbdb-100km.json" });
-    //bodies.load({ "major-bodies.json", "small-bodies-sbdb-50km.json" });
-    //bodies.load({ "major-bodies.json" });
-    //bodies.load({ "test-bodies.json" });
+    const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-100km.json" };
+    //const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-50km.json" };
+    //const std::vector<std::string> body_files = { "major-bodies.json" };
+    //const std::vector<std::string> body_files = { "test-bodies.json" };
+
+    std::vector<const char*> bodies_jsons;
+    for (const auto& file_path : body_files)
+    {
+        auto& data = files[file_path];
+        data.push_back('\0');
+        bodies_jsons.push_back(data.data());
+    }
+    bodies.load(bodies_jsons);
 }
 
 void create_quadtree(float max_size, float min_size)
@@ -99,17 +115,13 @@ void create_quadtree(float max_size, float min_size)
     tree.construct(frame::rectangle::from_min_max(-frame::vec2(max_size, max_size) / 2.0f, frame::vec2(max_size, max_size) / 2.0f), min_size, bodies);
 }
 
-void setup_quadtree()
+void setup_quadtree(std::map<std::string, std::vector<char>>& files)
 {
-    static const char* cache_filename = "quadtree_cache_100.cbor";
+    static const char* cache_filename = "cache/quadtree_cache_100.cbor";
     static const float tree_min_size = 100.0f;
 
-    std::ifstream cache_file_in(cache_filename, std::ios_base::binary);
-    if (cache_file_in)
-    {
-        tree.deserialize(nlohmann::json::from_cbor(cache_file_in), bodies.bodies);
-    }
-    else
+    auto& data = files[cache_filename];
+    if (data.empty())
     {
         create_quadtree(100'000.0f, tree_min_size);
 
@@ -119,6 +131,22 @@ void setup_quadtree()
         std::ofstream cache_file_out(cache_filename, std::ios_base::binary);
         cache_file_out.write((const char*)cbor_data.data(), cbor_data.size());
     }
+    else
+    {
+        tree.deserialize(nlohmann::json::from_cbor(data), bodies.bodies);
+    }
+}
+
+void setup_colors(std::map<std::string, std::vector<char>>& files)
+{
+    auto& data = files["colors.json"];
+    data.push_back('\0');
+    body_color_data.setup(data.data());
+}
+
+void setup_info(std::map<std::string, std::vector<char>>& files)
+{
+    info.setup(files["icons/body_icons.zip"]);
 }
 
 void setup_units()
@@ -133,6 +161,11 @@ void setup_units()
 
 void setup()
 {
+    frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
+    frame::load_font("roboto-black", "fonts/roboto-black.ttf");
+    frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
+    frame::load_font("roboto", "fonts/roboto.ttf");
+
     auto size = get_screen_size();
 
     set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
@@ -141,17 +174,27 @@ void setup()
 
     setup_units();
 
-    load_bodies_tree();
+    static const std::vector<std::string> files_to_read =
+    {
+        "major-bodies.json",
+        "small-bodies-sbdb-100km.json",
+        "small-bodies-sbdb-50km.json",
+        "colors.json",
+        "quadtree_cache_100.cbor",
+        "icons/body_icons.zip",
+        "cache/quadtree_cache_100.cbor"
+    };
 
-    setup_quadtree();
+    fetch_files(files_to_read, [](std::map<std::string, std::vector<char>> files)
+    {
+        load_bodies_tree(files);
 
-    frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
-    frame::load_font("roboto-black", "fonts/roboto-black.ttf");
-    frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
-    frame::load_font("roboto", "fonts/roboto.ttf");
+        setup_quadtree(files);
 
-    body_color_data.setup();
-    info.setup();
+        setup_colors(files);
+
+        setup_info(files);
+    });
 }
 
 void draw_debug_gui()
@@ -265,13 +308,11 @@ void handle_left_click()
     }
 }
 
-void update_sg() {}
-
 void update()
 {
     // draw
 
-    //draw_debug_gui();
+    draw_debug_gui();
 
     draw_coordinate_lines(rgb(40, 40, 40));
 

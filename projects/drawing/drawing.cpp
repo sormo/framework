@@ -149,10 +149,7 @@ void update()
     //frame::svg_draw_ex(svg_test, { 10.0f, 10.0f }, 45.0f, { 1.0f, 1.0f }, frame::text_align::middle_middle);
     //frame::svg_draw_ex_size(svg_test, { 10.0f, -10.0f }, 0.0f, { 20.0f, 20.0f }, frame::text_align::middle_middle);
     frame::svg_draw_ex_size(svg_test, { 10.0f, 10.0f }, 90.0f, { 80.0f, 80.0f }, frame::text_align::bottom_right);
-}
 
-void update_sg()
-{
     for (auto& tr : state.rects)
     {
         tr.rotation += 0.5f;
@@ -162,7 +159,7 @@ void update_sg()
     frame::draw_buffer_instanced(state.rectangle);
     frame::draw_buffer_instanced(state.circle);
 
-    frame::draw_buffer(state.polyline, {200.0f, 200.0f}, 90.0f, {0.5f, 0.5f}, frame::col4::WHITE);
+    frame::draw_buffer(state.polyline, { 200.0f, 200.0f }, 90.0f, { 0.5f, 0.5f }, frame::col4::WHITE);
     //frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 200.0f, 200.0f }), frame::col4::WHITE);
     frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 5.0f, 5.0f }), frame::col4::WHITE);
 }

@@ -8,7 +8,6 @@
 
 void setup();
 void update();
-void update_sg();
 
 extern NVGcontext* vg;
 
