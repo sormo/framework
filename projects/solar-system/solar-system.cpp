@@ -146,7 +146,7 @@ void setup_colors(std::map<std::string, std::vector<char>>& files)
 
 void setup_info(std::map<std::string, std::vector<char>>& files)
 {
-    info.setup(files["icons/body_icons.zip"]);
+    info.setup(files["icons/body_icons.zip"], body_color_data);
 }
 
 void setup_units()
@@ -324,7 +324,7 @@ void update()
 
     draw_distance_legend();
 
-    info.draw(body_color_data);
+    info.draw();
 
     // update
 

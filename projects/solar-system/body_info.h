@@ -18,14 +18,25 @@ private:
 
 struct body_info
 {
-    void draw(body_color& colors);
+    void draw();
 
     void set_body(body_node* body);
 
-    void setup(const std::vector<char>& body_icons_zip);
+    void setup(const std::vector<char>& body_icons_zip, body_color& cols);
 
 private:
+    float draw_internal(bool skip_draw = false);
+
+    void draw_name_type_and_group(float& y, bool skip_draw = false);
+    void draw_property_str(float& y, const char* name, const char* value, const char* unit, bool skip_draw = false);
+    void draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw = false);
+    void draw_separator(float& y, const char* name, bool skip_draw = false);
+
     body_node* body = nullptr;
+    frame::vec2 draw_size;
+    frame::vec2 draw_position; // upper-left corner
     frame::svg_image* icon;
+    body_color* colors = nullptr;
+
     std::map<std::string, frame::svg_image*> icons;
 };

@@ -104,7 +104,7 @@ namespace frame
         nvgRotate(vg, radians);
 
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, -hw, -hh, hw, hh, radius);
+        nvgRoundedRect(vg, -hw, -hh, width, height, radius);
 
         nvgFillColor(vg, fill_color.data);
         nvgFill(vg);
