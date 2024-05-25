@@ -11,6 +11,8 @@
 
 using namespace frame;
 
+extern commons::settings_data settings;
+
 vec3d body_node::get_absolute_position()
 {
     vec3d result = orbit.position;
@@ -249,10 +251,12 @@ void bodies_tree::draw_trajectories(std::set<body_node*>& parents, body_color& c
         if (std::isnan(position.x) || std::isnan(position.y))
             position = {};
 
-        data.trajectory.draw(data.orbit.semi_major_axis);
+        if (settings.draw_trajectories)
+            data.trajectory.draw(data.orbit.semi_major_axis);
 
         float default_radius = commons::pixel_to_world(3.5f);
-        draw_circle(position, default_radius, data.group.empty() ? colors.get(data.type) : colors.get(data.group));
+        if (settings.draw_points)
+            draw_circle(position, default_radius, data.group.empty() ? colors.get(data.type) : colors.get(data.group));
 
         double body_radius = commons::convert_km_to_world_size(data.radius);
         if (body_radius > default_radius)
@@ -301,4 +305,10 @@ void create_world_points_in_body_trajectories(bodies_tree& data)
     };
 
     create_recursive(*data.parent, {});
+}
+
+void bodies_tree::clear()
+{
+    bodies.clear();
+    parent = nullptr;
 }

@@ -6,9 +6,11 @@ files:
     - fonts/roboto-black.ttf
     - small-bodies-sbdb-100km.json
     - small-bodies-sbdb-50km.json
+    - small-bodies-sbdb-10km.json
     - major-bodies.json
     - test-bodies.json
     - colors.json
     - icons/body_icons.zip
     - cache/quadtree_cache_100.cbor
     - cache/quadtree_cache_50.cbor
+    - cache/quadtree_cache_10.cbor

@@ -21,6 +21,8 @@ click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 body_color body_color_data;
 body_info info;
 
+commons::settings_data settings;
+
 void fetch_files(const std::vector<std::string>& files, std::function<void(std::map<std::string, std::vector<char>> file_data)> finished_callback)
 {
     std::shared_ptr<std::map<std::string, std::vector<char>>> file_data = std::make_shared<std::map<std::string, std::vector<char>>>();
@@ -37,7 +39,8 @@ void fetch_files(const std::vector<std::string>& files, std::function<void(std::
 
 void step_bodies_tree(bodies_tree& data)
 {
-    bodies.step(time_delta);
+    if (settings.step_time)
+        bodies.step(time_delta);
 }
 
 void draw_bodies_tree(bodies_tree& data)
@@ -45,7 +48,9 @@ void draw_bodies_tree(bodies_tree& data)
     auto parents = tree.query(frame::get_world_rectangle());
 
     data.draw_trajectories(parents, body_color_data);
-    data.draw_names(parents);
+
+    if (settings.draw_names)
+        data.draw_names(parents);
 }
 
 void draw_distance_legend()
@@ -89,19 +94,15 @@ void draw_distance_legend()
     frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
 }
 
-void load_bodies_tree(std::map<std::string, std::vector<char>>& files)
+void load_bodies_tree(std::vector<std::vector<char>*> files)
 {
-    //const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-100km.json" };
-    const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-50km.json" };
-    //const std::vector<std::string> body_files = { "major-bodies.json" };
-    //const std::vector<std::string> body_files = { "test-bodies.json" };
+    bodies.clear();
 
     std::vector<const char*> bodies_jsons;
-    for (const auto& file_path : body_files)
+    for (auto data : files)
     {
-        auto& data = files[file_path];
-        data.push_back('\0');
-        bodies_jsons.push_back(data.data());
+        data->push_back('\0');
+        bodies_jsons.push_back(data->data());
     }
     bodies.load(bodies_jsons);
 }
@@ -115,13 +116,11 @@ void create_quadtree(float max_size, float min_size)
     tree.construct(frame::rectangle::from_min_max(-frame::vec2(max_size, max_size) / 2.0f, frame::vec2(max_size, max_size) / 2.0f), min_size, bodies);
 }
 
-void setup_quadtree(std::map<std::string, std::vector<char>>& files)
+void setup_quadtree(const char* cache_filename, const std::vector<char>& cache_file_data)
 {
-    static const char* cache_filename = "cache/quadtree_cache_50.cbor";
     static const float tree_min_size = 100.0f;
 
-    auto& data = files[cache_filename];
-    if (data.empty())
+    if (cache_file_data.empty())
     {
         create_quadtree(100'000.0f, tree_min_size);
 
@@ -133,8 +132,27 @@ void setup_quadtree(std::map<std::string, std::vector<char>>& files)
     }
     else
     {
-        tree.deserialize(nlohmann::json::from_cbor(data), bodies.bodies);
+        tree.deserialize(nlohmann::json::from_cbor(cache_file_data), bodies.bodies);
     }
+}
+
+void setup_bodies(commons::bodies_included_type type)
+{
+    const char* cache_file = nullptr;
+    const char* small_bodies_file = nullptr;
+
+    if (type == commons::bodies_included_type::more_than_10)
+        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-10km.json", "cache/quadtree_cache_10.cbor" };
+    else if (type == commons::bodies_included_type::more_than_50)
+        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-50km.json", "cache/quadtree_cache_50.cbor" };
+    else
+        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-100km.json", "cache/quadtree_cache_100.cbor" };
+
+    fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    {
+        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file] });
+        setup_quadtree(cache_file, files[cache_file]);
+    });
 }
 
 void setup_colors(std::map<std::string, std::vector<char>>& files)
@@ -174,28 +192,13 @@ void setup()
 
     setup_units();
 
-    static const std::vector<std::string> files_to_read =
+    fetch_files({ "colors.json", "icons/body_icons.zip" }, [](std::map<std::string, std::vector<char>> files)
     {
-        "major-bodies.json",
-        "small-bodies-sbdb-100km.json",
-        "small-bodies-sbdb-50km.json",
-        "colors.json",
-        "quadtree_cache_100.cbor",
-        "icons/body_icons.zip",
-        "cache/quadtree_cache_100.cbor",
-        "cache/quadtree_cache_50.cbor",
-    };
-
-    fetch_files(files_to_read, [](std::map<std::string, std::vector<char>> files)
-    {
-        load_bodies_tree(files);
-
-        setup_quadtree(files);
-
         setup_colors(files);
-
         setup_info(files);
     });
+
+    setup_bodies(settings.bodies_included);
 }
 
 void draw_debug_gui()
@@ -231,6 +234,22 @@ void draw_debug_gui()
     ImGui::EndMainMenuBar();
 
     //ImGui::ShowDemoWindow();
+}
+
+void draw_settings_gui()
+{
+    ImGui::Begin("Settings");
+    
+    ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
+    ImGui::Checkbox("Draw points", &settings.draw_points);
+    ImGui::Checkbox("Draw names", &settings.draw_names);
+    ImGui::Checkbox("Step time", &settings.step_time);
+    if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
+    {
+        setup_bodies(settings.bodies_included);
+    }
+
+    ImGui::End();
 }
 
 body_node* get_clicked_body()
@@ -314,6 +333,7 @@ void update()
     // draw
 
     draw_debug_gui();
+    draw_settings_gui();
 
     draw_coordinate_lines(rgb(40, 40, 40));
 

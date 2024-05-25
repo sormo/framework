@@ -7,6 +7,22 @@ namespace commons
     static const double DRAW_SIZE_FACTOR = 200.0;
     static const double DRAW_VELOCITY_FACTOR = 13.0;
 
+    enum bodies_included_type : int
+    {
+        more_than_100,
+        more_than_50,
+        more_than_10
+    };
+
+    struct settings_data
+    {
+        bool draw_trajectories = true;
+        bool draw_names = true;
+        bool draw_points = true;
+        bool step_time = true;
+        bodies_included_type bodies_included = bodies_included_type::more_than_100;
+    };
+
     static frame::vec2 draw_cast(const frame::vec3d& p)
     {
         return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR) };
