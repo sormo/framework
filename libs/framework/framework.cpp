@@ -401,6 +401,20 @@ namespace frame
 
         sfetch_send(&request);
     }
+
+    void fetch_files(const std::vector<std::string>& files, std::function<void(std::map<std::string, std::vector<char>> file_data)> finished_callback)
+    {
+        std::shared_ptr<std::map<std::string, std::vector<char>>> file_data = std::make_shared<std::map<std::string, std::vector<char>>>();
+        for (const auto& file : files)
+        {
+            frame::fetch_file(file.c_str(), [files, file, finished_callback, file_data](std::vector<char> data)
+            {
+                file_data->insert({ file, std::move(data) });
+                if (file_data->size() == files.size())
+                    finished_callback(std::move(*file_data));
+            });
+        }
+    }
 }
 
 void frame_delta_update()

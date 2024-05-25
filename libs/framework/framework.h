@@ -5,6 +5,9 @@
 #include "matrix_type.h"
 #include "color_type.h"
 #include <functional>
+#include <vector>
+#include <map>
+#include <memory>
 
 void setup();
 void update();
@@ -204,4 +207,5 @@ namespace frame
     using fetch_callback = std::function<void(std::vector<char>)>;
 
     void fetch_file(const char* file_path, fetch_callback callback, size_t file_size_hint = 0);
+    void fetch_files(const std::vector<std::string>& files, std::function<void(std::map<std::string, std::vector<char>> file_data)> finished_callback);
 }
