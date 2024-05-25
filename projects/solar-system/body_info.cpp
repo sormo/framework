@@ -132,6 +132,20 @@ void body_info::set_body(body_node* body)
     }
 }
 
+static std::pair<double, const char*> get_period_value_and_unit(double period)
+{
+    if (period < 10'000)
+        return { period, "days" };
+    return { period / 365.0, "years" };
+}
+
+static std::pair<double, const char*> get_semi_major_axis_value_and_unit(double semi_major_axis)
+{
+    if (semi_major_axis > 0.01)
+        return { semi_major_axis, "AU" };
+    return { semi_major_axis * 1.496e8, "km" };
+}
+
 float body_info::draw_internal(bool skip_draw)
 {
     float y_value = boundary;
@@ -160,10 +174,13 @@ float body_info::draw_internal(bool skip_draw)
     if (body->is_major_body && body->parent->type == body_type::barycenter)
         orbit_node = body->parent;
 
-    draw_property_num(y_value, "Period", body->period, "days", skip_draw);
-    draw_property_num(y_value, "Semi-major Axis", body->orbit.semi_major_axis, "AU", skip_draw);
-    draw_property_num(y_value, "Eccentricity", body->orbit.eccentricity, "", skip_draw);
-    draw_property_num(y_value, "Inclination", rad_to_deg(body->inclination), "deg", skip_draw);
+    auto [period_value, period_unit] = get_period_value_and_unit(orbit_node->period);
+    auto [semi_major_axis_value, semi_major_axis_unit] = get_semi_major_axis_value_and_unit(orbit_node->orbit.semi_major_axis);
+
+    draw_property_num(y_value, "Period", period_value, period_unit, skip_draw);
+    draw_property_num(y_value, "Semi-major Axis", semi_major_axis_value, semi_major_axis_unit, skip_draw);
+    draw_property_num(y_value, "Eccentricity", orbit_node->orbit.eccentricity, "", skip_draw);
+    draw_property_num(y_value, "Inclination", rad_to_deg(orbit_node->inclination), "deg", skip_draw);
 
     return y_value;
 }

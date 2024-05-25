@@ -91,8 +91,8 @@ void draw_distance_legend()
 
 void load_bodies_tree(std::map<std::string, std::vector<char>>& files)
 {
-    const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-100km.json" };
-    //const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-50km.json" };
+    //const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-100km.json" };
+    const std::vector<std::string> body_files = { "major-bodies.json", "small-bodies-sbdb-50km.json" };
     //const std::vector<std::string> body_files = { "major-bodies.json" };
     //const std::vector<std::string> body_files = { "test-bodies.json" };
 
@@ -117,7 +117,7 @@ void create_quadtree(float max_size, float min_size)
 
 void setup_quadtree(std::map<std::string, std::vector<char>>& files)
 {
-    static const char* cache_filename = "cache/quadtree_cache_100.cbor";
+    static const char* cache_filename = "cache/quadtree_cache_50.cbor";
     static const float tree_min_size = 100.0f;
 
     auto& data = files[cache_filename];
@@ -182,7 +182,8 @@ void setup()
         "colors.json",
         "quadtree_cache_100.cbor",
         "icons/body_icons.zip",
-        "cache/quadtree_cache_100.cbor"
+        "cache/quadtree_cache_100.cbor",
+        "cache/quadtree_cache_50.cbor",
     };
 
     fetch_files(files_to_read, [](std::map<std::string, std::vector<char>> files)

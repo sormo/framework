@@ -11,3 +11,4 @@ files:
     - colors.json
     - icons/body_icons.zip
     - cache/quadtree_cache_100.cbor
+    - cache/quadtree_cache_50.cbor
