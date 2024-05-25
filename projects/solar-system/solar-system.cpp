@@ -7,7 +7,7 @@
 
 using namespace frame;
 
-static double time_current = 0.0;
+static double time_current = 0.0; // in days
 static double time_delta = 1.0 / 1000.0;
 //static double time_delta = 0.0;
 
@@ -54,8 +54,28 @@ void draw_distance_legend()
     auto text_au = commons::convert_double_to_string(value_au);
     auto text_km = commons::convert_double_to_string(value_km);
 
-    frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::WHITE, "roboto", text_align::bottom_middle);
-    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::WHITE, "roboto", text_align::top_middle);
+    frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::LIGHTGRAY, "roboto", text_align::bottom_middle);
+    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::LIGHTGRAY, "roboto", text_align::top_middle);
+}
+
+void draw_current_time()
+{
+    static const float offset = 20.0f;
+
+    time_t t = 1514764800; // 2018.01.01 00:00:00
+    t += (time_current * 86400.0); // convert days to seconds
+
+    auto tm = *std::gmtime(&t);
+
+    char time_str[256] = {};
+    std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S UTC", &tm);
+
+    frame::save_world_transform();
+    frame::set_world_transform(frame::identity());
+
+    frame::draw_text_ex(time_str, { offset, get_screen_size().y - offset}, 15.0f, col4::LIGHTGRAY, "roboto", frame::text_align::bottom_left);
+
+    frame::restore_world_transform();
 }
 
 void setup_units()
@@ -123,12 +143,23 @@ void draw_debug_gui()
 
 void draw_settings_gui()
 {
-    ImGui::Begin("Settings");
+    static bool is_opened = false;
+    static const float window_width = 353.0f;
+
+    ImGui::GetStyle().WindowRounding = 7.0f;
+
+    ImGui::SetNextWindowSize({ window_width, 0.0f});
+    ImGui::SetNextWindowCollapsed(true, ImGuiCond_::ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f - window_width, 30.0f), ImGuiCond_::ImGuiCond_Always);
+    ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
     
     ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
     ImGui::Checkbox("Draw points", &settings.draw_points);
     ImGui::Checkbox("Draw names", &settings.draw_names);
     ImGui::Checkbox("Step time", &settings.step_time);
+    static float step_speed = (float)time_delta;
+    if (ImGui::SliderFloat("Step speed", &step_speed, 0.001f, 10.0f))
+        time_delta = step_speed;
     if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
     {
         b_system.setup_bodies(settings.bodies_included);
@@ -175,6 +206,7 @@ void update()
     b_system.draw();
 
     draw_distance_legend();
+    draw_current_time();
 
     // update
 
@@ -186,5 +218,6 @@ void update()
 
     camera.update();
 
-    time_current += time_delta;
+    if (settings.step_time)
+        time_current += time_delta;
 }
