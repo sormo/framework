@@ -13,16 +13,6 @@ click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
 commons::settings_data settings;
 
-void setup_units()
-{
-    unit::set_base_meter((1.0 / 1.5e8) * 1e-3);
-    unit::set_base_kilogram(1.0 / 2e30);
-    unit::set_base_second(1e-7 / PI);
-
-    unit::GRAVITATIONAL_CONSTANT = 4.0 * PI * PI;
-    //GRAVITATIONAL_CONSTANT = 6.6743e-11 * (unit::meter * unit::meter * unit::meter) / (unit::kilogram * unit::second * unit::second);
-}
-
 void setup()
 {
     frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
@@ -30,13 +20,9 @@ void setup()
     frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
     frame::load_font("roboto", "fonts/roboto.ttf");
 
-    auto size = get_screen_size();
-
-    set_world_transform(translation(size / 2.0f) * scale({ 1.0f, -1.0f }));
+    set_world_transform(translation(get_screen_size() / 2.0f) * scale({ 1.0f, -1.0f }));
 
     camera.setup();
-
-    setup_units();
 
     b_system.setup();
 }
@@ -67,9 +53,6 @@ void draw_debug_gui()
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Scale");
     ImGui::Text("%.2f %.2f ", get_world_scale().x, get_world_scale().y);
-
-    //ImGui::TextColored(ImVec4(1, 1, 0, 1), "Jupiter Point Count");
-    //ImGui::Text("%d", ellipse_point_count(5.0, frame::get_world_scale().x));
 
     ImGui::EndMainMenuBar();
 

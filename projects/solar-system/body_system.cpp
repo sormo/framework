@@ -19,6 +19,16 @@ void body_system::setup_info(std::map<std::string, std::vector<char>>& files)
     info.setup(files["icons/body_icons.zip"], body_color_data);
 }
 
+void setup_units()
+{
+    unit::set_base_meter((1.0 / 1.5e8) * 1e-3);
+    unit::set_base_kilogram(1.0 / 2e30);
+    unit::set_base_second(1e-7 / PI);
+
+    unit::GRAVITATIONAL_CONSTANT = 4.0 * PI * PI;
+    //GRAVITATIONAL_CONSTANT = 6.6743e-11 * (unit::meter * unit::meter * unit::meter) / (unit::kilogram * unit::second * unit::second);
+}
+
 void body_system::load_bodies_tree(std::vector<std::vector<char>*> files)
 {
     bodies.clear();
@@ -221,6 +231,8 @@ void body_system::set_info(body_node* body)
 
 void body_system::setup()
 {
+    setup_units();
+
     fetch_files({ "colors.json", "icons/body_icons.zip" }, [this](std::map<std::string, std::vector<char>> files)
     {
         setup_colors(files);
