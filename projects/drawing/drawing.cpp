@@ -46,6 +46,7 @@ frame::vec2 get_random_position()
 }
 
 frame::svg_image* svg_test;
+frame::image image_test;
 
 void setup()
 {
@@ -97,6 +98,50 @@ void setup()
                          </g>
                         </svg>)";
 
+    const char sokol[] = "iVBORw0KGgoAAAANSUhEUgAAA5gAAACwCAYAAABq38F7AAAAAXNSR0IArs4c6QAACVxJREFUeJzt3d+"
+                         "LnFcZB/CZss0mJiHJNkbFWg2UUKNWQ0GpIJIIJhZ/Ia1Y4520hUIpiEW8C94UaS9aFGmkKogh0kapVs"
+                         "SaJilVkEjboFGMunQDJtLuprMxP5psYjL+A5t5hfM9vDOzn8/t5Jz3cN5nntlvzsXp9r/7wU5V0+v7d"
+                         "R/AIFM/OTrw896ud3SLHnDDhaLhrXtjRd351f9AI1+fh99Vd/5OR/0M0Fg/37iprH5qO7lmpN9v9f2/"
+                         "8UzR8Eb6f6v0/0bqp0WN9fmVDxTVZ/exAyXDh951bS8AAACA8SBgAgAAECFgAgAAECFgAgAAECFgAgA"
+                         "AECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAg"
+                         "AAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAENHt793Ub3sRJ"
+                         "aYeON32Eor0vrO27SUUadr/3q/f2y16wKrlRcMb/WlG/Q8w9vX54pay+vz7sqLhTabuOVy1Psf+/f70"
+                         "Q2Xvt7a542Pdf3pPbC7b/82TRcMb6f8DjX1/0P9rTl9d23//z5+aHe7fl5Y5wQQAACBCwAQAACBCwAQ"
+                         "AACBCwAQAACBCwAQAACBCwAQAACBCwAQAACBiou0F1Nbb9b6ye2pevxRaybXMjfQ9XAy33tc2Ft7TNK"
+                         "8+W9T7dmH/anTS+4Uxpf+PNv2/TPH+Ha17Btd97EDV+dvmBBMAAIAIARMAAIAIARMAAIAIARMAAIAIA"
+                         "RMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAI"
+                         "ARMAAICIbr/3pX7biygxtengwM//8vuPdEvmX7h0pWR4o9u2vTTS+99k/tRs0f6Pe33W1rT//b2bBo6"
+                         "feuB01f3v/WNbzemra3q/x45uLar/ybnTJcMbrblx3Vh/v4794fai/d9ww4qx3p/a9P/h3n/9v4z+36"
+                         "6m/Z85uKVo/9fe+lzJ8CXPCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+                         "20vYKk79swtRff0NJl882LN6Tudt6+rO/+Y+9ezZe9/5fHXGv7F2pLpi9f3fxjpe7hglPWeek/R9/s/"
+                         "6/X/Evq//g/jygkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+                         "mAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAERNTmw5WfcDvXt7a6vzznU6/6A"
+                         "ErikY3enPN6qrzf+y2QwM//8GhO7ol869fdrVkeKOpswtV52/bP992U9H4Lbe/GFrJ4o68+uGq819/9"
+                         "nLV+dv27wvXl02w6q2ZhVzDqO9/U/+fK+z/c2fLfj6aNPXn2l559y1F46/r1u3/o16fTfT/8X6/+n+7"
+                         "ZirvX6knX7qn7SVU5QQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiImZv24"
+                         "tugexyYmLhfdQAsASdODw9qLf536n6s87ACzKCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAi"
+                         "YAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+                         "99/dVXVBzz8mWerzj/qHvnN51qdv7fQ6ZfM/9Wtvxj8/Oc+3S2Zv3N2smj4sHthdnnR+Hv33x9ayeJe"
+                         "mL1Udf7VEyuqzt+21y+W/R/eiQsToZVcQ3+09/+hHYP7T6m2+/Mr82X9uWl/7tv3haL+fPPquv1h1Ou"
+                         "zif4/3u9X/2/Xy/PLisbX/n5Nn7tadf6bV10p+v1o0vT74gQTAACACAETAACACAETAACACAETAACACA"
+                         "ETAACACAETAACACAETAACAiMqX7HQ6j/72jrJ7EBu8c8XlmtN3Ll2tm8FnL5TdcwbA4n54aEfR788bh"
+                         "fcEA8BS5AQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACA"
+                         "CAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiInpc5P9mg+YPldz9k7n6bv3Dfz8o99"
+                         "7vlsy/9rJ2ZLhjVa+5edV529bb2GiaPzDn30mtJLF3bX3zlbn/9vZTtH3r6n+P757b1H9dzo/q9ofam"
+                         "van9p2bP5xq89vcu/++9teQlWH595fNH73Fx8NrWRxbfef3uWy/vPQ9l8N/Hznnl1F/WfPzl0lwxu1v"
+                         "f/6f136/2Dj3v8Pnfhy0fjTCxtCK7mGdU9U/X79cb7dM0QnmAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+                         "mAAAAEQImAAAAEQImAAAAESUXVIIlX3zl58vvMdrsOnzZfeQMdpK6+vkme2ppSzqzH+rln+n03m+8vy"
+                         "j7b6nvl71BfSuHNd/BtD/qUn/1/+pxwkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQ"
+                         "ImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEd116zf0a"
+                         "z5gy+MzNaenwZEHN7b6/PlTs91WF9BA/ber7fq8a++dRfU5PftIainXUrU+R11T/Xziyd1D3X965z85"
+                         "0u+39v5PrdxfMrzR03fv0/9bpP83Gun+wHhr+v46wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQAACB"
+                         "CwAQAACBCwAQAACBi4lM/+lbVe8JeO+Men2FW+v5XLf9zaimtOHfxVvU/xJZ6fQL1+PtnuOn/MLqcYA"
+                         "IAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhY"
+                         "AIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABDR3bbnfNUHHHlwY7/qAyiy5fGZbsn4gztXppbSCvU/"
+                         "3OZPzRbVZ23qZ7g11U/t99dk3N+v7+94v9/a1I/6YXQ5wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQ"
+                         "AACBCwAQAACBCwAQAACDifxFf+7S1xG8ZAAAAAElFTkSuQmCC)";
+
+    image_test = frame::image_create(frame::base64_decode(sokol));
     svg_test = frame::svg_parse(sun_svg);
 }
 
@@ -144,11 +189,19 @@ void update()
 
     frame::free_move_camera_update(free_move_config);
 
-    // 
-    //frame::svg_draw(svg_test, {10.0f, 10.0f}, frame::text_align::middle_middle);
-    //frame::svg_draw_ex(svg_test, { 10.0f, 10.0f }, 45.0f, { 1.0f, 1.0f }, frame::text_align::middle_middle);
-    //frame::svg_draw_ex_size(svg_test, { 10.0f, -10.0f }, 0.0f, { 20.0f, 20.0f }, frame::text_align::middle_middle);
-    frame::svg_draw_ex_size(svg_test, { 10.0f, 10.0f }, 90.0f, { 80.0f, 80.0f }, frame::text_align::bottom_right);
+    //frame::draw_svg(svg_test, {10.0f, 10.0f}, frame::text_align::middle_middle);
+    //frame::draw_svg_ex(svg_test, { 10.0f, 10.0f }, 45.0f, { 1.0f, 1.0f }, frame::text_align::middle_middle);
+    //frame::draw_svg_ex_size(svg_test, { 10.0f, -10.0f }, 0.0f, { 20.0f, 20.0f }, frame::text_align::middle_middle);
+    frame::draw_svg_ex_size(svg_test, { 10.0f, 10.0f }, 90.0f, { 80.0f, 80.0f }, frame::text_align::bottom_right);
+
+    auto image_size = frame::get_image_size(image_test);
+    frame::draw_circle({ 100.0f, 100.0f }, 3.0f, col4::RED);
+    frame::draw_rectangle(frame::rectangle::from_min_max({ 100.0f, 100.0f }, { 300.0f, 50.0f }), col4::BLUE);
+
+    //frame::draw_image(image_test, { 100.0f, 100.0f }, frame::text_align::top_left);
+    //frame::draw_image_ex(image_test, { 100.0f, 100.0f }, frame::deg_to_rad(45.0f), {0.2f, 0.2f}, text_align::top_middle);
+    //frame::draw_image_ex_size(image_test, { 100.0f, 100.0f }, 0.0f, image_size * 0.3f, text_align::top_left);
+    frame::draw_image_ex_size(image_test, { 100.0f, 100.0f }, frame::deg_to_rad(90.0f), {200.0f, 50.0f}, text_align::top_left);
 
     for (auto& tr : state.rects)
     {

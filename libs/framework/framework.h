@@ -203,6 +203,19 @@ namespace frame
     // TODO font won't be available right away because reading files is asynchronous, not sure whether this will be a problem
     void load_font(const char* font_name, const char* file_path);
 
+    // *** image ***
+    using image = int32_t;
+
+    image image_create(const char* data, size_t size);
+    image image_create(const std::vector<char>& data);
+    void image_delete(image img);
+
+    vec2 get_image_size(image img);
+
+    void draw_image(image img, const vec2& position, text_align align = text_align::top_left);
+    void draw_image_ex(image img, const vec2& position, float radians, const vec2& scale, text_align align = text_align::top_left);
+    void draw_image_ex_size(image img, const vec2& position, float radians, const vec2& screen_size, text_align align = text_align::top_left);
+
     // *** file ***
     using fetch_callback = std::function<void(std::vector<char>)>;
 

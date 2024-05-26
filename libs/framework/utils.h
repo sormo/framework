@@ -33,6 +33,10 @@ namespace frame
     float randf(float min, float max);
     double rand(double min, double max);
 
+    //https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
+    std::string base64_encode(const char* buffer, size_t size);
+    std::vector<char> base64_decode(const char* string);
+
     //enum class side
     //{
     //    left,

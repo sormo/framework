@@ -14,6 +14,7 @@ click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 commons::settings_data settings;
 
 bool first_time_init = true;
+frame::image sokol_image = 0;
 
 void setup()
 {
@@ -21,6 +22,8 @@ void setup()
     frame::load_font("roboto-black", "fonts/roboto-black.ttf");
     frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
     frame::load_font("roboto", "fonts/roboto.ttf");
+
+    frame::fetch_file("images/sokol_logo.png", [](std::vector<char> data) { sokol_image = frame::image_create(data); });
 
     set_world_transform(translation(get_screen_size() / 2.0f) * scale({ 1.0f, -1.0f }));
 
@@ -112,7 +115,17 @@ void handle_left_click()
 
 void draw_welcome_screen()
 {
-    frame::draw_text_ex("Solar System", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 60.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+    auto center = frame::get_world_position_screen_relative({ 0.5f, 0.5f });
+
+    frame::draw_text_ex("Solar System", center, 60.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+
+    if (sokol_image)
+    {
+        auto position = frame::get_world_position_screen_relative({ 0.5f, 0.35f });
+        auto sokol_size = frame::get_image_size(sokol_image);
+        frame::draw_text_ex("made with", position, 15.0f, col4::LIGHTGRAY, "roboto-medium", text_align::top_middle);
+        frame::draw_image_ex_size(sokol_image, position - vec2(0.0f, 35.0f), 0.0f, sokol_size * 0.2f, text_align::top_middle);
+    }
 }
 
 void draw_system()

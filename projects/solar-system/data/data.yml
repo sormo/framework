@@ -14,3 +14,4 @@ files:
     - cache/quadtree_cache_100.cbor
     - cache/quadtree_cache_50.cbor
     - cache/quadtree_cache_10.cbor
+    - images/sokol_logo.png

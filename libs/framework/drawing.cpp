@@ -787,4 +787,100 @@ namespace frame
             }
         });
     }
+
+    image image_create(const char* data, size_t size)
+    {
+        return nvgCreateImageMem(vg, 0, (const unsigned char*)data, (int)size);
+    }
+
+    image image_create(const std::vector<char>& data)
+    {
+        return nvgCreateImageMem(vg, 0, (const unsigned char*)data.data(), (int)data.size());
+    }
+
+    void image_delete(image img)
+    {
+        nvgDeleteImage(vg, img);
+    }
+
+    vec2 get_image_size(image img)
+    {
+        int w = 0, h = 0;
+        nvgImageSize(vg, img, &w, &h);
+
+        return { (float)w, (float)h };
+    }
+
+    vec2 get_align_offset_factor_image(text_align align)
+    {
+        switch (align)
+        {
+        case text_align::top_left: return vec2{ 0.0f, 0.0f };
+        case text_align::top_middle: return vec2{ -0.5f, 0.0f };
+        case text_align::top_right: return vec2{ -1.0f, 0.0f };
+        case text_align::middle_left: return vec2{ 0.0f, -0.5f };
+        case text_align::middle_middle: return vec2{ -0.5f, -0.5f };
+        case text_align::middle_right: return vec2{ -1.0f, -0.5f };
+        case text_align::bottom_left: return vec2{ 0.0f, -1.0f };
+        case text_align::bottom_middle: return vec2{ -0.5f, -1.0f };
+        case text_align::bottom_right: return vec2{ -1.0f, -1.0f };
+        }
+        return {};
+    }
+
+    void draw_image_internal(image img, const vec2& size, float alpha)
+    {
+        auto paint = nvgImagePattern(vg, 0.0f, 0.0f, size.x, size.y, 0.0f, img, alpha);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, 0.0f, 0.0f, size.x, size.y);
+        nvgFillPaint(vg, paint);
+        nvgFill(vg);
+    }
+
+    void draw_image(image img, const vec2& position, text_align align)
+    {
+        auto size = get_image_size(img);
+        vec2 screen_scale = get_world_scale().abs();
+        vec2 screen_position = get_world_transform().transform_point(position);
+
+        save_world_transform();
+
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
+
+        draw_image_internal(img, size, 1.0f);
+
+        restore_world_transform();
+    }
+
+    void draw_image_ex(image img, const vec2& position, float radians, const vec2& scale, text_align align)
+    {
+        vec2 size = get_image_size(img);
+        vec2 screen_scale = scale * get_world_scale().abs();
+        vec2 screen_size = size * screen_scale;
+        vec2 screen_position = get_world_transform().transform_point(position);
+
+        save_world_transform();
+
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
+
+        draw_image_internal(img, size, 1.0f);
+
+        restore_world_transform();
+    }
+
+    void draw_image_ex_size(image img, const vec2& position, float radians, const vec2& screen_size, text_align align)
+    {
+        vec2 image_size = get_image_size(img);
+        vec2 scale = screen_size / image_size;
+        vec2 screen_position = get_world_transform().transform_point(position);
+
+        save_world_transform();
+
+        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
+
+        draw_image_internal(img, image_size, 1.0f);
+
+        restore_world_transform();
+    }
 }

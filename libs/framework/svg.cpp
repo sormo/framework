@@ -196,37 +196,11 @@ static void svgDraw(NVGcontext* vg, NSVGimage* svg) {
 
 namespace frame
 {
-    // TODO possibly define somewhere on better place
-    static vec2 get_align_offset_factor_svg(text_align align)
-    {
-        switch (align)
-        {
-        case text_align::top_left: return vec2{ 0.0f, 0.0f };
-        case text_align::top_middle: return vec2{ -0.5f, 0.0f };
-        case text_align::top_right: return vec2{ -1.0f, 0.0f };
-        case text_align::middle_left: return vec2{ 0.0f, -0.5f };
-        case text_align::middle_middle: return vec2{ -0.5f, -0.5f };
-        case text_align::middle_right: return vec2{ -1.0f, -0.5f };
-        case text_align::bottom_left: return vec2{ 0.0f, -1.0f };
-        case text_align::bottom_middle: return vec2{ -0.5f, -1.0f };
-        case text_align::bottom_right: return vec2{ -1.0f, -1.0f };
-        }
-        return {};
-    }
+    vec2 get_align_offset_factor_image(text_align align);
 
-    static vec2 get_align_offset(text_align align, const vec2& size, const vec2& scale)
+    svg_image* svg_parse(const char* input_xml)
     {
-        return size * get_align_offset_factor_svg(align) * scale;
-    }
-
-    svg_image* svg_parse_from_file(const char* filename)
-    {
-        return nsvgParseFromFile(filename, "px", 1.0f);
-    }
-
-    svg_image* svg_parse(const char* input)
-    {
-        std::string copy = input;
+        std::string copy = input_xml;
 
         return nsvgParse(copy.data(), "px", 1.0f);
     }
@@ -241,7 +215,7 @@ namespace frame
         nsvgDelete(image);
     }
 
-    void svg_draw(svg_image* image, const vec2& position, frame::text_align align)
+    void draw_svg(svg_image* image, const vec2& position, frame::text_align align)
     {
         vec2 size = get_svg_image_size(image);
         vec2 screen_scale = get_world_scale().abs();
@@ -249,14 +223,14 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * size * screen_scale) * frame::scale(screen_scale));
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
 
         svgDraw(vg, image);
 
         restore_world_transform();
     }
 
-    void svg_draw_ex(svg_image* image, const vec2& position, float radians, const vec2& scale, frame::text_align align)
+    void draw_svg_ex(svg_image* image, const vec2& position, float radians, const vec2& scale, frame::text_align align)
     {
         vec2 size = get_svg_image_size(image);
         vec2 screen_scale = scale * get_world_scale().abs();
@@ -265,14 +239,14 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
 
         svgDraw(vg, image);
 
         restore_world_transform();
     }
 
-    void svg_draw_ex_size(svg_image* image, const vec2& world_position, float radians, const vec2& screen_size, frame::text_align align)
+    void draw_svg_ex_size(svg_image* image, const vec2& world_position, float radians, const vec2& screen_size, frame::text_align align)
     {
         vec2 image_size = get_svg_image_size(image);
         vec2 scale = screen_size / image_size;
@@ -283,7 +257,7 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
+        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
 
         svgDraw(vg, image);
 

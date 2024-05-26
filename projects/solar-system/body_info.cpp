@@ -28,7 +28,7 @@ void body_info::draw_name_type_and_group(float& y, bool skip_draw)
     {
         if (icon)
         {
-            frame::svg_draw_ex_size(icon, { boundary, y }, 0.0f, { icon_size - 6.0f , icon_size - 6.0f });
+            frame::draw_svg_ex_size(icon, { boundary, y }, 0.0f, { icon_size - 6.0f , icon_size - 6.0f });
         }
 
         frame::draw_text_ex(body->name.c_str(),
