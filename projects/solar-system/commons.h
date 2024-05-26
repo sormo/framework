@@ -20,6 +20,7 @@ namespace commons
         bool draw_names = true;
         bool draw_points = true;
         bool step_time = true;
+        float step_speed = 0.001f; // in days
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
     };
 

@@ -8,7 +8,7 @@ struct body_system
 {
 	void setup();
 	void draw();
-	void update(double time_delta);
+	void update();
 
 	body_node* query(const frame::vec2& world_position, float radius_in_pixels);
 	void set_info(body_node* body);
@@ -20,8 +20,10 @@ private:
 	void create_quadtree(float max_size, float min_size);
 	void setup_quadtree(const char* cache_filename, const std::vector<char>& cache_file_data);
 	void load_bodies_tree(std::vector<std::vector<char>*> files);
-	void step_bodies_tree(double time_delta);
+	void step_bodies_tree();
 	void draw_bodies_tree();
+	void draw_distance_legend();
+	void draw_current_time();
 
 	bodies_tree bodies;
 	quadtree tree;

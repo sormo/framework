@@ -7,76 +7,11 @@
 
 using namespace frame;
 
-static double time_current = 0.0; // in days
-static double time_delta = 1.0 / 1000.0;
-//static double time_delta = 0.0;
-
 body_system b_system;
 camera_type camera;
 click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
 commons::settings_data settings;
-
-void draw_distance_legend()
-{
-    auto screen = frame::get_screen_size();
-
-    const float line_size = screen.x / 8.0f;
-    const float line_offset = screen.x / 20.0f;
-    const float vertical_line_offset = commons::pixel_to_world(5.0f);
-    const float line_thickness = commons::pixel_to_world(1.5f);
-
-    vec2 left_point_screen = { screen.x - line_offset - line_size, screen.y - line_offset };
-    vec2 right_point_screen = { screen.x - line_offset, screen.y - line_offset };
-
-    vec2 left_point = frame::get_screen_to_world(left_point_screen);
-    vec2 right_point = frame::get_screen_to_world(right_point_screen);
-
-    frame::draw_line_solid_ex(left_point, right_point, line_thickness, frame::col4::WHITE);
-
-    auto draw_vertical_line = [vertical_line_offset, line_thickness](const vec2& center)
-    {
-        frame::draw_line_solid_ex(frame::vec2(center.x, center.y - vertical_line_offset),
-                                  frame::vec2(center.x, center.y + vertical_line_offset),
-                                  line_thickness,
-                                  frame::col4::WHITE);
-    };
-
-    draw_vertical_line(left_point);
-    draw_vertical_line(right_point);
-
-    vec2 center_point = left_point + (right_point - left_point) / 2.0f;
-
-    double legend_size = (right_point - left_point).length();
-    double value_au = commons::convert_world_size_to_AU(legend_size);
-    double value_km = commons::convert_AU_to_km(value_au);
-
-    auto text_au = commons::convert_double_to_string(value_au);
-    auto text_km = commons::convert_double_to_string(value_km);
-
-    frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::LIGHTGRAY, "roboto", text_align::bottom_middle);
-    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::LIGHTGRAY, "roboto", text_align::top_middle);
-}
-
-void draw_current_time()
-{
-    static const float offset = 20.0f;
-
-    time_t t = 1514764800; // 2018.01.01 00:00:00
-    t += (time_current * 86400.0); // convert days to seconds
-
-    auto tm = *std::gmtime(&t);
-
-    char time_str[256] = {};
-    std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S UTC", &tm);
-
-    frame::save_world_transform();
-    frame::set_world_transform(frame::identity());
-
-    frame::draw_text_ex(time_str, { offset, get_screen_size().y - offset}, 15.0f, col4::LIGHTGRAY, "roboto", frame::text_align::bottom_left);
-
-    frame::restore_world_transform();
-}
 
 void setup_units()
 {
@@ -157,9 +92,7 @@ void draw_settings_gui()
     ImGui::Checkbox("Draw points", &settings.draw_points);
     ImGui::Checkbox("Draw names", &settings.draw_names);
     ImGui::Checkbox("Step time", &settings.step_time);
-    static float step_speed = (float)time_delta;
-    if (ImGui::SliderFloat("Step speed", &step_speed, 0.001f, 10.0f))
-        time_delta = step_speed;
+    ImGui::SliderFloat("Step speed", &settings.step_speed, 0.001f, 10.0f);
     if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
     {
         b_system.setup_bodies(settings.bodies_included);
@@ -205,19 +138,13 @@ void update()
 
     b_system.draw();
 
-    draw_distance_legend();
-    draw_current_time();
-
     // update
 
-    b_system.update(time_delta);
+    b_system.update();
 
     left_mouse_click.update();
 
     handle_left_click();
 
     camera.update();
-
-    if (settings.step_time)
-        time_current += time_delta;
 }
