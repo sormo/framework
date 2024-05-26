@@ -44,6 +44,8 @@ void body_system::load_bodies_tree(std::vector<std::vector<char>*> files)
 
 void body_system::setup_bodies(commons::bodies_included_type type)
 {
+    settings.body_system_initializing = true;
+
     const char* cache_file = nullptr;
     const char* small_bodies_file = nullptr;
 
@@ -58,6 +60,8 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     {
         load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file] });
         setup_quadtree(cache_file, files[cache_file]);
+
+        settings.body_system_initializing = false;
     });
 }
 

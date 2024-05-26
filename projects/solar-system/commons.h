@@ -22,6 +22,8 @@ namespace commons
         bool step_time = true;
         float step_speed = 0.001f; // in days
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
+
+        bool body_system_initializing = false;
     };
 
     static frame::vec2 draw_cast(const frame::vec3d& p)

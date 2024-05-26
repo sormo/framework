@@ -13,6 +13,8 @@ click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
 commons::settings_data settings;
 
+bool first_time_init = true;
+
 void setup()
 {
     frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
@@ -108,10 +110,13 @@ void handle_left_click()
     }
 }
 
-void update()
+void draw_welcome_screen()
 {
-    // draw
+    frame::draw_text_ex("Solar System", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 60.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+}
 
+void draw_system()
+{
     draw_debug_gui();
     draw_settings_gui();
 
@@ -121,8 +126,12 @@ void update()
 
     b_system.draw();
 
-    // update
+    if (settings.body_system_initializing)
+        frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+}
 
+void update_system()
+{
     b_system.update();
 
     left_mouse_click.update();
@@ -130,4 +139,22 @@ void update()
     handle_left_click();
 
     camera.update();
+}
+
+void update()
+{
+    // draw
+    if (first_time_init && settings.body_system_initializing)
+    {
+        draw_welcome_screen();
+    }
+    else
+    {
+        first_time_init = false;
+        draw_system();
+    }
+
+    // update
+    if (!settings.body_system_initializing)
+        update_system();
 }
