@@ -239,6 +239,34 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
     }
 }
 
+void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
+{
+    std::function<void(vec2, body_node&)> draw_recursive = [&draw_recursive, &colors](vec2 parent_position, body_node& data)
+    {
+        if (is_body_node_skip(data))
+            return;
+
+        vec2 position = commons::draw_cast(data.orbit.position) + parent_position;
+
+        float default_radius = commons::pixel_to_world(3.5f);
+        double body_radius = commons::convert_km_to_world_size(data.radius);
+
+        if (body_radius > default_radius)
+            draw_circle(position, body_radius, col4::ORANGE);
+        else
+            draw_circle(position, default_radius, data.group.empty() ? colors.get(data.type) : colors.get(data.group));
+
+        if (!data.childs.empty())
+        {
+            for (auto& child : data.childs)
+                draw_recursive(position, *child);
+        }
+    };
+
+    for (auto parent : parents)
+        draw_recursive({}, *parent);
+}
+
 void bodies_tree::draw_trajectories(std::set<body_node*>& parents, body_color& colors)
 {
     std::function<void(body_node&)> draw_recursive = [&draw_recursive, &colors](body_node& data)
@@ -246,34 +274,19 @@ void bodies_tree::draw_trajectories(std::set<body_node*>& parents, body_color& c
         if (is_body_node_skip(data))
             return;
 
-        vec2 position = commons::draw_cast(data.orbit.position);
+        data.trajectory.draw(data.orbit.semi_major_axis);
 
-        if (std::isnan(position.x) || std::isnan(position.y))
-            position = {};
+        if (data.childs.empty())
+            return;
 
-        if (settings.draw_trajectories)
-            data.trajectory.draw(data.orbit.semi_major_axis);
+        save_world_transform();
 
-        float default_radius = commons::pixel_to_world(3.5f);
-        if (settings.draw_points)
-            draw_circle(position, default_radius, data.group.empty() ? colors.get(data.type) : colors.get(data.group));
+        set_world_translation(get_world_translation() + commons::draw_cast(data.orbit.position) * get_world_scale());
 
-        double body_radius = commons::convert_km_to_world_size(data.radius);
-        if (body_radius > default_radius)
-            draw_circle(position, body_radius, col4::ORANGE);
-        //draw_text(data.name.c_str(), position, 15.0f, col4::GRAY, frame::text_align::bottom_left);
+        for (auto& child : data.childs)
+            draw_recursive(*child);
 
-        if (!data.childs.empty())
-        {
-            save_world_transform();
-
-            set_world_translation(get_world_translation() + position * get_world_scale());
-
-            for (auto& child : data.childs)
-                draw_recursive(*child);
-
-            restore_world_transform();
-        }
+        restore_world_transform();
     };
 
     for (auto parent : parents)

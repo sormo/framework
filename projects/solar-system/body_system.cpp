@@ -104,7 +104,11 @@ void body_system::draw_bodies_tree()
 {
     auto parents = tree.query(frame::get_world_rectangle());
 
-    bodies.draw_trajectories(parents, body_color_data);
+    if (settings.draw_trajectories)
+        bodies.draw_trajectories(parents, body_color_data);
+
+    if (settings.draw_points)
+        bodies.draw_points(parents, body_color_data);
 
     if (settings.draw_names)
         bodies.draw_names(parents);

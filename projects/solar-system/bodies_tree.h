@@ -17,6 +17,7 @@ struct bodies_tree
     void load(std::vector<const char*> json_datas);
     void draw_names(std::set<body_node*>& parents);
     void draw_trajectories(std::set<body_node*>& parents, body_color& colors);
+    void draw_points(std::set<body_node*>& parents, body_color& colors);
     void step(double time_delta);
     void clear();
 
