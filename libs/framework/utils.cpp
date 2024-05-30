@@ -160,7 +160,7 @@ namespace frame
         else if (world_rect.max.y > boundary.max.y)
             vec.y = world_rect.max.y - boundary.max.y;
 
-        return translation + get_world_transform().transform_vector(vec);
+        return translation + get_world_to_screen_vector(vec);
     }
 
     void free_move_camera_update_world_offset(mouse_button button, const rectangle& boundary)
@@ -218,7 +218,7 @@ namespace frame
     {
         if (get_mouse_wheel_delta())
         {
-            vec2 new_scale = get_world_transform().get_scale() * (1.0f + get_mouse_wheel_delta() * zoom_speed);
+            vec2 new_scale = get_world_scale() * (1.0f + get_mouse_wheel_delta() * zoom_speed);
             new_scale = free_move_camera_apply_min_size(new_scale, min_size);
             new_scale = free_move_camera_apply_max_size(new_scale, max_size);
             set_world_scale(new_scale, get_mouse_world_position());
@@ -238,7 +238,7 @@ namespace frame
         save_world_transform();
 
         auto world_rect = get_world_rectangle();
-        float thickness = 1.0f / get_world_transform().get_scale().abs().x;
+        float thickness = 1.0f / get_world_scale().abs().x;
         auto world_size = get_world_size();
 
         auto draw_lines_x = [&world_rect](float step, const col4& color, float thickness)
@@ -281,7 +281,7 @@ namespace frame
 
     void draw_line_handle(const vec2& position, line_handle_config& handle)
     {
-        float world_scale = get_world_transform().get_scale().x;
+        float world_scale = get_world_scale().x;
 
         if ((position - get_mouse_world_position()).length_sqr() < handle.radius * handle.radius)
             draw_circle_ex(position, 0.0f, handle.radius / world_scale, handle.hover_fill_color, handle.hover_outline_thickness / world_scale, handle.hover_outline_color);
@@ -291,7 +291,7 @@ namespace frame
 
     void draw_line_directed_with_handles(const vec2& from, const vec2& to, float thickness, const col4& color, line_handle_config* from_handle, line_handle_config* to_handle)
     {
-        float world_scale = get_world_transform().get_scale().x;
+        float world_scale = get_world_scale().x;
 
         draw_line_directed_ex(from, to, thickness / world_scale, color);
         if (from_handle)
@@ -305,7 +305,7 @@ namespace frame
         if (!is_mouse_down(mouse_button::left))
             return false;
 
-        auto world_dt = get_world_transform().inverted().transform_vector(get_mouse_screen_delta());
+        auto world_dt = get_screen_to_world_vector(get_mouse_screen_delta());
         auto position = get_mouse_world_position();
 
         if (is_inside_line_handle(position - world_dt, from, from_handle))

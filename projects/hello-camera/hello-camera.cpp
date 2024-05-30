@@ -76,13 +76,13 @@ void draw_gui()
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Offset");
     ImGui::SameLine();
-    auto translation = frame::get_world_transform().get_translation();
+    auto translation = frame::get_world_translation();
     ImGui::Text("%.2f %.2f", translation.x, translation.y);
     ImGui::TextColored(ImVec4(0, 1, 1, 1), "Use right mouse button to move world offset");
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "World Scale");
     ImGui::SameLine();
-    auto scale = frame::get_world_transform().get_scale();
+    auto scale = frame::get_world_scale();
     ImGui::Text("%.2f %.2f", scale.x, scale.y);
     ImGui::TextColored(ImVec4(0, 1, 1, 1), "Use mouse wheel to modify scale");
 

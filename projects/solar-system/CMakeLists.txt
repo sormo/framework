@@ -3,6 +3,7 @@ fips_begin_app(solar-system windowed)
                unit.h
                unit.cpp
                camera.h
+               camera.cpp
                trajectory_resolutions.h
                commons.h
                bodies_tree.h

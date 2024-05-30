@@ -64,6 +64,9 @@ namespace frame
     bool is_screen_resized();
 
     vec2 get_screen_to_world(const vec2& screen_position);
+    vec2 get_screen_to_world_vector(const vec2& screen_position);
+    vec2 get_world_to_screen(const vec2& world_position);
+    vec2 get_world_to_screen_vector(const vec2& world_position);
 
     // *** transform ***
 
@@ -98,7 +101,7 @@ namespace frame
 
     // pos x and y is between 0 and 1, returns world position on screen at these coordinate offsets
     vec2 get_world_position_screen_relative(const vec2& rel);
-    void set_world_translation(const vec2& screen_point, const vec2& world_point); // modify world translation such that scree_point match the world point
+    void set_world_translation(const vec2& screen_point, const vec2& world_point); // modify world translation such that screen_point match the world point
 
     // *** mouse ***
     enum class mouse_button { left, right, middle };

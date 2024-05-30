@@ -690,8 +690,8 @@ namespace frame
         else
             nvgTextBounds(vg, 0.0f, 0.0f, text, nullptr, bounds);
 
-        vec2 min = vec2{ bounds[0], bounds[1] } / get_world_transform().get_scale();
-        vec2 max = vec2{ bounds[2], bounds[3] } / get_world_transform().get_scale();
+        vec2 min = vec2{ bounds[0], bounds[1] } / get_world_scale();
+        vec2 max = vec2{ bounds[2], bounds[3] } / get_world_scale();
         vec2 rect_size = (max - min);
 
         vec2 align_offset = rect_size * 0.5f;
@@ -728,8 +728,8 @@ namespace frame
     void set_text_transform(const vec2& position, float scale = 1.0f)
     {
         // TODO
-        auto t = get_world_transform().get_translation();
-        auto s = get_world_transform().get_scale();
+        auto t = get_world_translation();
+        auto s = get_world_scale();
 
         nvgResetTransform(vg);
         nvgTransform(vg, scale, 0.0f, 0.0f, scale, t.x + position.x * s.x, t.y + position.y * s.y);
@@ -842,7 +842,7 @@ namespace frame
     {
         auto size = get_image_size(img);
         vec2 screen_scale = get_world_scale().abs();
-        vec2 screen_position = get_world_transform().transform_point(position);
+        vec2 screen_position = get_world_to_screen(position);
 
         save_world_transform();
 
@@ -858,7 +858,7 @@ namespace frame
         vec2 size = get_image_size(img);
         vec2 screen_scale = scale * get_world_scale().abs();
         vec2 screen_size = size * screen_scale;
-        vec2 screen_position = get_world_transform().transform_point(position);
+        vec2 screen_position = get_world_to_screen(position);
 
         save_world_transform();
 
@@ -873,7 +873,7 @@ namespace frame
     {
         vec2 image_size = get_image_size(img);
         vec2 scale = screen_size / image_size;
-        vec2 screen_position = get_world_transform().transform_point(position);
+        vec2 screen_position = get_world_to_screen(position);
 
         save_world_transform();
 

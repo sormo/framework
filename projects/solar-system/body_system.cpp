@@ -56,9 +56,11 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     else
         std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-100km.json", "cache/quadtree_cache_100.cbor" };
 
+    //fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     {
-        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file] });
+        //load_bodies_tree({ &files["test-bodies.json"] });
+        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
         setup_quadtree(cache_file, files[cache_file]);
 
         settings.body_system_initializing = false;

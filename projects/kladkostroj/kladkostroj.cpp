@@ -235,7 +235,7 @@ void draw_debug_gui()
     ImGui::Text("%.3f %.3f", mouse_screen.x, mouse_screen.y);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Canvas");
-    auto mouse_canvas = frame::get_world_transform().transform_point(mouse_screen);
+    auto mouse_canvas = frame::get_world_to_screen(mouse_screen);
     ImGui::Text("%.3f %.3f", mouse_canvas.x, mouse_canvas.y);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen Size");

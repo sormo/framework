@@ -219,7 +219,7 @@ namespace frame
     {
         vec2 size = get_svg_image_size(image);
         vec2 screen_scale = get_world_scale().abs();
-        vec2 screen_position = get_world_transform().transform_point(position);
+        vec2 screen_position = get_world_to_screen(position);
 
         save_world_transform();
 
@@ -235,7 +235,7 @@ namespace frame
         vec2 size = get_svg_image_size(image);
         vec2 screen_scale = scale * get_world_scale().abs();
         vec2 screen_size = size * screen_scale;
-        vec2 screen_position = get_world_transform().transform_point(position);
+        vec2 screen_position = get_world_to_screen(position);
 
         save_world_transform();
 
@@ -253,7 +253,7 @@ namespace frame
         
         //scale = scale * frame::get_world_scale().abs();
 
-        vec2 screen_position = get_world_transform().transform_point(world_position);
+        vec2 screen_position = get_world_to_screen(world_position);
 
         save_world_transform();
 
