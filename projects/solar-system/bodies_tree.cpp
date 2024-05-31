@@ -13,6 +13,8 @@ using namespace frame;
 
 extern commons::settings_data settings;
 
+static const float name_font_size = 15.0f;
+
 vec3d body_node::get_absolute_position()
 {
     vec3d result = orbit.position;
@@ -49,6 +51,9 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
 
 void bodies_tree::load(std::vector<const char*> json_datas)
 {
+    save_world_transform();
+    set_world_transform(frame::identity());
+
     std::vector<std::pair<std::string, std::string>> parents;
 
     for (auto json_data : json_datas)
@@ -112,6 +117,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.inclination = inclination;
             node.orbit = std::move(orbit);
             node.trajectory.init(node.orbit);
+            node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, name_font_size, "roboto-bold");
 
             bodies.push_back(std::move(node));
             parents.push_back({ std::move(body_name), std::move(parent_name) });
@@ -166,6 +172,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
         if (major_node)
             major_node->is_major_body = true;
     }
+
+    restore_world_transform();
 }
 
 // skip child bodies which has too small semi-major axis
@@ -191,14 +199,32 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
         return false;
     };
 
-    auto get_draw_data = [](const body_node* body) -> std::pair<float, frame::text_align>
+    auto get_computed_font_size = [](const body_node* body)
     {
         double body_radius = commons::convert_km_to_world_size(body->radius) * frame::get_world_scale().x;
         double body_diameter = body_radius * 2.0;
         double max_char_size = body_diameter / body->name.size();
-        auto computed_font_size = (float)std::min(body_diameter / 4.0, max_char_size);
 
-        return { std::max(15.0f, computed_font_size), (computed_font_size > 15.0f ? frame::text_align::middle_middle : frame::text_align::bottom_left) };
+        return (float)std::min(body_diameter / 4.0, max_char_size);
+    };
+
+    auto get_text_rectangle = [](const body_node* body, const vec2& position) -> frame::rectangle
+    {
+        auto result = body->name_text_rectangle;
+        result.min /= get_world_scale();
+        result.max /= get_world_scale();
+        result.min += position;
+        result.max += position;
+
+        // the rectangle has top_left align (means [0,0] is top left) and we need bottom_left
+        vec2 align_modif(0.0f, result.size().y);
+
+        std::swap(result.min.y, result.max.y);
+
+        result.min -= align_modif;
+        result.max -= align_modif;
+
+        return result;
     };
 
     std::queue<body_node*> Q; // BFS
@@ -221,15 +247,21 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
 
         if (!is_barycenter(*body))
         {
-            auto [text_size, text_align] = get_draw_data(body);
-
-            auto rect = get_text_rectangle_ex(body->name.c_str(), position, text_size, "roboto-bold", text_align);
-
-            if (!check_overlap(rect))
+            auto computed_font_size = get_computed_font_size(body);
+            if (computed_font_size > name_font_size)
             {
-                rectangles.push_back(rect);
                 // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position, text_size, col4::LIGHTGRAY, "roboto-bold", text_align);
+                draw_text_ex(body->name.c_str(), position, computed_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
+            }
+            else
+            {
+                auto rect = get_text_rectangle(body, position);
+
+                if (!check_overlap(rect))
+                {
+                    rectangles.push_back(std::move(rect));
+                    draw_text_ex(body->name.c_str(), position, name_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+                }
             }
         }
 

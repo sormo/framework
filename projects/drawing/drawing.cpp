@@ -77,7 +77,7 @@ void setup()
 
     frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
-    free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 100000.0f, 100000.0f });
+    free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 1'000'000.0f, 1'000'000.0f });
 
     char earth_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" version="1.1" style="fill:none;stroke-width:0.6;stroke:#ffffff">
@@ -215,4 +215,32 @@ void update()
     frame::draw_buffer(state.polyline, { 200.0f, 200.0f }, 90.0f, { 0.5f, 0.5f }, frame::col4::WHITE);
     //frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 200.0f, 200.0f }), frame::col4::WHITE);
     frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 5.0f, 5.0f }), frame::col4::WHITE);
+
+    //frame::draw_circle({ 200.0f, 200.0f }, 3.0f, col4::RED);
+
+    {
+        auto position = vec2(200.0f, 200.0f);
+        auto rect = frame::get_text_rectangle("Hello, World", position, 20.0f, frame::text_align::bottom_left);
+
+        frame::save_world_transform();
+        frame::set_world_transform(frame::identity());
+        auto rect2 = frame::get_text_rectangle("Hello, World", {}, 20.0f);
+        frame::restore_world_transform();
+
+        rect2.max /= get_world_scale();
+        rect2.min += position;
+        rect2.max += position;
+
+        // the rectangle has top_left align (means [0,0] is top left)
+        vec2 align_modif(0.0f, rect2.size().y);
+
+        std::swap(rect2.min.y, rect2.max.y);
+
+        rect2.min -= align_modif;
+        rect2.max -= align_modif;
+
+        frame::draw_rectangle(rect, frame::col4::BLUE);
+        frame::draw_rectangle(rect2, frame::col4::GREEN);
+        frame::draw_text("Hello, World", position, 20.0f, frame::col4::RED, frame::text_align::bottom_left);
+    }
 }

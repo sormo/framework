@@ -39,6 +39,7 @@ struct body_node
     std::vector<body_node*> childs;
 
     trajectory_resolutions trajectory;
+    frame::rectangle name_text_rectangle; // cached name text rectangle in screen coordinates
 
     frame::vec3d get_absolute_position();
 };
