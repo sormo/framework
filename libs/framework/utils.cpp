@@ -235,41 +235,39 @@ namespace frame
 
     void draw_coordinate_lines(const col4& color)
     {
-        save_world_transform();
-
         auto world_rect = get_world_rectangle();
         float thickness = 1.0f / get_world_scale().abs().x;
         auto world_size = get_world_size();
 
-        auto draw_lines_x = [&world_rect](float step, const col4& color, float thickness)
+        auto draw_lines_x = [&world_rect](double step, const col4& color, double thickness)
         {
-            float start_x = std::ceil(world_rect.min.x / step) * step;
-            for (float x = start_x; x < world_rect.max.x; x += step)
-                draw_line_solid_ex({ x, world_rect.min.y }, { x, world_rect.max.y }, x == 0.0f ? 2.0f * thickness : thickness, color);
+            double start_x = std::ceil((double)world_rect.min.x / step) * step;
+            for (double x = start_x; x < (double)world_rect.max.x; x += step)
+                draw_line_solid_ex({ (float)x, world_rect.min.y }, { (float)x, world_rect.max.y }, x == 0.0 ? 2.0f * thickness : thickness, color);
         };
 
-        auto draw_lines_y = [&world_rect](float step, const col4& color, float thickness)
+        auto draw_lines_y = [&world_rect](double step, const col4& color, double thickness)
         {
-            float start_y = std::ceil(world_rect.min.y / step) * step;
-            for (float y = start_y; y < world_rect.max.y; y += step)
-                draw_line_solid_ex({ world_rect.min.x, y }, { world_rect.max.x, y }, y == 0.0f ? 2.0f * thickness : thickness, color);
+            double start_y = std::ceil((double)world_rect.min.y / step) * step;
+            for (double y = start_y; y < (double)world_rect.max.y; y += step)
+                draw_line_solid_ex({ world_rect.min.x, (float)y }, { world_rect.max.x, (float)y }, y == 0.0 ? 2.0f * thickness : thickness, color);
         };
 
-        auto draw_grid = [&color, thickness](float world_size, auto draw_lines)
+        auto draw_grid = [&color, thickness](double world_size, auto draw_lines)
         {
-            float major_power = std::floor(log10(world_size));
-            float major = std::pow(10.0f, major_power);
-            float minor = std::pow(10.0f, major_power - 1.0f);
-            float major_size = major / world_size;
+            // using double here, to support large scale
+            // if we use float and step is small (like e-5) it won't increment the y coordinate in the for loop leading to infinte loop
+            double major_power = std::floor(log10(world_size));
+            double major_step = std::pow(10.0, major_power);
+            double minor_step = std::pow(10.0, major_power - 1.0);
+            double major_size = major_step / world_size;
 
-            draw_lines(major, color, thickness);
-            draw_lines(minor, color.transparency(255 * color.alpha() * major_size), thickness * major_size);
+            draw_lines(major_step, color, thickness);
+            draw_lines(minor_step, color.transparency(255 * color.alpha() * major_size), thickness * major_size);
         };
 
         draw_grid(world_size.x, draw_lines_x);
         draw_grid(world_size.y, draw_lines_y);
-
-        restore_world_transform();
     }
 
     bool is_inside_line_handle(const vec2& position, const vec2& handle_position, line_handle_config* handle)

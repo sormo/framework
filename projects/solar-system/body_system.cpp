@@ -122,39 +122,43 @@ void body_system::draw_distance_legend()
 
     const float line_size = screen.x / 8.0f;
     const float line_offset = screen.x / 20.0f;
-    const float vertical_line_offset = commons::pixel_to_world(5.0f);
-    const float line_thickness = commons::pixel_to_world(1.5f);
+    const float vertical_line_offset = 5.0f;
+    const float line_thickness = 1.5f;
 
     vec2 left_point_screen = { screen.x - line_offset - line_size, screen.y - line_offset };
     vec2 right_point_screen = { screen.x - line_offset, screen.y - line_offset };
 
-    vec2 left_point = frame::get_screen_to_world(left_point_screen);
-    vec2 right_point = frame::get_screen_to_world(right_point_screen);
-
-    frame::draw_line_solid_ex(left_point, right_point, line_thickness, frame::col4::WHITE);
-
-    auto draw_vertical_line = [vertical_line_offset, line_thickness](const vec2& center)
-        {
-            frame::draw_line_solid_ex(frame::vec2(center.x, center.y - vertical_line_offset),
-                frame::vec2(center.x, center.y + vertical_line_offset),
-                line_thickness,
-                frame::col4::WHITE);
-        };
-
-    draw_vertical_line(left_point);
-    draw_vertical_line(right_point);
-
-    vec2 center_point = left_point + (right_point - left_point) / 2.0f;
-
-    double legend_size = (right_point - left_point).length();
+    auto legend_size = frame::get_screen_to_world_vector(right_point_screen - left_point_screen).x;
     double value_au = commons::convert_world_size_to_AU(legend_size);
     double value_km = commons::convert_AU_to_km(value_au);
 
     auto text_au = commons::convert_double_to_string(value_au);
     auto text_km = commons::convert_double_to_string(value_km);
 
-    frame::draw_text_ex((text_au + "AU").c_str(), center_point, 15.0f, col4::LIGHTGRAY, "roboto", text_align::bottom_middle);
-    frame::draw_text_ex((text_km + "km").c_str(), center_point - vec2(0.0f, commons::pixel_to_world(2.5f)), 15.0f, col4::LIGHTGRAY, "roboto", text_align::top_middle);
+    // drawing
+
+    frame::save_world_transform();
+    frame::set_world_transform(frame::identity());
+
+    frame::draw_line_solid_ex(left_point_screen, right_point_screen, line_thickness, frame::col4::WHITE);
+
+    auto draw_vertical_line = [vertical_line_offset, line_thickness](const vec2& center)
+    {
+        frame::draw_line_solid_ex(frame::vec2(center.x, center.y - vertical_line_offset),
+                                  frame::vec2(center.x, center.y + vertical_line_offset),
+                                  line_thickness,
+                                  frame::col4::WHITE);
+    };
+
+    draw_vertical_line(left_point_screen);
+    draw_vertical_line(right_point_screen);
+
+    vec2 center_point_screen = left_point_screen + (right_point_screen - left_point_screen) / 2.0f;
+
+    frame::draw_text_ex((text_au + "AU").c_str(), center_point_screen, 15.0f, col4::LIGHTGRAY, "roboto", text_align::bottom_middle);
+    frame::draw_text_ex((text_km + "km").c_str(), center_point_screen + vec2(0.0f, 2.5f), 15.0f, col4::LIGHTGRAY, "roboto", text_align::top_middle);
+
+    frame::restore_world_transform();
 }
 
 void body_system::draw_current_time()
