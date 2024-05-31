@@ -10,6 +10,7 @@ struct trajectory_resolutions
     {
         auto get_color = [](int point_count)
         {
+#ifdef _DEBUG
             if (point_count < 200)
                 return frame::col4::DARKGRAY;
             else if (point_count < 1000)
@@ -19,6 +20,9 @@ struct trajectory_resolutions
             else if (point_count < 8000)
                 return frame::col4::ORANGE;
             return frame::col4::RED;
+#else
+            return frame::col4::DARKGRAY;
+#endif
         };
 
         double world_scale = frame::get_world_scale().x;
