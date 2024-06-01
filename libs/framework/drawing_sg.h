@@ -31,7 +31,8 @@ namespace frame
 	mesh_data create_mesh_circle(size_t count);
 
 	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);
-	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t max_count);
+	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);
+	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t instances_count);
 
 	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	size_t add_draw_instance(draw_buffer_id id, const frame::mat3& transform, frame::col4 color);
@@ -42,6 +43,7 @@ namespace frame
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color);
 	void draw_buffer_instanced(draw_buffer_id id);
+	void draw_buffer_instanced(draw_buffer_id id, size_t count);
 
 	// ---
 

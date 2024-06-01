@@ -116,6 +116,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.dimensions_str = dimensions_str;
             node.inclination = inclination;
             node.orbit = std::move(orbit);
+
             node.trajectory.init(node.orbit);
             node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, name_font_size, "roboto-bold");
 
@@ -123,6 +124,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     }
+
+    points_instance_buffer = frame::create_draw_buffer_instanced("points", frame::create_mesh_circle(20), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, bodies.size());
 
     // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [this](const std::string& name) -> body_node*
@@ -273,7 +276,7 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
 
 void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
 {
-    std::function<void(vec2, body_node&)> draw_recursive = [&draw_recursive, &colors](vec2 parent_position, body_node& data)
+    std::function<void(vec2, body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](vec2 parent_position, body_node& data, size_t& point_counter)
     {
         if (is_body_node_skip(data))
             return;
@@ -283,20 +286,38 @@ void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
         float default_radius = commons::pixel_to_world(3.5f);
         double body_radius = commons::convert_km_to_world_size(data.radius);
 
+        auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
+
         if (body_radius > default_radius)
-            draw_circle(position, body_radius, col4::ORANGE);
+            draw_circle(position, body_radius, color);
         else
-            draw_circle(position, default_radius, data.group.empty() ? colors.get(data.type) : colors.get(data.group));
+            frame::update_draw_instance(points_instance_buffer,
+                                        point_counter++,
+                                        frame::get_world_to_screen(position),
+                                        0.0f,
+                                        { 7.0f, 7.0f },
+                                        color);
 
         if (!data.childs.empty())
         {
             for (auto& child : data.childs)
-                draw_recursive(position, *child);
+                draw_recursive(position, *child, point_counter);
         }
     };
 
+    size_t point_count = 0;
     for (auto parent : parents)
-        draw_recursive({}, *parent);
+        draw_recursive({}, *parent, point_count);
+
+    if (point_count != 0)
+    {
+        frame::save_world_transform();
+        frame::set_world_transform(frame::identity());
+
+        frame::draw_buffer_instanced(points_instance_buffer, point_count);
+
+        frame::restore_world_transform();
+    }
 }
 
 void bodies_tree::draw_trajectories(std::set<body_node*>& parents, body_color& colors)

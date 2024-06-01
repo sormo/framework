@@ -23,4 +23,6 @@ struct bodies_tree
 
 private:
     bool is_barycenter(const body_node& body);
+
+    frame::draw_buffer_id points_instance_buffer;
 };

@@ -45,12 +45,32 @@ namespace frame
 		int append_buffer_data(char* data, size_t size)
 		{
 			size_t required_size = buffer_data.size() + size;
-			int offset = buffer_data.size();
+			int offset = (int)buffer_data.size();
 
 			buffer_data.resize(required_size);
 			memcpy(&buffer_data[offset], data, size);
 
 			return offset;
+		}
+
+		std::vector<int> append_buffer_data(char* data, size_t size, size_t count)
+		{
+			int offset = (int)buffer_data.size();
+
+			size_t required_size = buffer_data.size() + size * count;
+			buffer_data.resize(required_size);
+			
+			std::vector<int> result;
+
+			for (size_t i = 0; i < count; i++)
+			{
+				memcpy(&buffer_data[offset], data, size);
+				result.push_back(offset);
+
+				offset += size;
+			}
+
+			return result;
 		}
 
 		void create_buffer(char* data, size_t size)
@@ -155,6 +175,62 @@ namespace frame
 
 			range_id result = ranges.size();
 			ranges.push_back(std::move(range));
+
+			is_appended = true;
+
+			return result;
+		}
+
+		std::vector<range_id> append(char* data, size_t size, size_t count)
+		{
+			std::vector<range_id> result;
+
+			auto append_buffer_data_and_create_ranges = [this](char* data, size_t size, size_t count)
+			{
+				std::vector<range_id> result;
+				for (auto offset : append_buffer_data(data, size, count))
+				{
+					result.push_back(ranges.size());
+					ranges.push_back({ offset, size });
+				}
+				return result;
+			};
+
+			if (usage == SG_USAGE_IMMUTABLE)
+			{
+				result = append_buffer_data_and_create_ranges(data, size, count);
+
+				create_buffer(buffer_data.data(), buffer_data.size());
+			}
+			else
+			{
+				bool is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
+
+				if (is_over_capacity)
+				{
+					if (buffer_data.capacity() == 0)
+					{
+						buffer_data.reserve(256);
+						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
+					}
+
+					while (is_over_capacity)
+					{
+						buffer_data.reserve(buffer_data.capacity() * 2);
+						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
+					}
+
+					result = append_buffer_data_and_create_ranges(data, size, count);
+
+					create_buffer(nullptr, buffer_data.capacity());
+
+					sg_append_buffer(buffer_id, { buffer_data.data(), buffer_data.size() });
+				}
+				else
+				{
+					result = append_buffer_data_and_create_ranges(data, size, count);
+				}
+			}
 
 			is_appended = true;
 
@@ -365,14 +441,14 @@ namespace frame
 	}
 
 	buffer_data_instanced create_buffer_data_instanced(const char* name,
-		                                               int32_t draw_elements,
-		                                               float* vertices,
-		                                               size_t vertices_count,
-		                                               uint16_t* indices,
-		                                               size_t indices_count,
-										               sg_primitive_type type,
-		                                               sg_usage usage, // TODO same usage for both vertex and instance buffer
-		                                               size_t instances_max)
+													   int32_t draw_elements,
+													   float* vertices,
+													   size_t vertices_count,
+													   uint16_t* indices,
+													   size_t indices_count,
+		                                               sg_primitive_type type,
+													   sg_usage usage, // TODO same usage for both vertex and index buffer
+													   size_t instances_count)
 	{
 		buffer_data_instanced result{};
 
@@ -389,6 +465,11 @@ namespace frame
 
 		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic_instanced });
 		result.draw_elements = draw_elements;
+
+		instanced_element default_instance = {};
+		auto ranges = result.instance_buffer.append((char*)&default_instance, sizeof(instanced_element), instances_count);
+		for (auto r : ranges)
+			result.instances.push_back(r);
 
 		return result;
 	}
@@ -458,7 +539,7 @@ namespace frame
 		return result;
 	}
 
-	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t max_count)
+	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage)
 	{
 		draw_buffer_id id{ draw_buffer_id_counter++ };
 
@@ -472,19 +553,38 @@ namespace frame
 																				 mesh.indices_count,
 																				 type,
 																				 usage,
-																				 max_count));
+	                                                                             0));
+
+		return id;
+	}
+
+	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t instances_count)
+	{
+		draw_buffer_id id{ draw_buffer_id_counter++ };
+
+		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
+
+		state.buffer_data_instanced[id] = std::move(create_buffer_data_instanced(name,
+																			  	 elements_count,
+																			 	 mesh.vertices,
+																			     mesh.vertices_count,
+																				 mesh.indices,
+																				 mesh.indices_count,
+																				 type,
+																				 usage,
+																				 instances_count));
 
 		return id;
 	}
 
 	draw_buffer_id create_instanced_rectangle()
 	{
-		return create_draw_buffer_instanced("rectangle", create_mesh_rectangle(), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000);
+		return create_draw_buffer_instanced("rectangle", create_mesh_rectangle(), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC);
 	}
 
 	draw_buffer_id create_instanced_circle(size_t count)
 	{
-		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, 1000);
+		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC);
 	}
 
 	hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
@@ -573,7 +673,7 @@ namespace frame
 		update_draw_instance(id, index, create_hmm_transform(transform), color);
 	}
 
-	void draw_buffer_data_instanced(buffer_data_instanced& data)
+	void draw_buffer_data_instanced(buffer_data_instanced& data, size_t count = 0)
 	{
 		if (data.instances.size() == 0)
 			return;
@@ -599,7 +699,7 @@ namespace frame
 		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, SG_RANGE(vs_params));
 
-		sg_draw(0, data.draw_elements, data.instances.size());
+		sg_draw(0, data.draw_elements, count == 0 ? data.instances.size() : count);
 
 		//state.rect.instances = 0;
 	}
@@ -607,6 +707,11 @@ namespace frame
 	void draw_buffer_instanced(draw_buffer_id id)
 	{
 		draw_buffer_data_instanced(state.buffer_data_instanced[id]);
+	}
+
+	void draw_buffer_instanced(draw_buffer_id id, size_t count)
+	{
+		draw_buffer_data_instanced(state.buffer_data_instanced[id], count);
 	}
 
 	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage)
