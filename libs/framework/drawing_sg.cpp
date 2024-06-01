@@ -759,6 +759,11 @@ namespace frame
 		sg_draw(0, data.draw_elements, 1);
 	}
 
+	void draw_buffer(draw_buffer_id id, frame::col4 color)
+	{
+		draw_buffer(id, HMM_Mat4d(1.0f), color);
+	}
+
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
 		draw_buffer(id, create_hmm_transform(position, rotation, size), color);

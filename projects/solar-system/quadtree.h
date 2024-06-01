@@ -32,7 +32,7 @@ struct quadtree
         for (auto& body : data.bodies)
         {
             // we need to pick only bodies which has parent solar-system barycenter, this barycenter does not move
-            // so also it's child bodies are stationary
+            // so also it's child orbit trajectories are stationary
             if (body.parent && body.parent->name != "Solar-System Barycenter")
                 continue;
 

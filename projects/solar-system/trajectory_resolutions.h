@@ -36,7 +36,7 @@ struct trajectory_resolutions
         if (res.draw_id == frame::draw_buffer_id_invalid)
             return;
 
-        frame::draw_buffer(res.draw_id, {}, 0.0f, { 1.0f, 1.0f }, get_color(res.point_count));
+        frame::draw_buffer(res.draw_id, get_color(res.point_count));
 
         //for (size_t i = 0; i < points.size(); i += points.size() / res.point_count)
         //    frame::draw_circle(points[i], scale_independent(1.5f), frame::col4::ORANGE);
