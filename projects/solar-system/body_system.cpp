@@ -1,5 +1,6 @@
 #include "body_system.h"
 #include <fstream>
+#include <set>
 
 using namespace frame;
 
@@ -73,7 +74,7 @@ void body_system::create_quadtree(float max_size, float min_size)
     // because their trajectory points does not move. We don't care if childs has trajectory relative to parent as we don't add
     // their points to tree.
     //create_world_points_in_body_trajectories(bodies);
-    tree.construct(frame::rectangle::from_min_max(-frame::vec2(max_size, max_size) / 2.0f, frame::vec2(max_size, max_size) / 2.0f), min_size, bodies);
+    tree.construct(frame::rectangle::from_min_max(-frame::vec2(max_size, max_size) / 2.0f, frame::vec2(max_size, max_size) / 2.0f), min_size, bodies.bodies);
 }
 
 void body_system::setup_quadtree(const char* cache_filename, const std::vector<char>& cache_file_data)

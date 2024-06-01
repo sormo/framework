@@ -1,6 +1,6 @@
 #pragma once
-#include <set>
-#include "bodies_tree.h"
+#include <unordered_set>
+#include "body.h"
 #include <json.hpp>
 
 struct quadtree
@@ -24,12 +24,12 @@ struct quadtree
 
     std::unique_ptr<quadnode> root;
 
-    void construct(frame::rectangle root_rect, float min_size, bodies_tree& data)
+    void construct(frame::rectangle root_rect, float min_size, std::vector<body_node>& data)
     {
         root = std::make_unique<quadnode>(std::move(root_rect));
 
         std::vector<size_t> indices; // optimization, provide indices from which should be bodies iterated to childs
-        for (auto& body : data.bodies)
+        for (auto& body : data)
         {
             // we need to pick only bodies which has parent solar-system barycenter, this barycenter does not move
             // so also it's child orbit trajectories are stationary
@@ -50,9 +50,11 @@ struct quadtree
         construct_recursive(root.get(), min_size, indices);
     }
 
-    std::set<body_node*> query(const frame::rectangle& rect)
+    using query_result_type = std::unordered_set<body_node*>;
+
+    query_result_type query(const frame::rectangle& rect)
     {
-        std::set<body_node*> result;
+        query_result_type result;
 
         query_recursive(root.get(), rect, result);
 
@@ -81,15 +83,18 @@ struct quadtree
     }
 
 private:
-    void query_recursive(quadnode* node, const frame::rectangle& rect, std::set<body_node*>& result)
+    void query_recursive(quadnode* node, const frame::rectangle& rect, query_result_type& result)
     {
         if (!node)
             return;
 
         if (rect.contains(node->rect))
         {
-            for (auto body : node->bodies)
-                result.insert(body);
+#ifdef __cpp_lib_containers_ranges
+            container.insert_range(rg);
+#else
+            result.insert(node->bodies.begin(), node->bodies.end());
+#endif
         }
         else if (rect.has_overlap(node->rect))
         {
@@ -102,8 +107,11 @@ private:
             }
             else
             {
-                for (auto body : node->bodies)
-                    result.insert(body);
+#ifdef __cpp_lib_containers_ranges
+                container.insert_range(rg);
+#else
+                result.insert(node->bodies.begin(), node->bodies.end());
+#endif
             }
         }
     }

@@ -189,7 +189,7 @@ bool is_body_node_skip(const body_node& node)
     return node.type != body_type::barycenter && !node.is_major_body && semi_major_axis < 2.0f;
 }
 
-void bodies_tree::draw_names(std::set<body_node*>& parents)
+void bodies_tree::draw_names(quadtree::query_result_type& parents)
 {
     std::vector<rectangle> rectangles;
     auto check_overlap = [&rectangles](const frame::rectangle& rect)
@@ -270,7 +270,7 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
     }
 }
 
-void bodies_tree::update_current_positions(std::set<body_node*>& parents)
+void bodies_tree::update_current_positions(quadtree::query_result_type& parents)
 {
     std::function<void(vec2, body_node&)> update_recursive = [&update_recursive](vec2 parent_position, body_node& data)
     {
@@ -290,7 +290,7 @@ void bodies_tree::update_current_positions(std::set<body_node*>& parents)
         update_recursive({}, *parent);
 }
 
-void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
+void bodies_tree::draw_points(quadtree::query_result_type& parents, body_color& colors)
 {
     std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
     {
@@ -336,7 +336,7 @@ void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
     }
 }
 
-void bodies_tree::draw_trajectories(std::set<body_node*>& parents, body_color& colors)
+void bodies_tree::draw_trajectories(quadtree::query_result_type& parents, body_color& colors)
 {
     std::function<void(body_node&)> draw_recursive = [&draw_recursive, &colors](body_node& data)
     {
@@ -395,7 +395,7 @@ void bodies_tree::clear()
     parent = nullptr;
 }
 
-void bodies_tree::draw(std::set<body_node*>& parents, body_color& colors)
+void bodies_tree::draw(quadtree::query_result_type& parents, body_color& colors)
 {
     update_current_positions(parents);
 
