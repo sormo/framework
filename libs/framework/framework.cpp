@@ -322,9 +322,7 @@ namespace frame
 
     bool rectangle::has_overlap(const rectangle& o) const
     {
-        auto over = get_overlap(o);
-
-        return !(over.min.x == 0 && over.min.y == 0 && over.max.x == 0 && over.max.y == 0);
+        return !(max.x < o.min.x || min.x > o.max.x || max.y < o.min.y || min.y > o.max.y);
     }
 
     bool rectangle::contains(const rectangle& o) const
