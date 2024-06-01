@@ -231,9 +231,6 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
     };
 
     std::queue<body_node*> Q; // BFS
-    std::map<body_node*, vec2> parent_translations;
-
-    parent_translations[nullptr] = vec2();
 
     for (auto parent : parents)
         Q.push(parent);
@@ -246,7 +243,7 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
         if (is_body_node_skip(*body))
             continue;
 
-        vec2 position = parent_translations[body->parent] + commons::draw_cast(body->orbit.position);
+        vec2 position = body->current_world_position;
 
         if (!is_barycenter(*body))
         {
@@ -268,20 +265,39 @@ void bodies_tree::draw_names(std::set<body_node*>& parents)
             }
         }
 
-        parent_translations[body] = position;
         for (auto* child : body->childs)
             Q.push(child);
     }
 }
 
-void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
+void bodies_tree::update_current_positions(std::set<body_node*>& parents)
 {
-    std::function<void(vec2, body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](vec2 parent_position, body_node& data, size_t& point_counter)
+    std::function<void(vec2, body_node&)> update_recursive = [&update_recursive](vec2 parent_position, body_node& data)
     {
         if (is_body_node_skip(data))
             return;
 
-        vec2 position = commons::draw_cast(data.orbit.position) + parent_position;
+        data.current_world_position = commons::draw_cast(data.orbit.position) + parent_position;
+
+        if (!data.childs.empty())
+        {
+            for (auto& child : data.childs)
+                update_recursive(data.current_world_position, *child);
+        }
+    };
+
+    for (auto parent : parents)
+        update_recursive({}, *parent);
+}
+
+void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
+{
+    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
+    {
+        if (is_body_node_skip(data))
+            return;
+
+        vec2 position = data.current_world_position;
 
         float default_radius = commons::pixel_to_world(3.5f);
         double body_radius = commons::convert_km_to_world_size(data.radius);
@@ -301,13 +317,13 @@ void bodies_tree::draw_points(std::set<body_node*>& parents, body_color& colors)
         if (!data.childs.empty())
         {
             for (auto& child : data.childs)
-                draw_recursive(position, *child, point_counter);
+                draw_recursive(*child, point_counter);
         }
     };
 
     size_t point_count = 0;
     for (auto parent : parents)
-        draw_recursive({}, *parent, point_count);
+        draw_recursive(*parent, point_count);
 
     if (point_count != 0)
     {
@@ -377,4 +393,18 @@ void bodies_tree::clear()
 {
     bodies.clear();
     parent = nullptr;
+}
+
+void bodies_tree::draw(std::set<body_node*>& parents, body_color& colors)
+{
+    update_current_positions(parents);
+
+    if (settings.draw_trajectories)
+        draw_trajectories(parents, colors);
+
+    if (settings.draw_points)
+        draw_points(parents, colors);
+
+    if (settings.draw_names)
+        draw_names(parents);
 }
