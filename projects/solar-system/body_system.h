@@ -10,6 +10,8 @@ struct body_system
 	void draw();
 	void update();
 
+	void set_follow_body(body_node* body);
+
 	body_node* query(const frame::vec2& world_position, float radius_in_pixels);
 	void set_info(body_node* body);
 	void setup_bodies(commons::bodies_included_type type);
@@ -26,6 +28,8 @@ private:
 	void draw_current_time();
 
 	bodies_tree bodies;
+	body_view body_draw;
+
 	quadtree tree;
 	body_color body_color_data;
 	body_info info;

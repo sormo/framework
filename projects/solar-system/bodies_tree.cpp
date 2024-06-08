@@ -15,18 +15,6 @@ extern commons::settings_data settings;
 
 static const float name_font_size = 15.0f;
 
-vec3d body_node::get_absolute_position()
-{
-    vec3d result = orbit.position;
-    body_node* current_parent = parent;
-    while (current_parent)
-    {
-        result += current_parent->orbit.position;
-        current_parent = current_parent->parent;
-    }
-    return result;
-}
-
 std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float query_radius)
 {
     std::vector<body_node*> result;
@@ -243,7 +231,7 @@ void bodies_tree::draw_names(quadtree::query_result_type& parents)
         if (is_body_node_skip(*body))
             continue;
 
-        vec2 position = body->current_world_position;
+        vec2 position = body->current_position;
 
         if (!is_barycenter(*body))
         {
@@ -277,12 +265,12 @@ void bodies_tree::update_current_positions(quadtree::query_result_type& parents)
         if (is_body_node_skip(data))
             return;
 
-        data.current_world_position = commons::draw_cast(data.orbit.position) + parent_position;
+        data.current_position = commons::draw_cast(data.orbit.position) + parent_position;
 
         if (!data.childs.empty())
         {
             for (auto& child : data.childs)
-                update_recursive(data.current_world_position, *child);
+                update_recursive(data.current_position, *child);
         }
     };
 
@@ -297,7 +285,7 @@ void bodies_tree::draw_points(quadtree::query_result_type& parents, body_color& 
         if (is_body_node_skip(data))
             return;
 
-        vec2 position = data.current_world_position;
+        vec2 position = data.current_position;
 
         float default_radius = commons::pixel_to_world(3.5f);
         double body_radius = commons::convert_km_to_world_size(data.radius);

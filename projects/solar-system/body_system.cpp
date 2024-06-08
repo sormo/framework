@@ -57,11 +57,11 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     else
         std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-100km.json", "cache/quadtree_cache_100.cbor" };
 
-    //fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-    fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    //fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     {
-        //load_bodies_tree({ &files["test-bodies.json"] });
-        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
+        load_bodies_tree({ &files["test-bodies.json"] });
+        //load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
         setup_quadtree(cache_file, files[cache_file]);
 
         settings.body_system_initializing = false;
@@ -235,6 +235,8 @@ body_node* body_system::query(const frame::vec2& world_position, float radius_in
 void body_system::set_info(body_node* body)
 {
     info.set_body(body);
+
+    set_follow_body(body);
 }
 
 void body_system::setup()
@@ -248,10 +250,15 @@ void body_system::setup()
     });
 
     setup_bodies(settings.bodies_included);
+
+    body_draw.setup();
 }
 
 void body_system::draw()
 {
+    if (body_draw.main_body)
+        body_draw.draw(body_color_data);
+
     draw_bodies_tree();
     info.draw();
     //tree.draw_debug();
@@ -261,8 +268,15 @@ void body_system::draw()
 
 void body_system::update()
 {
+    body_draw.update();
+
     step_bodies_tree();
 
     if (settings.step_time)
         time_current += settings.step_speed;
+}
+
+void body_system::set_follow_body(body_node* body)
+{
+    body_draw.set_body(body);
 }
