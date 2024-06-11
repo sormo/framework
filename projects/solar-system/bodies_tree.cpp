@@ -170,9 +170,9 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 // skip child bodies which has too small semi-major axis
 // - do not skip major bodies in a case of barycentric system
 // - do not skip barycenter
-bool is_body_node_skip(const body_node& node)
+bool bodies_tree::is_body_node_skip(const body_node& node)
 {
-    double semi_major_axis = commons::convert_AU_to_world_size(node.orbit.semi_major_axis) * frame::get_world_scale().x;
+    double semi_major_axis = commons::convert_AU_to_world_size(node.orbit.semi_major_axis) * frame::get_world_scale().x * scale_factor;
 
     return node.type != body_type::barycenter && !node.is_major_body && semi_major_axis < 2.0f;
 }
@@ -190,9 +190,9 @@ void bodies_tree::draw_names(quadtree::query_result_type& parents)
         return false;
     };
 
-    auto get_computed_font_size = [](const body_node* body)
+    auto get_computed_font_size = [this](const body_node* body)
     {
-        double body_radius = commons::convert_km_to_world_size(body->radius) * frame::get_world_scale().x;
+        double body_radius = commons::convert_km_to_world_size(body->radius * scale_factor) * frame::get_world_scale().x;
         double body_diameter = body_radius * 2.0;
         double max_char_size = body_diameter / body->name.size();
 
@@ -260,12 +260,12 @@ void bodies_tree::draw_names(quadtree::query_result_type& parents)
 
 void bodies_tree::update_current_positions(quadtree::query_result_type& parents)
 {
-    std::function<void(vec2, body_node&)> update_recursive = [&update_recursive](vec2 parent_position, body_node& data)
+    std::function<void(vec2, body_node&)> update_recursive = [this, &update_recursive](vec2 parent_position, body_node& data)
     {
         if (is_body_node_skip(data))
             return;
 
-        data.current_position = commons::draw_cast(data.orbit.position) + parent_position;
+        data.current_position = commons::draw_cast(data.orbit.position * scale_factor) + parent_position;
 
         if (!data.childs.empty())
         {
@@ -288,7 +288,7 @@ void bodies_tree::draw_points(quadtree::query_result_type& parents, body_color& 
         vec2 position = data.current_position;
 
         float default_radius = commons::pixel_to_world(3.5f);
-        double body_radius = commons::convert_km_to_world_size(data.radius);
+        double body_radius = commons::convert_km_to_world_size(data.radius * scale_factor);
 
         auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
 
@@ -326,12 +326,12 @@ void bodies_tree::draw_points(quadtree::query_result_type& parents, body_color& 
 
 void bodies_tree::draw_trajectories(quadtree::query_result_type& parents, body_color& colors)
 {
-    std::function<void(body_node&)> draw_recursive = [&draw_recursive, &colors](body_node& data)
+    std::function<void(body_node&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data)
     {
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(data.orbit.semi_major_axis);
+        data.trajectory.draw(data.orbit.semi_major_axis * scale_factor);
 
         if (data.childs.empty())
             return;

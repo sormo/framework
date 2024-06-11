@@ -66,6 +66,9 @@ vec3d body_node::get_main_body_position()
     vec3d result = orbit.position;
     auto main_body = get_main_body();
 
+    if (this == main_body)
+        return {};
+
     body_node* current_parent = parent;
     while (current_parent && current_parent != main_body)
     {

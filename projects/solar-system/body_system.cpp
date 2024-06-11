@@ -268,12 +268,13 @@ void body_system::draw()
 
 void body_system::update()
 {
-    body_draw.update();
-
     step_bodies_tree();
 
     if (settings.step_time)
         time_current += settings.step_speed;
+
+    // this is update of camera, this seems needs to be done after stepping bodies
+    body_draw.update();
 }
 
 void body_system::set_follow_body(body_node* body)
