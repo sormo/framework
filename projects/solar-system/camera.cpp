@@ -18,6 +18,8 @@ void camera_type::follow(std::function<frame::vec2()> position)
     static const float max_follow_distance_px = 5.0f;
 
     camera_follow = position;
+    camera_move = {};
+
     if (!position)
         return;
 

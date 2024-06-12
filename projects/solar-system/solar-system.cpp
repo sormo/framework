@@ -42,6 +42,18 @@ struct system_view
         }
     }
 
+    vec2 screen_to_world(const vec2& screen_position)
+    {
+        if (main_body)
+        {
+            return get_transform_to_world().inverted().transform_point(screen_position);
+        }
+        else
+        {
+            return get_world_transform().inverted().transform_point(screen_position);
+        }
+    }
+
     // take body transform and create world transform
     frame::mat3 get_transform_to_world()
     {
@@ -159,7 +171,7 @@ body_node* get_clicked_body()
 {
     static const float click_radius_in_pixels = 15.0f;
 
-    return b_system.query(frame::get_mouse_world_position() * view.scale_factor, click_radius_in_pixels);
+    return b_system.query(view.screen_to_world(get_mouse_screen_position()), click_radius_in_pixels / view.scale_factor);
 }
 
 void handle_left_click()
