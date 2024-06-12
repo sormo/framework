@@ -16,6 +16,70 @@ commons::settings_data settings;
 bool first_time_init = true;
 frame::image sokol_image = 0;
 
+struct system_view
+{
+    body_node* main_body;
+    double scale_factor = 1.0;
+
+    // set the main body (get child of Solar System barycenter)
+    void set_body(body_node* body)
+    {
+        if (main_body)
+        {
+            frame::set_world_transform(get_transform_to_world());
+        }
+
+        if (body == nullptr)
+        {
+            main_body = nullptr;
+            scale_factor = 1.0;
+        }
+        else
+        {
+            main_body = body->get_main_body();
+            scale_factor = 1000.0;
+            frame::set_world_transform(get_transform_to_body());
+        }
+    }
+
+    // take body transform and create world transform
+    frame::mat3 get_transform_to_world()
+    {
+        auto body_transform = get_world_transform(); // TODO
+
+        auto translation = body_transform.get_translation() - commons::draw_cast(main_body->get_absolute_position()) * body_transform.get_scale() * scale_factor;
+        auto scale = body_transform.get_scale() * scale_factor;
+
+        return frame::translation(translation) * frame::scale(scale);
+    }
+
+    // take world tansform and create body transform
+    frame::mat3 get_transform_to_body()
+    {
+        //frame::mat3 screen_center = frame::translation(frame::get_screen_size() / 2.0f) * frame::scale(frame::get_world_scale());
+        //return screen_center * frame::scale({ 1.0 / scale_factor, 1.0 / scale_factor });
+
+        auto translation = frame::get_screen_size() / 2.0f;
+        auto scale = frame::get_world_scale();
+
+        auto world_translation = frame::get_screen_to_world(frame::get_screen_size() / 2.0f) - commons::draw_cast(main_body->get_absolute_position());
+
+        frame::save_world_transform();
+        frame::set_world_transform(frame::translation(translation) * frame::scale(scale));
+
+        // TODO cleanup
+        frame::set_world_translation(frame::get_screen_size() / 2.0f, world_translation);
+
+        auto result = frame::get_world_transform() * frame::scale({ 1.0 / scale_factor, 1.0 / scale_factor });;
+
+        frame::restore_world_transform();
+
+        return result;
+    }
+};
+
+system_view view;
+
 void setup()
 {
     frame::load_font("roboto-medium", "fonts/roboto-medium.ttf");
@@ -95,7 +159,7 @@ body_node* get_clicked_body()
 {
     static const float click_radius_in_pixels = 15.0f;
 
-    return b_system.query(frame::get_mouse_world_position(), click_radius_in_pixels);
+    return b_system.query(frame::get_mouse_world_position() * view.scale_factor, click_radius_in_pixels);
 }
 
 void handle_left_click()
@@ -106,10 +170,13 @@ void handle_left_click()
     if (auto clicked_body = get_clicked_body())
     {
         b_system.set_info(clicked_body);
-        camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
+        view.set_body(clicked_body);
+        //camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
+        camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_main_body_position() * view.scale_factor); });
     }
     else
     {
+        view.set_body(nullptr);
         b_system.set_info(nullptr);
         camera.follow(nullptr);
     }
@@ -139,7 +206,7 @@ void draw_system()
 
     frame::nanovg_flush();
 
-    b_system.draw();
+    b_system.draw(view.main_body, view.scale_factor);
 
     if (settings.body_system_initializing)
         frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);

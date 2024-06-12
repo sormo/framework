@@ -103,11 +103,39 @@ void body_system::step_bodies_tree()
         bodies.step(settings.step_speed);
 }
 
-void body_system::draw_bodies_tree()
+void body_system::draw_world_bodies()
 {
     auto parents = tree.query(frame::get_world_rectangle());
 
-    bodies.draw(parents, body_color_data);
+    bodies.update_current_positions(parents);
+
+    if (settings.draw_trajectories)
+        bodies.draw_trajectories(parents, body_color_data);
+
+    if (settings.draw_points)
+        bodies.draw_points(parents, body_color_data);
+
+    if (settings.draw_names)
+        bodies.draw_names(parents);
+}
+
+void body_system::draw_main_body(body_node* main_body)
+{
+    quadtree::query_result_type direct_childs{ main_body->childs.begin(), main_body->childs.end() };
+
+    // main body is at [0, 0]
+    main_body->current_position = {};
+    bodies.update_current_positions(direct_childs);
+
+    // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
+    frame::save_world_transform();
+    frame::set_world_transform(frame::get_world_transform() * frame::scale({ bodies.scale_factor, bodies.scale_factor }));
+    // TODO not drawing the trajectory of main body here
+    bodies.draw_trajectories(direct_childs, body_color_data);
+    frame::restore_world_transform();
+
+    bodies.draw_points({ main_body }, body_color_data);
+    bodies.draw_names({ main_body });
 }
 
 void body_system::draw_distance_legend()
@@ -235,8 +263,6 @@ body_node* body_system::query(const frame::vec2& world_position, float radius_in
 void body_system::set_info(body_node* body)
 {
     info.set_body(body);
-
-    set_follow_body(body);
 }
 
 void body_system::setup()
@@ -250,16 +276,17 @@ void body_system::setup()
     });
 
     setup_bodies(settings.bodies_included);
-
-    body_draw.setup();
 }
 
-void body_system::draw()
+void body_system::draw(body_node* main_body, double scale_factor)
 {
-    if (body_draw.main_body)
-        body_draw.draw(body_color_data);
+    bodies.scale_factor = scale_factor;
 
-    draw_bodies_tree();
+    if (main_body)
+        draw_main_body(main_body);
+    else
+        draw_world_bodies();
+
     info.draw();
     //tree.draw_debug();
     draw_distance_legend();
@@ -272,12 +299,4 @@ void body_system::update()
 
     if (settings.step_time)
         time_current += settings.step_speed;
-
-    // this is update of camera, this seems needs to be done after stepping bodies
-    body_draw.update();
-}
-
-void body_system::set_follow_body(body_node* body)
-{
-    body_draw.set_body(body);
 }

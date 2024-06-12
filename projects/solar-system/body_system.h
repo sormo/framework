@@ -7,10 +7,8 @@
 struct body_system
 {
 	void setup();
-	void draw();
+	void draw(body_node* main_body = nullptr, double scale_factor = 1.0);
 	void update();
-
-	void set_follow_body(body_node* body);
 
 	body_node* query(const frame::vec2& world_position, float radius_in_pixels);
 	void set_info(body_node* body);
@@ -23,12 +21,14 @@ private:
 	void setup_quadtree(const char* cache_filename, const std::vector<char>& cache_file_data);
 	void load_bodies_tree(std::vector<std::vector<char>*> files);
 	void step_bodies_tree();
-	void draw_bodies_tree();
+	
+	void draw_world_bodies();
+	void draw_main_body(body_node* body);
+
 	void draw_distance_legend();
 	void draw_current_time();
 
 	bodies_tree bodies;
-	body_view body_draw;
 
 	quadtree tree;
 	body_color body_color_data;
