@@ -15,8 +15,6 @@ struct bodies_tree
     std::vector<body_node> bodies;
     body_node* parent = nullptr;
 
-    double scale_factor = 1.0;
-
     std::vector<body_node*> query(const frame::vec2& query_point, float query_radius);
     void load(std::vector<const char*> json_datas);
     void draw(const quadtree::query_result_type& parents, body_color& colors);

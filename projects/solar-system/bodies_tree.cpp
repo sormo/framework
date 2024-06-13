@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "commons.h"
 #include "unit.h"
+#include "view.h"
 #include <json.hpp>
 #include <vector>
 #include <string>
@@ -172,9 +173,9 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 // - do not skip barycenter
 bool bodies_tree::is_body_node_skip(const body_node& node)
 {
-    double semi_major_axis = commons::convert_AU_to_world_size(node.orbit.semi_major_axis) * frame::get_world_scale().x * scale_factor;
+    double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(node.orbit.semi_major_axis));
 
-    return node.type != body_type::barycenter && !node.is_major_body && semi_major_axis < 2.0f;
+    return node.type != body_type::barycenter && !node.is_major_body && semi_major_axis_pixels < 2.0f;
 }
 
 void bodies_tree::draw_names(const quadtree::query_result_type& parents)
@@ -192,11 +193,11 @@ void bodies_tree::draw_names(const quadtree::query_result_type& parents)
 
     auto get_computed_font_size = [this](const body_node* body)
     {
-        double body_radius = commons::convert_km_to_world_size(body->radius * scale_factor) * frame::get_world_scale().x;
-        double body_diameter = body_radius * 2.0;
-        double max_char_size = body_diameter / body->name.size();
+        auto body_radius = view::get_world_to_pixel(commons::convert_km_to_world_size(body->radius));
+        auto body_diameter = body_radius * 2.0f;
+        auto max_char_size = body_diameter / body->name.size();
 
-        return (float)std::min(body_diameter / 4.0, max_char_size);
+        return (float)std::min(body_diameter / 4.0f, max_char_size);
     };
 
     auto get_text_rectangle = [](const body_node* body, const vec2& position) -> frame::rectangle
@@ -265,7 +266,8 @@ void bodies_tree::update_current_positions(const quadtree::query_result_type& pa
         if (is_body_node_skip(data))
             return;
 
-        data.current_position = commons::draw_cast(data.orbit.position * scale_factor) + parent_position;
+        // here we use the fact that we have already position relative to main body, so only scale is needed
+        data.current_position = commons::draw_cast(data.orbit.position * view::get_scale()) + parent_position;
 
         if (!data.childs.empty())
         {
@@ -287,13 +289,13 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
 
         vec2 position = data.current_position;
 
-        float default_radius = commons::pixel_to_world(3.5f);
-        double body_radius = commons::convert_km_to_world_size(data.radius * scale_factor);
+        float default_radius = view::get_pixel_to_world(3.5f);
+        double body_radius = commons::convert_km_to_world_size(data.radius);
 
         auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
 
         if (body_radius > default_radius)
-            draw_circle(position, body_radius, color);
+            draw_circle(position, view::get_world_to_view(body_radius), color);
         else
             frame::update_draw_instance(points_instance_buffer,
                                         point_counter++,
@@ -331,7 +333,7 @@ void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, 
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(data.orbit.semi_major_axis * scale_factor);
+        data.trajectory.draw(view::get_world_to_view(data.orbit.semi_major_axis));
 
         if (data.childs.empty())
             return;

@@ -14,7 +14,9 @@ fips_begin_app(solar-system windowed)
                body_info.h
                body_info.cpp
                body_system.h
-               body_system.cpp)
+               body_system.cpp
+               view.h
+               view.cpp)
     fips_dir(data)
     fipsutil_copy(data.yml)
     fips_deps(framework)

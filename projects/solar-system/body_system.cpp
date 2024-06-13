@@ -1,4 +1,5 @@
 #include "body_system.h"
+#include "view.h"
 #include <fstream>
 #include <set>
 
@@ -129,7 +130,7 @@ void body_system::draw_main_body(body_node* main_body)
 
     // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
     frame::save_world_transform();
-    frame::set_world_transform(frame::get_world_transform() * frame::scale({ bodies.scale_factor, bodies.scale_factor }));
+    frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
     // TODO not drawing the trajectory of main body here
     bodies.draw_trajectories(direct_childs, body_color_data);
     frame::restore_world_transform();
@@ -207,7 +208,7 @@ body_node* body_system::query(const frame::vec2& world_position, float radius_in
 {
     static const float min_body_distance = 6.0f;
 
-    auto queried_bodies = bodies.query(world_position, commons::pixel_to_world(radius_in_pixels));
+    auto queried_bodies = bodies.query(world_position, view::get_pixel_to_world(radius_in_pixels));
     if (queried_bodies.empty())
         return nullptr;
 
@@ -241,7 +242,7 @@ body_node* body_system::query(const frame::vec2& world_position, float radius_in
                 auto& body_i = clicked_bodies[i];
                 auto& body_j = clicked_bodies[j];
 
-                if ((body_i.position - body_j.position).length() < commons::pixel_to_world(min_body_distance))
+                if ((body_i.position - body_j.position).length() < view::get_pixel_to_world(min_body_distance))
                 {
                     updated = true;
                     delete_indices.insert(body_i.data->radius > body_j.data->radius ? j : i);
@@ -278,10 +279,8 @@ void body_system::setup()
     setup_bodies(settings.bodies_included);
 }
 
-void body_system::draw(body_node* main_body, double scale_factor)
+void body_system::draw(body_node* main_body)
 {
-    bodies.scale_factor = scale_factor;
-
     if (main_body)
         draw_main_body(main_body);
     else
