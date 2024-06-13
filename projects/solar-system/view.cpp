@@ -113,6 +113,11 @@ namespace view
 		return s / (state.scale * frame::get_world_scale().x);
 	}
 
+	float get_pixel_to_view(float s)
+	{
+		return view::get_world_to_view(view::get_pixel_to_world(s));
+	}
+
 	float get_world_to_pixel(float s)
 	{
 		return s * state.scale * frame::get_world_scale().x;

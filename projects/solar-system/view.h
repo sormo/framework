@@ -17,6 +17,7 @@ namespace view
 	frame::vec2 get_screen_to_world(const frame::vec2& screen_position);
 
 	float get_pixel_to_world(float s);
+	float get_pixel_to_view(float s);
 	float get_world_to_pixel(float s);
 	float get_world_to_view(float s);
 	double get_world_to_view(double s);

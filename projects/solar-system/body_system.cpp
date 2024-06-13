@@ -120,6 +120,16 @@ void body_system::draw_world_bodies()
         bodies.draw_names(parents);
 }
 
+void draw_main_trajectory(body_node* main_body)
+{
+    auto screen_size = frame::get_screen_size();
+    float max_pixel_size = 10'000; // some large number
+    auto to = commons::draw_cast(main_body->orbit.velocity).normalized() * view::get_pixel_to_view(max_pixel_size);
+
+    frame::draw_line_solid_ex(main_body->current_position, to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
+    frame::draw_line_solid_ex(main_body->current_position, -to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
+}
+
 void body_system::draw_main_body(body_node* main_body)
 {
     quadtree::query_result_type direct_childs{ main_body->childs.begin(), main_body->childs.end() };
@@ -128,10 +138,12 @@ void body_system::draw_main_body(body_node* main_body)
     main_body->current_position = {};
     bodies.update_current_positions(direct_childs);
 
+    // draw trajectory of main body
+    draw_main_trajectory(main_body);
+
     // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
     frame::save_world_transform();
     frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
-    // TODO not drawing the trajectory of main body here
     bodies.draw_trajectories(direct_childs, body_color_data);
     frame::restore_world_transform();
 

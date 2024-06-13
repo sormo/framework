@@ -17,7 +17,8 @@ commons::settings_data settings;
 bool first_time_init = true;
 frame::image sokol_image = 0;
 
-body_node* main_body = nullptr;
+body_node* clicked_body = nullptr;
+bool body_view = false;
 
 void setup()
 {
@@ -101,25 +102,51 @@ body_node* get_clicked_body()
     return b_system.query(view::get_screen_to_world(get_mouse_screen_position()), click_radius_in_pixels);
 }
 
+void evaluate_body_view(bool init = false)
+{
+    static const double semi_major_axis_pixels_threshold = 10'000.0;
+
+    if (!clicked_body)
+    {
+        body_view = false;
+
+        return;
+    }
+
+    double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->get_main_body()->orbit.semi_major_axis));
+
+    if ((init || !body_view) && semi_major_axis_pixels > semi_major_axis_pixels_threshold)
+    {
+        body_view = true;
+
+        // here we again use the fact that we have position relative to main body, so only scale is needed
+        view::set_view([body = clicked_body->get_main_body()]() { return commons::draw_cast(body->get_absolute_position()); }, 1000.0);
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); });
+    }
+    else if ((init || body_view) && semi_major_axis_pixels < semi_major_axis_pixels_threshold)
+    {
+        body_view = false;
+
+        view::clear_view();
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); });
+    }
+}
+
 void handle_left_click()
 {
     if (!left_mouse_click.is_clicked())
         return;
 
-    if (auto clicked_body = get_clicked_body())
+    if (clicked_body = get_clicked_body())
     {
-        main_body = clicked_body->get_main_body();
-
         b_system.set_info(clicked_body);
-        view::set_view([body = main_body]() { return commons::draw_cast(body->get_absolute_position()); }, 1000.0);
 
-        //camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_absolute_position()); });
-        // here we again use the fact that we have position relative to main body, so only scale is needed
-        camera.follow([clicked_body]() { return commons::draw_cast(clicked_body->get_main_body_position() * view::get_scale()); });
+        evaluate_body_view(true);
     }
     else
     {
-        main_body = nullptr;
+        body_view = false;
+        clicked_body = nullptr;
 
         view::clear_view();
 
@@ -152,7 +179,7 @@ void draw_system()
 
     frame::nanovg_flush();
 
-    b_system.draw(main_body);
+    b_system.draw(body_view ? clicked_body->get_main_body() : nullptr);
 
     if (settings.body_system_initializing)
         frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
@@ -165,6 +192,8 @@ void update_system()
     left_mouse_click.update();
 
     handle_left_click();
+
+    evaluate_body_view();
 
     camera.update();
 }
