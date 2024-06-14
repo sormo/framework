@@ -18,7 +18,7 @@ bool first_time_init = true;
 frame::image sokol_image = 0;
 
 body_node* clicked_body = nullptr;
-bool body_view = false;
+body_node* view_body = nullptr;
 
 void setup()
 {
@@ -104,28 +104,39 @@ body_node* get_clicked_body()
 
 void evaluate_body_view(bool init = false)
 {
-    static const double semi_major_axis_pixels_threshold = 10'000.0;
+    static const double semi_major_axis_pixels_main_threshold = 15'000.0;
+    static const double semi_major_axis_pixels_clicked_threshold = 25'000.0;
 
     if (!clicked_body)
     {
-        body_view = false;
+        view_body = nullptr;
 
         return;
     }
 
-    double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->get_main_body()->orbit.semi_major_axis));
-
-    if ((init || !body_view) && semi_major_axis_pixels > semi_major_axis_pixels_threshold)
+    auto apply_view = [](body_node* view_b)
     {
-        body_view = true;
+        view_body = view_b;
+        view::set_view([body = view_body]() { return commons::draw_cast(body->get_absolute_position()); }, 1000.0);
+    };
 
+    double semi_major_axis_pixels_main = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->get_main_body()->orbit.semi_major_axis));
+    double semi_major_axis_pixels_clicked = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->orbit.semi_major_axis));
+
+    if ((init || view_body != clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
+    {
+        apply_view(clicked_body);
+        camera.follow([body = clicked_body]() { return vec2{}; });
+    }
+    else if ((init || view_body != clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
+    {
+        apply_view(clicked_body->get_main_body());
         // here we again use the fact that we have position relative to main body, so only scale is needed
-        view::set_view([body = clicked_body->get_main_body()]() { return commons::draw_cast(body->get_absolute_position()); }, 1000.0);
         camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); });
     }
-    else if ((init || body_view) && semi_major_axis_pixels < semi_major_axis_pixels_threshold)
+    else if ((init || view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
     {
-        body_view = false;
+        view_body = nullptr;
 
         view::clear_view();
         camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); });
@@ -145,7 +156,7 @@ void handle_left_click()
     }
     else
     {
-        body_view = false;
+        view_body = nullptr;
         clicked_body = nullptr;
 
         view::clear_view();
@@ -179,7 +190,7 @@ void draw_system()
 
     frame::nanovg_flush();
 
-    b_system.draw(body_view ? clicked_body->get_main_body() : nullptr);
+    b_system.draw(view_body);
 
     if (settings.body_system_initializing)
         frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
