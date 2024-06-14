@@ -108,6 +108,18 @@ namespace view
 		}
 	}
 
+	frame::vec2 get_screen_to_world_vector(const frame::vec2& screen_position)
+	{
+		if (state.world_position)
+		{
+			return impl::get_transform_to_world(frame::get_world_transform()).inverted().transform_vector(screen_position);
+		}
+		else
+		{
+			return frame::get_world_transform().inverted().transform_vector(screen_position);
+		}
+	}
+
 	float get_pixel_to_world(float s)
 	{
 		return s / (state.scale * frame::get_world_scale().x);

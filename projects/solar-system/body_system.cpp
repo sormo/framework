@@ -163,7 +163,7 @@ void body_system::draw_distance_legend()
     vec2 left_point_screen = { screen.x - line_offset - line_size, screen.y - line_offset };
     vec2 right_point_screen = { screen.x - line_offset, screen.y - line_offset };
 
-    auto legend_size = frame::get_screen_to_world_vector(right_point_screen - left_point_screen).x;
+    auto legend_size = view::get_screen_to_world_vector(right_point_screen - left_point_screen).x;
     double value_au = commons::convert_world_size_to_AU(legend_size);
     double value_km = commons::convert_AU_to_km(value_au);
 
