@@ -11,7 +11,7 @@ static double time_current = 0.0; // in days
 
 void body_system::setup_colors(std::map<std::string, std::vector<char>>& files)
 {
-    auto& data = files["colors.json"];
+    auto& data = files["misc/colors.json"];
     data.push_back('\0');
     body_color_data.setup(data.data());
 }
@@ -52,17 +52,17 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     const char* small_bodies_file = nullptr;
 
     if (type == commons::bodies_included_type::more_than_10)
-        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-10km.json", "cache/quadtree_cache_10.cbor" };
+        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-10km.json", "bodies/cache/quadtree_cache_10.cbor" };
     else if (type == commons::bodies_included_type::more_than_50)
-        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-50km.json", "cache/quadtree_cache_50.cbor" };
+        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-50km.json", "bodies/cache/quadtree_cache_50.cbor" };
     else
-        std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-100km.json", "cache/quadtree_cache_100.cbor" };
+        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-100km.json", "bodies/cache/quadtree_cache_100.cbor" };
 
-    //fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-    fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    //fetch_files({ "bodies/test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "bodies/major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     {
-        //load_bodies_tree({ &files["test-bodies.json"] });
-        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
+        //load_bodies_tree({ &files["bodies/test-bodies.json"] });
+        load_bodies_tree({ &files["bodies/major-bodies.json"], &files[small_bodies_file]});
         setup_quadtree(cache_file, files[cache_file]);
 
         settings.body_system_initializing = false;
@@ -288,7 +288,7 @@ void body_system::setup()
 {
     setup_units();
 
-    fetch_files({ "colors.json", "icons/body_icons.zip" }, [this](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "misc/colors.json", "icons/body_icons.zip" }, [this](std::map<std::string, std::vector<char>> files)
     {
         setup_colors(files);
         setup_info(files);
