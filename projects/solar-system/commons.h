@@ -41,12 +41,12 @@ namespace commons
         return s * frame::get_world_scale().x;
     }
 
-    static std::vector<frame::vec2> draw_cast(const std::vector<frame::vec3d>& data)
+    static std::vector<frame::vec2> draw_cast(const std::vector<frame::vec3d>& data, double scale = 1.0)
     {
         std::vector<frame::vec2> r;
         r.reserve(data.size());
         for (const auto& o : data)
-            r.push_back(draw_cast(o));
+            r.push_back(draw_cast(o * scale));
         return r;
     }
 

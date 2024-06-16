@@ -58,11 +58,11 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     else
         std::tie(small_bodies_file, cache_file) = std::pair{ "small-bodies-sbdb-100km.json", "cache/quadtree_cache_100.cbor" };
 
-    fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-    //fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    //fetch_files({ "test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     {
-        load_bodies_tree({ &files["test-bodies.json"] });
-        //load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
+        //load_bodies_tree({ &files["test-bodies.json"] });
+        load_bodies_tree({ &files["major-bodies.json"], &files[small_bodies_file]});
         setup_quadtree(cache_file, files[cache_file]);
 
         settings.body_system_initializing = false;
@@ -139,16 +139,22 @@ void body_system::draw_main_body(body_node* main_body)
     bodies.update_current_positions(direct_childs);
 
     // draw trajectory of main body
-    draw_main_trajectory(main_body);
+    if (settings.draw_trajectories)
+    {
+        draw_main_trajectory(main_body);
 
-    // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
-    frame::save_world_transform();
-    frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
-    bodies.draw_trajectories(direct_childs, body_color_data);
-    frame::restore_world_transform();
+        // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
+        frame::save_world_transform();
+        frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
+        bodies.draw_trajectories(direct_childs, body_color_data);
+        frame::restore_world_transform();
+    }
 
-    bodies.draw_points({ main_body }, body_color_data);
-    bodies.draw_names({ main_body });
+    if (settings.draw_points)
+        bodies.draw_points({ main_body }, body_color_data);
+
+    if (settings.draw_names)
+        bodies.draw_names({ main_body });
 }
 
 void body_system::draw_distance_legend()

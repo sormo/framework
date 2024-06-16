@@ -105,7 +105,7 @@ body_node* get_clicked_body()
 void evaluate_body_view(bool init = false)
 {
     static const double semi_major_axis_pixels_main_threshold = 15'000.0;
-    static const double semi_major_axis_pixels_clicked_threshold = 25'000.0;
+    static const double semi_major_axis_pixels_clicked_threshold = 80'000.0;
 
     if (!clicked_body)
     {

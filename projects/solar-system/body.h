@@ -39,7 +39,6 @@ struct body_node
     std::vector<body_node*> childs;
 
     trajectory_resolutions trajectory;
-    double scale_factor = 1000.0; // same for all childs of main body (body which has solar-system barycenter as parent), used in body view
     frame::rectangle name_text_rectangle; // cached name text rectangle in screen coordinates
     frame::vec2 current_position; // cache used during drawing
 

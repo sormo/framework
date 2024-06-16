@@ -333,23 +333,26 @@ void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, 
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(view::get_world_to_view(data.orbit.semi_major_axis));
-
+        //data.trajectory.draw(view::get_world_to_view(commons::convert_AU_to_world_size(data.orbit.semi_major_axis)));
+        data.trajectory.draw(commons::convert_AU_to_world_size(data.orbit.semi_major_axis));
+        
         if (data.childs.empty())
             return;
-
-        save_world_transform();
 
         set_world_translation(get_world_translation() + commons::draw_cast(data.orbit.position) * get_world_scale());
 
         for (auto& child : data.childs)
             draw_recursive(*child);
-
-        restore_world_transform();
     };
 
     for (auto parent : parents)
+    {
+        save_world_transform();
+
         draw_recursive(*parent);
+
+        restore_world_transform();
+    }
 }
 
 void bodies_tree::step(double time_delta)
