@@ -539,6 +539,33 @@ namespace frame
 		return result;
 	}
 
+	mesh_data create_mesh_circle_no_index(size_t count)
+	{
+		mesh_data result;
+
+		float step = 2.0f * frame::PI / count;
+
+		std::vector<vec2> temp;
+		for (int i = 0; i < count; ++i)
+		{
+			float angle = i * step;
+			temp.push_back({ 0.5f * cos(angle), 0.5f * sin(angle) });
+		}
+
+		int triangleCount = count - 2;
+		for (int i = 0; i < triangleCount; i++)
+		{
+			result.vertices.push_back(temp[0].x);
+			result.vertices.push_back(temp[0].y);
+			result.vertices.push_back(temp[i + 1].x);
+			result.vertices.push_back(temp[i + 1].y);
+			result.vertices.push_back(temp[i + 2].x);
+			result.vertices.push_back(temp[i + 2].y);
+		}
+
+		return result;
+	}
+
 	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage)
 	{
 		draw_buffer_id id{ draw_buffer_id_counter++ };

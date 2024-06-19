@@ -29,6 +29,7 @@ namespace frame
 
 	mesh_data create_mesh_rectangle();
 	mesh_data create_mesh_circle(size_t count);
+	mesh_data create_mesh_circle_no_index(size_t count);
 
 	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);
 	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);

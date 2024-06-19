@@ -114,7 +114,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
         }
     }
 
-    points_instance_buffer = frame::create_draw_buffer_instanced("points", frame::create_mesh_circle(20), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC, bodies.size());
+    points_instance_buffer = frame::create_draw_buffer_instanced("points", frame::create_mesh_circle_no_index(20), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE, bodies.size());
 
     // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [this](const std::string& name) -> body_node*

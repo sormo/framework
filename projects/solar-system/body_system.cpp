@@ -116,6 +116,12 @@ void body_system::draw_world_bodies()
     if (settings.draw_points)
         bodies.draw_points(parents, body_color_data);
 
+    // draw_points is doing instanced drawing of circles. Problem seems to be with modified opengl state
+    // by sokol gfx. In particular sokol is calling glVertexAttribDivisor . This seems to make problem
+    // when trying to draw with nanovg afterwards but for some reason only with webgl2. Don't know why.
+    // Needed to add glVertexAttribDivisor(i, 0); to _sg_gl_reset_state_cache.
+    sg_reset_state_cache();
+
     if (settings.draw_names)
         bodies.draw_names(parents);
 }
@@ -152,6 +158,8 @@ void body_system::draw_main_body(body_node* main_body)
 
     if (settings.draw_points)
         bodies.draw_points({ main_body }, body_color_data);
+
+    sg_reset_state_cache();
 
     if (settings.draw_names)
         bodies.draw_names({ main_body });

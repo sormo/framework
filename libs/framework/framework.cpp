@@ -1,4 +1,5 @@
 #ifdef __EMSCRIPTEN__
+//#define NANOVG_GLES3_IMPLEMENTATION
 #define NANOVG_GLES2_IMPLEMENTATION
 #define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
@@ -7,11 +8,13 @@
 #define NOMINMAX
 #include <Windows.h>
 #define NANOVG_GL3_IMPLEMENTATION
+//#define NANOVG_GLES3_IMPLEMENTATION
 #include <glad/glad.h>
 #define SOKOL_WIN32_NO_GL_LOADER
 #endif
 
 #define SOKOL_IMPL
+//#define SOKOL_GLES3
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
@@ -489,9 +492,11 @@ void init()
     set_screen_background(frame::col4::RGBf(0.0f, 0.0f, 0.0f));
 
 #ifdef __EMSCRIPTEN__
-    vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+    //vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+	vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 #else
     vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+    //vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 #endif
 
     {

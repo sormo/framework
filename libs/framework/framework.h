@@ -121,7 +121,6 @@ namespace frame
     bool is_key_released(char key);
 
     // *** drawing ***
-    // TODO position of rectangle is actually center, either rename, or change to to use frame::rectangle
     void draw_rectangle(const vec2& center, float width, float height, const col4& color);
     void draw_rectangle(const rectangle& rect, const col4& color);
     void draw_rectangle_ex(const vec2& center, 
