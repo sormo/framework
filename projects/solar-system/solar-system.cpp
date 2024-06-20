@@ -89,6 +89,10 @@ void draw_settings_gui()
     ImGui::SliderFloat("Step speed", &settings.step_speed, 0.001f, 10.0f);
     if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
     {
+        // when calling setup_bodies, we need to clear all body_node references as body tree is going to be reinitialized
+        clicked_body = view_body = nullptr;
+        camera.follow(nullptr);
+
         b_system.setup_bodies(settings.bodies_included);
     }
 

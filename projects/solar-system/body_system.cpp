@@ -48,6 +48,8 @@ void body_system::setup_bodies(commons::bodies_included_type type)
 {
     settings.body_system_initializing = true;
 
+    info.set_body(nullptr);
+
     const char* cache_file = nullptr;
     const char* small_bodies_file = nullptr;
 
