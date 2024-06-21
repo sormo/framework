@@ -96,6 +96,6 @@ set(BOX2D_HEADER_FILES
 	../include/box2d/box2d.h)
 
 fips_begin_lib(box2d)
-    fips_include_directories(.)
+    include_directories(.)
     fips_files(${BOX2D_SOURCE_FILES} ${BOX2D_HEADER_FILES})
 fips_end_lib()

@@ -1,10 +1,12 @@
 #ifdef __EMSCRIPTEN__
-//#define NANOVG_GLES3_IMPLEMENTATION
-#define NANOVG_GLES2_IMPLEMENTATION
+#define NANOVG_GLES3_IMPLEMENTATION
+//#define NANOVG_GLES2_IMPLEMENTATION
+#define SOKOL_GLES3
 #define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #else
+#define SOKOL_GLCORE
 #define NOMINMAX
 #include <Windows.h>
 #define NANOVG_GL3_IMPLEMENTATION
@@ -14,7 +16,6 @@
 #endif
 
 #define SOKOL_IMPL
-//#define SOKOL_GLES3
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
@@ -94,7 +95,7 @@ namespace frame
 
     vec2 get_screen_size()
     {
-        return { (float)sapp_width(), (float)sapp_height() };
+        return { sapp_widthf(), sapp_heightf() };
     }
 
     float get_delta_time()
@@ -448,9 +449,14 @@ void frame_update()
 
     imgui::prepare_render();
 
-    sg_begin_default_pass(&pass_action, (float)sapp_width(), (float)sapp_height());
+    //sg_begin_default_pass(&pass_action, sapp_widthf(), sapp_heightf());
+    sg_pass pass = {};
+    pass.action = pass_action;
+    pass.swapchain = sglue_swapchain();
 
-    nvgBeginFrame(vg, (float)sapp_width(), (float)sapp_height(), 1.0f);
+    sg_begin_pass(pass);
+
+    nvgBeginFrame(vg, sapp_widthf(), sapp_heightf(), 1.0f);
 
     nvgResetTransform(vg);
     apply_transform(transforms.back());
@@ -478,7 +484,7 @@ void init()
 
     {
         sg_desc desc{};
-        desc.context = sapp_sgcontext();
+        desc.environment = sglue_environment();
 #ifdef _DEBUG
         desc.logger.func = slog_func;
 #endif
@@ -492,8 +498,8 @@ void init()
     set_screen_background(frame::col4::RGBf(0.0f, 0.0f, 0.0f));
 
 #ifdef __EMSCRIPTEN__
-    //vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-	vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+    vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	//vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 #else
     vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
     //vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);

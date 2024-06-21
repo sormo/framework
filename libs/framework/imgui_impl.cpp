@@ -3,8 +3,15 @@
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
+#include "sokol_log.h"
 #include "sokol_time.h"
 #include "imgui.h"
+
+#ifdef __EMSCRIPTEN__
+#define SOKOL_GLES3
+#else
+#define SOKOL_GLCORE
+#endif
 
 #define SOKOL_IMGUI_IMPL
 #include "sokol_imgui.h"
@@ -36,7 +43,10 @@ namespace imgui
     {
         // setup sokol-gfx, sokol-time and sokol-imgui
         sg_desc desc = { };
-        desc.context = sapp_sgcontext();
+        desc.environment = sglue_environment();
+#ifdef _DEBUG
+        desc.logger.func = slog_func;
+#endif
         sg_setup(&desc);
 
         // use sokol-imgui with all default-options (we're not doing
