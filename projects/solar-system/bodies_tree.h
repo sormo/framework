@@ -28,6 +28,8 @@ struct bodies_tree
     void update_current_positions(const quadtree::query_result_type& parents);
 private:
 
+    void initialize_instance_buffer();
+
     bool is_barycenter(const body_node& body);
     bool is_body_node_skip(const body_node& node);
 

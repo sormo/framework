@@ -40,6 +40,7 @@ namespace frame
 	void remove_draw_instance(draw_buffer_id id, size_t index);
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::mat3& transform, frame::col4 color);
+	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec2& position, const frame::col4& color);
 
 	void draw_buffer(draw_buffer_id id, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);

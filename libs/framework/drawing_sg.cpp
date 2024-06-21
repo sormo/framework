@@ -690,6 +690,25 @@ namespace frame
 		memcpy(instance->color, &color, sizeof(color));
 	}
 
+	// fast position update
+	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec2& position, const frame::col4& color)
+	{
+		auto& data = state.buffer_data_instanced[id];
+
+		instanced_element* instance;
+		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
+
+		//  0  1  2  3
+		//	4  5  6  7
+		//	8  9 10 11
+		// 12 13 14 15
+
+		instance->model[12] = position.x;// / instance->model[0];
+		instance->model[13] = position.y;// / instance->model[5];
+
+		memcpy(instance->color, &color, sizeof(color));
+	}
+
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
 		update_draw_instance(id, index, create_hmm_transform(position, rotation, size), color);

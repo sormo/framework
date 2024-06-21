@@ -12,8 +12,8 @@ struct body_color
     frame::col4 get(const std::string& group);
 
 private:
-    std::map<body_type, frame::col4> type_colors;
-    std::map<std::string, frame::col4> group_colors;
+    std::unordered_map<body_type, frame::col4> type_colors;
+    std::unordered_map<std::string, frame::col4> group_colors;
 };
 
 struct body_info
@@ -38,5 +38,5 @@ private:
     frame::svg_image* icon;
     body_color* colors = nullptr;
 
-    std::map<std::string, frame::svg_image*> icons;
+    std::unordered_map<std::string, frame::svg_image*> icons;
 };

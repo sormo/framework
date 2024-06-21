@@ -109,6 +109,7 @@ void body_system::step_bodies_tree()
 void body_system::draw_world_bodies()
 {
     auto parents = tree.query(frame::get_world_rectangle());
+    //quadtree::query_result_type parents = { bodies.parent };
 
     bodies.update_current_positions(parents);
 

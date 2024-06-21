@@ -114,7 +114,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
         }
     }
 
-    points_instance_buffer = frame::create_draw_buffer_instanced("points", frame::create_mesh_circle_no_index(20), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE, bodies.size());
+    initialize_instance_buffer();
 
     // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [this](const std::string& name) -> body_node*
@@ -280,6 +280,26 @@ void bodies_tree::update_current_positions(const quadtree::query_result_type& pa
         update_recursive({}, *parent);
 }
 
+void bodies_tree::initialize_instance_buffer()
+{
+    points_instance_buffer = frame::create_draw_buffer_instanced("points",
+                                                                 frame::create_mesh_circle_no_index(20),
+                                                                 SG_PRIMITIVETYPE_TRIANGLE_STRIP,
+                                                                 SG_USAGE_IMMUTABLE,
+                                                                 bodies.size());
+
+    size_t point_counter = 0;
+    for (auto& body : bodies)
+    {
+        frame::update_draw_instance(points_instance_buffer,
+                                    point_counter++,
+                                    {},
+                                    0.0f,
+                                    { 7.0f, 7.0f },
+                                    col4::WHITE);
+    }
+}
+
 void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_color& colors)
 {
     std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
@@ -300,8 +320,6 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
             frame::update_draw_instance(points_instance_buffer,
                                         point_counter++,
                                         frame::get_world_to_screen(position),
-                                        0.0f,
-                                        { 7.0f, 7.0f },
                                         color);
 
         if (!data.childs.empty())
@@ -339,19 +357,25 @@ void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, 
         if (data.childs.empty())
             return;
 
+        auto current_translation = get_world_translation();
+
         set_world_translation(get_world_translation() + commons::draw_cast(data.orbit.position) * get_world_scale());
 
         for (auto& child : data.childs)
             draw_recursive(*child);
+        
+        set_world_translation(current_translation);
     };
 
     for (auto parent : parents)
     {
-        save_world_transform();
+        auto current_translation = get_world_translation();
+
+        //set_world_translation(get_world_translation() + commons::draw_cast(parent->orbit.position) * get_world_scale());
 
         draw_recursive(*parent);
 
-        restore_world_transform();
+        set_world_translation(current_translation);
     }
 }
 
