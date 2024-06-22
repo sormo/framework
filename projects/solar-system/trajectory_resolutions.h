@@ -39,7 +39,7 @@ struct trajectory_resolutions
         { max_orbit_points, 64'000 }
     }};
 
-    void draw(const frame::vec2& world_translation, double semi_major_axis_world_size);
+    void draw(const frame::vec2& world_translation, double semi_major_axis_world_size, bool has_stationary_parent);
 
     void init(kepler_orbit& orbit);
 
@@ -55,6 +55,7 @@ private:
     };
 
     resolution& get_resolution(float semi_major_axis_pixel_size);
+    frame::mat3 get_transform(const frame::vec2& position, bool has_stationary_parent);
 
     frame::draw_buffer_id create_trajectory(const std::vector<frame::vec2>& points, int point_count);
 
@@ -62,4 +63,6 @@ private:
 
     std::vector<resolution> resolutions;
     std::vector<frame::vec2> points;
+
+    std::optional<frame::mat3> cached_transform;
 };

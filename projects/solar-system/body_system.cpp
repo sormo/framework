@@ -155,7 +155,9 @@ void body_system::draw_main_body(body_node* main_body)
         // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
         frame::save_world_transform();
         frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
-        bodies.draw_trajectories(direct_childs, body_color_data);
+
+        bodies.draw_trajectories(direct_childs, body_color_data, main_body);
+
         frame::restore_world_transform();
     }
 

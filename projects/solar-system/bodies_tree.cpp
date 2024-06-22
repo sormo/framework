@@ -344,14 +344,16 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
     }
 }
 
-void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors)
+void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body)
 {
-    std::function<void(body_node&, const vec2&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, const vec2& parent_position)
+    stationary_body = stationary_body == nullptr ? parent : stationary_body;
+
+    std::function<void(body_node&, const vec2&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body](body_node& data, const vec2& parent_position)
     {
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis));
+        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body);
         
         if (data.childs.empty())
             return;

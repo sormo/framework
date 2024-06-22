@@ -18,7 +18,23 @@ void trajectories_draw_cache::flush()
     transforms.clear();
 }
 
-void trajectory_resolutions::draw(const frame::vec2& world_translation, double semi_major_axis_world_size)
+frame::mat3 trajectory_resolutions::get_transform(const frame::vec2& position, bool has_stationary_parent)
+{
+    if (has_stationary_parent)
+    {
+        if (!cached_transform)
+            cached_transform = frame::translation(position) * frame::scale(frame::vec2{ 1.0 / scale_factor, 1.0 / scale_factor });
+        return *cached_transform;
+    }
+    else
+    {
+        cached_transform = {};
+
+        return frame::translation(position) * frame::scale(frame::vec2{ 1.0 / scale_factor, 1.0 / scale_factor });
+    }
+}
+
+void trajectory_resolutions::draw(const frame::vec2& world_translation, double semi_major_axis_world_size, bool has_stationary_parent)
 {
     auto get_color = [](int point_count)
     {
@@ -50,7 +66,7 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
     if (res.draw_id == frame::draw_buffer_id_invalid)
         res.draw_id = create_trajectory(points, res.point_count);
 
-    auto transform = frame::translation(world_translation) * frame::scale(frame::vec2{ 1.0 / scale_factor, 1.0 / scale_factor });
+    auto transform = get_transform(world_translation, has_stationary_parent);
 
     draw_cache.draw(res.draw_id, std::move(transform), get_color(res.point_count));
 

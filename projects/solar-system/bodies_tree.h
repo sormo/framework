@@ -22,7 +22,7 @@ struct bodies_tree
     void clear();
 
     void draw_names(const quadtree::query_result_type& parents);
-    void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors);
+    void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body = nullptr);
     void draw_points(const quadtree::query_result_type& parents, body_color& colors);
 
     void update_current_positions(const quadtree::query_result_type& parents);

@@ -803,24 +803,19 @@ namespace frame
 		sg_draw(0, data.draw_elements, 1);
 	}
 
-	void draw_buffer(draw_buffer_id id, const hmm_mat4& projection_view, const hmm_mat4& model, frame::col4 color)
-	{
-		draw_buffer(id, HMM_MultiplyMat4(projection_view, model), color);
-	}
-
 	void draw_buffer(draw_buffer_id id, frame::col4 color)
 	{
-		draw_buffer(id, create_projection_view_matrix(), HMM_Mat4d(1.0f), color);
+		draw_buffer(id, create_projection_view_matrix(), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		draw_buffer(id, create_projection_view_matrix(), create_hmm_transform(position, rotation, size), color);
+		draw_buffer(id, HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size)), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color)
 	{
-		draw_buffer(id, create_projection_view_matrix(), create_hmm_transform(transform), color);
+		draw_buffer(id, HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(transform)), color);
 	}
 
 	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat3>& transforms, const std::vector<frame::col4>& colors)
@@ -829,7 +824,7 @@ namespace frame
 
 		for (size_t i = 0; i < ids.size(); i++)
 		{
-			draw_buffer(ids[i], projection_view, create_hmm_transform(transforms[i]), colors[i]);
+			draw_buffer(ids[i], HMM_MultiplyMat4(projection_view, create_hmm_transform(transforms[i])), colors[i]);
 		}
 	}
 }
