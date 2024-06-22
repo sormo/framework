@@ -69,6 +69,8 @@ struct kepler_orbit
 
     static double compute_mass(double semi_major_axis, double period, double g_constant);
 
+    void update_initial_mean_anomaly_with_time_offset(double time);
+
 private:
     void calculate_orbit_state_from_orbital_elements();
     void calculate_initial_orbit_state();

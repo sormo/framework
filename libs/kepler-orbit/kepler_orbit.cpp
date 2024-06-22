@@ -187,6 +187,11 @@ double kepler_orbit::get_current_orbit_time()
 
 // TODO test
 
+void kepler_orbit::update_initial_mean_anomaly_with_time_offset(double time)
+{
+    mean_anomaly_initial += mean_motion * time;
+}
+
 void kepler_orbit::set_current_orbit_time(double time)
 {
     mean_anomaly = mean_anomaly_initial + mean_motion * time;

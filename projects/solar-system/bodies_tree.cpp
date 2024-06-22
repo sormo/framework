@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <chrono>
 #include <queue>
 #include <set>
 
@@ -36,6 +37,28 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
     query_recursive({}, *parent);
 
     return result;
+}
+
+double get_time_offset(std::string time)
+{
+    // this is 0 time: 2018-01-01
+    if (time == "2018-01-01")
+        return 0.0;
+
+    int year = std::stoi(time.substr(0, 4));
+    int month = std::stoi(time.substr(5, 2));
+    int day = std::stoi(time.substr(8, 2));
+
+    auto make_time_point = [](int year, int month, int day)
+    {
+        std::tm tm = {};
+        tm.tm_year = year - 1900; // std::tm's year is since 1900
+        tm.tm_mon = month - 1;    // std::tm's month is 0-based
+        tm.tm_mday = day;
+        return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    };
+
+    return std::chrono::duration_cast<std::chrono::hours>(make_time_point(2018,1,1) - make_time_point(year,month,day)).count() / 24.0;
 }
 
 void bodies_tree::load(std::vector<const char*> json_datas)
@@ -94,6 +117,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, unit::GRAVITATIONAL_CONSTANT);
 
             orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, unit::GRAVITATIONAL_CONSTANT);
+
+            orbit.update_initial_mean_anomaly_with_time_offset(get_time_offset(orbit_data.contains("time") ? orbit_data["time"] : "2018-01-01"));
 
             body_node node;
             node.name = body_name;
