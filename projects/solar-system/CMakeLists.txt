@@ -5,6 +5,7 @@ fips_begin_app(solar-system windowed)
                camera.h
                camera.cpp
                trajectory_resolutions.h
+               trajectory_resolutions.cpp
                commons.h
                bodies_tree.h
                bodies_tree.cpp

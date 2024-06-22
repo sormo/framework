@@ -351,8 +351,8 @@ namespace frame
 	{
 		sg_shader basic_instanced;
 		sg_shader basic;
-		std::map<draw_buffer_id, buffer_data_instanced> buffer_data_instanced;
-		std::map<draw_buffer_id, buffer_data> buffer_data;
+		std::unordered_map<draw_buffer_id, buffer_data_instanced> buffer_data_instanced;
+		std::unordered_map<draw_buffer_id, buffer_data> buffer_data;
 		sg_pass_action pass_action;
 
 		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
@@ -778,7 +778,7 @@ namespace frame
 		return id;
 	}
 
-	void draw_buffer(draw_buffer_id id, const hmm_mat4& model , frame::col4 color)
+	void draw_buffer(draw_buffer_id id, const hmm_mat4& mvp , frame::col4 color)
 	{
 		auto& data = state.buffer_data[id];
 
@@ -794,10 +794,8 @@ namespace frame
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
-		hmm_mat4 projection_view = create_projection_view_matrix();
-
 		basic_vs_params_t vs_params;
-		memcpy(vs_params.mvp, HMM_MultiplyMat4(projection_view, model).Elements, sizeof(model.Elements));
+		memcpy(vs_params.mvp, mvp.Elements, sizeof(mvp.Elements));
 		memcpy(vs_params.color, color.data.rgba, sizeof(color.data.rgba));
 		
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, SG_RANGE(vs_params));
@@ -805,18 +803,33 @@ namespace frame
 		sg_draw(0, data.draw_elements, 1);
 	}
 
+	void draw_buffer(draw_buffer_id id, const hmm_mat4& projection_view, const hmm_mat4& model, frame::col4 color)
+	{
+		draw_buffer(id, HMM_MultiplyMat4(projection_view, model), color);
+	}
+
 	void draw_buffer(draw_buffer_id id, frame::col4 color)
 	{
-		draw_buffer(id, HMM_Mat4d(1.0f), color);
+		draw_buffer(id, create_projection_view_matrix(), HMM_Mat4d(1.0f), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		draw_buffer(id, create_hmm_transform(position, rotation, size), color);
+		draw_buffer(id, create_projection_view_matrix(), create_hmm_transform(position, rotation, size), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color)
 	{
-		draw_buffer(id, create_hmm_transform(transform), color);
+		draw_buffer(id, create_projection_view_matrix(), create_hmm_transform(transform), color);
+	}
+
+	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat3>& transforms, const std::vector<frame::col4>& colors)
+	{
+		hmm_mat4 projection_view = create_projection_view_matrix();
+
+		for (size_t i = 0; i < ids.size(); i++)
+		{
+			draw_buffer(ids[i], projection_view, create_hmm_transform(transforms[i]), colors[i]);
+		}
 	}
 }

@@ -45,6 +45,7 @@ namespace frame
 	void draw_buffer(draw_buffer_id id, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color);
+	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat3>& transforms, const std::vector<frame::col4>& colors);
 	void draw_buffer_instanced(draw_buffer_id id);
 	void draw_buffer_instanced(draw_buffer_id id, size_t count);
 

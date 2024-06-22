@@ -346,37 +346,26 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
 
 void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors)
 {
-    std::function<void(body_node&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data)
+    std::function<void(body_node&, const vec2&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, const vec2& parent_position)
     {
         if (is_body_node_skip(data))
             return;
 
-        //data.trajectory.draw(view::get_world_to_view(commons::convert_AU_to_world_size(data.orbit.semi_major_axis)));
-        data.trajectory.draw(commons::convert_AU_to_world_size(data.orbit.semi_major_axis));
+        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis));
         
         if (data.childs.empty())
             return;
 
-        auto current_translation = get_world_translation();
-
-        set_world_translation(get_world_translation() + commons::draw_cast(data.orbit.position) * get_world_scale());
-
         for (auto& child : data.childs)
-            draw_recursive(*child);
-        
-        set_world_translation(current_translation);
+            draw_recursive(*child, data.current_position);
     };
 
     for (auto parent : parents)
     {
-        auto current_translation = get_world_translation();
-
-        //set_world_translation(get_world_translation() + commons::draw_cast(parent->orbit.position) * get_world_scale());
-
-        draw_recursive(*parent);
-
-        set_world_translation(current_translation);
+        draw_recursive(*parent, parent->parent ? parent->parent->current_position : vec2{});
     }
+
+    trajectory_resolutions::draw_cache.flush();
 }
 
 void bodies_tree::step(double time_delta)
