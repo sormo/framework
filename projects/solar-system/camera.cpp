@@ -6,6 +6,7 @@ void camera_type::setup()
 
     free_move_config.min_size = { (float)commons::MIN_ZOOMED_SIZE, (float)commons::MIN_ZOOMED_SIZE };
     free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, world_size);
+    free_move_config.zoom_speed = 0.03f;
 }
 
 void camera_type::move(const frame::vec2& move_destination)

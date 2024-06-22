@@ -54,6 +54,7 @@ namespace frame
 
     float deg_to_rad(float deg);
     float rad_to_deg(float rad);
+    double rad_to_deg(double rad);
 
     // *** screen ***
     // SCREEN COORDINATES - screen coordinates has origin in upper-left and extends to right (x) and down (y)

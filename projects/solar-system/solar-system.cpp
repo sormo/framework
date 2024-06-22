@@ -82,6 +82,7 @@ void draw_settings_gui()
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f - window_width, 30.0f), ImGuiCond_::ImGuiCond_Always);
     ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
     
+    ImGui::SliderFloat("Zoom speed", &camera.free_move_config.zoom_speed, 0.01f, 0.07f);
     ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
     ImGui::Checkbox("Draw points", &settings.draw_points);
     ImGui::Checkbox("Draw names", &settings.draw_names);

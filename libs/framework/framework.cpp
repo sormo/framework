@@ -80,6 +80,11 @@ namespace frame
         return rad * 57.2958f;
     }
 
+    double rad_to_deg(double rad)
+    {
+        return rad * 57.2958;
+    }
+
     void set_screen_background(const col4& color)
     {
         pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
@@ -106,7 +111,7 @@ namespace frame
     float get_time()
     {
         auto now = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration_cast<std::chrono::milliseconds>(now - start_application).count();
+        return (float)std::chrono::duration_cast<std::chrono::milliseconds>(now - start_application).count();
     }
 
     mat3 translation(const vec2& translation)
@@ -437,7 +442,7 @@ namespace frame
 void frame_delta_update()
 {
     auto now = std::chrono::high_resolution_clock::now();
-    frame_delta = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_frame).count();
+    frame_delta = (float)std::chrono::duration_cast<std::chrono::milliseconds>(now - start_frame).count();
     start_frame = now;
 }
 

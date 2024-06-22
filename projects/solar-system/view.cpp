@@ -122,7 +122,7 @@ namespace view
 
 	float get_pixel_to_world(float s)
 	{
-		return s / (state.scale * frame::get_world_scale().x);
+		return s / ((float)state.scale * frame::get_world_scale().x);
 	}
 
 	float get_pixel_to_view(float s)
@@ -132,12 +132,17 @@ namespace view
 
 	float get_world_to_pixel(float s)
 	{
+		return s * (float)state.scale * frame::get_world_scale().x;
+	}
+
+	double get_world_to_pixel(double s)
+	{
 		return s * state.scale * frame::get_world_scale().x;
 	}
 
 	float get_world_to_view(float s)
 	{
-		return s * state.scale;
+		return s * (float)state.scale;
 	}
 
 	double get_world_to_view(double s)

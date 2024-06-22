@@ -54,7 +54,7 @@ private:
         frame::draw_buffer_id draw_id = frame::draw_buffer_id_invalid;
     };
 
-    resolution& get_resolution(float semi_major_axis_pixel_size);
+    resolution& get_resolution(double semi_major_axis_pixel_size);
     frame::mat3 get_transform(const frame::vec2& position, bool has_stationary_parent);
 
     frame::draw_buffer_id create_trajectory(const std::vector<frame::vec2>& points, int point_count);

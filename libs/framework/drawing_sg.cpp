@@ -67,7 +67,7 @@ namespace frame
 				memcpy(&buffer_data[offset], data, size);
 				result.push_back(offset);
 
-				offset += size;
+				offset += (int)size;
 			}
 
 			return result;
@@ -90,8 +90,8 @@ namespace frame
 		void merge_update_range(int offset, size_t size)
 		{
 			// Calculate the end points of the intervals
-			int end1 = offset + size;
-			int end2 = update_range.offset + update_range.size;
+			size_t end1 = offset + size;
+			size_t end2 = update_range.offset + update_range.size;
 
 			// Find the new offset as the minimum of the current and updated offsets
 			int new_offset = std::min(offset, update_range.offset);
@@ -441,7 +441,7 @@ namespace frame
 	}
 
 	buffer_data_instanced create_buffer_data_instanced(const char* name,
-													   int32_t draw_elements,
+													   size_t draw_elements,
 													   float* vertices,
 													   size_t vertices_count,
 													   uint16_t* indices,
@@ -475,7 +475,7 @@ namespace frame
 	}
 
 	buffer_data create_buffer_data(const char* name,
-				                   int32_t draw_elements,
+				                   size_t draw_elements,
 						           float* vertices,
 						           size_t vertices_count,
 							       uint16_t* indices,
@@ -522,7 +522,7 @@ namespace frame
 		result.vertices.resize(count * 2);
 		for (size_t i = 0; i < count; i++)
 		{
-			float angle = 2.0f * frame::PI * (float)i / (float)(count);
+			float angle = 2.0f * (float)frame::PI * (float)i / (float)(count);
 
 			result.vertices[i * 2] = std::cos(angle) * 0.5f;
 			result.vertices[i * 2 + 1] = std::sin(angle) * 0.5f;
@@ -543,7 +543,7 @@ namespace frame
 	{
 		mesh_data result;
 
-		float step = 2.0f * frame::PI / count;
+		float step = 2.0f * (float)frame::PI / count;
 
 		std::vector<vec2> temp;
 		for (int i = 0; i < count; ++i)
@@ -552,7 +552,7 @@ namespace frame
 			temp.push_back({ 0.5f * cos(angle), 0.5f * sin(angle) });
 		}
 
-		int triangleCount = count - 2;
+		int triangleCount = (int)count - 2;
 		for (int i = 0; i < triangleCount; i++)
 		{
 			result.vertices.push_back(temp[0].x);
@@ -745,7 +745,7 @@ namespace frame
 		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, SG_RANGE(vs_params));
 
-		sg_draw(0, data.draw_elements, count == 0 ? data.instances.size() : count);
+		sg_draw(0, (int)data.draw_elements, count == 0 ? (int)data.instances.size() : (int)count);
 
 		//state.rect.instances = 0;
 	}
@@ -800,7 +800,7 @@ namespace frame
 		
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, SG_RANGE(vs_params));
 
-		sg_draw(0, data.draw_elements, 1);
+		sg_draw(0, (int)data.draw_elements, 1);
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::col4 color)

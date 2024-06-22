@@ -783,7 +783,7 @@ namespace frame
                 unsigned char* malloc_data = (unsigned char*)malloc(data.size());
                 memcpy(malloc_data, data.data(), data.size());
 
-                nvgCreateFontMem(vg, font_name, malloc_data, data.size(), 1);
+                nvgCreateFontMem(vg, font_name, malloc_data, (int)data.size(), 1);
             }
         });
     }

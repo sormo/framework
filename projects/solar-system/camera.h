@@ -12,6 +12,8 @@ struct camera_type
 
     void update();
 
+    frame::free_move_camera_config free_move_config;
+
 private:
 
     void move_internal(std::function<frame::vec2()> move_destination);
@@ -34,7 +36,6 @@ private:
         float move_progress = 0.0f;
     };
 
-    frame::free_move_camera_config free_move_config;
     std::optional<move_data> camera_move;
     std::function<frame::vec2()> camera_follow;
 };

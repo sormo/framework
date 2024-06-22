@@ -56,7 +56,7 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
     };
 
     // TODO there is something wrong with the view, why it needs to be scaled down, this is wrong
-    double semi_major_axis_pixel_size = view::get_world_to_pixel(semi_major_axis_world_size) / view::get_scale();
+    double semi_major_axis_pixel_size = double(view::get_world_to_pixel(semi_major_axis_world_size)) / view::get_scale();
 
     if (semi_major_axis_pixel_size <= 1.0)
         return;
@@ -110,7 +110,7 @@ std::vector<frame::vec2>& trajectory_resolutions::get_points()
     return points;
 }
 
-trajectory_resolutions::resolution& trajectory_resolutions::get_resolution(float semi_major_axis_pixel_size)
+trajectory_resolutions::resolution& trajectory_resolutions::get_resolution(double semi_major_axis_pixel_size)
 {
     for (auto& res : resolutions)
     {

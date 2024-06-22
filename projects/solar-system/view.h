@@ -20,6 +20,7 @@ namespace view
 	float get_pixel_to_world(float s);
 	float get_pixel_to_view(float s);
 	float get_world_to_pixel(float s);
+	double get_world_to_pixel(double s);
 	float get_world_to_view(float s);
 	double get_world_to_view(double s);
 

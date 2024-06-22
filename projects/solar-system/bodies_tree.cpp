@@ -315,7 +315,7 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
         auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
 
         if (body_radius > default_radius)
-            draw_circle(position, view::get_world_to_view(body_radius), color);
+            draw_circle(position, (float)view::get_world_to_view(body_radius), color);
         else
             frame::update_draw_instance(points_instance_buffer,
                                         point_counter++,

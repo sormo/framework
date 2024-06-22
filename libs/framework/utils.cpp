@@ -86,7 +86,7 @@ namespace frame
 
     double rand(double min, double max)
     {
-        return std::uniform_real_distribution<float>(min, max)(g_random_generator);
+        return std::uniform_real_distribution<double>(min, max)(g_random_generator);
     }
 
     vec2 get_direction_vector(direction direction)
@@ -243,14 +243,14 @@ namespace frame
         {
             double start_x = std::ceil((double)world_rect.min.x / step) * step;
             for (double x = start_x; x < (double)world_rect.max.x; x += step)
-                draw_line_solid_ex({ (float)x, world_rect.min.y }, { (float)x, world_rect.max.y }, x == 0.0 ? 2.0f * thickness : thickness, color);
+                draw_line_solid_ex({ (float)x, world_rect.min.y }, { (float)x, world_rect.max.y }, x == 0.0 ? (float)(2.0 * thickness) : (float)thickness, color);
         };
 
         auto draw_lines_y = [&world_rect](double step, const col4& color, double thickness)
         {
             double start_y = std::ceil((double)world_rect.min.y / step) * step;
             for (double y = start_y; y < (double)world_rect.max.y; y += step)
-                draw_line_solid_ex({ world_rect.min.x, (float)y }, { world_rect.max.x, (float)y }, y == 0.0 ? 2.0f * thickness : thickness, color);
+                draw_line_solid_ex({ world_rect.min.x, (float)y }, { world_rect.max.x, (float)y }, y == 0.0 ? (float)(2.0 * thickness) : (float)thickness, color);
         };
 
         auto draw_grid = [&color, thickness](double world_size, auto draw_lines)
@@ -263,7 +263,7 @@ namespace frame
             double major_size = major_step / world_size;
 
             draw_lines(major_step, color, thickness);
-            draw_lines(minor_step, color.transparency(255 * color.alpha() * major_size), thickness * major_size);
+            draw_lines(minor_step, color.transparency(uint8_t(255 * color.alpha() * (float)major_size)), thickness * major_size);
         };
 
         draw_grid(world_size.x, draw_lines_x);
@@ -412,7 +412,7 @@ namespace frame
 
     std::vector<char> base64_decode(const char* string)
     {
-        int in_len = strlen(string);
+        int in_len = (int)strlen(string);
         int i = 0;
         int j = 0;
         int in_ = 0;
@@ -425,7 +425,7 @@ namespace frame
             if (i == 4)
             {
                 for (i = 0; i < 4; i++)
-                    char_array_4[i] = base64_chars.find(char_array_4[i]);
+                    char_array_4[i] = (char)base64_chars.find(char_array_4[i]);
 
                 char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
                 char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
@@ -443,7 +443,7 @@ namespace frame
                 char_array_4[j] = 0;
 
             for (j = 0; j < 4; j++)
-                char_array_4[j] = base64_chars.find(char_array_4[j]);
+                char_array_4[j] = (char)base64_chars.find(char_array_4[j]);
 
             char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
             char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);

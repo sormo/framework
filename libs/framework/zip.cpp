@@ -54,7 +54,7 @@ namespace frame
 		auto file_count = mz_zip_reader_get_num_files(&archive.archive);
 
 		std::vector<std::string> files;
-		for (int i = 0; i < file_count; ++i)
+		for (mz_uint i = 0; i < file_count; ++i)
 		{
 			mz_zip_archive_file_stat file_stat;
 			if (!mz_zip_reader_file_stat(&archive.archive, i, &file_stat))

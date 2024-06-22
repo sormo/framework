@@ -108,8 +108,8 @@ void body_system::step_bodies_tree()
 
 void body_system::draw_world_bodies()
 {
-    auto parents = tree.query(frame::get_world_rectangle());
-    //quadtree::query_result_type parents = { bodies.parent };
+    //auto parents = tree.query(frame::get_world_rectangle());
+    quadtree::query_result_type parents = { bodies.parent };
 
     bodies.update_current_positions(parents);
 
@@ -220,7 +220,7 @@ void body_system::draw_current_time()
     static const float offset = 20.0f;
 
     time_t t = 1514764800; // 2018.01.01 00:00:00
-    t += (time_current * 86400.0); // convert days to seconds
+    t += (time_t)(time_current * 86400.0); // convert days to seconds
 
     auto tm = *std::gmtime(&t);
 

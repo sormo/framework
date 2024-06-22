@@ -36,7 +36,7 @@ namespace imgui
         fontCfg.OversampleV = 2;
         fontCfg.RasterizerMultiply = 1.5f;
         fontCfg.GlyphRanges = ranges;
-        io.Fonts->AddFontFromMemoryTTF(data, size, 16.0f, &fontCfg);
+        io.Fonts->AddFontFromMemoryTTF(data, (int)size, 16.0f, &fontCfg);
     }
 
     void setup(void*, size_t)

@@ -25,7 +25,7 @@ color_type color_type::HSL(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 color_type color_type::HSLf(float r, float g, float b, float a)
 {
     color_type result;
-    result.data = nvgHSLA(r, g, b, a * 255);
+    result.data = nvgHSLA(r, g, b, (unsigned char)(a * 255));
     return result;
 }
 
