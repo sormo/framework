@@ -14,6 +14,8 @@ struct body_system
 	void set_info(body_node* body);
 	void setup_bodies(commons::bodies_included_type type);
 
+	body_node* get_body(const char* name);
+
 private:
 	void setup_colors(std::map<std::string, std::vector<char>>& files);
 	void setup_info(std::map<std::string, std::vector<char>>& files);

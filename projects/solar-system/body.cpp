@@ -13,6 +13,7 @@ static constexpr std::pair<std::string_view, body_type> body_type_mapping[] =
     { "Moon", body_type::moon },
     { "Minor Planet", body_type::minor_planet },
     { "Comet", body_type::comet },
+    { "Spacecraft", body_type::spacecraft },
 };
 
 body_type get_body_type_from_string(const std::string& type_str)

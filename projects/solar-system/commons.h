@@ -21,6 +21,7 @@ namespace commons
         bool draw_points = true;
         bool step_time = true;
         float step_speed = 0.001f; // in days
+        bool disable_inclination = false;
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
 
         bool body_system_initializing = false;

@@ -124,6 +124,8 @@ void body_info::set_body(body_node* body)
                 icon = icons["asteroid.svg"];
             else if (body->type == body_type::moon)
                 icon = icons["moon_decrescent.svg"];
+            else if (body->type == body_type::spacecraft)
+                icon = icons["spacecraft.svg"];
         }
 
         auto y_size = draw_internal(true);
@@ -135,6 +137,8 @@ void body_info::set_body(body_node* body)
 
 static std::pair<double, const char*> get_period_value_and_unit(double period)
 {
+    if (period < 1.0)
+        return { period * 24.0, "hours" };
     if (period < 10'000)
         return { period, "days" };
     return { period / 365.0, "years" };
@@ -147,6 +151,13 @@ static std::pair<double, const char*> get_semi_major_axis_value_and_unit(double 
     return { semi_major_axis * 1.496e8, "km" };
 }
 
+static std::pair<double, const char*> get_mean_radius_value_and_unit(double radius)
+{
+    if (radius < 1.0)
+        return { radius * 1000.0, "m" };
+    return { radius, "km" };
+}
+
 float body_info::draw_internal(bool skip_draw)
 {
     float y_value = boundary;
@@ -155,7 +166,8 @@ float body_info::draw_internal(bool skip_draw)
 
     draw_separator(y_value, "Physical Properties:", skip_draw);
 
-    draw_property_num(y_value, "Mean Radius", body->radius, "km", skip_draw);
+    auto [radius_value, radius_unit] = get_mean_radius_value_and_unit(body->radius);
+    draw_property_num(y_value, "Mean Radius", radius_value, radius_unit, skip_draw);
 
     if (body->mass != 0.0)
         draw_property_num(y_value, "Mass", body->mass, "kg", skip_draw);

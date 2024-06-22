@@ -13,7 +13,8 @@ enum class body_type
     barycenter,
     moon,
     minor_planet,
-    comet
+    comet,
+    spacecraft
 };
 
 std::string get_body_type_to_string(body_type type_value);

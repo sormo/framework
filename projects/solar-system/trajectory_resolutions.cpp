@@ -23,14 +23,14 @@ frame::mat3 trajectory_resolutions::get_transform(const frame::vec2& position, b
     if (has_stationary_parent)
     {
         if (!cached_transform)
-            cached_transform = frame::translation(position) * frame::scale(frame::vec2{ 1.0 / scale_factor, 1.0 / scale_factor });
+            cached_transform = frame::translation(position) * frame::scale(frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
         return *cached_transform;
     }
     else
     {
         cached_transform = {};
 
-        return frame::translation(position) * frame::scale(frame::vec2{ 1.0 / scale_factor, 1.0 / scale_factor });
+        return frame::translation(position) * frame::scale(frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
     }
 }
 
@@ -55,8 +55,7 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
 #endif
     };
 
-    // TODO there is something wrong with the view, why it needs to be scaled down, this is wrong
-    double semi_major_axis_pixel_size = double(view::get_world_to_pixel(semi_major_axis_world_size)) / view::get_scale();
+    double semi_major_axis_pixel_size = double(view::get_world_to_pixel(semi_major_axis_world_size));
 
     if (semi_major_axis_pixel_size <= 1.0)
         return;
@@ -69,6 +68,7 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
     auto transform = get_transform(world_translation, has_stationary_parent);
 
     draw_cache.draw(res.draw_id, std::move(transform), get_color(res.point_count));
+    //frame::draw_buffer(res.draw_id, transform, get_color(res.point_count));
 
     //for (size_t i = 0; i < points.size(); i += points.size() / res.point_count)
     //    frame::draw_circle(points[i], scale_independent(1.5f), frame::col4::ORANGE);

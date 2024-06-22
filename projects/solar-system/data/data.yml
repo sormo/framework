@@ -8,6 +8,7 @@ files:
     - bodies/small-bodies-sbdb-50km.json
     - bodies/small-bodies-sbdb-10km.json
     - bodies/major-bodies.json
+    - bodies/spacecrafts.json
     - bodies/test-bodies.json
     - misc/colors.json
     - icons/body_icons.zip

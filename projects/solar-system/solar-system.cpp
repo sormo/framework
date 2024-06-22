@@ -70,43 +70,6 @@ void draw_debug_gui()
     //ImGui::ShowDemoWindow();
 }
 
-void draw_settings_gui()
-{
-    static bool is_opened = false;
-    static const float window_width = 353.0f;
-
-    ImGui::GetStyle().WindowRounding = 7.0f;
-
-    ImGui::SetNextWindowSize({ window_width, 0.0f});
-    ImGui::SetNextWindowCollapsed(true, ImGuiCond_::ImGuiCond_Once);
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f - window_width, 30.0f), ImGuiCond_::ImGuiCond_Always);
-    ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
-    
-    ImGui::SliderFloat("Zoom speed", &camera.free_move_config.zoom_speed, 0.01f, 0.07f);
-    ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
-    ImGui::Checkbox("Draw points", &settings.draw_points);
-    ImGui::Checkbox("Draw names", &settings.draw_names);
-    ImGui::Checkbox("Step time", &settings.step_time);
-    ImGui::SliderFloat("Step speed", &settings.step_speed, 0.001f, 10.0f);
-    if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
-    {
-        // when calling setup_bodies, we need to clear all body_node references as body tree is going to be reinitialized
-        clicked_body = view_body = nullptr;
-        camera.follow(nullptr);
-
-        b_system.setup_bodies(settings.bodies_included);
-    }
-
-    ImGui::End();
-}
-
-body_node* get_clicked_body()
-{
-    static const float click_radius_in_pixels = 15.0f;
-
-    return b_system.query(view::get_screen_to_world(get_mouse_screen_position()), click_radius_in_pixels);
-}
-
 void evaluate_body_view(bool init = false)
 {
     static const double semi_major_axis_pixels_main_threshold = 15'000.0;
@@ -146,6 +109,63 @@ void evaluate_body_view(bool init = false)
         view::clear_view();
         camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); });
     }
+}
+
+void draw_settings_gui()
+{
+    static bool is_opened = false;
+    static const float window_width = 353.0f;
+
+    auto reset_bodies_tree = []()
+    {
+        // when calling setup_bodies, we need to clear all body_node references as body tree is going to be reinitialized
+        auto clicked_body_name = clicked_body ? clicked_body->name : "";
+
+        clicked_body = view_body = nullptr;
+        camera.follow(nullptr);
+        view::clear_view();
+        b_system.set_info(nullptr);
+
+        b_system.setup_bodies(settings.bodies_included);
+
+        if (!clicked_body_name.empty())
+        {
+            clicked_body = b_system.get_body(clicked_body_name.c_str());
+            b_system.set_info(clicked_body);
+        }
+        evaluate_body_view(true);
+    };
+
+    ImGui::GetStyle().WindowRounding = 7.0f;
+
+    ImGui::SetNextWindowSize({ window_width, 0.0f});
+    ImGui::SetNextWindowCollapsed(true, ImGuiCond_::ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f - window_width, 30.0f), ImGuiCond_::ImGuiCond_Always);
+    ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
+    
+    ImGui::SliderFloat("Zoom speed", &camera.free_move_config.zoom_speed, 0.01f, 0.07f);
+    ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
+    ImGui::Checkbox("Draw points", &settings.draw_points);
+    ImGui::Checkbox("Draw names", &settings.draw_names);
+    if (ImGui::Checkbox("Disable inclination", &settings.disable_inclination))
+    {
+        reset_bodies_tree();
+    }
+    ImGui::Checkbox("Step time", &settings.step_time);
+    ImGui::SliderFloat("Step speed", &settings.step_speed, 0.0001f, 10.0f, "%.4f");
+    if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
+    {
+        reset_bodies_tree();
+    }
+
+    ImGui::End();
+}
+
+body_node* get_clicked_body()
+{
+    static const float click_radius_in_pixels = 15.0f;
+
+    return b_system.query(view::get_screen_to_world(get_mouse_screen_position()), click_radius_in_pixels);
 }
 
 void handle_left_click()

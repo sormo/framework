@@ -83,7 +83,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             }
 
             // inclination hack, we are showing this in 2d
-            //inclination = 0.0;
+            if (settings.disable_inclination)
+                inclination = 0.0;
 
             double AU = 1.495978707e11;
             // TODO G constant is used as free parameter to fixate orbits periods values while SemiMajor axis parameter is adjusted for the scene.

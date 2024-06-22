@@ -9,7 +9,8 @@
         "Barycenter": "#4b5052",
         "Moon": "#8d8d8d",
         "Minor Planet": "#c8c1c9",
-        "Comet": "#91daec"
+        "Comet": "#91daec",
+        "Spacecraft": "#e8e6ec"
     },
     "body_group": {
         "": "#ffffff",

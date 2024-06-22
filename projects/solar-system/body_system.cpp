@@ -44,11 +44,19 @@ void body_system::load_bodies_tree(std::vector<std::vector<char>*> files)
     bodies.load(bodies_jsons);
 }
 
+body_node* body_system::get_body(const char* name)
+{
+    for (auto& body : bodies.bodies)
+    {
+        if (body.name == name)
+            return &body;
+    }
+    return nullptr;
+}
+
 void body_system::setup_bodies(commons::bodies_included_type type)
 {
     settings.body_system_initializing = true;
-
-    info.set_body(nullptr);
 
     const char* cache_file = nullptr;
     const char* small_bodies_file = nullptr;
@@ -61,10 +69,10 @@ void body_system::setup_bodies(commons::bodies_included_type type)
         std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-100km.json", "bodies/cache/quadtree_cache_100.cbor" };
 
     //fetch_files({ "bodies/test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-    fetch_files({ "bodies/major-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "bodies/major-bodies.json", "bodies/spacecrafts.json", small_bodies_file, cache_file}, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
     {
         //load_bodies_tree({ &files["bodies/test-bodies.json"] });
-        load_bodies_tree({ &files["bodies/major-bodies.json"], &files[small_bodies_file]});
+        load_bodies_tree({ &files["bodies/major-bodies.json"], &files["bodies/spacecrafts.json"], &files[small_bodies_file]});
         setup_quadtree(cache_file, files[cache_file]);
 
         settings.body_system_initializing = false;
@@ -152,13 +160,7 @@ void body_system::draw_main_body(body_node* main_body)
     {
         draw_main_trajectory(main_body);
 
-        // unfortunately we need to scale up the transform because trajectories are created with scale 1.0
-        frame::save_world_transform();
-        frame::set_world_transform(frame::get_world_transform() * frame::scale({ view::get_scale(), view::get_scale() }));
-
         bodies.draw_trajectories(direct_childs, body_color_data, main_body);
-
-        frame::restore_world_transform();
     }
 
     if (settings.draw_points)
