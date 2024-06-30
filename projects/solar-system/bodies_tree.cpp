@@ -188,7 +188,9 @@ void bodies_tree::load(std::vector<const char*> json_datas)
                 major_node = child;
         }
         if (major_node)
-            major_node->is_major_body = true;
+            major_node->system.is_major_body = true;
+
+        data.system.major_body = major_node;
     }
 
     restore_world_transform();
@@ -201,7 +203,7 @@ bool bodies_tree::is_body_node_skip(const body_node& node)
 {
     double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(node.orbit.semi_major_axis));
 
-    return node.type != body_type::barycenter && !node.is_major_body && semi_major_axis_pixels < 2.0f;
+    return node.type != body_type::barycenter && !node.system.is_major_body && semi_major_axis_pixels < 2.0f;
 }
 
 void bodies_tree::draw_names(const quadtree::query_result_type& parents)
@@ -441,4 +443,35 @@ void bodies_tree::draw(const quadtree::query_result_type& parents, body_color& c
 
     if (settings.draw_names)
         draw_names(parents);
+}
+
+void bodies_tree::draw_lagrangians(body_node* body)
+{
+    // if this is major body and barycenter does not have parent, we will skip lagrangians
+    if (body->system.is_major_body && !body->parent->parent)
+        return;
+
+
+    std::map<lagrangian, vec2> lagrangians;
+    for (auto lagr : { lagrangian::l1, lagrangian::l2, lagrangian::l3, lagrangian::l4, lagrangian::l5 })
+    {
+        auto position = commons::draw_cast(body->get_lagrangian(lagr) * view::get_scale());
+
+        position += body->current_position;
+
+        lagrangians[lagr] = position;
+
+        draw_circle(position, view::get_pixel_to_view(3.0f), col4::DARKGRAY);
+        draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position, name_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+    }
+
+    minor_system system(*body);
+
+    auto thickness = view::get_pixel_to_view(0.5f);
+
+    draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
 }

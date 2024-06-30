@@ -151,6 +151,7 @@ void draw_settings_gui()
     {
         reset_bodies_tree();
     }
+    ImGui::Checkbox("Draw lagrangians (experimental)", &settings.draw_lagrangians);
     ImGui::Checkbox("Step time", &settings.step_time);
     ImGui::SliderFloat("Step speed", &settings.step_speed, 0.0001f, 10.0f, "%.4f");
     if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))

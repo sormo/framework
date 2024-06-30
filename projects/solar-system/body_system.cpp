@@ -319,6 +319,9 @@ void body_system::draw(body_node* main_body)
     else
         draw_world_bodies();
 
+    if (info.get_body() && settings.draw_lagrangians)
+        bodies.draw_lagrangians(info.get_body());
+
     info.draw();
     //tree.draw_debug();
     draw_distance_legend();

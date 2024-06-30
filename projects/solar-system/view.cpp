@@ -84,6 +84,10 @@ namespace view
 
 	frame::vec2 get_world_to_view(const frame::vec2& world_position)
 	{
+		if (!state.world_position)
+			return world_position;
+
+		// TODO this can be done more cheaply
 		auto screen_position = impl::get_transform_to_world(frame::get_world_transform()).transform_point(world_position);
 
 		return frame::get_world_transform().inverted().transform_point(screen_position);
@@ -91,6 +95,9 @@ namespace view
 
 	frame::vec2 get_view_to_world(const frame::vec2& view_position)
 	{
+		if (!state.world_position)
+			return view_position;
+
 		auto screen_position = frame::get_world_transform().inverted().transform_point(view_position);
 
 		return impl::get_transform_to_world(frame::get_world_transform()).transform_point(screen_position);

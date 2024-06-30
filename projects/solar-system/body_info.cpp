@@ -135,6 +135,11 @@ void body_info::set_body(body_node* body)
     }
 }
 
+body_node* body_info::get_body()
+{
+    return body;
+}
+
 static std::pair<double, const char*> get_period_value_and_unit(double period)
 {
     if (period < 1.0)
@@ -184,7 +189,7 @@ float body_info::draw_internal(bool skip_draw)
     draw_separator(y_value, "Orbit Properties:", skip_draw);
 
     body_node* orbit_node = body;
-    if (body->is_major_body && body->parent->type == body_type::barycenter)
+    if (body->system.is_major_body && body->parent->type == body_type::barycenter)
         orbit_node = body->parent;
 
     auto [period_value, period_unit] = get_period_value_and_unit(orbit_node->period);

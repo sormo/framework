@@ -17,13 +17,15 @@ struct bodies_tree
 
     std::vector<body_node*> query(const frame::vec2& query_point, float query_radius);
     void load(std::vector<const char*> json_datas);
-    void draw(const quadtree::query_result_type& parents, body_color& colors);
+    void draw(const quadtree::query_result_type& parents, body_color& colors); // TODO not used
     void step(double time_delta);
     void clear();
 
     void draw_names(const quadtree::query_result_type& parents);
     void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body = nullptr);
     void draw_points(const quadtree::query_result_type& parents, body_color& colors);
+
+    void draw_lagrangians(body_node* body);
 
     void update_current_positions(const quadtree::query_result_type& parents);
 private:

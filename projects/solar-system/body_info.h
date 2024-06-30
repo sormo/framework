@@ -21,6 +21,7 @@ struct body_info
     void draw();
 
     void set_body(body_node* body);
+    body_node* get_body();
 
     void setup(const std::vector<char>& body_icons_zip, body_color& cols);
 
