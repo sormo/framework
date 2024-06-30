@@ -42,7 +42,7 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
 double get_time_offset(std::string time)
 {
     // this is 0 time: 2018-01-01
-    if (time == "2018-01-01")
+    if (time == "2024-03-31")
         return 0.0;
 
     int year = std::stoi(time.substr(0, 4));
@@ -58,7 +58,7 @@ double get_time_offset(std::string time)
         return std::chrono::system_clock::from_time_t(std::mktime(&tm));
     };
 
-    return std::chrono::duration_cast<std::chrono::hours>(make_time_point(2018,1,1) - make_time_point(year,month,day)).count() / 24.0;
+    return std::chrono::duration_cast<std::chrono::hours>(make_time_point(2024,3,31) - make_time_point(year,month,day)).count() / 24.0;
 }
 
 void bodies_tree::load(std::vector<const char*> json_datas)
@@ -118,7 +118,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 
             orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, unit::GRAVITATIONAL_CONSTANT);
 
-            orbit.update_initial_mean_anomaly_with_time_offset(get_time_offset(orbit_data.contains("time") ? orbit_data["time"] : "2018-01-01"));
+            auto time_offset = get_time_offset(orbit_data.contains("time") ? orbit_data["time"] : "2024-03-31");
+            orbit.set_current_orbit_time(time_offset);
 
             body_node node;
             node.name = body_name;

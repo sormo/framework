@@ -176,14 +176,15 @@ def update_horizons_major_bodies(file_in, file_out, time):
         horizons_body = get_horizons_body(id, parent, Time([time]), False)
         for k,v in horizons_body.items():
             body[k] = v
+        body['time'] = time
     
     with open(file_out, 'w') as file:
         json.dump(bodies, file, indent=4)
 
-#update_horizons_major_bodies('major-bodies-final.json', 'major-bodies-final-2.json', '2018-01-01')
+update_horizons_major_bodies('major-bodies.json', 'major-bodies-updated.json', '2024-03-31')
 
 #process_horizon_major_bodies('2018-01-01')
-test = get_horizons_body(65091, 6, Time(['2018-01-01']))
+# test = get_horizons_body(5, 0, Time(['2018-01-01']))
 
-for key, value in test.items():
-    print(f'        "{key}": {value},')
+# for key, value in test.items():
+#     print(f'        "{key}": {value},')

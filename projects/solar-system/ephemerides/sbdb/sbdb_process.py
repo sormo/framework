@@ -1,5 +1,18 @@
 import json, csv
 from astroquery.jplsbdb import SBDB
+from datetime import datetime, timedelta
+
+def julian_to_utc(julian_date):
+    # Julian date for January 1, 2000 at 12:00 UTC
+    julian_start = datetime(2000, 1, 1, 12)
+    # Difference in Julian days from the reference date
+    delta_days = julian_date - 2451545.0
+    # Convert to UTC date
+    utc_date = julian_start + timedelta(days=delta_days)
+    return utc_date
+
+def format_date(utc_date):
+    return utc_date.strftime("%Y-%m-%d")
 
 def read_input_file(filename):
     spkids, names = [], []
@@ -9,6 +22,12 @@ def read_input_file(filename):
             spkids.append(row[0].strip())
             names.append(row[1].strip())
     return spkids[1:], names[1:]
+
+def get_type(kind):
+    if kind == 'cn' or kind == 'cu':
+        return 'Comet'
+    return 'Minor Planet'
+
 
 def print_body(data):
     if 'shortname' in data['object']:
@@ -27,6 +46,8 @@ def print_body(data):
     argument_of_perihelion = data['orbit']['elements']['w']
     mean_anomaly = data['orbit']['elements']['ma']
     semi_major_axis = data['orbit']['elements']['a']
+    epoch = data['orbit']['epoch']
+    kind = data['object']['kind']
 
     if 'shortname' in data['object']:
         print(f'short name: {short_name}')
@@ -43,7 +64,9 @@ def print_body(data):
     print(f'ascending_node_longitude: {ascending_node_longitude}')
     print(f'argument_of_perihelion: {argument_of_perihelion}')
     print(f'mean_anomaly: {mean_anomaly}')
-    print(f'semi_major_axis: {semi_major_axis}\n')
+    print(f'semi_major_axis: {semi_major_axis}')
+    print(f'type: {get_type(kind)}')
+    print(f'time: {format_date(julian_to_utc(epoch.value))}\n')
 
 def get_body_from_sbdb(spkid):
     data = SBDB.query(spkid, phys=True)
@@ -67,6 +90,8 @@ def get_body_from_sbdb(spkid):
     body['W'] = data['orbit']['elements']['w'].value # argument of perihelion [deg]
     body['MA'] = data['orbit']['elements']['ma'].value # mean anomaly [deg]
     body['A'] = data['orbit']['elements']['a'].value # semi-major axis [AU]
+    body['type'] = get_type(data['object']['kind'])
+    body['time'] = format_date(julian_to_utc(data['orbit']['epoch'].value))
     if 'diameter' in data['phys_par']:
         if type(data['phys_par']['diameter']) == str:
             body['radius'] = float(data['phys_par']['diameter']) / 2.0 # diameter [km]
@@ -98,8 +123,8 @@ def process_bodies_from_csv(csvfile, output_jsonfile):
         result.append(get_body_from_sbdb(spkid))
 
     with open(output_jsonfile, 'w') as file:
-        json.dump(result, file)
+        json.dump(result, file, indent=4)
 
-test = get_body_from_sbdb('20000003')
+#test = get_body_from_sbdb('20000003')
 
-#process_bodies_from_csv('sbdb_query_diameter_10km.csv', '..\..\data\small-bodies-sbdb-10km.json')
+process_bodies_from_csv('sbdb_query_diameter_10km.csv', 'small-bodies-sbdb-10km.json')
