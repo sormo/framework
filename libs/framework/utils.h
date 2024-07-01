@@ -54,6 +54,7 @@ namespace frame
         mouse_button move_button = mouse_button::right;
         bool allow_move = true;
         bool allow_scale = true;
+        bool allow_touch = true;
         vec2 min_size = {}; // minimum size of world rectangle
         rectangle boundary = { {}, { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() }};
         float zoom_speed = 0.01f;
@@ -86,16 +87,24 @@ namespace frame
         static constexpr float max_click_duration = 500.0f; // milliseconds
         static constexpr float max_click_distance = 5.0f; // pixels
 
-        click_handler(frame::mouse_button button);
+        click_handler(frame::mouse_button button, bool allow_touch = true);
 
         void update();
         bool is_clicked();
 
+        frame::vec2 get_click_screen_position();
+
     private:
+        vec2 get_pressed_screen_position();
+        vec2 get_released_screen_position();
+
         const frame::mouse_button button;
+        const bool allow_touch;
 
         uint64_t press_ticks = 0;
         vec2 press_position_screen;
         bool clicked = false;
+
+        touch_id click_touch = (touch_id)-1;
     };
 }

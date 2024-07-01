@@ -546,7 +546,7 @@ namespace frame
 		float step = 2.0f * (float)frame::PI / count;
 
 		std::vector<vec2> temp;
-		for (int i = 0; i < count; ++i)
+		for (int i = 0; i < (int)count; ++i)
 		{
 			float angle = i * step;
 			temp.push_back({ 0.5f * cos(angle), 0.5f * sin(angle) });

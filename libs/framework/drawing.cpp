@@ -518,7 +518,7 @@ namespace frame
 
         std::vector<vec2> result1, result2;
 
-        auto n = points.size() - 1;
+        auto n = (int)points.size() - 1;
         if (n < 1)
             return {};
 

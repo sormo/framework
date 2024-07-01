@@ -166,7 +166,7 @@ body_node* get_clicked_body()
 {
     static const float click_radius_in_pixels = 15.0f;
 
-    return b_system.query(view::get_screen_to_world(get_mouse_screen_position()), click_radius_in_pixels);
+    return b_system.query(view::get_screen_to_world(left_mouse_click.get_click_screen_position()), click_radius_in_pixels);
 }
 
 void handle_left_click()

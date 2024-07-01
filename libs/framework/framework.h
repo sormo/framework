@@ -104,7 +104,7 @@ namespace frame
     vec2 get_world_position_screen_relative(const vec2& rel);
     void set_world_translation(const vec2& screen_point, const vec2& world_point); // modify world translation such that screen_point match the world point
 
-    // *** mouse ***
+    // *** events ***
     enum class mouse_button { left, right, middle };
     vec2 get_mouse_screen_position();
     vec2 get_mouse_world_position();
@@ -120,6 +120,19 @@ namespace frame
     bool is_key_down(char key);
     bool is_key_pressed(char key);
     bool is_key_released(char key);
+
+    using touch_id = uint32_t;
+
+    const std::vector<touch_id>& get_touches_pressed();
+    const std::vector<touch_id>& get_touches_released();
+    const std::vector<touch_id>& get_touches_down();
+    bool is_touch_down(touch_id id);
+    vec2 get_touch_screen_position(touch_id id);
+    vec2 get_touch_screen_delta(touch_id id);
+    // touch debug
+    void set_debug_touch_down(touch_id id, vec2 screen_position);
+    void set_debug_touch_move(touch_id id, vec2 screen_position);
+    void set_debug_touch_up(touch_id id);
 
     // *** drawing ***
     void draw_rectangle(const vec2& center, float width, float height, const col4& color);

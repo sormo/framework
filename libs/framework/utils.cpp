@@ -163,11 +163,13 @@ namespace frame
         return translation + get_world_to_screen_vector(vec);
     }
 
-    void free_move_camera_update_world_offset(mouse_button button, const rectangle& boundary)
+    void free_move_camera_update_world_offset(mouse_button button, const rectangle& boundary, bool allow_touch)
     {
-        if (is_mouse_down(button))
+        if (is_mouse_down(button) || (allow_touch && frame::get_touches_down().size() == 1))
         {
-            vec2 new_translation = get_world_translation() + get_mouse_screen_delta();
+            auto translation_delta = is_mouse_down(button) ? get_mouse_screen_delta() : get_touch_screen_delta(get_touches_down()[0]);
+
+            vec2 new_translation = get_world_translation() + translation_delta;
             set_world_translation(new_translation);
             new_translation = free_move_camera_apply_boundary(new_translation, boundary);
             set_world_translation(new_translation);
@@ -214,7 +216,7 @@ namespace frame
         return scale;
     }
 
-    void free_move_camera_update_world_scale(float zoom_speed, const vec2& min_size, const vec2& max_size)
+    void free_move_camera_update_world_scale(float zoom_speed, const vec2& min_size, const vec2& max_size, bool allow_touch)
     {
         if (get_mouse_wheel_delta())
         {
@@ -223,14 +225,33 @@ namespace frame
             new_scale = free_move_camera_apply_max_size(new_scale, max_size);
             set_world_scale(new_scale, get_mouse_world_position());
         }
+
+        if (allow_touch && get_touches_down().size() >= 2)
+        {
+            auto delta1 = get_touch_screen_delta(get_touches_down()[0]);
+            auto delta2 = get_touch_screen_delta(get_touches_down()[1]);
+            auto pos1 = get_touch_screen_position(get_touches_down()[0]);
+            auto pos2 = get_touch_screen_position(get_touches_down()[1]);
+            auto mid = pos1 + (pos2 - pos1) / 2.0f;
+            auto prev_pos1 = pos1 - delta1;
+            auto prev_pos2 = pos2 - delta2;
+            auto prev_mid = prev_pos1 + (prev_pos2 - prev_pos1) / 2.0f;
+
+            auto delta_pos = mid - prev_mid;
+            auto delta_scale = (pos2 - pos1).length() - (prev_pos2 - prev_pos1).length();
+
+            set_world_translation(get_world_translation() + delta_pos);
+            vec2 new_scale = get_world_scale() * (1.0f + delta_scale * zoom_speed);
+            set_world_scale(new_scale, get_screen_to_world(mid));
+        }
     }
 
     void free_move_camera_update(const free_move_camera_config& config)
     {
         if (config.allow_scale)
-            free_move_camera_update_world_scale(config.zoom_speed, config.min_size, config.boundary.size());
+            free_move_camera_update_world_scale(config.zoom_speed, config.min_size, config.boundary.size(), config.allow_touch);
         if (config.allow_move)
-            free_move_camera_update_world_offset(config.move_button, config.boundary);
+            free_move_camera_update_world_offset(config.move_button, config.boundary, config.allow_touch);
     }
 
     void draw_coordinate_lines(const col4& color)
@@ -327,32 +348,62 @@ namespace frame
         return result;
     }
 
-    click_handler::click_handler(frame::mouse_button button)
-        : button(button)
+    click_handler::click_handler(frame::mouse_button button, bool allow_touch)
+        : button(button), allow_touch(allow_touch)
     {
+    }
+
+    vec2 click_handler::get_pressed_screen_position()
+    {
+        if (frame::is_mouse_pressed(button))
+            return frame::get_mouse_screen_position();
+        if (allow_touch && frame::get_touches_pressed().size() == 1)
+            return frame::get_touch_screen_position(frame::get_touches_pressed()[0]);
+        return {};
+    }
+
+    vec2 click_handler::get_released_screen_position()
+    {
+        if (frame::is_mouse_released(button))
+            return frame::get_mouse_screen_position();
+
+        auto release_touch = std::find(get_touches_released().begin(), get_touches_released().end(), click_touch);
+        if (allow_touch && release_touch != get_touches_released().end())
+            return frame::get_touch_screen_position(*release_touch);
+        return {};
     }
 
     void click_handler::update()
     {
         clicked = false;
 
-        if (frame::is_mouse_pressed(button))
+        if (frame::is_mouse_pressed(button) || (allow_touch && frame::get_touches_pressed().size() == 1))
         {
             press_ticks = stm_now();
-            press_position_screen = frame::get_mouse_screen_position();
+            press_position_screen = get_pressed_screen_position();
+
+            if (frame::get_touches_pressed().size() == 1)
+                click_touch = frame::get_touches_pressed()[0];
         }
-        else if (frame::is_mouse_released(button))
+        else if (frame::is_mouse_released(button) || (allow_touch && std::find(get_touches_released().begin(), get_touches_released().end(), click_touch) != frame::get_touches_released().end()))
         {
             auto duration_ms = stm_ms(stm_since(press_ticks));
-            auto distance_px = (frame::get_mouse_screen_position() - press_position_screen).length();
+            auto distance_px = (get_released_screen_position() - press_position_screen).length();
 
             clicked = duration_ms < max_click_duration && distance_px < max_click_distance;
+
+            click_touch = (touch_id)-1;
         }
     }
 
     bool click_handler::is_clicked()
     {
         return clicked;
+    }
+
+    frame::vec2 click_handler::get_click_screen_position()
+    {
+        return press_position_screen;
     }
 
     static const std::string base64_chars =

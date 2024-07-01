@@ -146,10 +146,10 @@ World::Rope World::CreateRope(const std::vector<frame::vec2>& points, const colo
     // prepare distance joints
 
     // TODO constant increase
-    for (int32_t i = 0; i < objects.size(); i += 3)
+    for (int32_t i = 0; i < (int32_t)objects.size(); i += 3)
     {
         frame::vec2 anchorDown = GetPosition(objects[i]) + frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
-        for (int32_t j = i + 1; j < objects.size(); j++)
+        for (int32_t j = i + 1; j < (int32_t)objects.size(); j++)
         {
             frame::vec2 anchor = GetPosition(objects[j]) - frame::vec2(0.0f, RopeData::SegmentHeight / 2.0f);
             float length = (float)(std::abs(i - j) + 1) * RopeData::SegmentHeight;
