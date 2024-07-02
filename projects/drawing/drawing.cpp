@@ -48,6 +48,8 @@ frame::vec2 get_random_position()
 
 frame::svg_image* svg_test;
 frame::image image_test;
+frame::image rasterize_test;
+frame::svg_image* rasterize_test_svg;
 
 void setup()
 {
@@ -149,6 +151,19 @@ void setup()
 
     image_test = frame::image_create(frame::base64_decode(sokol));
     svg_test = frame::svg_parse(sun_svg);
+
+    static const char menu_svg[] = R"(<svg width="800px" height="800px" fill="none" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                       <g id="a">
+                                        <g id="b" clip-rule="evenodd" fill="#c8c8c8" fill-rule="evenodd">
+                                         <path id="c" d="m2.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                         <path d="m9.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                         <path d="m16.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                        </g>
+                                       </g>
+                                      </svg>)";
+
+    rasterize_test_svg = frame::svg_parse(menu_svg);
+    rasterize_test = frame::svg_rasterize(rasterize_test_svg, 16, 16);
 }
 
 void update()
@@ -250,4 +265,7 @@ void update()
         frame::draw_rectangle(rect2, frame::col4::GREEN);
         frame::draw_text("Hello, World", position, 20.0f, frame::col4::RED, frame::text_align::bottom_left);
     }
+
+    frame::draw_image(rasterize_test, { -200, 200 });
+    //frame::draw_svg(rasterize_test_svg, { -200, 200 });
 }

@@ -1,6 +1,9 @@
 #define NANOSVG_IMPLEMENTATION
 #include "svg.h"
 #undef NANOSVG_IMPLEMENTATION
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvgrast.h"
+#undef NANOSVGRAST_IMPLEMENTATION
 
 #include <nanovg.h>
 #include <assert.h>
@@ -213,6 +216,20 @@ namespace frame
     void svg_delete(svg_image* image)
     {
         nsvgDelete(image);
+    }
+
+    image svg_rasterize(svg_image* image, uint32_t width, uint32_t height)
+    {
+        NSVGrasterizer* rasterizer = nsvgCreateRasterizer();
+        
+        std::vector<char> buffer(width * height * 4);
+
+        float scale = (float)width / image->width;
+
+        nsvgRasterize(rasterizer, image, 0.0f, 0.0f, scale, (unsigned char*)buffer.data(), width, height, width * 4);
+        nsvgDeleteRasterizer(rasterizer);
+
+        return nvgCreateImageRGBA(vg, width, height, 0, (const unsigned char*)buffer.data());
     }
 
     void draw_svg(svg_image* image, const vec2& position, frame::text_align align)

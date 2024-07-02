@@ -8,6 +8,8 @@ namespace frame
 
     svg_image* svg_parse(const char* input_xml);
     void svg_delete(svg_image* image);
+    
+    image svg_rasterize(svg_image* svg, uint32_t width, uint32_t height);
 
     frame::vec2 get_svg_image_size(svg_image* image);
 
