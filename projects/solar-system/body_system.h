@@ -16,6 +16,8 @@ struct body_system
 
 	body_node* get_body(const char* name);
 
+	body_info info;
+
 private:
 	void setup_colors(std::map<std::string, std::vector<char>>& files);
 	void setup_info(std::map<std::string, std::vector<char>>& files);
@@ -34,5 +36,5 @@ private:
 
 	quadtree tree;
 	body_color body_color_data;
-	body_info info;
+	
 };

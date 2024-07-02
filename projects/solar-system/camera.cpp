@@ -50,6 +50,20 @@ void camera_type::update()
             frame::vec2 new_scale = frame::get_world_scale() * (1.0f + frame::get_mouse_wheel_delta() * free_move_config.zoom_speed);
             frame::set_world_scale(new_scale, follow_position_world);
         }
+        else if (frame::get_touches_down().size() >= 2)
+        {
+            auto delta1 = frame::get_touch_screen_delta(frame::get_touches_down()[0]);
+            auto delta2 = frame::get_touch_screen_delta(frame::get_touches_down()[1]);
+            auto pos1 = frame::get_touch_screen_position(frame::get_touches_down()[0]);
+            auto pos2 = frame::get_touch_screen_position(frame::get_touches_down()[1]);
+            auto prev_pos1 = pos1 - delta1;
+            auto prev_pos2 = pos2 - delta2;
+
+            auto delta_scale = (pos2 - pos1).length() - (prev_pos2 - prev_pos1).length();
+
+            frame::vec2 new_scale = frame::get_world_scale() * (1.0f + delta_scale * free_move_config.zoom_speed);
+            frame::set_world_scale(new_scale, follow_position_world);
+        }
 
         auto screen_center = frame::get_screen_size() / 2.0f;
 

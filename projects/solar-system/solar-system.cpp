@@ -219,9 +219,13 @@ void handle_left_click()
     if (!left_mouse_click.is_clicked())
         return;
 
-    if (clicked_body = get_clicked_body())
+    if (b_system.info.accept_click(left_mouse_click.get_click_screen_position()))
     {
-        b_system.set_info(clicked_body);
+
+    }
+    else if (clicked_body = get_clicked_body())
+    {
+        b_system.info.set_body(clicked_body);
 
         evaluate_body_view(true);
     }

@@ -25,6 +25,8 @@ struct body_info
 
     void setup(const std::vector<char>& body_icons_zip, body_color& cols);
 
+    bool accept_click(const frame::vec2& screen_position);
+
 private:
     float draw_internal(bool skip_draw = false);
 
@@ -33,11 +35,17 @@ private:
     void draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw = false);
     void draw_separator(float& y, const char* name, bool skip_draw = false);
 
+    frame::rectangle get_info_rectangle();
+
     body_node* body = nullptr;
     frame::vec2 draw_size;
     frame::vec2 draw_position; // upper-left corner
-    frame::svg_image* icon;
+    frame::svg_image* icon = nullptr;
     body_color* colors = nullptr;
 
+    bool is_collapsed = true;
+
     std::unordered_map<std::string, frame::svg_image*> icons;
+
+    frame::svg_image* expand_icon = nullptr;
 };

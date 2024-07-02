@@ -23,6 +23,8 @@ static const float property_y_size = 15.0f;
 static const float property_column_name_x_size = 150.0f;
 static const float property_column_value_x_size = 80.0f;
 
+static const float y_size_collapsed = name_y_size + type_y_size + boundary;
+
 void body_info::draw_name_type_and_group(float& y, bool skip_draw)
 {
     if (!skip_draw)
@@ -51,6 +53,10 @@ void body_info::draw_name_type_and_group(float& y, bool skip_draw)
                            group_y_size, colors->get(body->group),
                            "roboto-bold",
                            frame::text_align::top_right);
+
+        float collapsed_icon_angle = is_collapsed ? frame::deg_to_rad(90.0f) : 0.0f;
+
+        frame::draw_svg_ex(expand_icon, { draw_size.x - boundary, y }, collapsed_icon_angle, {0.7f, 0.7f}, frame::text_align::top_right);
     }
 
     y += name_y_size + type_y_size + boundary;
@@ -94,6 +100,12 @@ void body_info::setup(const std::vector<char>& body_icons_zip, body_color& cols)
         auto data = frame::get_zip_file(*zip, file);
         icons[file] = frame::svg_parse(data.data());
     }
+
+    static const char expand_icon_src[] = R"(<svg width="20" height="20" version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"">
+                                              <path d="m19 6.25-1.5-1.5-7.5 7.5-7.5-7.5-1.5 1.5 9 9 9-9z" fill="#c8c8c8" stroke-opacity="0" style="paint-order:fill markers stroke"/>
+                                             </svg>)";
+
+    expand_icon = frame::svg_parse(expand_icon_src);
 }
 
 void body_info::set_body(body_node* body)
@@ -131,7 +143,7 @@ void body_info::set_body(body_node* body)
         auto y_size = draw_internal(true);
 
         draw_size = vec2(300.0f, y_size);
-        draw_position = { 10.0f, 30.0f };
+        draw_position = { 10.0f, 10.0f };
     }
 }
 
@@ -163,11 +175,28 @@ static std::pair<double, const char*> get_mean_radius_value_and_unit(double radi
     return { radius, "km" };
 }
 
+bool body_info::accept_click(const frame::vec2& screen_position)
+{
+    if (!body)
+        return false;
+
+    if (get_info_rectangle().contains(screen_position))
+    {
+        is_collapsed = !is_collapsed;
+        return true;
+    }
+    return false;
+}
+
 float body_info::draw_internal(bool skip_draw)
 {
     float y_value = boundary;
 
     draw_name_type_and_group(y_value, skip_draw);
+
+    // skip_draw is not best name, it is used to measure the height of info
+    if (is_collapsed && !skip_draw)
+        return y_size_collapsed;
 
     draw_separator(y_value, "Physical Properties:", skip_draw);
 
@@ -203,6 +232,13 @@ float body_info::draw_internal(bool skip_draw)
     return y_value;
 }
 
+frame::rectangle body_info::get_info_rectangle()
+{
+    vec2 info_size = is_collapsed ? vec2{ draw_size.x, y_size_collapsed } : draw_size;
+
+    return rectangle::from_center_size(info_size / 2.0f, info_size);
+}
+
 void body_info::draw()
 {
     if (body == nullptr)
@@ -212,8 +248,10 @@ void body_info::draw()
     frame::set_world_transform(frame::mat3::identity());
     frame::set_world_translation(draw_position);
 
-    frame::draw_rounded_rectangle(draw_size / 2.0f, draw_size.x, draw_size.y, 7.0f, col4::RGB(41,40,38));
-    frame::draw_rounded_rectangle_ex(draw_size / 2.0f, 0.0f, draw_size.x, draw_size.y, 7.0f, col4::BLANK, 1.0f, col4::RGB(89,88,87));
+    auto rect = get_info_rectangle();
+
+    frame::draw_rounded_rectangle(rect.center(), rect.size().x, rect.size().y, 7.0f, col4::RGB(41, 40, 38));
+    frame::draw_rounded_rectangle_ex(rect.center(), 0.0f, rect.size().x, rect.size().y, 7.0f, col4::BLANK, 1.0f, col4::RGB(89,88,87));
 
     //frame::set_world_translation(draw_position + vec2{ boundary, boundary });
 
