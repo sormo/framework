@@ -111,10 +111,36 @@ void evaluate_body_view(bool init = false)
     }
 }
 
+void draw_settings_menu_icon(float icon_size)
+{
+    static frame::image menu_image = -1;
+    if (menu_image == -1)
+    {
+        static const char menu_svg[] = R"(<svg width="800px" height="800px" fill="none" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                           <g id="a">
+                                            <g id="b" clip-rule="evenodd" fill="#c8c8c8" fill-rule="evenodd">
+                                             <path id="c" d="m2.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                             <path d="m9.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                             <path d="m16.75 12c0-1.2426 1.0074-2.25 2.25-2.25s2.25 1.0074 2.25 2.25-1.0074 2.25-2.25 2.25-2.25-1.0074-2.25-2.25z"/>
+                                             </g>
+                                            </g>
+                                          </svg>)";
+
+        auto tmp = frame::svg_parse(menu_svg);
+        menu_image = svg_rasterize(tmp, icon_size, icon_size);
+        svg_delete(tmp);
+    }
+
+    frame::save_world_transform();
+    frame::set_world_transform(frame::identity());
+    frame::draw_image(menu_image, { frame::get_screen_size().x - icon_size - 10.0f, 10.0f });
+    frame::restore_world_transform();
+}
+
 void draw_settings_gui()
 {
     static bool is_opened = false;
-    static const float window_width = 353.0f;
+    static const float menu_icon_size = 24.0f;
 
     auto reset_bodies_tree = []()
     {
@@ -136,27 +162,46 @@ void draw_settings_gui()
         evaluate_body_view(true);
     };
 
-    ImGui::GetStyle().WindowRounding = 7.0f;
+    draw_settings_menu_icon(menu_icon_size);
 
-    ImGui::SetNextWindowSize({ window_width, 0.0f});
+    ImGui::GetStyle().PopupRounding = 7.0f;
+
+    ImVec2 window_padding = ImGui::GetStyle().WindowPadding;
+    ImGui::GetStyle().WindowPadding = {};
+
     ImGui::SetNextWindowCollapsed(true, ImGuiCond_::ImGuiCond_Once);
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f - window_width, 30.0f), ImGuiCond_::ImGuiCond_Always);
-    ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - menu_icon_size - 10.0f, 10.0f), ImGuiCond_::ImGuiCond_Always);
+    ImGui::Begin("Settings", &is_opened, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor(1.0f, 1.0f, 1.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor(1.0f, 1.0f, 1.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor(1.0f, 1.0f, 1.0f, 0.0f));
+
+    if (ImGui::Button("##", ImVec2(menu_icon_size, menu_icon_size)))
+        ImGui::OpenPopup("settings_popup");
     
-    ImGui::SliderFloat("Zoom speed", &camera.free_move_config.zoom_speed, 0.01f, 0.07f);
-    ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
-    ImGui::Checkbox("Draw points", &settings.draw_points);
-    ImGui::Checkbox("Draw names", &settings.draw_names);
-    if (ImGui::Checkbox("Disable inclination", &settings.disable_inclination))
+    ImGui::PopStyleColor(3);
+    ImGui::GetStyle().WindowPadding = window_padding;
+    
+    if (ImGui::BeginPopup("settings_popup"))
     {
-        reset_bodies_tree();
-    }
-    ImGui::Checkbox("Draw lagrangians (experimental)", &settings.draw_lagrangians);
-    ImGui::Checkbox("Step time", &settings.step_time);
-    ImGui::SliderFloat("Step speed", &settings.step_speed, 0.0001f, 10.0f, "%.4f");
-    if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
-    {
-        reset_bodies_tree();
+        ImGui::SliderFloat("Zoom speed", &camera.free_move_config.zoom_speed, 0.01f, 0.07f);
+        ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
+        ImGui::Checkbox("Draw points", &settings.draw_points);
+        ImGui::Checkbox("Draw names", &settings.draw_names);
+        if (ImGui::Checkbox("Disable inclination", &settings.disable_inclination))
+        {
+            reset_bodies_tree();
+        }
+        ImGui::Checkbox("Draw lagrangians (experimental)", &settings.draw_lagrangians);
+        ImGui::Checkbox("Step time", &settings.step_time);
+        ImGui::SliderFloat("Step speed", &settings.step_speed, 0.0001f, 10.0f, "%.4f");
+        if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
+        {
+            reset_bodies_tree();
+        }
+
+        ImGui::EndPopup();
     }
 
     ImGui::End();
@@ -209,7 +254,9 @@ void draw_welcome_screen()
 
 void draw_system()
 {
+#ifdef _DEBUG
     draw_debug_gui();
+#endif
     draw_settings_gui();
 
     draw_coordinate_lines(rgb(40, 40, 40));

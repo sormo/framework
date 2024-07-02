@@ -220,6 +220,7 @@ namespace frame
     void load_font(const char* font_name, const char* file_path);
 
     // *** image ***
+    // TODO switch to sg_image 
     using image = int32_t;
 
     image image_create(const char* data, size_t size);
