@@ -18,6 +18,8 @@ private:
 
     void move_internal(std::function<frame::vec2()> move_destination);
 
+    static void scale_internal(const frame::vec2& scale_position, float zoom_speed);
+
     struct move_data
     {
         using easing_func = float(float);

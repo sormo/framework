@@ -33,6 +33,61 @@ void camera_type::follow(std::function<frame::vec2()> position)
         move_internal(position);
 }
 
+void camera_type::scale_internal(const frame::vec2& scale_position, float zoom_speed)
+{
+    auto apply_scale_delta = [](float scale_delta, const frame::vec2& scale_position, float zoom_speed)
+    {
+        auto get_new_scale = [](float scale_delta, float zoom_speed)
+        {
+            auto scale_factor = 1.0f + scale_delta * zoom_speed;
+            if (scale_factor < 0.0f)
+                scale_factor = 0.001f;
+
+            return frame::get_world_scale() * scale_factor;
+        };
+
+        auto normalize_value = [](float& v)
+        {
+            static const float max_v = 1000000.0f;
+            static const float max_r = 0.0001f;
+
+            v = v > max_v ? max_v : v;
+            v = v < -max_v ? -max_v : v;
+            if (v > 0.0f && v < max_r)
+                v = max_r;
+            if (v < 0.0f && v > -max_r)
+                v = -max_r;
+        };
+
+        auto new_scale = get_new_scale(scale_delta, zoom_speed);
+
+        // just make sure do not break transform matrix, maybe we can use min/max from free_move_config, but
+        // right now just make sure it won't break
+        normalize_value(new_scale.x);
+        normalize_value(new_scale.y);
+
+        frame::set_world_scale(new_scale, scale_position);
+    };
+
+    if (frame::get_mouse_wheel_delta())
+    {
+        apply_scale_delta(frame::get_mouse_wheel_delta(), scale_position, zoom_speed);
+    }
+    else if (frame::get_touches_down().size() >= 2)
+    {
+        auto delta1 = frame::get_touch_screen_delta(frame::get_touches_down()[0]);
+        auto delta2 = frame::get_touch_screen_delta(frame::get_touches_down()[1]);
+        auto pos1 = frame::get_touch_screen_position(frame::get_touches_down()[0]);
+        auto pos2 = frame::get_touch_screen_position(frame::get_touches_down()[1]);
+        auto prev_pos1 = pos1 - delta1;
+        auto prev_pos2 = pos2 - delta2;
+
+        auto delta_scale = (pos2 - pos1).length() - (prev_pos2 - prev_pos1).length();
+
+        apply_scale_delta(delta_scale, scale_position, zoom_speed);
+    }
+}
+
 void camera_type::update()
 {
     if (camera_move)
@@ -45,25 +100,7 @@ void camera_type::update()
     {
         auto follow_position_world = camera_follow();
 
-        if (frame::get_mouse_wheel_delta())
-        {
-            frame::vec2 new_scale = frame::get_world_scale() * (1.0f + frame::get_mouse_wheel_delta() * free_move_config.zoom_speed);
-            frame::set_world_scale(new_scale, follow_position_world);
-        }
-        else if (frame::get_touches_down().size() >= 2)
-        {
-            auto delta1 = frame::get_touch_screen_delta(frame::get_touches_down()[0]);
-            auto delta2 = frame::get_touch_screen_delta(frame::get_touches_down()[1]);
-            auto pos1 = frame::get_touch_screen_position(frame::get_touches_down()[0]);
-            auto pos2 = frame::get_touch_screen_position(frame::get_touches_down()[1]);
-            auto prev_pos1 = pos1 - delta1;
-            auto prev_pos2 = pos2 - delta2;
-
-            auto delta_scale = (pos2 - pos1).length() - (prev_pos2 - prev_pos1).length();
-
-            frame::vec2 new_scale = frame::get_world_scale() * (1.0f + delta_scale * free_move_config.zoom_speed);
-            frame::set_world_scale(new_scale, follow_position_world);
-        }
+        scale_internal(follow_position_world, free_move_config.zoom_speed);
 
         auto screen_center = frame::get_screen_size() / 2.0f;
 
@@ -102,11 +139,7 @@ void camera_type::move_data::update()
     //frame::draw_circle(end, commons::scale_independent(3.0f), frame::col4::YELLOW);
     //frame::draw_circle(current, commons::scale_independent(3.0f), frame::col4::ORANGE);
 
-    if (frame::get_mouse_wheel_delta())
-    {
-        frame::vec2 new_scale = frame::get_world_scale() * (1.0f + frame::get_mouse_wheel_delta() * zoom_speed); // zoom speed
-        frame::set_world_scale(new_scale, current);
-    }
+    scale_internal(current, zoom_speed);
 
     auto screen_center = frame::get_screen_size() / 2.0f;
 

@@ -218,12 +218,26 @@ namespace frame
 
     void free_move_camera_update_world_scale(float zoom_speed, const vec2& min_size, const vec2& max_size, bool allow_touch)
     {
-        if (get_mouse_wheel_delta())
+        auto apply_scale_delta = [zoom_speed, &min_size, &max_size](float scale_delta, const vec2& scale_position)
         {
-            vec2 new_scale = get_world_scale() * (1.0f + get_mouse_wheel_delta() * zoom_speed);
+            auto get_new_scale = [](float scale_delta, float zoom_speed)
+            {
+                auto scale_factor = 1.0f + scale_delta * zoom_speed;
+                if (scale_factor < 0.0f)
+                    scale_factor = 0.001f;
+
+                return get_world_scale() * scale_factor;
+            };
+
+            vec2 new_scale = get_new_scale(scale_delta, zoom_speed);
             new_scale = free_move_camera_apply_min_size(new_scale, min_size);
             new_scale = free_move_camera_apply_max_size(new_scale, max_size);
-            set_world_scale(new_scale, get_mouse_world_position());
+            set_world_scale(new_scale, scale_position);
+        };
+
+        if (get_mouse_wheel_delta())
+        {
+            apply_scale_delta(get_mouse_wheel_delta(), get_mouse_world_position());
         }
 
         if (allow_touch && get_touches_down().size() >= 2)
@@ -241,8 +255,8 @@ namespace frame
             auto delta_scale = (pos2 - pos1).length() - (prev_pos2 - prev_pos1).length();
 
             set_world_translation(get_world_translation() + delta_pos);
-            vec2 new_scale = get_world_scale() * (1.0f + delta_scale * zoom_speed);
-            set_world_scale(new_scale, get_screen_to_world(mid));
+
+            apply_scale_delta(delta_scale, get_screen_to_world(mid));
         }
     }
 
