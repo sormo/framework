@@ -8,7 +8,9 @@ struct camera_type
 
     void move(const frame::vec2& move_destination);
 
-    void follow(std::function<frame::vec2()> position);
+    // move_if_needed means that we will move center of camera to position if needed
+    // if set to false, camera is set to position directly
+    void follow(std::function<frame::vec2()> position, bool move_if_needed = true);
 
     void update();
 

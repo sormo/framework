@@ -14,7 +14,7 @@ void camera_type::move(const frame::vec2& move_destination)
     move_internal([move_destination]() { return move_destination; });
 }
 
-void camera_type::follow(std::function<frame::vec2()> position)
+void camera_type::follow(std::function<frame::vec2()> position, bool move_if_needed)
 {
     static const float max_follow_distance_px = 5.0f;
 
@@ -29,7 +29,7 @@ void camera_type::follow(std::function<frame::vec2()> position)
 
     auto distance_px = (frame::get_world_to_screen(position_world) - frame::get_world_to_screen(move_source_world)).length();
 
-    if (distance_px > max_follow_distance_px)
+    if (move_if_needed && distance_px > max_follow_distance_px)
         move_internal(position);
 }
 

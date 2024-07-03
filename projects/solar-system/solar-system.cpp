@@ -94,20 +94,20 @@ void evaluate_body_view(bool init = false)
     if ((init || view_body != clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
     {
         apply_view(clicked_body);
-        camera.follow([body = clicked_body]() { return vec2{}; });
+        camera.follow([body = clicked_body]() { return vec2{}; }, false);
     }
     else if ((init || view_body != clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
     {
         apply_view(clicked_body->get_main_body());
         // here we again use the fact that we have position relative to main body, so only scale is needed
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); });
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); }, false);
     }
     else if ((init || view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
     {
         view_body = nullptr;
 
         view::clear_view();
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); });
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); }, false);
     }
 }
 
