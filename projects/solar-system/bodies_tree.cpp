@@ -226,7 +226,9 @@ void bodies_tree::draw_names(const quadtree::query_result_type& parents)
         auto body_diameter = body_radius * 2.0f;
         auto max_char_size = body_diameter / body->name.size();
 
-        return (float)std::min(body_diameter / 4.0f, max_char_size);
+        auto rounded = std::roundf((float)std::min(body_diameter / 4.0f, max_char_size));
+
+        return std::min(frame::get_screen_size().y / 2.0f, rounded);
     };
 
     auto get_text_rectangle = [](const body_node* body, const vec2& position) -> frame::rectangle

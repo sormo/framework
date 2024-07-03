@@ -70,7 +70,7 @@ void draw_debug_gui()
     //ImGui::ShowDemoWindow();
 }
 
-void evaluate_body_view(bool init = false)
+void evaluate_body_view(bool init = false, bool allow_camera_move = false)
 {
     static const double semi_major_axis_pixels_main_threshold = 15'000.0;
     static const double semi_major_axis_pixels_clicked_threshold = 80'000.0;
@@ -94,20 +94,20 @@ void evaluate_body_view(bool init = false)
     if ((init || view_body != clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
     {
         apply_view(clicked_body);
-        camera.follow([body = clicked_body]() { return vec2{}; }, false);
+        camera.follow([body = clicked_body]() { return vec2{}; }, allow_camera_move);
     }
     else if ((init || view_body != clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
     {
         apply_view(clicked_body->get_main_body());
         // here we again use the fact that we have position relative to main body, so only scale is needed
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); }, false);
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); }, allow_camera_move);
     }
     else if ((init || view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
     {
         view_body = nullptr;
 
         view::clear_view();
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); }, false);
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); }, allow_camera_move);
     }
 }
 
@@ -223,11 +223,17 @@ void handle_left_click()
     {
 
     }
-    else if (clicked_body = get_clicked_body())
+    else if (auto new_clicked_body = get_clicked_body())
     {
+        // allow camera moving to destination if we have no body clicked yet or clicked body is new one
+        // otherwise we want to change to position directly (when changing views in update)
+        bool allow_camera_move = clicked_body != new_clicked_body;
+
+        clicked_body = new_clicked_body;
+
         b_system.info.set_body(clicked_body);
 
-        evaluate_body_view(true);
+        evaluate_body_view(true, allow_camera_move);
     }
     else
     {
