@@ -3,6 +3,8 @@
 #include <fstream>
 #include <set>
 
+//#define USE_QUADTREE
+
 using namespace frame;
 
 extern commons::settings_data settings;
@@ -73,7 +75,9 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     {
         //load_bodies_tree({ &files["bodies/test-bodies.json"] });
         load_bodies_tree({ &files["bodies/major-bodies.json"], &files["bodies/spacecrafts.json"], &files[small_bodies_file]});
+#ifdef USE_QUADTREE
         setup_quadtree(cache_file, files[cache_file]);
+#endif
 
         settings.body_system_initializing = false;
     });
@@ -116,8 +120,11 @@ void body_system::step_bodies_tree()
 
 void body_system::draw_world_bodies()
 {
-    //auto parents = tree.query(frame::get_world_rectangle());
+#ifdef USE_QUADTREE
+    auto parents = tree.query(frame::get_world_rectangle());
+#else
     quadtree::query_result_type parents = { bodies.parent };
+#endif
 
     bodies.update_current_positions(parents);
 
