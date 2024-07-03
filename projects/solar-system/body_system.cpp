@@ -176,7 +176,7 @@ void body_system::draw_distance_legend()
 {
     auto screen = frame::get_screen_size();
 
-    const float line_size = screen.x / 8.0f;
+    const float line_size = std::max(100.0f, screen.x / 8.0f);
     const float line_offset = screen.x / 20.0f;
     const float vertical_line_offset = 5.0f;
     const float line_thickness = 1.5f;
@@ -322,10 +322,10 @@ void body_system::draw(body_node* main_body)
     if (info.get_body() && settings.draw_lagrangians)
         bodies.draw_lagrangians(info.get_body());
 
-    info.draw();
-    //tree.draw_debug();
     draw_distance_legend();
     draw_current_time();
+    info.draw();
+    //tree.draw_debug();
 }
 
 void body_system::update()
