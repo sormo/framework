@@ -4,6 +4,7 @@
 #include <set>
 
 //#define USE_QUADTREE
+//#define USE_TEST_BODIES
 
 using namespace frame;
 
@@ -70,11 +71,17 @@ void body_system::setup_bodies(commons::bodies_included_type type)
     else
         std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-100km.json", "bodies/cache/quadtree_cache_100.cbor" };
 
-    //fetch_files({ "bodies/test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+#ifdef USE_TEST_BODIES
+    fetch_files({ "bodies/test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+#else
     fetch_files({ "bodies/major-bodies.json", "bodies/spacecrafts.json", small_bodies_file, cache_file}, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
+#endif
     {
-        //load_bodies_tree({ &files["bodies/test-bodies.json"] });
+#ifdef USE_TEST_BODIES
+        load_bodies_tree({ &files["bodies/test-bodies.json"] });
+#else
         load_bodies_tree({ &files["bodies/major-bodies.json"], &files["bodies/spacecrafts.json"], &files[small_bodies_file]});
+#endif
 #ifdef USE_QUADTREE
         setup_quadtree(cache_file, files[cache_file]);
 #endif
