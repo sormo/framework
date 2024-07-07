@@ -46,7 +46,8 @@ include_directories(libs
                     libs/box2d/include
                     libs/json
                     libs/kepler-orbit
-                    libs/miniz)
+                    libs/miniz
+                    libs/xxhash)
 
 fips_ide_group(libs)
 add_subdirectory(libs/glad)
@@ -54,6 +55,7 @@ add_subdirectory(libs/nanovg)
 #add_subdirectory(libs/nanosvg)
 add_subdirectory(libs/box2d/src)
 add_subdirectory(libs/miniz)
+add_subdirectory(libs/xxhash)
 
 fips_import_fips_imgui_imgui()
 

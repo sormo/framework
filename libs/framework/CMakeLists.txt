@@ -12,6 +12,8 @@ fips_begin_lib(framework)
                drawing.cpp
                drawing_sg.h
                drawing_sg.cpp
+               buffer_sg.h
+               buffer_sg.cpp
                events.h
                events.cpp
                color_type.h

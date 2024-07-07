@@ -31,7 +31,8 @@ namespace frame
 	mesh_data create_mesh_circle(size_t count);
 	mesh_data create_mesh_circle_no_index(size_t count);
 
-	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);
+	// stride seems to be limited to [0,255) on webgl (which is unfortunate, on desktop opengl works fine larger stride)
+	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, uint8_t stride_in_bytes = 0);
 	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage);
 	draw_buffer_id create_draw_buffer_instanced(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, size_t instances_count);
 

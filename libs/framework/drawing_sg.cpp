@@ -1,5 +1,7 @@
 #include "drawing_sg.h"
+#include "buffer_sg.h"
 #include "utils.h"
+#include <xxh3.h>
 #include <sokol_app.h>
 #include <sokol_gfx.h>
 #include <map>
@@ -17,274 +19,6 @@ namespace frame
 	/// BUFFERS ///////////////////////////////
 	///////////////////////////////////////////
 
-	class buffer
-	{
-		sg_buffer buffer_id = {};
-		sg_usage usage = sg_usage::_SG_USAGE_DEFAULT;
-		sg_buffer_type type = sg_buffer_type::_SG_BUFFERTYPE_DEFAULT;
-
-		struct buffer_range
-		{
-			int offset;
-			size_t size;
-		};
-		std::vector<buffer_range> ranges;
-
-		std::vector<char> buffer_data;
-
-		bool is_appended = false; // TODO can't update buffer while appending to it in the same frame
-
-		struct
-		{
-			int offset = 0;
-			size_t size = 0;
-
-		} update_range;
-		bool is_dirty = false;
-
-		int append_buffer_data(char* data, size_t size)
-		{
-			size_t required_size = buffer_data.size() + size;
-			int offset = (int)buffer_data.size();
-
-			buffer_data.resize(required_size);
-			memcpy(&buffer_data[offset], data, size);
-
-			return offset;
-		}
-
-		std::vector<int> append_buffer_data(char* data, size_t size, size_t count)
-		{
-			int offset = (int)buffer_data.size();
-
-			size_t required_size = buffer_data.size() + size * count;
-			buffer_data.resize(required_size);
-			
-			std::vector<int> result;
-
-			for (size_t i = 0; i < count; i++)
-			{
-				memcpy(&buffer_data[offset], data, size);
-				result.push_back(offset);
-
-				offset += (int)size;
-			}
-
-			return result;
-		}
-
-		void create_buffer(char* data, size_t size)
-		{
-			if (buffer_id.id != 0)
-				sg_destroy_buffer(buffer_id);
-
-			sg_buffer_desc desc{};
-			desc.data = { data, size };
-			desc.size = size;
-			desc.type = type;
-			desc.usage = usage;
-
-			buffer_id = sg_make_buffer(desc);
-		}
-
-		void merge_update_range(int offset, size_t size)
-		{
-			// Calculate the end points of the intervals
-			size_t end1 = offset + size;
-			size_t end2 = update_range.offset + update_range.size;
-
-			// Find the new offset as the minimum of the current and updated offsets
-			int new_offset = std::min(offset, update_range.offset);
-
-			// Find the new size as the difference between the maximum end points and the new offset
-			size_t new_size = std::max(end1, end2) - new_offset;
-
-			// Update the update_range with the new merged interval
-			update_range.offset = new_offset;
-			update_range.size = new_size;
-		}
-
-	public:
-
-		using range_id = size_t;
-
-		buffer() = default;
-		buffer(sg_usage usage, sg_buffer_type type) : usage(usage), type(type) {}
-
-		operator bool() const
-		{
-			return buffer_id.id != 0;
-		}
-
-		void apply(range_id range_id, sg_bindings& bindings, size_t vertex_bindings_index = 0)
-		{
-			if (type == SG_BUFFERTYPE_INDEXBUFFER)
-			{
-				bindings.index_buffer = buffer_id;
-				bindings.index_buffer_offset = ranges[range_id].offset;
-			}
-			else
-			{
-				bindings.vertex_buffers[vertex_bindings_index] = buffer_id;
-				bindings.vertex_buffer_offsets[vertex_bindings_index] = ranges[range_id].offset;
-			}
-		}
-
-		range_id append(char* data, size_t size)
-		{
-			buffer_range range{ -1, size };
-
-			if (usage == SG_USAGE_IMMUTABLE)
-			{
-				range.offset = append_buffer_data(data, size);
-
-				create_buffer(buffer_data.data(), buffer_data.size());
-			}
-			else
-			{
-				bool is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
-
-				if (is_over_capacity)
-				{
-					if (buffer_data.capacity() == 0)
-					{
-						buffer_data.reserve(256);
-						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
-					}
-
-					while (is_over_capacity)
-					{
-						buffer_data.reserve(buffer_data.capacity() * 2);
-						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size;
-					}
-
-					range.offset = append_buffer_data(data, size);
-
-					create_buffer(nullptr, buffer_data.capacity());
-
-					sg_append_buffer(buffer_id, { buffer_data.data(), buffer_data.size() });
-				}
-				else
-				{
-					range.offset = append_buffer_data(data, size);
-					int sg_offset = sg_append_buffer(buffer_id, { data, size });
-
-					assert(sg_offset == range.offset);
-				}
-			}
-
-			range_id result = ranges.size();
-			ranges.push_back(std::move(range));
-
-			is_appended = true;
-
-			return result;
-		}
-
-		std::vector<range_id> append(char* data, size_t size, size_t count)
-		{
-			std::vector<range_id> result;
-
-			auto append_buffer_data_and_create_ranges = [this](char* data, size_t size, size_t count)
-			{
-				std::vector<range_id> result;
-				for (auto offset : append_buffer_data(data, size, count))
-				{
-					result.push_back(ranges.size());
-					ranges.push_back({ offset, size });
-				}
-				return result;
-			};
-
-			if (usage == SG_USAGE_IMMUTABLE)
-			{
-				result = append_buffer_data_and_create_ranges(data, size, count);
-
-				create_buffer(buffer_data.data(), buffer_data.size());
-			}
-			else
-			{
-				bool is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
-
-				if (is_over_capacity)
-				{
-					if (buffer_data.capacity() == 0)
-					{
-						buffer_data.reserve(256);
-						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
-					}
-
-					while (is_over_capacity)
-					{
-						buffer_data.reserve(buffer_data.capacity() * 2);
-						is_over_capacity = buffer_data.capacity() < buffer_data.size() + size * count;
-					}
-
-					result = append_buffer_data_and_create_ranges(data, size, count);
-
-					create_buffer(nullptr, buffer_data.capacity());
-
-					sg_append_buffer(buffer_id, { buffer_data.data(), buffer_data.size() });
-				}
-				else
-				{
-					result = append_buffer_data_and_create_ranges(data, size, count);
-				}
-			}
-
-			is_appended = true;
-
-			return result;
-		}
-
-		size_t get_data_size(range_id range_id)
-		{
-			return ranges[range_id].size;
-		}
-
-		// provide data pointer for in-place update
-		void update_inplace(range_id range_id, char** data_ptr)
-		{
-			assert(usage != SG_USAGE_IMMUTABLE);
-
-			auto [offset, size] = ranges[range_id];
-
-			*data_ptr = &buffer_data[offset];
-
-			is_dirty = true;
-
-			merge_update_range(offset, size);
-		}
-
-		void update(range_id range_id, char* data)
-		{
-			assert(usage != SG_USAGE_IMMUTABLE);
-
-			auto [offset, size] = ranges[range_id];
-
-			memcpy(&buffer_data[offset], data, size);
-
-			is_dirty = true;
-
-			merge_update_range(offset, size);
-		}
-
-		void remove(range_id range_id)
-		{
-			// TODO
-		}
-
-		void flush()
-		{
-			if (is_dirty && !is_appended)
-			{
-				sg_update_buffer(buffer_id, { &buffer_data[update_range.offset], update_range.size });
-				is_dirty = false;
-			}
-			is_appended = false;
-		}
-	};
-
 	static uint32_t draw_buffer_id_counter = 1;
 
 	struct instanced_element
@@ -299,17 +33,17 @@ namespace frame
 		sg_bindings bindings = {};
 		size_t draw_elements = 0;
 
-		buffer* vertex_buffer = nullptr;
-		buffer::range_id vertex_buffer_id = 0;
+		buffer_sg* vertex_buffer = nullptr;
+		buffer_sg::range_id vertex_buffer_id = 0;
 
-		buffer* index_buffer = nullptr;
-		buffer::range_id index_buffer_id = 0;
+		buffer_sg* index_buffer = nullptr;
+		buffer_sg::range_id index_buffer_id = 0;
 	};
 
 	struct buffer_data_instanced : public buffer_data
 	{
-		buffer instance_buffer;
-		std::vector<buffer::range_id> instances;
+		buffer_sg instance_buffer;
+		std::vector<buffer_sg::range_id> instances;
 	};
 
 	enum class shader_type
@@ -320,9 +54,10 @@ namespace frame
 
 	struct pipeline_desc
 	{
-		sg_primitive_type type;
+		sg_primitive_type type = SG_PRIMITIVETYPE_TRIANGLES;
 		bool index_buffer = false;
-		shader_type shader;
+		shader_type shader = shader_type::basic;
+		uint8_t stride_in_bytes = 0;
 
 		bool operator<(const pipeline_desc& o) const
 		{
@@ -330,7 +65,9 @@ namespace frame
 				return type < o.type;
 			if (o.index_buffer != index_buffer)
 				return index_buffer < o.index_buffer;
-			return shader < o.shader;
+			if (o.shader != shader)
+				return shader < o.shader;
+			return stride_in_bytes < o.stride_in_bytes;
 		}
 	};
 
@@ -357,7 +94,7 @@ namespace frame
 
 		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
 
-		std::map<buffer_desc, buffer> buffer_cache;
+		std::map<buffer_desc, buffer_sg> buffer_cache;
 
 	} state;
 
@@ -386,15 +123,21 @@ namespace frame
 		return pip_desc;
 	}
 
-	sg_pipeline_desc get_pipeline_desc_basic(sg_primitive_type type, bool index_buffer)
+	sg_pipeline_desc get_pipeline_desc_basic(sg_primitive_type type, bool index_buffer, int stride_in_bytes)
 	{
 		sg_pipeline_desc pip_desc = {};
 		pip_desc.primitive_type = type;
 		pip_desc.shader = state.basic;
 		if (index_buffer)
 			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
 		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
 		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_vs_position].offset = 0;
+		// single buffer with positions at index 0
+		pip_desc.layout.buffers[0].stride = stride_in_bytes;
+		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
+		pip_desc.layout.buffers[0].step_rate = 0;
 
 		return pip_desc;
 	}
@@ -404,7 +147,7 @@ namespace frame
 		switch (desc.shader)
 		{
 		case shader_type::basic:
-			return get_pipeline_desc_basic(desc.type, desc.index_buffer);
+			return get_pipeline_desc_basic(desc.type, desc.index_buffer, desc.stride_in_bytes);
 		case shader_type::basic_instanced:
 			return get_pipeline_desc_basic_instanced(desc.type, desc.index_buffer);
 		}
@@ -421,12 +164,12 @@ namespace frame
 		return state.pipeline_cache[desc];
 	}
 
-	std::pair<buffer*, buffer::range_id> create_buffer(buffer_desc desc, char* data, size_t size)
+	std::pair<buffer_sg*, buffer_sg::range_id> create_buffer(buffer_desc desc, char* data, size_t size)
 	{
 		if (!state.buffer_cache.count(desc))
-			state.buffer_cache[desc] = buffer(desc.usage, desc.type);
+			state.buffer_cache[desc] = buffer_sg(desc.usage, desc.type);
 
-		buffer& buffer = state.buffer_cache[desc];
+		buffer_sg& buffer = state.buffer_cache[desc];
 
 		return { &buffer, buffer.append(data, size) };
 	}
@@ -461,7 +204,7 @@ namespace frame
 			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
 
-		result.instance_buffer = buffer(SG_USAGE_DYNAMIC, SG_BUFFERTYPE_VERTEXBUFFER);
+		result.instance_buffer = buffer_sg(SG_USAGE_DYNAMIC, SG_BUFFERTYPE_VERTEXBUFFER);
 
 		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic_instanced });
 		result.draw_elements = draw_elements;
@@ -481,7 +224,8 @@ namespace frame
 							       uint16_t* indices,
 							       size_t indices_count,
 							       sg_primitive_type type,
-		                           sg_usage usage)
+		                           sg_usage usage,
+								   uint8_t stride_in_bytes)
 	{
 		buffer_data result{};
 
@@ -494,7 +238,7 @@ namespace frame
 			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
 
-		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic });
+		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic, stride_in_bytes });
 		result.draw_elements = draw_elements;
 
 		return result;
@@ -760,20 +504,26 @@ namespace frame
 		draw_buffer_data_instanced(state.buffer_data_instanced[id], count);
 	}
 
-	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage)
+	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, uint8_t stride_in_bytes)
 	{
 		draw_buffer_id id{ draw_buffer_id_counter++ };
 
 		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
 
-		state.buffer_data[id] = std::move(create_buffer_data(name,
-								        					 elements_count,
-															 mesh.vertices,
-															 mesh.vertices_count,
-															 mesh.indices,
-															 mesh.indices_count,
-															 type,
-			                                                 usage));
+		// TODO how does stride work with indices ???
+		// doing ceil to draw as much as possible, test whether this is ok, possibly add elements_count as function argument
+		if (stride_in_bytes)
+			elements_count = (size_t)std::ceil((float)elements_count / ((float)stride_in_bytes / (float)sizeof(frame::vec2)));
+
+		state.buffer_data[id] = create_buffer_data(name,
+								        		   elements_count,
+												   mesh.vertices,
+												   mesh.vertices_count,
+												   mesh.indices,
+												   mesh.indices_count,
+										           type,
+			                                       usage,
+												   stride_in_bytes);
 
 		return id;
 	}

@@ -1,7 +1,16 @@
 #include "trajectory_resolutions.h"
 #include "commons.h"
+#include <cassert>
 
 trajectories_draw_cache trajectory_resolutions::draw_cache;
+
+const std::array<trajectory_resolutions::resmap_type, 4> trajectory_resolutions::resmap =
+{ {
+    { 40, 600 },
+    { 200, 3000 },
+    { 500, 16'000 },
+    { max_orbit_points, 64'000 }
+} };
 
 void trajectories_draw_cache::draw(frame::draw_buffer_id id, frame::mat3&& transform, frame::col4&& color)
 {
@@ -16,6 +25,7 @@ void trajectories_draw_cache::flush()
 
     ids.clear();
     transforms.clear();
+    colors.clear();
 }
 
 frame::mat3 trajectory_resolutions::get_transform(const frame::vec2& position, bool has_stationary_parent)
@@ -34,6 +44,14 @@ frame::mat3 trajectory_resolutions::get_transform(const frame::vec2& position, b
     }
 }
 
+static frame::draw_buffer_id create_trajectory_with_stride(const std::vector<frame::vec2>& points, int point_count)
+{
+    int stride_in_bytes = ((int)trajectory_resolutions::max_orbit_points / point_count) * (int)sizeof(frame::vec2);
+
+    // TODO fix SG_USAGE_IMMUTABLE, problem is that we are re-creating buffer each time (in a case of immutable buffer)
+    return frame::create_draw_buffer("polyline", { (float*)points.data(), points.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC, stride_in_bytes);
+}
+
 void trajectory_resolutions::draw(const frame::vec2& world_translation, double semi_major_axis_world_size, bool has_stationary_parent)
 {
     auto get_color = [](int point_count)
@@ -41,14 +59,12 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
 #ifdef _DEBUG
         if (point_count == 40)
             return frame::col4::DARKGRAY;
-        else if (point_count == 120)
+        else if (point_count == 200)
             return frame::col4::BLUE;
-        else if (point_count == 400)
+        else if (point_count == 500)
             return frame::col4::GREEN;
-        else if (point_count == 800)
+        else if (point_count == 1000)
             return frame::col4::ORANGE;
-        else if (point_count == 1600)
-            return frame::col4::RED;
         return frame::col4::WHITE;
 #else
         return frame::col4::DARKGRAY;
@@ -63,7 +79,7 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
     auto& res = get_resolution(semi_major_axis_pixel_size);
 
     if (res.draw_id == frame::draw_buffer_id_invalid)
-        res.draw_id = create_trajectory(points, res.point_count);
+        res.draw_id = create_trajectory_with_stride(points, res.point_count);
 
     auto transform = get_transform(world_translation, has_stationary_parent);
 
@@ -72,6 +88,28 @@ void trajectory_resolutions::draw(const frame::vec2& world_translation, double s
 
     //for (size_t i = 0; i < points.size(); i += points.size() / res.point_count)
     //    frame::draw_circle(points[i], scale_independent(1.5f), frame::col4::ORANGE);
+}
+
+// this one is not used, possibly delete, not sure why keeping it
+static frame::draw_buffer_id create_trajectory_no_stride(const std::vector<frame::vec2>& points, int point_count)
+{
+    if (point_count > points.size())
+        return frame::draw_buffer_id_invalid;
+
+    size_t step = points.size() / point_count;
+
+    std::vector<frame::vec2> trajectory;
+    trajectory.reserve(point_count);
+
+    for (size_t i = 0; i < points.size(); i += step)
+        trajectory.push_back(points[i]);
+
+    // add last point that will close the ellipse (if last point is not added in for loop)
+    if ((points.size() - 1) % step != 0)
+        trajectory.push_back(points.back());
+
+    // TODO fix SG_USAGE_IMMUTABLE, problem is that we are re-creating buffer each time (in a case of immutable buffer)
+    return frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
 }
 
 void trajectory_resolutions::init(kepler_orbit& orbit)
@@ -91,7 +129,9 @@ void trajectory_resolutions::init(kepler_orbit& orbit)
 
     points = commons::draw_cast(orbit.get_orbit_points(max_orbit_points), scale_factor);
 
-    static const double init_scale_limit_factor = 1000.0;
+    points.push_back(points[0]);
+
+    //static const double init_scale_limit_factor = 1000.0;
 
     for (auto& res : resolutions)
     {
@@ -99,7 +139,8 @@ void trajectory_resolutions::init(kepler_orbit& orbit)
         //if (semi_major_axis_world_size * init_scale_limit_factor < res.radius)
         //    break;
 
-        res.draw_id = create_trajectory(points, res.point_count);
+        res.draw_id = create_trajectory_with_stride(points, res.point_count);
+        //res.draw_id = create_trajectory(points, res.point_count);
     }
 
     return;
@@ -123,23 +164,3 @@ trajectory_resolutions::resolution& trajectory_resolutions::get_resolution(doubl
     return resolutions.back();
 }
 
-frame::draw_buffer_id trajectory_resolutions::create_trajectory(const std::vector<frame::vec2>& points, int point_count)
-{
-    if (point_count > points.size())
-        return frame::draw_buffer_id_invalid;
-
-    size_t step = points.size() / point_count;
-
-    std::vector<frame::vec2> trajectory;
-    trajectory.reserve(point_count);
-
-    for (size_t i = 0; i < points.size(); i += step)
-        trajectory.push_back(points[i]);
-
-    // add last point that will close the ellipse (if last point is not added in for loop)
-    if ((points.size() - 1) % step != 0)
-        trajectory.push_back(points.back());
-
-    // TODO fix SG_USAGE_IMMUTABLE, problem is that we are re-creating buffer each time (in a case of immutable buffer)
-    return frame::create_draw_buffer("polyline", { (float*)trajectory.data(), trajectory.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC);
-}
