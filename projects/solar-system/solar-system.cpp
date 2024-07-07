@@ -195,7 +195,13 @@ void draw_settings_gui()
         }
         ImGui::Checkbox("Draw lagrangians (experimental)", &settings.draw_lagrangians);
         ImGui::Checkbox("Step time", &settings.step_time);
-        ImGui::SliderFloat("Step speed", &settings.step_speed, 0.0001f, 10.0f, "%.4f");
+        static int step_exponent_value = 4;
+        if (ImGui::SliderInt("Step speed", &step_exponent_value, 1, 8))
+        {
+            int step_exponent = step_exponent_value - 7;
+            settings.step_speed = std::pow(10.0f, (float)step_exponent);
+        }
+
         if (ImGui::Combo("Bodies included", (int*)&settings.bodies_included, "more than 100km\0more than 50km\0more than 10km"))
         {
             reset_bodies_tree();
@@ -267,7 +273,6 @@ void draw_system()
 #ifdef _DEBUG
     draw_debug_gui();
 #endif
-    draw_settings_gui();
 
     draw_coordinate_lines(rgb(40, 40, 40));
 
@@ -277,6 +282,8 @@ void draw_system()
 
     if (settings.body_system_initializing)
         frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+
+    draw_settings_gui();
 }
 
 void update_system()
