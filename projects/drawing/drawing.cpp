@@ -4,10 +4,13 @@
 #include <sokol_app.h>
 #include <sokol_gfx.h>
 #include <sokol_time.h>
+#include <stb_image.h>
 #include "imgui.h"
 #include "utils.h"
 #include "drawing_sg.h"
 #include "svg.h"
+#include <HandmadeMath.h>
+#include "texrect.glsl.h"
 
 using namespace frame;
 
@@ -63,7 +66,7 @@ struct
     frame::draw_buffer_id circle;
 
     std::string drawing_types_string;
-    drawing_type drawing_type_current = drawing_type::basic;
+    drawing_type drawing_type_current = drawing_type::image;
 
 } state_common;
 
@@ -207,7 +210,86 @@ struct
     frame::image rasterize_test;
     frame::svg_image* rasterize_test_svg;
 
+    sg_pipeline test_sg_image_pip;
+    sg_bindings test_sg_image_bind;
+
 } state_image;
+
+void setup_test_sg_image(const char* sokol_image_base64)
+{
+    struct vertex_t
+    {
+        float x, y;
+        uint16_t u, v;
+    };
+
+    vertex_t vertices[] =
+    {
+         0.5f,  0.5f, 32767, 32767,
+         0.5f, -0.5f, 32767,     0,
+        -0.5f, -0.5f,     0,     0,
+        -0.5f,  0.5f,     0, 32767
+    };
+
+    sg_buffer_desc buffer_desc_vert = {};
+    buffer_desc_vert.data = SG_RANGE(vertices);
+    buffer_desc_vert.label = "texrect-vertices";
+    state_image.test_sg_image_bind.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
+
+    uint16_t indices[] = { 0, 1, 3, 2 };
+    sg_buffer_desc buffer_desc_index = {};
+    buffer_desc_index.type = SG_BUFFERTYPE_INDEXBUFFER;
+    buffer_desc_index.data = SG_RANGE(indices);
+    buffer_desc_index.label = "texrect-indices";
+    state_image.test_sg_image_bind.index_buffer = sg_make_buffer(&buffer_desc_index);
+
+    auto swap = [](uint32_t n) { return ((n >> 24) & 0xff) | ((n << 8) & 0xff0000) | ((n >> 8) & 0xff00) | ((n << 24) & 0xff000000); };
+
+    // create a checkerboard texture
+    uint32_t pixels[4 * 4] =
+    {
+        0xFF0000FF, 0xFF000000, 0xFFFFFFFF, swap(frame::col4::BLUE.to_hex()),
+        0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
+        0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000,
+        0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
+    };
+
+    auto sokol_image = frame::base64_decode(sokol_image_base64);
+    int w, h, n, image;
+    unsigned char* img = stbi_load_from_memory((const unsigned char*)sokol_image.data(), sokol_image.size(), &w, &h, &n, 4);
+
+    sg_image_desc image_desc = {};
+    image_desc.pixel_format = SG_PIXELFORMAT_RGBA8;
+    //image_desc.width = image_desc.height = 4;
+    image_desc.width = w;
+    image_desc.height = h;
+    //image_desc.data.subimage[0][0] = SG_RANGE(pixels);
+    image_desc.data.subimage[0][0] = sg_range{ img, (unsigned long long)w * h * 4 };
+    image_desc.label = "texrect-texture";
+    state_image.test_sg_image_bind.fs.images[SLOT_tex] = sg_make_image(&image_desc);
+
+    stbi_image_free(img);
+
+    // create a sampler object with default attributes
+    sg_sampler_desc sampler_desc = {};
+    sampler_desc.wrap_u = sampler_desc.wrap_v = SG_WRAP_CLAMP_TO_BORDER;
+    sampler_desc.min_filter = sampler_desc.mag_filter = SG_FILTER_LINEAR;
+    state_image.test_sg_image_bind.fs.samplers[SLOT_smp] = sg_make_sampler(&sampler_desc);
+
+    // a shader
+    sg_shader shd = sg_make_shader(texrect_shader_desc(sg_query_backend()));
+
+    // a pipeline state object
+    sg_pipeline_desc pipeline_desc = {};
+    pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
+    pipeline_desc.layout.attrs[ATTR_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+    pipeline_desc.layout.attrs[ATTR_vs_texcoord0].format = SG_VERTEXFORMAT_SHORT2N;
+    pipeline_desc.shader = shd;
+    pipeline_desc.alpha_to_coverage_enabled = true;
+    pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
+    pipeline_desc.label = "texrect-pipeline";
+    state_image.test_sg_image_pip = sg_make_pipeline(&pipeline_desc);
+}
 
 void setup_image()
 {
@@ -289,7 +371,42 @@ void setup_image()
     state_image.rasterize_test_svg = frame::svg_parse(menu_svg);
     state_image.rasterize_test = frame::svg_rasterize(state_image.rasterize_test_svg, 16, 16);
 
+    setup_test_sg_image(sokol);
+}
 
+hmm_mat4 create_hmm_transform(const frame::mat3& transform)
+{
+    hmm_mat4 result = HMM_Mat4d(1.0f);
+
+    result.Elements[0][0] = transform.data[0];
+    result.Elements[0][1] = transform.data[3];
+    result.Elements[0][3] = transform.data[6];
+
+    result.Elements[1][0] = transform.data[1];
+    result.Elements[1][1] = transform.data[4];
+    result.Elements[1][3] = transform.data[7];
+
+    result.Elements[3][0] = transform.data[2];
+    result.Elements[3][1] = transform.data[5];
+    result.Elements[3][3] = transform.data[8];
+
+    return result;
+}
+
+hmm_mat4 create_projection_view_matrix()
+{
+    hmm_mat4 view = create_hmm_transform(frame::get_world_transform());
+    hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
+
+    return HMM_MultiplyMat4(projection, view);
+}
+
+hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
+{
+    auto scale = HMM_Scale({ size.x, size.y, 0.0f });
+    auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
+    auto translate = HMM_Translate({ position.x, position.y, 0.0f });
+    return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
 }
 
 void update_image()
@@ -303,13 +420,22 @@ void update_image()
     frame::draw_circle({ 100.0f, 100.0f }, 3.0f, col4::RED);
     frame::draw_rectangle(frame::rectangle::from_min_max({ 100.0f, 100.0f }, { 300.0f, 50.0f }), col4::BLUE);
 
-    //frame::draw_image(image_test, { 100.0f, 100.0f }, frame::text_align::top_left);
-    //frame::draw_image_ex(image_test, { 100.0f, 100.0f }, frame::deg_to_rad(45.0f), {0.2f, 0.2f}, text_align::top_middle);
-    //frame::draw_image_ex_size(image_test, { 100.0f, 100.0f }, 0.0f, image_size * 0.3f, text_align::top_left);
-    frame::draw_image_ex_size(state_image.image_test, { 100.0f, 100.0f }, frame::deg_to_rad(90.0f), { 200.0f, 50.0f }, text_align::top_left);
+    frame::draw_image(state_image.image_test, { 100.0f, 100.0f }, frame::text_align::top_left);
+    //frame::draw_image_ex(state_image.image_test, { 100.0f, 100.0f }, frame::deg_to_rad(45.0f), {0.2f, 0.2f}, text_align::top_middle);
+    //frame::draw_image_ex_size(state_image.image_test, { 100.0f, 100.0f }, 0.0f, image_size * 0.3f, text_align::top_left);
+    //frame::draw_image_ex_size(state_image.image_test, { 100.0f, 100.0f }, frame::deg_to_rad(90.0f), { 200.0f, 50.0f }, text_align::top_left);
 
     frame::draw_image(state_image.rasterize_test, { -200, 200 });
     //frame::draw_svg(rasterize_test_svg, { -200, 200 });
+    
+    vs_params_t vs_params;
+    vs_params.color0[0] = vs_params.color0[1] = vs_params.color0[2] = vs_params.color0[3] = 1.0f;
+    vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform({}, 0.0f, { 500.0f, 50.0f }));
+
+    sg_apply_pipeline(state_image.test_sg_image_pip);
+    sg_apply_bindings(&state_image.test_sg_image_bind);
+    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
+    sg_draw(0, 4, 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,7 +454,7 @@ void setup()
     }
     state_common.drawing_types_string.push_back('\0');
 
-    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
+    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, 1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
     free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 1'000'000.0f, 1'000'000.0f });
 }
@@ -364,8 +490,6 @@ void update_imgui()
     ImGui::Combo("Type", (int*)&state_common.drawing_type_current, state_common.drawing_types_string.data());
 
     ImGui::End();
-
-    frame::draw_rectangle({}, 20.0f, 20.0f, frame::col4::RED);
 }
 
 void update()
