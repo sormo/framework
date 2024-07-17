@@ -29,6 +29,8 @@ struct color_type
     float blue() const;
     float alpha() const;
 
+    uint32_t to_hex() const;
+
     static const color_type BLANK;           // Blank (Transparent)
     static const color_type WHITE;
     static const color_type BLACK;

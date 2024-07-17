@@ -97,6 +97,11 @@ float color_type::blue() const
     return data.b;
 }
 
+uint32_t color_type::to_hex() const
+{
+    return (uint32_t(data.r * 255) << 24) + (uint32_t(data.g * 255) << 16) + (uint32_t(data.b * 255) << 8) + uint32_t(data.a * 255);
+}
+
 const color_type color_type::BLANK = color_type::RGB(0, 0, 0, 0);
 const color_type color_type::WHITE = color_type::RGB(255, 255, 255);
 const color_type color_type::BLACK = color_type::RGB(0, 0, 0);

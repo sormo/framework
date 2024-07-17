@@ -1,0 +1,5 @@
+fips_begin_app(drawing-planet windowed)
+    fips_files(drawing-planet.cpp)
+    fips_deps(framework)
+    sokol_shader(planet.glsl ${slang})
+fips_end_app()
