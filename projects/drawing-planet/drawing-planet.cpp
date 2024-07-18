@@ -32,10 +32,8 @@ struct
     float light_power = 40.0f;
     float ambient_color[3] = { 0.1f, 0.1f, 0.1f };
     float diffuse_color[3] = { 0.1f, 0.1f, 0.1f };
-    float spec_color[3] = { 0.1f, 0.1f, 0.1f };
+    float specular_color[3] = { 0.1f, 0.1f, 0.1f };
     float shininess = 16.0f;
-    float screen_gamma = 2.0f;
-    int light_mode = 0;
 
 } state;
 
@@ -48,10 +46,10 @@ void setup_planet()
 
     vertex_t vertices[] =
     {
-         0.5f,  0.5f, 1.0f, 1.0f,
-         0.5f, -0.5f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f
+         0.5f,  0.5f,
+         0.5f, -0.5f,
+        -0.5f, -0.5f,
+        -0.5f,  0.5f
     };
 
     sg_buffer_desc buffer_desc_vert = {};
@@ -71,7 +69,6 @@ void setup_planet()
     sg_pipeline_desc pipeline_desc = {};
     pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
     pipeline_desc.layout.attrs[ATTR_planet_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-    pipeline_desc.layout.attrs[ATTR_planet_vs_uv].format = SG_VERTEXFORMAT_FLOAT2;
     pipeline_desc.shader = shd;
     pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
     pipeline_desc.label = "planet-pipeline";
@@ -120,20 +117,10 @@ void update_planet()
 
     auto assign = [](const float* from, float* to, size_t count) { for (size_t i = 0; i < count; i++) to[i] = from[i]; };
 
-    // compute light position, this awkward
-    vec3 light_pos_vec(state.light_position[0], state.light_position[1], state.light_position[2]);
-    light_pos_vec *= state.light_distance;
 
-    float light_position[3];
-    light_position[0] = light_pos_vec.x;
-    light_position[1] = light_pos_vec.y;
-    light_position[2] = light_pos_vec.z;
 
     vs_params_planet_t vs_params;
-    vs_params.color[0] = vs_params.color[1] = vs_params.color[2] = vs_params.color[3] = 1.0f;
     vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform({}, 0.0f, { 500.0f, 500.0f }));
-    assign(light_position, vs_params.light_position, 3);
-    assign(state.planet_color, vs_params.color, 3);
 
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(vs_params));
 
@@ -141,16 +128,23 @@ void update_planet()
     fs_params.light_power = state.light_power;
     assign(state.ambient_color, fs_params.ambient_color, 3);
     assign(state.diffuse_color, fs_params.diffuse_color, 3);
-    assign(state.spec_color, fs_params.spec_color, 3);
+    assign(state.specular_color, fs_params.specular_color, 3);
     fs_params.shininess = state.shininess;
-    fs_params.screen_gamma = state.screen_gamma;
-    fs_params.light_mode = state.light_mode;
 
     // for phong and blinn-phong we need vector toward the camera, problem is that fragment shader uses [-0.5, 0.5] range in the shader
     // the whole planet is scaled up
-    auto camera_center = get_world_rectangle().center() / (2.0f * 500.0f);
-    float camera_position[3] = { camera_center.x, camera_center.y,  1.0f / get_world_scale().x };
+    //auto camera_center = get_world_rectangle().center() / (2.0f * 500.0f);
+    //float camera_position[3] = { camera_center.x, camera_center.y,  1.0f / get_world_scale().x };
+    float camera_position[3] = { 0.0f, 0.0f, 5.0f };
     assign(camera_position, fs_params.camera_position, 3);
+    assign(state.planet_color, fs_params.planet_color, 3);
+
+    // compute light position, this awkward
+    vec3 light_pos_vec = vec3(state.light_position[0], state.light_position[1], state.light_position[2]).normalized() * state.light_distance;
+
+    fs_params.light_position[0] = light_pos_vec.x;
+    fs_params.light_position[1] = light_pos_vec.y;
+    fs_params.light_position[2] = light_pos_vec.z;
 
     sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_planet, SG_RANGE(fs_params));
 
@@ -201,10 +195,8 @@ void update_imgui()
     ImGui::InputFloat("Light Power", &state.light_power);
     ImGui::ColorEdit3("Ambient Color", state.ambient_color);
     ImGui::ColorEdit3("Diffuse Color", state.diffuse_color);
-    ImGui::ColorEdit3("Spec Color", state.spec_color);
+    ImGui::ColorEdit3("Specular Color", state.specular_color);
     ImGui::InputFloat("Shininess", &state.shininess);
-    ImGui::InputFloat("Screen Gamme", &state.screen_gamma);
-    ImGui::Combo("Light Mode", &state.light_mode, "Lambertian\0BlinnPhon\0Phon");
 
     ImGui::End();
 }
