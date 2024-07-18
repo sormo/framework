@@ -1,0 +1,5 @@
+fips_begin_app(shadertoy windowed)
+    fips_files(shadertoy.cpp shadertoy-shader.glsl)
+    fips_deps(framework)
+    sokol_shader(shadertoy.glsl ${slang})
+fips_end_app()

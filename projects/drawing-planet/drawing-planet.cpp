@@ -9,7 +9,11 @@
 #include "utils.h"
 #include "drawing_sg.h"
 #include "svg.h"
+
+#define HANDMADE_MATH_IMPLEMENTATION
 #include <HandmadeMath.h>
+#undef HANDMADE_MATH_IMPLEMENTATION
+
 #include "planet.glsl.h"
 
 using namespace frame;

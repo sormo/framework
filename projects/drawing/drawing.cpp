@@ -9,7 +9,11 @@
 #include "utils.h"
 #include "drawing_sg.h"
 #include "svg.h"
+
+#define HANDMADE_MATH_IMPLEMENTATION
 #include <HandmadeMath.h>
+#undef HANDMADE_MATH_IMPLEMENTATION
+
 #include "texrect.glsl.h"
 
 using namespace frame;
@@ -264,7 +268,7 @@ void setup_test_sg_image(const char* sokol_image_base64)
     image_desc.width = w;
     image_desc.height = h;
     //image_desc.data.subimage[0][0] = SG_RANGE(pixels);
-    image_desc.data.subimage[0][0] = sg_range{ img, (unsigned long long)w * h * 4 };
+    image_desc.data.subimage[0][0] = sg_range{ (const void*)img, (size_t)(w * h * 4) };
     image_desc.label = "texrect-texture";
     state_image.test_sg_image_bind.fs.images[SLOT_tex] = sg_make_image(&image_desc);
 
