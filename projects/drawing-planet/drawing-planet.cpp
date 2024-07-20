@@ -78,41 +78,6 @@ void setup_planet()
     state.pip_planet = sg_make_pipeline(&pipeline_desc);
 }
 
-hmm_mat4 create_hmm_transform(const frame::mat3& transform)
-{
-    hmm_mat4 result = HMM_Mat4d(1.0f);
-
-    result.Elements[0][0] = transform.data[0];
-    result.Elements[0][1] = transform.data[3];
-    result.Elements[0][3] = transform.data[6];
-
-    result.Elements[1][0] = transform.data[1];
-    result.Elements[1][1] = transform.data[4];
-    result.Elements[1][3] = transform.data[7];
-
-    result.Elements[3][0] = transform.data[2];
-    result.Elements[3][1] = transform.data[5];
-    result.Elements[3][3] = transform.data[8];
-
-    return result;
-}
-
-hmm_mat4 create_projection_view_matrix()
-{
-    hmm_mat4 view = create_hmm_transform(frame::get_world_transform());
-    hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
-
-    return HMM_MultiplyMat4(projection, view);
-}
-
-hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
-{
-    auto scale = HMM_Scale({ size.x, size.y, 0.0f });
-    auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
-    auto translate = HMM_Translate({ position.x, position.y, 0.0f });
-    return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
-}
-
 void update_planet()
 {
     sg_apply_pipeline(state.pip_planet);
@@ -120,10 +85,8 @@ void update_planet()
 
     auto assign = [](const float* from, float* to, size_t count) { for (size_t i = 0; i < count; i++) to[i] = from[i]; };
 
-
-
     vs_params_planet_t vs_params;
-    vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform({}, 0.0f, { 500.0f, 500.0f }));
+    vs_params.mvp = frame::create_world_mvp({}, 0.0f, { 500.0f, 500.0f });
 
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(vs_params));
 

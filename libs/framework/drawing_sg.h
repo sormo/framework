@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 #include "sokol_gfx.h"
+#include "HandmadeMath.h"
 
 namespace frame
 {
@@ -59,4 +60,9 @@ namespace frame
 
 	draw_buffer_id create_instanced_rectangle();
 	draw_buffer_id create_instanced_circle(size_t count);
+
+	// --- drawing with custom shader ---
+	// if user creates custom shader he should have all control over bingings and pipeline, add just some helper functions
+	hmm_mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
+	hmm_mat4 create_world_mvp(const frame::mat3& transform);
 }

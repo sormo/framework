@@ -393,6 +393,16 @@ namespace frame
 		return HMM_MultiplyMat4(projection, view);
 	}
 
+	hmm_mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size)
+	{
+		return HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+	}
+
+	hmm_mat4 create_world_mvp(const frame::mat3& transform)
+	{
+		return HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(transform));
+	}
+
 	size_t add_draw_instance(draw_buffer_id id, const hmm_mat4& model, frame::col4 color)
 	{
 		auto& data = state.buffer_data_instanced[id];
