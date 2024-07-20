@@ -2,6 +2,7 @@
 #include <nanovg.h>
 #include <stdint.h>
 #include <string_view>
+#include "point_type.h"
 
 #ifdef RGB
 #undef RGB
@@ -30,6 +31,7 @@ struct color_type
     float alpha() const;
 
     uint32_t to_hex() const;
+    point_type_3<float> to_vec3() const;
 
     static const color_type BLANK;           // Blank (Transparent)
     static const color_type WHITE;

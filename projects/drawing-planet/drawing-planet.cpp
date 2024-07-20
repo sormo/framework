@@ -75,7 +75,51 @@ void setup_planet()
     pipeline_desc.shader = shd;
     pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
     pipeline_desc.label = "planet-pipeline";
+
+    pipeline_desc.colors[0].blend.enabled = true;
+    pipeline_desc.colors[0].blend.src_factor_rgb = SG_BLENDFACTOR_SRC_ALPHA;
+    pipeline_desc.colors[0].blend.dst_factor_rgb = SG_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+    pipeline_desc.colors[0].blend.op_rgb = SG_BLENDOP_ADD;
+    pipeline_desc.colors[0].blend.src_factor_alpha = SG_BLENDFACTOR_ONE;
+    pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
+    pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
+
     state.pip_planet = sg_make_pipeline(&pipeline_desc);
+}
+
+fs_params_planet_t create_planet_fs_params()
+{
+    auto to_vec3 = [](const float* d) { return vec3(d[0], d[1], d[2]); };
+
+    fs_params_planet_t result = {};
+    result.light_power = state.light_power;
+    result.ambient_color = to_vec3(state.ambient_color);
+    result.diffuse_color = to_vec3(state.diffuse_color);
+    result.specular_color = to_vec3(state.specular_color);
+    result.shininess = state.shininess;
+
+    // for phong and blinn-phong we need vector toward the camera, problem is that fragment shader uses [-0.5, 0.5] range in the shader
+    // the whole planet is scaled up
+    //auto camera_center = get_world_rectangle().center() / (2.0f * 500.0f);
+    //float camera_position[3] = { camera_center.x, camera_center.y,  1.0f / get_world_scale().x };
+    result.camera_position = vec3{ 0.0f, 0.0f, 1.0f };
+
+    // compute light position
+    result.light_position = vec3(state.light_position[0], state.light_position[1], state.light_position[2]).normalized() * state.light_distance;
+
+    result.atmosphere_radius_relative = state.atmosphere_radius_relative;
+    result.atmosphere_color = to_vec3(state.atmosphere_color);
+    result.atmosphere_density = state.atmosphere_density;
+
+    return result;
+}
+
+static vs_params_planet_t create_planet_vs_params()
+{
+    vs_params_planet_t result = {};
+    result.mvp = frame::create_world_mvp({}, 0.0f, { 500.0f, 500.0f });
+
+    return result;
 }
 
 void update_planet()
@@ -83,39 +127,11 @@ void update_planet()
     sg_apply_pipeline(state.pip_planet);
     sg_apply_bindings(&state.bind_planet);
 
-    auto assign = [](const float* from, float* to, size_t count) { for (size_t i = 0; i < count; i++) to[i] = from[i]; };
+    auto params_vs = create_planet_vs_params();
+    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(params_vs));
 
-    vs_params_planet_t vs_params;
-    vs_params.mvp = frame::create_world_mvp({}, 0.0f, { 500.0f, 500.0f });
-
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(vs_params));
-
-    fs_params_planet_t fs_params;
-    fs_params.light_power = state.light_power;
-    assign(state.ambient_color, fs_params.ambient_color, 3);
-    assign(state.diffuse_color, fs_params.diffuse_color, 3);
-    assign(state.specular_color, fs_params.specular_color, 3);
-    fs_params.shininess = state.shininess;
-
-    // for phong and blinn-phong we need vector toward the camera, problem is that fragment shader uses [-0.5, 0.5] range in the shader
-    // the whole planet is scaled up
-    //auto camera_center = get_world_rectangle().center() / (2.0f * 500.0f);
-    //float camera_position[3] = { camera_center.x, camera_center.y,  1.0f / get_world_scale().x };
-    float camera_position[3] = { 0.0f, 0.0f, 1.0f };
-    assign(camera_position, fs_params.camera_position, 3);
-
-    // compute light position, this awkward
-    vec3 light_pos_vec = vec3(state.light_position[0], state.light_position[1], state.light_position[2]).normalized() * state.light_distance;
-
-    fs_params.light_position[0] = light_pos_vec.x;
-    fs_params.light_position[1] = light_pos_vec.y;
-    fs_params.light_position[2] = light_pos_vec.z;
-
-    fs_params.atmosphere_radius_relative = state.atmosphere_radius_relative;
-    assign(state.atmosphere_color, fs_params.atmosphere_color, 3);
-    fs_params.atmosphere_density = state.atmosphere_density;
-
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_planet, SG_RANGE(fs_params));
+    auto params_fs = create_planet_fs_params();
+    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_planet, SG_RANGE(params_fs));
 
     sg_draw(0, 4, 1);
 }
@@ -180,6 +196,10 @@ void update_imgui()
 
 void update()
 {
+    draw_coordinate_lines(rgb(40, 40, 40));
+
+    frame::nanovg_flush();
+
     update_imgui();
 
     update_planet();

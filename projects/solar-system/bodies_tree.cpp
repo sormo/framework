@@ -17,6 +17,11 @@ extern commons::settings_data settings;
 
 static const float name_font_size = 15.0f;
 
+void bodies_tree::setup()
+{
+    body_drawer.setup();
+}
+
 std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float query_radius)
 {
     std::vector<body_node*> result;
@@ -346,12 +351,19 @@ void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_c
         auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
 
         if (body_radius > default_radius)
-            draw_circle(position, (float)view::get_world_to_view(body_radius), color);
+        {
+            if (settings.shaded_planets)
+                body_drawer.draw(data, (float)view::get_world_to_view(body_radius), color);
+            else
+                draw_circle(position, (float)view::get_world_to_view(body_radius), color);
+        }
         else
+        {
             frame::update_draw_instance(points_instance_buffer,
                                         point_counter++,
                                         frame::get_world_to_screen(position),
                                         color);
+        }
 
         if (!data.childs.empty())
         {

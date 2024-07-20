@@ -189,6 +189,7 @@ void draw_settings_gui()
         ImGui::Checkbox("Draw trajectories", &settings.draw_trajectories);
         ImGui::Checkbox("Draw points", &settings.draw_points);
         ImGui::Checkbox("Draw names", &settings.draw_names);
+        ImGui::Checkbox("Shaded planets", &settings.shaded_planets);
         if (ImGui::Checkbox("Disable inclination", &settings.disable_inclination))
         {
             reset_bodies_tree();

@@ -177,6 +177,8 @@ void body_system::draw_main_body(body_node* main_body)
         bodies.draw_trajectories(direct_childs, body_color_data, main_body);
     }
 
+    frame::nanovg_flush();
+
     if (settings.draw_points)
         bodies.draw_points({ main_body }, body_color_data);
 
@@ -324,6 +326,8 @@ void body_system::setup()
     });
 
     setup_bodies(settings.bodies_included);
+
+    bodies.setup();
 }
 
 void body_system::draw(body_node* main_body)

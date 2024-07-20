@@ -6,6 +6,7 @@
 #include "quadtree.h"
 #include "body_info.h"
 #include "camera.h"
+#include "body_draw.h"
 #include <string>
 #include <vector>
 #include <queue>
@@ -14,6 +15,8 @@ struct bodies_tree
 {
     std::vector<body_node> bodies;
     body_node* parent = nullptr;
+
+    void setup();
 
     std::vector<body_node*> query(const frame::vec2& query_point, float query_radius);
     void load(std::vector<const char*> json_datas);
@@ -36,4 +39,5 @@ private:
     bool is_body_node_skip(const body_node& node);
 
     frame::draw_buffer_id points_instance_buffer = 0;
+    body_draw body_drawer;
 };

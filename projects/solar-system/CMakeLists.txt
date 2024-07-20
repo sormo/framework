@@ -12,6 +12,8 @@ fips_begin_app(solar-system windowed)
                quadtree.h
                body.h
                body.cpp
+               body_draw.h
+               body_draw.cpp
                body_info.h
                body_info.cpp
                body_system.h
@@ -22,4 +24,6 @@ fips_begin_app(solar-system windowed)
     fipsutil_copy(data.yml)
     fips_deps(framework)
     fips_deps(kepler-orbit)
+    fips_dir(shaders)
+    sokol_shader(body_draw_planet.glsl ${slang})
 fips_end_app()
