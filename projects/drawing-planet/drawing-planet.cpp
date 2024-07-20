@@ -25,15 +25,18 @@ struct
     sg_pipeline pip_planet;
     sg_bindings bind_planet;
 
-    float planet_color[3] = { 1.0f, 1.0f, 1.0f };
     float light_position[3] = { 0.0f, 0.0f, 1.0f };
-    float light_distance = 10.0f;
+    float light_distance = 6.0f;
 
     float light_power = 40.0f;
-    float ambient_color[3] = { 0.1f, 0.1f, 0.1f };
-    float diffuse_color[3] = { 0.1f, 0.1f, 0.1f };
+    float ambient_color[3] = { 0.01f, 0.01f, 0.01f };
+    float diffuse_color[3] = { 0.75f, 0.75f, 0.75f };
     float specular_color[3] = { 0.1f, 0.1f, 0.1f };
     float shininess = 16.0f;
+
+    float atmosphere_radius_relative = 0.25f;
+    float atmosphere_color[3] = { 1.0f, 0.9f, 0.7f };
+    float atmosphere_density = 1.0f;
 
 } state;
 
@@ -135,9 +138,8 @@ void update_planet()
     // the whole planet is scaled up
     //auto camera_center = get_world_rectangle().center() / (2.0f * 500.0f);
     //float camera_position[3] = { camera_center.x, camera_center.y,  1.0f / get_world_scale().x };
-    float camera_position[3] = { 0.0f, 0.0f, 5.0f };
+    float camera_position[3] = { 0.0f, 0.0f, 1.0f };
     assign(camera_position, fs_params.camera_position, 3);
-    assign(state.planet_color, fs_params.planet_color, 3);
 
     // compute light position, this awkward
     vec3 light_pos_vec = vec3(state.light_position[0], state.light_position[1], state.light_position[2]).normalized() * state.light_distance;
@@ -145,6 +147,10 @@ void update_planet()
     fs_params.light_position[0] = light_pos_vec.x;
     fs_params.light_position[1] = light_pos_vec.y;
     fs_params.light_position[2] = light_pos_vec.z;
+
+    fs_params.atmosphere_radius_relative = state.atmosphere_radius_relative;
+    assign(state.atmosphere_color, fs_params.atmosphere_color, 3);
+    fs_params.atmosphere_density = state.atmosphere_density;
 
     sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_planet, SG_RANGE(fs_params));
 
@@ -182,6 +188,7 @@ void update_imgui()
 
     bool open = true;
     ImGui::SetNextWindowPos({ 0.0f, 20.0f });
+    ImGui::SetNextWindowSize({});
     ImGui::Begin("Settings", &open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
@@ -189,16 +196,23 @@ void update_imgui()
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     ImGui::DragFloat3("Light Position", state.light_position, 0.01f, -1.0f, 1.0f);
-    ImGui::InputFloat("Light Distance", &state.light_distance);
-
-    ImGui::ColorEdit3("Planet Color", state.planet_color);
-    ImGui::InputFloat("Light Power", &state.light_power);
-    ImGui::ColorEdit3("Ambient Color", state.ambient_color);
     ImGui::ColorEdit3("Diffuse Color", state.diffuse_color);
-    ImGui::ColorEdit3("Specular Color", state.specular_color);
-    ImGui::InputFloat("Shininess", &state.shininess);
+    ImGui::DragFloat("Atmosphere Radius", &state.atmosphere_radius_relative, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat("Atmosphere Density", &state.atmosphere_density, 0.01f, 0.0f, 20.0f);
+
+    if (ImGui::CollapsingHeader("Advanced"))
+    {
+        ImGui::InputFloat("Light Distance", &state.light_distance);
+        ImGui::InputFloat("Light Power", &state.light_power);
+        ImGui::ColorEdit3("Ambient Color", state.ambient_color);
+        ImGui::ColorEdit3("Specular Color", state.specular_color);
+        ImGui::InputFloat("Shininess", &state.shininess);
+        ImGui::ColorEdit3("Atmosphere Color", state.atmosphere_color);
+    }
 
     ImGui::End();
+
+    //ImGui::ShowDemoWindow();
 }
 
 void update()
