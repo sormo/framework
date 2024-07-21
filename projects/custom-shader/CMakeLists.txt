@@ -1,0 +1,5 @@
+fips_begin_app(custom-shader windowed)
+    fips_files(custom-shader.cpp)
+    fips_deps(framework)
+    sokol_shader(custom_shader.glsl ${slang})
+fips_end_app()
