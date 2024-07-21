@@ -15,13 +15,6 @@ using namespace frame;
 
 extern commons::settings_data settings;
 
-static const float name_font_size = 15.0f;
-
-void bodies_tree::setup()
-{
-    body_drawer.setup();
-}
-
 std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float query_radius)
 {
     std::vector<body_node*> result;
@@ -139,14 +132,12 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.orbit = std::move(orbit);
 
             node.trajectory.init(node.orbit);
-            node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, name_font_size, "roboto-bold");
+            node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, commons::NAME_FONT_SIZE, "roboto-bold");
 
             bodies.push_back(std::move(node));
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     }
-
-    initialize_instance_buffer();
 
     // TODO assign parent-child relationships, can't add anything to this vector
     auto get_body = [this](const std::string& name) -> body_node*
@@ -202,99 +193,6 @@ void bodies_tree::load(std::vector<const char*> json_datas)
     restore_world_transform();
 }
 
-// skip child bodies which has too small semi-major axis
-// - do not skip major bodies in a case of barycentric system
-// - do not skip barycenter
-bool bodies_tree::is_body_node_skip(const body_node& node)
-{
-    double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(node.orbit.semi_major_axis));
-
-    return node.type != body_type::barycenter && !node.system.is_major_body && semi_major_axis_pixels < 2.0f;
-}
-
-void bodies_tree::draw_names(const quadtree::query_result_type& parents)
-{
-    std::vector<rectangle> rectangles;
-    auto check_overlap = [&rectangles](const frame::rectangle& rect)
-    {
-        for (const auto& rect_overlap : rectangles)
-        {
-            if (rect_overlap.has_overlap(rect))
-                return true;
-        }
-        return false;
-    };
-
-    auto get_computed_font_size = [this](const body_node* body)
-    {
-        auto body_radius = view::get_world_to_pixel(commons::convert_km_to_world_size(body->radius));
-        auto body_diameter = body_radius * 2.0f;
-        auto max_char_size = body_diameter / body->name.size();
-
-        auto rounded = std::roundf((float)std::min(body_diameter / 4.0f, max_char_size));
-
-        return std::min(frame::get_screen_size().y / 2.0f, rounded);
-    };
-
-    auto get_text_rectangle = [](const body_node* body, const vec2& position) -> frame::rectangle
-    {
-        auto result = body->name_text_rectangle;
-        result.min /= get_world_scale();
-        result.max /= get_world_scale();
-        result.min += position;
-        result.max += position;
-
-        // the rectangle has top_left align (means [0,0] is top left) and we need bottom_left
-        vec2 align_modif(0.0f, result.size().y);
-
-        std::swap(result.min.y, result.max.y);
-
-        result.min -= align_modif;
-        result.max -= align_modif;
-
-        return result;
-    };
-
-    std::queue<body_node*> Q; // BFS
-
-    for (auto parent : parents)
-        Q.push(parent);
-
-    while (!Q.empty())
-    {
-        body_node* body = Q.front();
-        Q.pop();
-
-        if (is_body_node_skip(*body))
-            continue;
-
-        vec2 position = body->current_position;
-
-        if (!is_barycenter(*body))
-        {
-            auto computed_font_size = get_computed_font_size(body);
-            if (computed_font_size > name_font_size)
-            {
-                // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position, computed_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
-            }
-            else
-            {
-                auto rect = get_text_rectangle(body, position);
-
-                if (!check_overlap(rect))
-                {
-                    rectangles.push_back(std::move(rect));
-                    draw_text_ex(body->name.c_str(), position, name_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
-                }
-            }
-        }
-
-        for (auto* child : body->childs)
-            Q.push(child);
-    }
-}
-
 void bodies_tree::update_current_positions(const quadtree::query_result_type& parents)
 {
     std::function<void(vec2, body_node&)> update_recursive = [this, &update_recursive](vec2 parent_position, body_node& data)
@@ -314,103 +212,6 @@ void bodies_tree::update_current_positions(const quadtree::query_result_type& pa
 
     for (auto parent : parents)
         update_recursive({}, *parent);
-}
-
-void bodies_tree::initialize_instance_buffer()
-{
-    points_instance_buffer = frame::create_draw_buffer_instanced("points",
-                                                                 frame::create_mesh_circle_no_index(20),
-                                                                 SG_PRIMITIVETYPE_TRIANGLE_STRIP,
-                                                                 SG_USAGE_IMMUTABLE,
-                                                                 bodies.size());
-
-    size_t point_counter = 0;
-    for (auto& body : bodies)
-    {
-        frame::update_draw_instance(points_instance_buffer,
-                                    point_counter++,
-                                    {},
-                                    0.0f,
-                                    { 7.0f, 7.0f },
-                                    col4::WHITE);
-    }
-}
-
-void bodies_tree::draw_points(const quadtree::query_result_type& parents, body_color& colors)
-{
-    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
-    {
-        if (is_body_node_skip(data))
-            return;
-
-        vec2 position = data.current_position;
-
-        float default_radius = view::get_pixel_to_world(3.5f);
-        double body_radius = commons::convert_km_to_world_size(data.radius);
-
-        auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
-
-        if (body_radius > default_radius)
-        {
-            if (settings.shaded_planets)
-                body_drawer.draw(data, (float)view::get_world_to_view(body_radius), color);
-            else
-                draw_circle(position, (float)view::get_world_to_view(body_radius), color);
-        }
-        else
-        {
-            frame::update_draw_instance(points_instance_buffer,
-                                        point_counter++,
-                                        frame::get_world_to_screen(position),
-                                        color);
-        }
-
-        if (!data.childs.empty())
-        {
-            for (auto& child : data.childs)
-                draw_recursive(*child, point_counter);
-        }
-    };
-
-    size_t point_count = 0;
-    for (auto parent : parents)
-        draw_recursive(*parent, point_count);
-
-    if (point_count != 0)
-    {
-        frame::save_world_transform();
-        frame::set_world_transform(frame::identity());
-
-        frame::draw_buffer_instanced(points_instance_buffer, point_count);
-
-        frame::restore_world_transform();
-    }
-}
-
-void bodies_tree::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body)
-{
-    stationary_body = stationary_body == nullptr ? parent : stationary_body;
-
-    std::function<void(body_node&, const vec2&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body](body_node& data, const vec2& parent_position)
-    {
-        if (is_body_node_skip(data))
-            return;
-
-        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body);
-        
-        if (data.childs.empty())
-            return;
-
-        for (auto& child : data.childs)
-            draw_recursive(*child, data.current_position);
-    };
-
-    for (auto parent : parents)
-    {
-        draw_recursive(*parent, parent->parent ? parent->parent->current_position : vec2{});
-    }
-
-    trajectory_resolutions::draw_cache.flush();
 }
 
 void bodies_tree::step(double time_delta)
@@ -444,49 +245,4 @@ void bodies_tree::clear()
 {
     bodies.clear();
     parent = nullptr;
-}
-
-void bodies_tree::draw(const quadtree::query_result_type& parents, body_color& colors)
-{
-    update_current_positions(parents);
-
-    if (settings.draw_trajectories)
-        draw_trajectories(parents, colors);
-
-    if (settings.draw_points)
-        draw_points(parents, colors);
-
-    if (settings.draw_names)
-        draw_names(parents);
-}
-
-void bodies_tree::draw_lagrangians(body_node* body)
-{
-    // if this is major body and barycenter does not have parent, we will skip lagrangians
-    if (body->system.is_major_body && !body->parent->parent)
-        return;
-
-
-    std::map<lagrangian, vec2> lagrangians;
-    for (auto lagr : { lagrangian::l1, lagrangian::l2, lagrangian::l3, lagrangian::l4, lagrangian::l5 })
-    {
-        auto position = commons::draw_cast(body->get_lagrangian(lagr) * view::get_scale());
-
-        position += body->current_position;
-
-        lagrangians[lagr] = position;
-
-        draw_circle(position, view::get_pixel_to_view(3.0f), col4::DARKGRAY);
-        draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position, name_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
-    }
-
-    minor_system system(*body);
-
-    auto thickness = view::get_pixel_to_view(0.5f);
-
-    draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
 }

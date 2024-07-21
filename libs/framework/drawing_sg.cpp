@@ -587,4 +587,9 @@ namespace frame
 			draw_buffer(ids[i], HMM_MultiplyMat4(projection_view, create_hmm_transform(transforms[i])), colors[i]);
 		}
 	}
+
+	void remove_buffer(draw_buffer_id id)
+	{
+		// TODO
+	}
 }

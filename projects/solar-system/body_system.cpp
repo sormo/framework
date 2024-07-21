@@ -45,6 +45,8 @@ void body_system::load_bodies_tree(std::vector<std::vector<char>*> files)
         bodies_jsons.push_back(data->data());
     }
     bodies.load(bodies_jsons);
+
+    body_drawer.setup_bodies(bodies);
 }
 
 body_node* body_system::get_body(const char* name)
@@ -125,69 +127,6 @@ void body_system::step_bodies_tree()
         bodies.step(settings.step_speed);
 }
 
-void body_system::draw_world_bodies()
-{
-#ifdef USE_QUADTREE
-    auto parents = tree.query(frame::get_world_rectangle());
-#else
-    quadtree::query_result_type parents = { bodies.parent };
-#endif
-
-    bodies.update_current_positions(parents);
-
-    if (settings.draw_trajectories)
-        bodies.draw_trajectories(parents, body_color_data);
-
-    if (settings.draw_points)
-        bodies.draw_points(parents, body_color_data);
-
-    // draw_points is doing instanced drawing of circles. Problem seems to be with modified opengl state
-    // by sokol gfx. In particular sokol is calling glVertexAttribDivisor . This seems to make problem
-    // when trying to draw with nanovg afterwards but for some reason only with webgl2. Don't know why.
-    // Needed to add glVertexAttribDivisor(i, 0); to _sg_gl_reset_state_cache.
-    sg_reset_state_cache();
-
-    if (settings.draw_names)
-        bodies.draw_names(parents);
-}
-
-void draw_main_trajectory(body_node* main_body)
-{
-    auto screen_size = frame::get_screen_size();
-    float max_pixel_size = 10'000; // some large number
-    auto to = commons::draw_cast(main_body->orbit.velocity).normalized() * view::get_pixel_to_view(max_pixel_size);
-
-    frame::draw_line_solid_ex(main_body->current_position, to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
-    frame::draw_line_solid_ex(main_body->current_position, -to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
-}
-
-void body_system::draw_main_body(body_node* main_body)
-{
-    quadtree::query_result_type direct_childs{ main_body->childs.begin(), main_body->childs.end() };
-
-    // main body is at [0, 0]
-    main_body->current_position = {};
-    bodies.update_current_positions(direct_childs);
-
-    // draw trajectory of main body
-    if (settings.draw_trajectories)
-    {
-        draw_main_trajectory(main_body);
-
-        bodies.draw_trajectories(direct_childs, body_color_data, main_body);
-    }
-
-    frame::nanovg_flush();
-
-    if (settings.draw_points)
-        bodies.draw_points({ main_body }, body_color_data);
-
-    sg_reset_state_cache();
-
-    if (settings.draw_names)
-        bodies.draw_names({ main_body });
-}
-
 void body_system::draw_distance_legend()
 {
     auto screen = frame::get_screen_size();
@@ -251,6 +190,36 @@ void body_system::draw_current_time()
     frame::draw_text_ex(time_str, { offset, get_screen_size().y - offset }, 15.0f, col4::LIGHTGRAY, "roboto", frame::text_align::bottom_left);
 
     frame::restore_world_transform();
+}
+
+void body_system::draw_lagrangians(body_node* body)
+{
+    // if this is major body and barycenter does not have parent, we will skip lagrangians
+    if (body->system.is_major_body && !body->parent->parent)
+        return;
+
+    std::map<lagrangian, vec2> lagrangians;
+    for (auto lagr : { lagrangian::l1, lagrangian::l2, lagrangian::l3, lagrangian::l4, lagrangian::l5 })
+    {
+        auto position = commons::draw_cast(body->get_lagrangian(lagr) * view::get_scale());
+
+        position += body->current_position;
+
+        lagrangians[lagr] = position;
+
+        draw_circle(position, view::get_pixel_to_view(3.0f), col4::DARKGRAY);
+        draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position, commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+    }
+
+    minor_system system(*body);
+
+    auto thickness = view::get_pixel_to_view(0.5f);
+
+    draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
 }
 
 body_node* body_system::query(const frame::vec2& world_position, float radius_in_pixels)
@@ -327,18 +296,40 @@ void body_system::setup()
 
     setup_bodies(settings.bodies_included);
 
-    bodies.setup();
+    body_drawer.setup(body_color_data);
+}
+
+void body_system::update_current_positions(body_node* main_body)
+{
+    if (main_body)
+    {
+        quadtree::query_result_type direct_childs{ main_body->childs.begin(), main_body->childs.end() };
+
+        // main body is at [0, 0]
+        main_body->current_position = {};
+        bodies.update_current_positions(direct_childs);
+    }
+    else
+    {
+#ifdef USE_QUADTREE
+        auto parents = tree.query(frame::get_world_rectangle());
+#else
+        quadtree::query_result_type parents = { bodies.parent };
+#endif
+
+        bodies.update_current_positions(parents);
+    }
 }
 
 void body_system::draw(body_node* main_body)
 {
-    if (main_body)
-        draw_main_body(main_body);
-    else
-        draw_world_bodies();
+    update_current_positions(main_body);
 
-    if (info.get_body() && settings.draw_lagrangians)
-        bodies.draw_lagrangians(info.get_body());
+    bool is_root = main_body == nullptr;
+    body_drawer.draw(is_root ? bodies.parent : main_body, is_root);
+
+    if (!is_root && settings.draw_lagrangians)
+        draw_lagrangians(main_body);
 
     draw_distance_legend();
     draw_current_time();

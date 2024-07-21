@@ -7,6 +7,9 @@ namespace commons
     static const double DRAW_SIZE_FACTOR = 200.0;
     static const double DRAW_VELOCITY_FACTOR = 13.0;
 
+    // font size for body names (when not zoomed in)
+    static const float NAME_FONT_SIZE = 15.0f;
+
     enum bodies_included_type : int
     {
         more_than_100,

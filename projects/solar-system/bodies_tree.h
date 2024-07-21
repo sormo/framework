@@ -6,7 +6,6 @@
 #include "quadtree.h"
 #include "body_info.h"
 #include "camera.h"
-#include "body_draw.h"
 #include <string>
 #include <vector>
 #include <queue>
@@ -16,28 +15,13 @@ struct bodies_tree
     std::vector<body_node> bodies;
     body_node* parent = nullptr;
 
-    void setup();
-
     std::vector<body_node*> query(const frame::vec2& query_point, float query_radius);
     void load(std::vector<const char*> json_datas);
-    void draw(const quadtree::query_result_type& parents, body_color& colors); // TODO not used
     void step(double time_delta);
     void clear();
-
-    void draw_names(const quadtree::query_result_type& parents);
-    void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body = nullptr);
-    void draw_points(const quadtree::query_result_type& parents, body_color& colors);
-
-    void draw_lagrangians(body_node* body);
 
     void update_current_positions(const quadtree::query_result_type& parents);
 private:
 
-    void initialize_instance_buffer();
-
     bool is_barycenter(const body_node& body);
-    bool is_body_node_skip(const body_node& node);
-
-    frame::draw_buffer_id points_instance_buffer = 0;
-    body_draw body_drawer;
 };

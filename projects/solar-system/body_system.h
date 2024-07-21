@@ -3,6 +3,7 @@
 #include "bodies_tree.h"
 #include "quadtree.h"
 #include "body_info.h"
+#include "body_draw.h"
 
 struct body_system
 {
@@ -26,13 +27,14 @@ private:
 	void load_bodies_tree(std::vector<std::vector<char>*> files);
 	void step_bodies_tree();
 	
-	void draw_world_bodies();
-	void draw_main_body(body_node* body);
+	void update_current_positions(body_node* main_body);
 
+	void draw_lagrangians(body_node* body);
 	void draw_distance_legend();
 	void draw_current_time();
 
 	bodies_tree bodies;
+	body_draw body_drawer;
 
 	quadtree tree;
 	body_color body_color_data;

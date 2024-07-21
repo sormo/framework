@@ -1,5 +1,6 @@
 #include "body.h"
 #include "unit.h"
+#include "commons.h"
 
 using namespace frame;
 
@@ -241,4 +242,11 @@ kepler_orbit& minor_system::get_minor_orbit()
     if (minor->system.is_major_body)
         return minor->parent->orbit;
     return minor->orbit;
+}
+
+bool is_body_node_skip(const body_node& node)
+{
+    double semi_major_axis_pixels = view::get_world_to_pixel(commons::convert_AU_to_world_size(node.orbit.semi_major_axis));
+
+    return node.type != body_type::barycenter && !node.system.is_major_body && semi_major_axis_pixels < 2.0f;
 }

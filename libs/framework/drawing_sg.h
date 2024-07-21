@@ -54,7 +54,7 @@ namespace frame
 	// ---
 
 	void update_buffer(draw_buffer_id id, mesh mesh); // TODO
-	void remove_buffer(draw_buffer_id id, mesh mesh); // TODO
+	void remove_buffer(draw_buffer_id id); // TODO
 
 	// TODO remove
 

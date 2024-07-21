@@ -86,3 +86,8 @@ struct minor_system
     body_node* major;
     body_node* barycenter = nullptr;
 };
+
+// skip child bodies which has too small semi-major axis
+// - do not skip major bodies in a case of barycentric system
+// - do not skip barycenter
+bool is_body_node_skip(const body_node& node);
