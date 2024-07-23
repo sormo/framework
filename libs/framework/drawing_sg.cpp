@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include "basic_depth_instanced.glsl.h"
+#include "basic_depth.glsl.h"
 #include "basic_instanced.glsl.h"
 #include "basic.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
@@ -49,7 +51,9 @@ namespace frame
 	enum class shader_type
 	{
 		basic,
-		basic_instanced
+		basic_instanced,
+		basic_depth,
+		basic_depth_instanced,
 	};
 
 	struct pipeline_desc
@@ -86,6 +90,8 @@ namespace frame
 
 	struct
 	{
+		sg_shader basic_depth_instanced;
+		sg_shader basic_depth;
 		sg_shader basic_instanced;
 		sg_shader basic;
 		std::unordered_map<draw_buffer_id, buffer_data_instanced> buffer_data_instanced;
@@ -98,13 +104,54 @@ namespace frame
 
 	} state;
 
-	sg_pipeline_desc get_pipeline_desc_basic_instanced(sg_primitive_type type, bool index_buffer)
+	sg_pipeline_desc get_pipeline_desc_common(sg_primitive_type type, bool index_buffer)
 	{
 		sg_pipeline_desc pip_desc = {};
 		pip_desc.primitive_type = type;
-		pip_desc.shader = state.basic_instanced;
+		
 		if (index_buffer)
 			pip_desc.index_type = SG_INDEXTYPE_UINT16;
+
+		pip_desc.depth.write_enabled = true;
+		pip_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
+
+		pip_desc.colors[0].blend.enabled = true;
+		pip_desc.colors[0].blend.src_factor_rgb = SG_BLENDFACTOR_SRC_ALPHA;
+		pip_desc.colors[0].blend.dst_factor_rgb = SG_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+		pip_desc.colors[0].blend.op_rgb = SG_BLENDOP_ADD;
+		pip_desc.colors[0].blend.src_factor_alpha = SG_BLENDFACTOR_ONE;
+		pip_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
+		pip_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
+
+		return pip_desc;
+	}
+
+	sg_pipeline_desc get_pipeline_desc_basic_depth_instanced(sg_primitive_type type, bool index_buffer)
+	{
+		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
+		pip_desc.shader = state.basic_depth_instanced;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model0].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model1].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model2].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model3].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_color].buffer_index = 1;
+		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
+		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
+
+		return pip_desc;
+	}
+
+	sg_pipeline_desc get_pipeline_desc_basic_instanced(sg_primitive_type type, bool index_buffer)
+	{
+		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
+		pip_desc.shader = state.basic_instanced;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
@@ -123,13 +170,26 @@ namespace frame
 		return pip_desc;
 	}
 
+	sg_pipeline_desc get_pipeline_desc_basic_depth(sg_primitive_type type, bool index_buffer, int stride_in_bytes)
+	{
+		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
+		pip_desc.shader = state.basic_depth;
+		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
+		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
+		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].offset = 0;
+		// single buffer with positions at index 0
+		pip_desc.layout.buffers[0].stride = stride_in_bytes;
+		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
+		pip_desc.layout.buffers[0].step_rate = 0;
+
+		return pip_desc;
+	}
+
 	sg_pipeline_desc get_pipeline_desc_basic(sg_primitive_type type, bool index_buffer, int stride_in_bytes)
 	{
-		sg_pipeline_desc pip_desc = {};
-		pip_desc.primitive_type = type;
+		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
 		pip_desc.shader = state.basic;
-		if (index_buffer)
-			pip_desc.index_type = SG_INDEXTYPE_UINT16;
 		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
 		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
 		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
@@ -150,6 +210,10 @@ namespace frame
 			return get_pipeline_desc_basic(desc.type, desc.index_buffer, desc.stride_in_bytes);
 		case shader_type::basic_instanced:
 			return get_pipeline_desc_basic_instanced(desc.type, desc.index_buffer);
+		case shader_type::basic_depth:
+			return get_pipeline_desc_basic_depth(desc.type, desc.index_buffer, desc.stride_in_bytes);
+		case shader_type::basic_depth_instanced:
+			return get_pipeline_desc_basic_depth_instanced(desc.type, desc.index_buffer);
 		}
 		return {};
 	}
@@ -176,6 +240,8 @@ namespace frame
 
 	void setup_draw_sg()
 	{
+		state.basic_depth_instanced = sg_make_shader(basic_depth_instanced_shader_desc(sg_query_backend()));
+		state.basic_depth = sg_make_shader(basic_depth_shader_desc(sg_query_backend()));
 		state.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
 		state.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
 
@@ -189,24 +255,30 @@ namespace frame
 													   size_t vertices_count,
 													   uint16_t* indices,
 													   size_t indices_count,
-		                                               sg_primitive_type type,
+													   mesh_t mesh_type,
+		                                               sg_primitive_type primitive_type,
 													   sg_usage usage, // TODO same usage for both vertex and index buffer
 													   size_t instances_count)
 	{
 		buffer_data_instanced result{};
 
-		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
+		size_t floats_per_vertex = mesh_type == mesh_t::basic ? 2 : 3;
+
+		size_t vertex_buffer_size = floats_per_vertex * sizeof(float) * vertices_count;
 		std::tie(result.vertex_buffer, result.vertex_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, (char*)vertices, vertex_buffer_size);
 
 		if (indices)
 		{
+			// TODO really 2 * ??
 			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
 			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
 
 		result.instance_buffer = buffer_sg(SG_USAGE_DYNAMIC, SG_BUFFERTYPE_VERTEXBUFFER);
 
-		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic_instanced });
+		auto shader = mesh_type == mesh_t::basic ? shader_type::basic_instanced : shader_type::basic_depth_instanced;
+
+		result.pipeline = create_pipeline({ primitive_type, indices != nullptr, shader });
 		result.draw_elements = draw_elements;
 
 		instanced_element default_instance = {};
@@ -223,22 +295,28 @@ namespace frame
 						           size_t vertices_count,
 							       uint16_t* indices,
 							       size_t indices_count,
-							       sg_primitive_type type,
+								   mesh_t mesh_type,
+							       sg_primitive_type primitive_type,
 		                           sg_usage usage,
 								   uint8_t stride_in_bytes)
 	{
 		buffer_data result{};
 
-		size_t vertex_buffer_size = 2 * sizeof(float) * vertices_count;
+		size_t floats_per_vertex = mesh_type == mesh_t::basic ? 2 : 3;
+
+		size_t vertex_buffer_size = floats_per_vertex * sizeof(float) * vertices_count;
 		std::tie(result.vertex_buffer, result.vertex_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_VERTEXBUFFER }, (char*)vertices, vertex_buffer_size);
 
 		if (indices)
 		{
+			// TODO really 2 * sizeof(uint16_t) ??
 			size_t index_buffer_size = 2 * sizeof(uint16_t) * indices_count;
 			std::tie(result.index_buffer, result.index_buffer_id) = create_buffer({ usage, SG_BUFFERTYPE_INDEXBUFFER }, (char*)indices, index_buffer_size);
 		}
 
-		result.pipeline = create_pipeline({ type, indices != nullptr, shader_type::basic, stride_in_bytes });
+		auto shader = mesh_type == mesh_t::basic ? shader_type::basic : shader_type::basic_depth;
+
+		result.pipeline = create_pipeline({ primitive_type, indices != nullptr, shader, stride_in_bytes });
 		result.draw_elements = draw_elements;
 
 		return result;
@@ -322,6 +400,7 @@ namespace frame
 																				 mesh.vertices_count,
 																			     mesh.indices,
 																				 mesh.indices_count,
+																				 mesh.type,
 																				 type,
 																				 usage,
 	                                                                             0));
@@ -341,6 +420,7 @@ namespace frame
 																			     mesh.vertices_count,
 																				 mesh.indices,
 																				 mesh.indices_count,
+																				 mesh.type,
 																				 type,
 																				 usage,
 																				 instances_count));
@@ -360,9 +440,17 @@ namespace frame
 
 	hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
 	{
-		auto scale = HMM_Scale({ size.x, size.y, 0.0f });
+		auto scale = HMM_Scale({ size.x, size.y, 1.0f });
 		auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
 		auto translate = HMM_Translate({ position.x, position.y, 0.0f });
+		return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
+	}
+
+	hmm_mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec2 size)
+	{
+		auto scale = HMM_Scale({ size.x, size.y, 1.0f });
+		auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
+		auto translate = HMM_Translate({ position.x, position.y, position.z });
 		return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
 	}
 
@@ -388,12 +476,17 @@ namespace frame
 	hmm_mat4 create_projection_view_matrix()
 	{
 		hmm_mat4 view = create_hmm_transform(frame::get_world_transform());
-		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
+		hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -max_depth, max_depth);
 
 		return HMM_MultiplyMat4(projection, view);
 	}
 
 	hmm_mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size)
+	{
+		return HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+	}
+
+	hmm_mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size)
 	{
 		return HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
 	}
@@ -419,6 +512,11 @@ namespace frame
 
 
 	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		return add_draw_instance(id, create_hmm_transform(position, rotation, size), color);
+	}
+
+	size_t add_draw_instance(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
 		return add_draw_instance(id, create_hmm_transform(position, rotation, size), color);
 	}
@@ -531,6 +629,7 @@ namespace frame
 												   mesh.vertices_count,
 												   mesh.indices,
 												   mesh.indices_count,
+												   mesh.type,
 										           type,
 			                                       usage,
 												   stride_in_bytes);
@@ -569,6 +668,11 @@ namespace frame
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
+	{
+		draw_buffer(id, HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size)), color);
+	}
+
+	void draw_buffer(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
 		draw_buffer(id, HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size)), color);
 	}

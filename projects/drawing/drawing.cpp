@@ -33,7 +33,8 @@ enum drawing_type
 {
     instanced,
     basic,
-    image
+    image,
+    depth
 };
 
 void setup_instanced();
@@ -42,12 +43,15 @@ void setup_basic();
 void update_basic();
 void setup_image();
 void update_image();
+void setup_depth();
+void update_depth();
 
 drawing_type_data drawing_types[] =
 {
     { "instanced", setup_instanced, update_instanced },
     { "basic", setup_basic, update_basic },
-    { "image", setup_image, update_image }
+    { "image", setup_image, update_image },
+    { "depth", setup_depth, update_depth }
 };
 
 frame::col4 get_random_color()
@@ -67,17 +71,21 @@ frame::vec2 get_random_position()
 struct
 {
     frame::draw_buffer_id rectangle;
+    frame::draw_buffer_id rectangle_instanced;
     frame::draw_buffer_id circle;
+    frame::draw_buffer_id circle_instanced;
 
     std::string drawing_types_string;
-    drawing_type drawing_type_current = drawing_type::image;
+    drawing_type drawing_type_current = drawing_type::depth;
 
 } state_common;
 
 void setup_common()
 {
-    state_common.rectangle = frame::create_instanced_rectangle();
-    state_common.circle = frame::create_instanced_circle(60);
+    state_common.rectangle = frame::create_draw_buffer("rectangle", frame::create_mesh_rectangle(), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE);
+    state_common.circle = frame::create_draw_buffer("circle", frame::create_mesh_circle(60), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE);
+    state_common.rectangle_instanced = frame::create_instanced_rectangle();
+    state_common.circle_instanced = frame::create_instanced_circle(60);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,12 +116,12 @@ void setup_instanced()
         frame::update_draw_instance(state_instanced.circle_instanced_count, i, get_random_position(), 0.0f, { 10.0f, 10.0f }, col4::WHITE);
 
     for (size_t i = 0; i < 10; i++)
-        frame::add_draw_instance(state_common.circle, get_random_position(), 0.0f, { 10.0f, 10.0f }, get_random_color());
+        frame::add_draw_instance(state_common.circle_instanced, get_random_position(), 0.0f, { 10.0f, 10.0f }, get_random_color());
 
     for (size_t i = 0; i < 10; i++)
     {
         state_instanced_type::rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), { 10.0f, 20.0f }, get_random_color() };
-        tr.index = frame::add_draw_instance(state_common.rectangle, tr.position, tr.rotation, tr.scale, get_random_color());
+        tr.index = frame::add_draw_instance(state_common.rectangle_instanced, tr.position, tr.rotation, tr.scale, get_random_color());
 
         state_instanced.rects.push_back(std::move(tr));
     }
@@ -124,7 +132,7 @@ void update_instanced()
     for (auto& tr : state_instanced.rects)
     {
         tr.rotation += 0.5f;
-        frame::update_draw_instance(state_common.rectangle, tr.index, tr.position, tr.rotation, tr.scale, tr.color);
+        frame::update_draw_instance(state_common.rectangle_instanced, tr.index, tr.position, tr.rotation, tr.scale, tr.color);
     }
 
     //sg_range update_range;
@@ -133,7 +141,7 @@ void update_instanced()
 
     //sg_update_buffer(state.rect.bind.vertex_buffers[1], &update_range);
 
-    frame::draw_buffer_instanced(state_common.rectangle);
+    frame::draw_buffer_instanced(state_common.rectangle_instanced);
     //frame::draw_buffer_instanced(state.circle);
     frame::draw_buffer_instanced(state_instanced.circle_instanced_count, 10);
 }
@@ -440,6 +448,57 @@ void update_image()
     sg_apply_bindings(&state_image.test_sg_image_bind);
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
     sg_draw(0, 4, 1);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////// DEPTH //////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct
+{
+    frame::draw_buffer_id rectangle_depth;
+
+} state_depth;
+
+void setup_depth()
+{
+    auto add_instances = [](col4 color, float depth)
+    {
+        for (size_t i = 0; i < 60; i++)
+        {
+            auto pos = get_random_position();
+            frame::add_draw_instance(state_common.circle_instanced, { pos.x, pos.y, depth }, 0.0f, { 80.0f, 80.0f }, color);
+        }
+    };
+
+    add_instances(col4::EARTHBLUE, -1.0f);
+    add_instances(col4::GOLD, 1.0f);
+
+    frame::mesh_data mesh;
+    // vertices with varying depth, starts at 1.5f on right side and drops to 0.5f on left side
+    mesh.vertices =
+    {
+         0.5f,  0.5f, 1.5f,
+         0.5f, -0.5f, 1.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f,  0.5f, 0.5f
+    };
+    mesh.indices = { 0, 1, 3, 2 };
+    mesh.type = mesh_t::depth;
+
+    state_depth.rectangle_depth = frame::create_draw_buffer("rectangle-depth", mesh, SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE);
+}
+
+void update_depth()
+{
+    frame::draw_buffer_instanced(state_common.circle_instanced);
+
+    frame::draw_buffer(state_common.rectangle, { 0.0f, 0.0f, 10.0f }, 0.0f, { 60.0f, 60.0f }, col4::ORANGE);
+    frame::draw_buffer(state_common.rectangle, { 0.0f, 0.0f, 0.0f }, 0.0f, { 80.0f, 80.0f }, col4::DARKGRAY);
+    frame::draw_buffer(state_common.rectangle, { 0.0f, 0.0f, -100.0f }, 0.0f, { 100.0f, 100.0f }, col4::BLUE);
+
+    frame::draw_buffer(state_depth.rectangle_depth, { -150.0f, -100.0f }, 0.0f, { 250.0f, 200.0f }, col4::RGB(0,255,12, 128));
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

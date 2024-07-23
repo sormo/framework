@@ -76,7 +76,7 @@ void setup_sg()
 void draw_sg()
 {
     custom_shader_vs_params_t vs_params;
-    vs_params.mvp = frame::create_world_mvp({}, 0.0f, { 500.0f, 500.0f });
+    vs_params.mvp = frame::create_world_mvp(vec2{}, 0.0f, { 500.0f, 500.0f });
 
     sg_apply_pipeline(state.pip);
     sg_apply_bindings(&state.bind);

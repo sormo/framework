@@ -117,7 +117,7 @@ fs_params_planet_t create_planet_fs_params()
 static vs_params_planet_t create_planet_vs_params()
 {
     vs_params_planet_t result = {};
-    result.mvp = frame::create_world_mvp({}, 0.0f, { 500.0f, 500.0f });
+    result.mvp = frame::create_world_mvp(vec2{}, 0.0f, { 500.0f, 500.0f });
 
     return result;
 }
