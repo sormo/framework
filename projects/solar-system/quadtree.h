@@ -39,7 +39,7 @@ struct quadtree
 
             for (size_t j = 0; j < body.trajectory.get_points().size(); j++)
             {
-                if (root->rect.contains(body.trajectory.get_points()[j]))
+                if (root->rect.contains(body.trajectory.get_points()[j].xy<float>()))
                 {
                     indices.push_back(j);
                     root->bodies.push_back(&body);
@@ -206,7 +206,7 @@ private:
 
             for (size_t j = parent_indices[i]; j < body->trajectory.get_points().size(); j++)
             {
-                if (result->rect.contains(body->trajectory.get_points()[j]))
+                if (result->rect.contains(body->trajectory.get_points()[j].xy<float>()))
                 {
                     indices.push_back(j);
                     result->bodies.push_back(body);

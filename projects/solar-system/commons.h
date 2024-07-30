@@ -1,10 +1,13 @@
 #pragma once
 #include "unit.h"
+#include "drawing_sg.h"
+#include "utils.h"
 
 namespace commons
 {
     static const double MIN_ZOOMED_SIZE = 0.1;
     static const double DRAW_SIZE_FACTOR = 200.0;
+    static const double DRAW_DEPTH_FACTOR = 10.0;
     static const double DRAW_VELOCITY_FACTOR = 13.0;
 
     // font size for body names (when not zoomed in)
@@ -32,9 +35,9 @@ namespace commons
         bool body_system_initializing = false;
     };
 
-    static frame::vec2 draw_cast(const frame::vec3d& p)
+    static frame::vec3 draw_cast(const frame::vec3d& p)
     {
-        return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR) };
+        return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR), (float)frame::clamp(p.z * DRAW_DEPTH_FACTOR, -frame::max_depth, frame::max_depth) };
     }
 
     static float pixel_to_world(float s)
@@ -47,12 +50,12 @@ namespace commons
         return s * frame::get_world_scale().x;
     }
 
-    static std::vector<frame::vec2> draw_cast(const std::vector<frame::vec3d>& data, double scale = 1.0)
+    static std::vector<frame::vec3> draw_cast(const std::vector<frame::vec3d>& data, double scale = 1.0)
     {
-        std::vector<frame::vec2> r;
+        std::vector<frame::vec3> r;
         r.reserve(data.size());
         for (const auto& o : data)
-            r.push_back(draw_cast(o * scale));
+            r.push_back(draw_cast(frame::vec3d{ o.x * scale, o.y * scale, o.z }));
         return r;
     }
 

@@ -361,6 +361,33 @@ namespace frame
 		return result;
 	}
 
+	mesh_data create_mesh_circle(size_t count, float depth)
+	{
+		mesh_data result;
+
+		result.vertices.resize(count * 3);
+		for (size_t i = 0; i < count; i++)
+		{
+			float angle = 2.0f * (float)frame::PI * (float)i / (float)(count);
+
+			result.vertices[i * 3 + 0] = std::cos(angle) * 0.5f;
+			result.vertices[i * 3 + 1] = std::sin(angle) * 0.5f;
+			result.vertices[i * 3 + 2] = depth;
+		}
+
+		std::vector<uint16_t> indices;
+		for (uint16_t i = 0; i < count - 2; i++)
+		{
+			result.indices.push_back(0);
+			result.indices.push_back(i + 1);
+			result.indices.push_back(i + 2);
+		}
+
+		result.type = mesh_t::depth;
+
+		return result;
+	}
+
 	mesh_data create_mesh_circle_no_index(size_t count)
 	{
 		mesh_data result;
@@ -561,6 +588,20 @@ namespace frame
 		memcpy(instance->color, &color, sizeof(color));
 	}
 
+	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec3& position, const frame::col4& color)
+	{
+		auto& data = state.buffer_data_instanced[id];
+
+		instanced_element* instance;
+		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
+
+		instance->model[12] = position.x;
+		instance->model[13] = position.y;
+		instance->model[14] = position.z;
+
+		memcpy(instance->color, &color, sizeof(color));
+	}
+
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
 		update_draw_instance(id, index, create_hmm_transform(position, rotation, size), color);
@@ -621,7 +662,10 @@ namespace frame
 		// TODO how does stride work with indices ???
 		// doing ceil to draw as much as possible, test whether this is ok, possibly add elements_count as function argument
 		if (stride_in_bytes)
-			elements_count = (size_t)std::ceil((float)elements_count / ((float)stride_in_bytes / (float)sizeof(frame::vec2)));
+		{
+			float stride_divisor = (float)stride_in_bytes / (mesh.type == mesh_t::basic ? (float)sizeof(frame::vec2) : (float)sizeof(frame::vec3));
+			elements_count = (size_t)std::ceil((float)elements_count / stride_divisor);
+		}
 
 		state.buffer_data[id] = create_buffer_data(name,
 								        		   elements_count,
@@ -653,6 +697,7 @@ namespace frame
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
+		// TODO this can be wrong if using different shader
 		basic_vs_params_t vs_params;
 		memcpy(vs_params.mvp, mvp.Elements, sizeof(mvp.Elements));
 		memcpy(vs_params.color, color.data.rgba, sizeof(color.data.rgba));
@@ -689,6 +734,16 @@ namespace frame
 		for (size_t i = 0; i < ids.size(); i++)
 		{
 			draw_buffer(ids[i], HMM_MultiplyMat4(projection_view, create_hmm_transform(transforms[i])), colors[i]);
+		}
+	}
+
+	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<hmm_mat4>& transforms, const std::vector<frame::col4>& colors)
+	{
+		hmm_mat4 projection_view = create_projection_view_matrix();
+
+		for (size_t i = 0; i < ids.size(); i++)
+		{
+			draw_buffer(ids[i], HMM_MultiplyMat4(projection_view, transforms[i]), colors[i]);
 		}
 	}
 

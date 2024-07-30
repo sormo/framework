@@ -85,7 +85,7 @@ void evaluate_body_view(bool init = false, bool allow_camera_move = false)
     auto apply_view = [](body_node* view_b)
     {
         view_body = view_b;
-        view::set_view([body = view_body]() { return commons::draw_cast(body->get_absolute_position()); }, 1000.0);
+        view::set_view([body = view_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, 1000.0);
     };
 
     double semi_major_axis_pixels_main = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->get_main_body()->orbit.semi_major_axis));
@@ -100,14 +100,14 @@ void evaluate_body_view(bool init = false, bool allow_camera_move = false)
     {
         apply_view(clicked_body->get_main_body());
         // here we again use the fact that we have position relative to main body, so only scale is needed
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()); }, allow_camera_move);
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()).xy<float>(); }, allow_camera_move);
     }
     else if ((init || view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
     {
         view_body = nullptr;
 
         view::clear_view();
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()); }, allow_camera_move);
+        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, allow_camera_move);
     }
 }
 

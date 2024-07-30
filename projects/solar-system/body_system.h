@@ -8,7 +8,7 @@
 struct body_system
 {
 	void setup();
-	void draw(body_node* main_body = nullptr);
+	void draw(body_node* view_body = nullptr);
 	void update();
 
 	body_node* query(const frame::vec2& world_position, float radius_in_pixels);

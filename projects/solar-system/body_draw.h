@@ -36,4 +36,6 @@ private:
 	body_color* colors;
 
 	frame::draw_buffer_id points_instance_buffer = 0;
+
+	frame::draw_buffer_id planet_circle = 0;
 };

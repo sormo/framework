@@ -366,6 +366,7 @@ public:
     point_type_3& operator=(point_type_3&& o);
 
     template<class T> point_type_3(const point_type<T>& o);
+    template<class T> point_type_3(const point_type<T>& o, float v);
     //Point& operator+=(const Point& o);
     //Point& operator-=(const Point& o);
     //Point operator+(const Point& o) const;
@@ -621,6 +622,13 @@ template<class M>
 template<class T>
 point_type_3<M>::point_type_3(const point_type<T>& o)
     : x(o.x), y(o.y), z(0.0)
+{
+}
+
+template<class M>
+template<class T>
+point_type_3<M>::point_type_3(const point_type<T>& o, float v)
+    : x(o.x), y(o.y), z(v)
 {
 }
 

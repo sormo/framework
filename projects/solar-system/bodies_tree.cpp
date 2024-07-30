@@ -21,11 +21,11 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
 
     float query_radius_sqr = query_radius * query_radius;
 
-    std::function<void(vec2, body_node&)> query_recursive = [this, &query_recursive, &result, query_point, query_radius_sqr](vec2 parent_position, body_node& body)
+    std::function<void(vec3, body_node&)> query_recursive = [this, &query_recursive, &result, query_point, query_radius_sqr](vec3 parent_position, body_node& body)
     {
         auto position = commons::draw_cast(body.orbit.position) + parent_position;
 
-        if (!is_barycenter(body) && (position - query_point).length_sqr() <= query_radius_sqr)
+        if (!is_barycenter(body) && (position.xy<float>() - query_point).length_sqr() <= query_radius_sqr)
             result.push_back(&body);
 
         for (auto& child : body.childs)
@@ -195,13 +195,14 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 
 void bodies_tree::update_current_positions(const quadtree::query_result_type& parents)
 {
-    std::function<void(vec2, body_node&)> update_recursive = [this, &update_recursive](vec2 parent_position, body_node& data)
+    std::function<void(vec3, body_node&)> update_recursive = [this, &update_recursive](vec3 parent_position, body_node& data)
     {
         if (is_body_node_skip(data))
             return;
 
         // here we use the fact that we have already position relative to main body, so only scale is needed
-        data.current_position = commons::draw_cast(data.orbit.position * view::get_scale()) + parent_position;
+        auto position = vec3{ data.orbit.position.x * view::get_scale(), data.orbit.position.y * view::get_scale(), data.orbit.position.z };
+        data.current_position = commons::draw_cast(position) + parent_position;
 
         if (!data.childs.empty())
         {
@@ -223,22 +224,6 @@ void bodies_tree::step(double time_delta)
 bool bodies_tree::is_barycenter(const body_node& body)
 {
     return body.type == body_type::barycenter;
-}
-
-// TODO not needed 
-void create_world_points_in_body_trajectories(bodies_tree& data)
-{
-    std::function<void(body_node&, vec2)> create_recursive = [&create_recursive](body_node& data, vec2 parent_position)
-    {
-        for (auto& p : data.trajectory.get_points())
-            p += parent_position;
-
-        vec2 position = commons::draw_cast(data.orbit.position);
-        for (auto& child : data.childs)
-            create_recursive(*child, parent_position + position);
-    };
-
-    create_recursive(*data.parent, {});
 }
 
 void bodies_tree::clear()

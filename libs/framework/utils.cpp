@@ -520,4 +520,9 @@ namespace frame
 
         return ret;
     }
+
+    double clamp(double x, double min_val, double max_val)
+    {
+        return x < min_val ? min_val : (x > max_val ? max_val : x);
+    }
 }

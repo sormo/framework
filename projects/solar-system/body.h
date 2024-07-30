@@ -57,7 +57,7 @@ struct body_node
 
     trajectory_resolutions trajectory;
     frame::rectangle name_text_rectangle; // cached name text rectangle in screen coordinates
-    frame::vec2 current_position; // cache used during drawing
+    frame::vec3 current_position; // cache used during drawing
 
     body_node* get_main_body(); // main body is body orbiting solar-system baarycenter
     frame::vec3d get_absolute_position();

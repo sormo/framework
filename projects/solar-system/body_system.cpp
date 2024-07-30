@@ -205,10 +205,10 @@ void body_system::draw_lagrangians(body_node* body)
 
         position += body->current_position;
 
-        lagrangians[lagr] = position;
+        lagrangians[lagr] = position.xy<float>();
 
-        draw_circle(position, view::get_pixel_to_view(3.0f), col4::DARKGRAY);
-        draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position, commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+        draw_circle(position.xy<float>(), view::get_pixel_to_view(3.0f), col4::DARKGRAY);
+        draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position.xy<float>(), commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
     }
 
     minor_system system(*body);
@@ -216,10 +216,10 @@ void body_system::draw_lagrangians(body_node* body)
     auto thickness = view::get_pixel_to_view(0.5f);
 
     draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position, lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
 }
 
 body_node* body_system::query(const frame::vec2& world_position, float radius_in_pixels)
@@ -244,7 +244,7 @@ body_node* body_system::query(const frame::vec2& world_position, float radius_in
     for (auto body : queried_bodies)
     {
         auto position = commons::draw_cast(body->get_absolute_position());
-        clicked_bodies.push_back({ (position - world_position).length_sqr(), position, body });
+        clicked_bodies.push_back({ (position.xy<float>() - world_position).length_sqr(), position.xy<float>(), body });
     }
 
     // merge bodies which are too close together
@@ -321,15 +321,15 @@ void body_system::update_current_positions(body_node* main_body)
     }
 }
 
-void body_system::draw(body_node* main_body)
+void body_system::draw(body_node* view_body)
 {
-    update_current_positions(main_body);
+    update_current_positions(view_body);
 
-    bool is_root = main_body == nullptr;
-    body_drawer.draw(is_root ? bodies.parent : main_body, is_root);
+    bool is_root = view_body == nullptr;
+    body_drawer.draw(is_root ? bodies.parent : view_body, is_root);
 
-    if (!is_root && settings.draw_lagrangians)
-        draw_lagrangians(main_body);
+    if (info.get_body() && settings.draw_lagrangians)
+        draw_lagrangians(info.get_body());
 
     draw_distance_legend();
     draw_current_time();

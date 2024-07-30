@@ -6,13 +6,14 @@ trajectories_draw_cache trajectory_resolutions::draw_cache;
 
 const std::array<trajectory_resolutions::resmap_type, 4> trajectory_resolutions::resmap =
 { {
-    { 40, 600 },
+    // resolutions below must divide max_orbit_points without remainder
+    { 50, 600 },
     { 200, 3000 },
     { 500, 16'000 },
     { max_orbit_points, 64'000 }
 } };
 
-void trajectories_draw_cache::draw(frame::draw_buffer_id id, frame::mat3&& transform, frame::col4&& color)
+void trajectories_draw_cache::draw(frame::draw_buffer_id id, hmm_mat4&& transform, frame::col4&& color)
 {
     ids.push_back(id);
     transforms.push_back(std::move(transform));
@@ -28,36 +29,41 @@ void trajectories_draw_cache::flush()
     colors.clear();
 }
 
-frame::mat3 trajectory_resolutions::get_transform(const frame::vec2& position, bool has_stationary_parent)
+hmm_mat4 trajectory_resolutions::get_transform(const frame::vec3& position, bool has_stationary_parent)
 {
+    auto create_transform = [this](const frame::vec3& position)
+    {
+        return frame::create_hmm_transform(position, 0.0f, frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
+    };
+
     if (has_stationary_parent)
     {
         if (!cached_transform)
-            cached_transform = frame::translation(position) * frame::scale(frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
+            cached_transform = create_transform(position);
         return *cached_transform;
     }
     else
     {
         cached_transform = {};
 
-        return frame::translation(position) * frame::scale(frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
+        return create_transform(position);
     }
 }
 
-static frame::draw_buffer_id create_trajectory_with_stride(const std::vector<frame::vec2>& points, int point_count)
+static frame::draw_buffer_id create_trajectory_with_stride(const std::vector<frame::vec3>& points, int point_count)
 {
-    int stride_in_bytes = ((int)trajectory_resolutions::max_orbit_points / point_count) * (int)sizeof(frame::vec2);
+    int stride_in_bytes = ((int)trajectory_resolutions::max_orbit_points / point_count) * (int)sizeof(frame::vec3);
 
     // TODO fix SG_USAGE_IMMUTABLE, problem is that we are re-creating buffer each time (in a case of immutable buffer)
-    return frame::create_draw_buffer("polyline", { (float*)points.data(), points.size(), nullptr, 0 }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC, stride_in_bytes);
+    return frame::create_draw_buffer("polyline", { (float*)points.data(), points.size(), nullptr, 0, frame::mesh_t::depth }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC, stride_in_bytes);
 }
 
-void trajectory_resolutions::draw(const frame::vec2& world_translation, double semi_major_axis_world_size, bool has_stationary_parent)
+void trajectory_resolutions::draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent)
 {
     auto get_color = [](int point_count)
     {
 #ifdef _DEBUG
-        if (point_count == 40)
+        if (point_count == 50)
             return frame::col4::DARKGRAY;
         else if (point_count == 200)
             return frame::col4::BLUE;
@@ -146,7 +152,7 @@ void trajectory_resolutions::init(kepler_orbit& orbit)
     return;
 }
 
-std::vector<frame::vec2>& trajectory_resolutions::get_points()
+std::vector<frame::vec3>& trajectory_resolutions::get_points()
 {
     return points;
 }

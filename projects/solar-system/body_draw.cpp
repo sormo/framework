@@ -50,6 +50,9 @@ void body_draw_shaded::setup()
     pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
     pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
 
+    pipeline_desc.depth.write_enabled = true;
+    pipeline_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
+
     pip_planet = sg_make_pipeline(&pipeline_desc);
 }
 
@@ -71,7 +74,7 @@ fs_params_body_draw_planet_t create_planet_fs_params(const col4& color, const ve
     return result;
 }
 
-static vs_params_body_draw_planet_t create_planet_vs_params(const vec2& position, const float radius)
+static vs_params_body_draw_planet_t create_planet_vs_params(const vec3& position, const float radius)
 {
     vs_params_body_draw_planet_t result = {};
 
@@ -129,6 +132,8 @@ void body_draw::setup(body_color& cols)
 {
     body_drawer.setup();
     colors = &cols;
+
+    planet_circle = frame::create_draw_buffer("planet-circle", frame::create_mesh_circle(60, 0.0f), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE);
 }
 
 void body_draw::draw_world_bodies(body_node* root)
@@ -155,8 +160,8 @@ void draw_main_trajectory(body_node* main_body)
     float max_pixel_size = 10'000; // some large number
     auto to = commons::draw_cast(main_body->orbit.velocity).normalized() * view::get_pixel_to_view(max_pixel_size);
 
-    frame::draw_line_solid_ex(main_body->current_position, to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
-    frame::draw_line_solid_ex(main_body->current_position, -to, view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
+    frame::draw_line_solid_ex(main_body->current_position.xy<float>(), to.xy<float>(), view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
+    frame::draw_line_solid_ex(main_body->current_position.xy<float>(), -to.xy<float>(), view::get_pixel_to_view(1.0f), frame::col4::DARKGRAY);
 }
 
 void body_draw::draw_main_body(body_node* main_body)
@@ -195,7 +200,7 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
         if (is_body_node_skip(data))
             return;
 
-        vec2 position = data.current_position;
+        auto position = data.current_position;
 
         float default_radius = view::get_pixel_to_world(3.5f);
         double body_radius = commons::convert_km_to_world_size(data.radius);
@@ -204,16 +209,22 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
 
         if (body_radius > default_radius)
         {
+            float radius = (float)view::get_world_to_view(body_radius);
+
             if (settings.shaded_planets)
-                body_drawer.draw(data, (float)view::get_world_to_view(body_radius), color);
+                body_drawer.draw(data, radius, color);
             else
-                draw_circle(position, (float)view::get_world_to_view(body_radius), color);
+                frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
         }
-        else
+        else if (data.type != body_type::barycenter)
         {
+            auto screen_position = frame::get_world_to_screen(position.xy<float>());
+            // increase depth by 10% to have point above trajectory
+            float depth = position.z + 0.1f * std::fabs(position.z);
+
             frame::update_draw_instance(points_instance_buffer,
                                         point_counter++,
-                                        frame::get_world_to_screen(position),
+                                        vec3(screen_position, depth),
                                         color);
         }
 
@@ -241,7 +252,7 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
 
 void body_draw::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body)
 {
-    std::function<void(body_node&, const vec2&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body](body_node& data, const vec2& parent_position)
+    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body](body_node& data, const vec3& parent_position)
     {
         if (is_body_node_skip(data))
             return;
@@ -257,7 +268,7 @@ void body_draw::draw_trajectories(const quadtree::query_result_type& parents, bo
 
     for (auto parent : parents)
     {
-        draw_recursive(*parent, parent->parent ? parent->parent->current_position : vec2{});
+        draw_recursive(*parent, parent->parent ? parent->parent->current_position : vec3{});
     }
 
     trajectory_resolutions::draw_cache.flush();
@@ -319,7 +330,7 @@ void body_draw::draw_names(const quadtree::query_result_type& parents)
         if (is_body_node_skip(*body))
             continue;
 
-        vec2 position = body->current_position;
+        auto position = body->current_position;
 
         if (body->type != body_type::barycenter)
         {
@@ -327,16 +338,16 @@ void body_draw::draw_names(const quadtree::query_result_type& parents)
             if (computed_font_size > commons::NAME_FONT_SIZE)
             {
                 // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position, computed_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
+                draw_text_ex(body->name.c_str(), position.xy<float>(), computed_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
             }
             else
             {
-                auto rect = get_text_rectangle(body, position);
+                auto rect = get_text_rectangle(body, position.xy<float>());
 
                 if (!check_overlap(rect))
                 {
                     rectangles.push_back(std::move(rect));
-                    draw_text_ex(body->name.c_str(), position, commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+                    draw_text_ex(body->name.c_str(), position.xy<float>(), commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
                 }
             }
         }
