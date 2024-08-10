@@ -8,8 +8,6 @@ namespace frame
 	using draw_buffer_id = uint32_t;
 	constexpr draw_buffer_id draw_buffer_id_invalid = 0;
 
-	static const float max_depth = 1000.0f;
-
 	enum class mesh_t
 	{
 		basic, // two float (x, y) per vertex

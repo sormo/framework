@@ -22,8 +22,8 @@ struct body_draw
 	void draw(body_node* body, bool is_root);
 
 private:
-
-	void draw_names(const quadtree::query_result_type& parents);
+	// if view is centered on body, we will draw names with depth, otherwise names are always in front
+	void draw_names(const quadtree::query_result_type& parents, bool is_view);
 	void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body);
 	void draw_points(const quadtree::query_result_type& parents, body_color& colors);
 

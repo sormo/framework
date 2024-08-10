@@ -1,4 +1,8 @@
 #include "framework.h"
+#include <sokol_app.h>
+#include <sokol_gfx.h>
+#include <sokol_gl.h>
+#include <sokol_fontstash.h>
 #include <cmath>
 #include <vector>
 
@@ -655,9 +659,32 @@ namespace frame
         case text_align::middle_left: return NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT;
         case text_align::middle_middle: return NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER;
         case text_align::middle_right: return NVG_ALIGN_MIDDLE | NVG_ALIGN_RIGHT;
+        case text_align::baseline_left: return NVG_ALIGN_BASELINE | NVG_ALIGN_LEFT;
+        case text_align::baseline_middle: return NVG_ALIGN_BASELINE | NVG_ALIGN_CENTER;
+        case text_align::baseline_right: return NVG_ALIGN_BASELINE | NVG_ALIGN_RIGHT;
         case text_align::bottom_left: return NVG_ALIGN_BOTTOM | NVG_ALIGN_LEFT;
         case text_align::bottom_middle: return NVG_ALIGN_BOTTOM | NVG_ALIGN_CENTER;
         case text_align::bottom_right: return NVG_ALIGN_BOTTOM | NVG_ALIGN_RIGHT;
+        }
+        return -1;
+    }
+
+    int map_to_fons_align(text_align align)
+    {
+        switch (align)
+        {
+        case text_align::top_left: return FONS_ALIGN_TOP | FONS_ALIGN_LEFT;
+        case text_align::top_middle: return FONS_ALIGN_TOP | FONS_ALIGN_CENTER;
+        case text_align::top_right: return FONS_ALIGN_TOP | FONS_ALIGN_RIGHT;
+        case text_align::middle_left: return FONS_ALIGN_MIDDLE | FONS_ALIGN_LEFT;
+        case text_align::middle_middle: return FONS_ALIGN_MIDDLE | FONS_ALIGN_CENTER;
+        case text_align::middle_right: return FONS_ALIGN_MIDDLE | FONS_ALIGN_RIGHT;
+        case text_align::baseline_left: return FONS_ALIGN_BASELINE | FONS_ALIGN_LEFT;
+        case text_align::baseline_middle: return FONS_ALIGN_BASELINE | FONS_ALIGN_CENTER;
+        case text_align::baseline_right: return FONS_ALIGN_BASELINE | FONS_ALIGN_RIGHT;
+        case text_align::bottom_left: return FONS_ALIGN_BOTTOM | FONS_ALIGN_LEFT;
+        case text_align::bottom_middle: return FONS_ALIGN_BOTTOM | FONS_ALIGN_CENTER;
+        case text_align::bottom_right: return FONS_ALIGN_BOTTOM | FONS_ALIGN_RIGHT;
         }
         return -1;
     }
@@ -763,15 +790,102 @@ namespace frame
         nvgRestore(vg);
     }
 
-    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align)
+    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align, float blur, float spacing)
     {
         nvgSave(vg);
 
         nvgFontFace(vg, font_name);
+        nvgFontBlur(vg, blur);
+        nvgTextLetterSpacing(vg, spacing);
 
         draw_text_common(text, position, size, color, align);
 
         nvgRestore(vg);
+    }
+
+    void set_text_transform2(const vec3& position, float size)
+    {
+        // this is attempt to fix slow text rendering when size is big, but doesn't look to help
+        float sizeDiscrete = std::roundf(size);
+        float scale = size / sizeDiscrete;
+
+        // TODO
+        auto t = get_world_translation();
+        auto s = get_world_scale();
+
+        float world[16] =
+        {
+             1.0f, 0.0f,       0.0f, 0.0f,
+             0.0f, 1.0f,       0.0f, 0.0f,
+             0.0f, 0.0f,       1.0f, 0.0f,
+              t.x,  t.y, position.z, 1.0f
+        };
+
+        sgl_mult_matrix(world);
+    }
+
+    float draw_text_ex2(const char* text, const vec3& position, float size, const col4& color, const char* font_name, text_align align, float blur, float spacing)
+    {
+        sgl_push_matrix();
+        set_text_transform2(position, size);
+
+        //fonsClearState(fons);
+
+        //fonsSetSize(fons, size * sapp_dpi_scale());
+        fonsSetSize(fons, size);
+        fonsSetFont(fons, fonsGetFontByName(fons, font_name));
+        fonsSetColor(fons, sfons_rgba(color.red() * 255, color.green() * 255, color.blue() * 255, color.alpha() * 255));
+        fonsSetSpacing(fons, spacing);
+        fonsSetBlur(fons, blur);
+        fonsSetAlign(fons, map_to_fons_align(align));
+
+        auto result = fonsDrawText(fons, position.x * get_world_scale().x, position.y * get_world_scale().y, text, nullptr);
+
+        sgl_pop_matrix();
+
+        //return result + position.x / get_world_scale().x;
+        return result;
+    }
+
+    font_metrics get_font_metrics2(const char* font_name, float size)
+    {
+        font_metrics result = {};
+        fonsSetFont(fons, fonsGetFontByName(fons, font_name));
+        fonsSetSize(fons, size * sapp_dpi_scale());
+        fonsVertMetrics(fons, &result.ascender, &result.descender, &result.line_height);
+        return result;
+    }
+
+    rectangle get_text_rectangle2(const char* text, const vec3& position, float size, const char* font_name, text_align align, float blur, float spacing)
+    {
+        fonsClearState(fons);
+
+        // size, spacig and blur can be scaled by scale if text should be also scaled
+        fonsSetSize(fons, size);
+        fonsSetFont(fons, fonsGetFontByName(fons, font_name));
+        fonsSetSpacing(fons, spacing);
+        fonsSetAlign(fons, map_to_fons_align(align));
+        fonsSetBlur(fons, blur);
+
+        float bounds[4] = {};
+        float scalex = get_world_scale().x;
+        float scaley = get_world_scale().y;
+
+        fonsTextBounds(fons, position.x * scalex, position.y * scaley, text, nullptr, bounds);
+        // Use line bounds for height.
+        fonsLineBounds(fons, position.y * scaley, &bounds[1], &bounds[3]);
+
+        float invscalex = 1.0f / scalex;
+        float invscaley = 1.0f / scaley;
+        bounds[0] *= invscalex;
+        bounds[1] *= invscaley;
+        bounds[2] *= invscalex;
+        bounds[3] *= invscaley;
+
+        vec2 min = vec2{ bounds[0], bounds[1] };
+        vec2 max = vec2{ bounds[2], bounds[3] };
+
+        return rectangle::from_min_max(min, max);
     }
 
     void load_font(const char* font_name, const char* file_path)
@@ -784,6 +898,7 @@ namespace frame
                 memcpy(malloc_data, data.data(), data.size());
 
                 nvgCreateFontMem(vg, font_name, malloc_data, (int)data.size(), 1);
+                fonsAddFontMem(fons, font_name, malloc_data, (int)data.size(), true, 0);
             }
         });
     }

@@ -258,7 +258,8 @@ void draw_welcome_screen()
 {
     auto center = frame::get_world_position_screen_relative({ 0.5f, 0.5f });
 
-    frame::draw_text_ex("Solar System", center, 60.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
+    frame::draw_text_ex("Solar System", center, 60.0f, col4::DARKGRAY, "roboto-medium", text_align::middle_middle, 5.0f);
+    frame::draw_text_ex("Solar System", center, 59.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
 
     if (sokol_image)
     {

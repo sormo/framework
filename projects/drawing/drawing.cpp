@@ -1,14 +1,44 @@
-#include <framework.h>
+﻿#include <framework.h>
 #include <vector>
 #include <string>
 #include <sokol_app.h>
 #include <sokol_gfx.h>
 #include <sokol_time.h>
+#include <sokol_fetch.h>
+#include <sokol_log.h>
 #include <stb_image.h>
 #include "imgui.h"
 #include "utils.h"
 #include "drawing_sg.h"
 #include "svg.h"
+
+#ifdef __EMSCRIPTEN__
+#define SOKOL_GLES3
+#else
+#define SOKOL_GLCORE
+#endif
+
+//#define SOKOL_GL_IMPL
+#include "sokol_gl.h"
+
+#include <stdio.h>  // needed by fontstash's IO functions even though they are not used
+//#define FONTSTASH_IMPLEMENTATION
+//#define FONTSTASH_DISABLE_STB_TRUETYPE_IMPLEMENTATION
+#if defined(_MSC_VER )
+#pragma warning(disable:4996)   // strncpy use in fontstash.h
+#endif
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+#include "nanovg/fontstash.h"
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+//#define SOKOL_FONTSTASH_IMPL
+#include "sokol_fontstash.h"
 
 #define HANDMADE_MATH_IMPLEMENTATION
 #include <HandmadeMath.h>
@@ -34,7 +64,8 @@ enum drawing_type
     instanced,
     basic,
     image,
-    depth
+    depth,
+    text
 };
 
 void setup_instanced();
@@ -45,13 +76,16 @@ void setup_image();
 void update_image();
 void setup_depth();
 void update_depth();
+void setup_text();
+void update_text();
 
 drawing_type_data drawing_types[] =
 {
     { "instanced", setup_instanced, update_instanced },
     { "basic", setup_basic, update_basic },
     { "image", setup_image, update_image },
-    { "depth", setup_depth, update_depth }
+    { "depth", setup_depth, update_depth },
+    { "text", setup_text, update_text }
 };
 
 frame::col4 get_random_color()
@@ -76,7 +110,7 @@ struct
     frame::draw_buffer_id circle_instanced;
 
     std::string drawing_types_string;
-    drawing_type drawing_type_current = drawing_type::depth;
+    drawing_type drawing_type_current = drawing_type::basic;
 
 } state_common;
 
@@ -86,6 +120,11 @@ void setup_common()
     state_common.circle = frame::create_draw_buffer("circle", frame::create_mesh_circle(60), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_IMMUTABLE);
     state_common.rectangle_instanced = frame::create_instanced_rectangle();
     state_common.circle_instanced = frame::create_instanced_circle(60);
+
+    load_font("Regular", "DroidSerif-Regular.ttf");
+    load_font("Italic", "DroidSerif-Italic.ttf");
+    load_font("Bold", "DroidSerif-Bold.ttf");
+    load_font("Japanese", "DroidSansJapanese.ttf");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +175,7 @@ void update_instanced()
     }
 
     //sg_range update_range;
-    //update_range.ptr = state.rect.array;
+    //update_range.ptr = state_text.rect.array;
     //update_range.size = sizeof(instanced_element) * state.rect.instances;
 
     //sg_update_buffer(state.rect.bind.vertex_buffers[1], &update_range);
@@ -176,7 +215,7 @@ void update_basic()
 
     auto rect = frame::get_text_rectangle(text, text_center, text_size, text_align);
     frame::draw_rectangle(rect.center(), rect.size().x, rect.size().y, frame::col4::ORANGE);
-    frame::draw_text(text, text_center, text_size, col4::GRAY, text_align);
+    frame::draw_text(text, text_center, text_size, col4::BLACK, text_align);
 
     //frame::draw_circle({ 200.0f, 200.0f }, 3.0f, col4::RED);
 
@@ -209,6 +248,43 @@ void update_basic()
     frame::draw_buffer(state_basic.polyline, { 200.0f, 200.0f }, 90.0f, { 0.5f, 0.5f }, frame::col4::WHITE);
     //frame::draw_buffer(state.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 200.0f, 200.0f }), frame::col4::WHITE);
     frame::draw_buffer(state_basic.center, frame::translation({ 0.0f, 0.0f }) * frame::scale({ 5.0f, 5.0f }), frame::col4::WHITE);
+
+    {
+        auto draw_text = [](const char* text, const vec2& pos, frame::text_align align, col4 colorRect)
+        {
+            const float font_size = 40.0f;
+            auto rect = get_text_rectangle2(text, pos, font_size, "Regular", align);
+            frame::draw_circle(pos, 3.0f / get_world_scale().x, col4::RED);
+            frame::draw_buffer(state_common.rectangle, { rect.center(), -1.0f }, 0.0f, rect.size(), colorRect);
+            draw_text_ex2(text, vec3(pos, 1.0f), font_size, col4::BLACK, "Regular", align);
+        };
+
+        draw_text("TopLeft", { -200.0f, -200.0f }, text_align::top_left, col4::ORANGE);
+        draw_text("MiddleMiddle", { -200.0f, -100.0f }, text_align::middle_middle, col4::EARTHBLUE);
+        draw_text("BottomRight", { -200.0f, 0.0f }, text_align::bottom_right, col4::GOLD);
+    }
+
+    {
+        float y = 50.0f;
+        {
+            static float x = -300.0f;
+            static float speed = 0.01f;
+            x += speed;
+
+            frame::draw_text_ex2("TEST", { x, y, 0.0f }, 30.0f, col4::BLACK, "Regular", text_align::bottom_left);
+            if (x > 300.0f || x < -300.0f)
+                speed = -speed;
+        }
+        {
+            static float x = 300.0f;
+            static float speed = -0.01f;
+            x += speed;
+
+            frame::draw_text_ex("TEST", { x, y }, 30.0f, col4::WHITE, "Regular", text_align::bottom_left);
+            if (x > 300.0f || x < -300.0f)
+                speed = -speed;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,47 +401,47 @@ void setup_image()
                                      </svg>)";
 
     static const char sokol[] = "iVBORw0KGgoAAAANSUhEUgAAA5gAAACwCAYAAABq38F7AAAAAXNSR0IArs4c6QAACVxJREFUeJzt3d+"
-                                "LnFcZB/CZss0mJiHJNkbFWg2UUKNWQ0GpIJIIJhZ/Ia1Y4520hUIpiEW8C94UaS9aFGmkKogh0kapVs"
-                                "SaJilVkEjboFGMunQDJtLuprMxP5psYjL+A5t5hfM9vDOzn8/t5Jz3cN5nntlvzsXp9r/7wU5V0+v7d"
-                                "R/AIFM/OTrw896ud3SLHnDDhaLhrXtjRd351f9AI1+fh99Vd/5OR/0M0Fg/37iprH5qO7lmpN9v9f2/"
-                                "8UzR8Eb6f6v0/0bqp0WN9fmVDxTVZ/exAyXDh951bS8AAACA8SBgAgAAECFgAgAAECFgAgAAECFgAgA"
-                                "AECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAg"
-                                "AAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAENHt793Ub3sRJ"
-                                "aYeON32Eor0vrO27SUUadr/3q/f2y16wKrlRcMb/WlG/Q8w9vX54pay+vz7sqLhTabuOVy1Psf+/f70"
-                                "Q2Xvt7a542Pdf3pPbC7b/82TRcMb6f8DjX1/0P9rTl9d23//z5+aHe7fl5Y5wQQAACBCwAQAACBCwAQ"
-                                "AACBCwAQAACBCwAQAACBCwAQAACBCwAQAACBiou0F1Nbb9b6ye2pevxRaybXMjfQ9XAy33tc2Ft7TNK"
-                                "8+W9T7dmH/anTS+4Uxpf+PNv2/TPH+Ha17Btd97EDV+dvmBBMAAIAIARMAAIAIARMAAIAIARMAAIAIA"
-                                "RMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAI"
-                                "ARMAAICIbr/3pX7biygxtengwM//8vuPdEvmX7h0pWR4o9u2vTTS+99k/tRs0f6Pe33W1rT//b2bBo6"
-                                "feuB01f3v/WNbzemra3q/x45uLar/ybnTJcMbrblx3Vh/v4794fai/d9ww4qx3p/a9P/h3n/9v4z+36"
-                                "6m/Z85uKVo/9fe+lzJ8CXPCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
-                                "20vYKk79swtRff0NJl882LN6Tudt6+rO/+Y+9ezZe9/5fHXGv7F2pLpi9f3fxjpe7hglPWeek/R9/s/"
-                                "6/X/Evq//g/jygkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
-                                "mAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAERNTmw5WfcDvXt7a6vzznU6/6A"
-                                "ErikY3enPN6qrzf+y2QwM//8GhO7ol869fdrVkeKOpswtV52/bP992U9H4Lbe/GFrJ4o68+uGq819/9"
-                                "nLV+dv27wvXl02w6q2ZhVzDqO9/U/+fK+z/c2fLfj6aNPXn2l559y1F46/r1u3/o16fTfT/8X6/+n+7"
-                                "ZirvX6knX7qn7SVU5QQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiImZv24"
-                                "tugexyYmLhfdQAsASdODw9qLf536n6s87ACzKCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAi"
-                                "YAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
-                                "99/dVXVBzz8mWerzj/qHvnN51qdv7fQ6ZfM/9Wtvxj8/Oc+3S2Zv3N2smj4sHthdnnR+Hv33x9ayeJe"
-                                "mL1Udf7VEyuqzt+21y+W/R/eiQsToZVcQ3+09/+hHYP7T6m2+/Mr82X9uWl/7tv3haL+fPPquv1h1Ou"
-                                "zif4/3u9X/2/Xy/PLisbX/n5Nn7tadf6bV10p+v1o0vT74gQTAACACAETAACACAETAACACAETAACACA"
-                                "ETAACACAETAACACAETAACAiMqX7HQ6j/72jrJ7EBu8c8XlmtN3Ll2tm8FnL5TdcwbA4n54aEfR788bh"
-                                "fcEA8BS5AQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACA"
-                                "CAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiInpc5P9mg+YPldz9k7n6bv3Dfz8o99"
-                                "7vlsy/9rJ2ZLhjVa+5edV529bb2GiaPzDn30mtJLF3bX3zlbn/9vZTtH3r6n+P757b1H9dzo/q9ofam"
-                                "van9p2bP5xq89vcu/++9teQlWH595fNH73Fx8NrWRxbfef3uWy/vPQ9l8N/Hznnl1F/WfPzl0lwxu1v"
-                                "f/6f136/2Dj3v8Pnfhy0fjTCxtCK7mGdU9U/X79cb7dM0QnmAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
-                                "mAAAAEQImAAAAEQImAAAAESUXVIIlX3zl58vvMdrsOnzZfeQMdpK6+vkme2ppSzqzH+rln+n03m+8vy"
-                                "j7b6nvl71BfSuHNd/BtD/qUn/1/+pxwkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQ"
-                                "ImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEd116zf0a"
-                                "z5gy+MzNaenwZEHN7b6/PlTs91WF9BA/ber7fq8a++dRfU5PftIainXUrU+R11T/Xziyd1D3X965z85"
-                                "0u+39v5PrdxfMrzR03fv0/9bpP83Gun+wHhr+v46wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQAACB"
-                                "CwAQAACBCwAQAACBi4lM/+lbVe8JeO+Men2FW+v5XLf9zaimtOHfxVvU/xJZ6fQL1+PtnuOn/MLqcYA"
-                                "IAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhY"
-                                "AIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABDR3bbnfNUHHHlwY7/qAyiy5fGZbsn4gztXppbSCvU/"
-                                "3OZPzRbVZ23qZ7g11U/t99dk3N+v7+94v9/a1I/6YXQ5wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQ"
-                                "AACBCwAQAACBCwAQAACDifxFf+7S1xG8ZAAAAAElFTkSuQmCC)";
+        "LnFcZB/CZss0mJiHJNkbFWg2UUKNWQ0GpIJIIJhZ/Ia1Y4520hUIpiEW8C94UaS9aFGmkKogh0kapVs"
+        "SaJilVkEjboFGMunQDJtLuprMxP5psYjL+A5t5hfM9vDOzn8/t5Jz3cN5nntlvzsXp9r/7wU5V0+v7d"
+        "R/AIFM/OTrw896ud3SLHnDDhaLhrXtjRd351f9AI1+fh99Vd/5OR/0M0Fg/37iprH5qO7lmpN9v9f2/"
+        "8UzR8Eb6f6v0/0bqp0WN9fmVDxTVZ/exAyXDh951bS8AAACA8SBgAgAAECFgAgAAECFgAgAAECFgAgA"
+        "AECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAg"
+        "AAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAENHt793Ub3sRJ"
+        "aYeON32Eor0vrO27SUUadr/3q/f2y16wKrlRcMb/WlG/Q8w9vX54pay+vz7sqLhTabuOVy1Psf+/f70"
+        "Q2Xvt7a542Pdf3pPbC7b/82TRcMb6f8DjX1/0P9rTl9d23//z5+aHe7fl5Y5wQQAACBCwAQAACBCwAQ"
+        "AACBCwAQAACBCwAQAACBCwAQAACBCwAQAACBiou0F1Nbb9b6ye2pevxRaybXMjfQ9XAy33tc2Ft7TNK"
+        "8+W9T7dmH/anTS+4Uxpf+PNv2/TPH+Ha17Btd97EDV+dvmBBMAAIAIARMAAIAIARMAAIAIARMAAIAIA"
+        "RMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAI"
+        "ARMAAICIbr/3pX7biygxtengwM//8vuPdEvmX7h0pWR4o9u2vTTS+99k/tRs0f6Pe33W1rT//b2bBo6"
+        "feuB01f3v/WNbzemra3q/x45uLar/ybnTJcMbrblx3Vh/v4794fai/d9ww4qx3p/a9P/h3n/9v4z+36"
+        "6m/Z85uKVo/9fe+lzJ8CXPCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+        "20vYKk79swtRff0NJl882LN6Tudt6+rO/+Y+9ezZe9/5fHXGv7F2pLpi9f3fxjpe7hglPWeek/R9/s/"
+        "6/X/Evq//g/jygkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+        "mAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAERNTmw5WfcDvXt7a6vzznU6/6A"
+        "ErikY3enPN6qrzf+y2QwM//8GhO7ol869fdrVkeKOpswtV52/bP992U9H4Lbe/GFrJ4o68+uGq819/9"
+        "nLV+dv27wvXl02w6q2ZhVzDqO9/U/+fK+z/c2fLfj6aNPXn2l559y1F46/r1u3/o16fTfT/8X6/+n+7"
+        "ZirvX6knX7qn7SVU5QQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiImZv24"
+        "tugexyYmLhfdQAsASdODw9qLf536n6s87ACzKCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAi"
+        "YAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+        "99/dVXVBzz8mWerzj/qHvnN51qdv7fQ6ZfM/9Wtvxj8/Oc+3S2Zv3N2smj4sHthdnnR+Hv33x9ayeJe"
+        "mL1Udf7VEyuqzt+21y+W/R/eiQsToZVcQ3+09/+hHYP7T6m2+/Mr82X9uWl/7tv3haL+fPPquv1h1Ou"
+        "zif4/3u9X/2/Xy/PLisbX/n5Nn7tadf6bV10p+v1o0vT74gQTAACACAETAACACAETAACACAETAACACA"
+        "ETAACACAETAACACAETAACAiMqX7HQ6j/72jrJ7EBu8c8XlmtN3Ll2tm8FnL5TdcwbA4n54aEfR788bh"
+        "fcEA8BS5AQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACA"
+        "CAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiInpc5P9mg+YPldz9k7n6bv3Dfz8o99"
+        "7vlsy/9rJ2ZLhjVa+5edV529bb2GiaPzDn30mtJLF3bX3zlbn/9vZTtH3r6n+P757b1H9dzo/q9ofam"
+        "van9p2bP5xq89vcu/++9teQlWH595fNH73Fx8NrWRxbfef3uWy/vPQ9l8N/Hznnl1F/WfPzl0lwxu1v"
+        "f/6f136/2Dj3v8Pnfhy0fjTCxtCK7mGdU9U/X79cb7dM0QnmAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+        "mAAAAEQImAAAAEQImAAAAESUXVIIlX3zl58vvMdrsOnzZfeQMdpK6+vkme2ppSzqzH+rln+n03m+8vy"
+        "j7b6nvl71BfSuHNd/BtD/qUn/1/+pxwkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQ"
+        "ImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEd116zf0a"
+        "z5gy+MzNaenwZEHN7b6/PlTs91WF9BA/ber7fq8a++dRfU5PftIainXUrU+R11T/Xziyd1D3X965z85"
+        "0u+39v5PrdxfMrzR03fv0/9bpP83Gun+wHhr+v46wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQAACB"
+        "CwAQAACBCwAQAACBi4lM/+lbVe8JeO+Men2FW+v5XLf9zaimtOHfxVvU/xJZ6fQL1+PtnuOn/MLqcYA"
+        "IAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhY"
+        "AIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABDR3bbnfNUHHHlwY7/qAyiy5fGZbsn4gztXppbSCvU/"
+        "3OZPzRbVZ23qZ7g11U/t99dk3N+v7+94v9/a1I/6YXQ5wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQ"
+        "AACBCwAQAACBCwAQAACDifxFf+7S1xG8ZAAAAAElFTkSuQmCC)";
 
     static const char menu_svg[] = R"(<svg width="800px" height="800px" fill="none" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                        <g id="a">
@@ -439,7 +515,7 @@ void update_image()
 
     frame::draw_image(state_image.rasterize_test, { -200, 200 });
     //frame::draw_svg(rasterize_test_svg, { -200, 200 });
-    
+
     vs_params_t vs_params;
     vs_params.color0[0] = vs_params.color0[1] = vs_params.color0[2] = vs_params.color0[3] = 1.0f;
     vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), ::create_hmm_transform(vec2{}, 0.0f, { 500.0f, 50.0f }));
@@ -463,13 +539,13 @@ struct
 void setup_depth()
 {
     auto add_instances = [](col4 color, float depth)
-    {
-        for (size_t i = 0; i < 60; i++)
         {
-            auto pos = get_random_position();
-            frame::add_draw_instance(state_common.circle_instanced, { pos.x, pos.y, depth }, 0.0f, { 80.0f, 80.0f }, color);
-        }
-    };
+            for (size_t i = 0; i < 60; i++)
+            {
+                auto pos = get_random_position();
+                frame::add_draw_instance(state_common.circle_instanced, { pos.x, pos.y, depth }, 0.0f, { 80.0f, 80.0f }, color);
+            }
+        };
 
     add_instances(col4::EARTHBLUE, -1.0f);
     add_instances(col4::GOLD, 1.0f);
@@ -497,8 +573,109 @@ void update_depth()
     frame::draw_buffer(state_common.rectangle, { 0.0f, 0.0f, 0.0f }, 0.0f, { 80.0f, 80.0f }, col4::DARKGRAY);
     frame::draw_buffer(state_common.rectangle, { 0.0f, 0.0f, -100.0f }, 0.0f, { 100.0f, 100.0f }, col4::BLUE);
 
-    frame::draw_buffer(state_depth.rectangle_depth, { -150.0f, -100.0f }, 0.0f, { 250.0f, 200.0f }, col4::RGB(0,255,12, 128));
+    frame::draw_buffer(state_depth.rectangle_depth, { -150.0f, -100.0f }, 0.0f, { 250.0f, 200.0f }, col4::RGB(0, 255, 12, 128));
 
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////// TEXT ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line(float sx, float sy, float ex, float ey)
+{
+    frame::save_world_transform();
+    frame::set_world_transform(frame::translation(frame::get_world_translation()));
+    frame::draw_line_solid({ sx, sy }, { ex, ey }, col4::YELLOW);
+    frame::restore_world_transform();
+}
+
+void setup_text()
+{
+    set_screen_background(col4::DARKGRAY);
+}
+
+void update_text()
+{
+    //set_world_transform(frame::identity());
+
+    float dpis = sapp_dpi_scale();
+    float sx, sy = 0.0f;
+    auto white = col4::RGB(255, 255, 255, 255);
+    auto black = col4::RGB(0, 0, 0, 255);
+    auto brown = col4::RGB(192, 128, 0, 128);
+    auto blue = col4::RGB(0, 192, 255, 255);
+
+    // Quick fox
+
+    sx = 50 * dpis; sy = 50 * dpis;
+    
+    vec2 d(sx, sy);
+    auto sc = get_world_scale();
+
+    d.y += get_font_metrics2("Regular", 124.0f).line_height;
+    d.x = draw_text_ex2("The quick ", { d / sc, 0.0f }, 124.0f, white, "Regular", text_align::baseline_left);
+    d.x = draw_text_ex2("brown ", { d / sc, 0.0f }, 48.0f, brown, "Italic", text_align::baseline_left);
+    d.x = draw_text_ex2("fox ", { d / sc, 0.0f }, 24.0f, white, "Regular", text_align::baseline_left);
+
+    d.x = sx;
+    d.y += get_font_metrics2("Regular", 24.0f).line_height * 1.2f;
+
+    d.x = draw_text_ex2("jumps over ", { d / sc, 0.0f }, 24.0f, white, "Italic", text_align::baseline_left);
+    d.x = draw_text_ex2("the lazy ", { d / sc, 0.0f }, 24.0f, white, "Bold", text_align::baseline_left);
+    d.x = draw_text_ex2("dog.", { d / sc, 0.0f }, 24.0f, white, "Regular", text_align::baseline_left);
+
+    d.x = sx;
+    d.y += get_font_metrics2("Regular", 24.0f).line_height * 1.2f;
+    draw_text_ex2("Now is the time for all good men to come to the aid of the party.", { d / sc, 0.0f }, 12.0f, blue, "Regular", text_align::baseline_left);
+
+    // Special characters
+    // TODO doesn't work
+
+    d.x = sx;
+    d.y += get_font_metrics2("Regular", 24.0f).line_height * 1.5f;
+    draw_text_ex2("Ég get etið gler án þess að meiða mig.", { d / sc, 0.0f }, 18.0f, white, "Italic", text_align::baseline_left);
+
+    d.x = sx;
+    d.y += get_font_metrics2("Italic", 18.0f).line_height * 1.2f;
+    draw_text_ex2("私はガラスを食べられます。それは私を傷つけません。", { d / sc, 0.0f }, 18.0f, white, "Japanese", text_align::baseline_left);
+
+    // Allignment
+
+    d.x = 50 * dpis; d.y = 350 * dpis;
+    line(d.x - 10 * dpis, d.y, d.x + 250 * dpis, d.y);
+
+    d.x = draw_text_ex2("Top", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::top_left);
+    d.x += 10 * dpis;
+    d.x = draw_text_ex2("Middle", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::middle_left);
+    d.x += 10 * dpis;
+    d.x = draw_text_ex2("Baseline", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::baseline_left);
+    d.x += 10 * dpis;
+    draw_text_ex2("Bottom", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::bottom_left);
+    
+    d.x = 150 * dpis; d.y = 400 * dpis;
+    line(d.x, d.y - 30 * dpis, d.x, d.y + 80.0f * dpis);
+
+    draw_text_ex2("Left", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::baseline_left);
+    d.y += 30 * dpis;
+    draw_text_ex2("Middle", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::baseline_middle);
+    d.y += 30 * dpis;
+    draw_text_ex2("Right", { d / sc, 0.0f }, 18.0f, white, "Regular", text_align::baseline_right);
+
+    // Blur
+
+    d.x = 500 * dpis; d.y = 350 * dpis;
+    draw_text_ex2("Blurry...", { d / sc, 0.0f }, 60.0f, white, "Italic", text_align::baseline_left, 10.0f, 5.0f * dpis);
+
+    d.y += 50.0f * dpis;
+    draw_text_ex2("DROP THAT SHADOW", { d.x / sc.x, (d.y + 2.0f) / sc.y + 2.0f, 0.0f }, 18.0f, black, "Bold", text_align::baseline_left, 3.0f);
+    draw_text_ex2("DROP THAT SHADOW", { d / sc, 0.0f }, 18.0f, white, "Bold", text_align::baseline_left);
+
+    //auto position = vec3(100.0f, -100.0f, 1.0f);
+    //auto align = text_align::bottom_left;
+    //
+    //auto rect = frame::get_text_rectangle2("Draw Depth", position, 120.0f, "Regular", align);
+    //frame::draw_buffer(state_common.rectangle, { rect.center().x, rect.center().y, -1.0f}, 0.0f, rect.size() / get_world_scale(), col4::ORANGE);
+    //frame::draw_text_ex2("Draw Depth", position, 120.0f, col4::WHITE, "Regular", align);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -254,11 +254,13 @@ int fons__tt_getGlyphKernAdvance(FONSttFontImpl *font, int glyph1, int glyph2)
 
 #else
 
+#ifndef FONTSTASH_DISABLE_STB_TRUETYPE_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
 static void* fons__tmpalloc(size_t size, void* up);
 static void fons__tmpfree(void* ptr, void* up);
 #define STBTT_malloc(x,u)    fons__tmpalloc(x,u)
 #define STBTT_free(x,u)      fons__tmpfree(x,u)
+#endif
 #include "stb_truetype.h"
 
 struct FONSttFontImpl {
@@ -1225,8 +1227,10 @@ static void fons__getQuad(FONScontext* stash, FONSfont* font,
 	y1 = (float)(glyph->y1-1);
 
 	if (stash->params.flags & FONS_ZERO_TOPLEFT) {
-		rx = floorf(*x + xoff);
-		ry = floorf(*y + yoff);
+		//rx = floorf(*x + xoff);
+		//ry = floorf(*y + yoff);
+		rx = *x + xoff;
+		ry = *y + yoff;
 
 		q->x0 = rx;
 		q->y0 = ry;
@@ -1238,8 +1242,10 @@ static void fons__getQuad(FONScontext* stash, FONSfont* font,
 		q->s1 = x1 * stash->itw;
 		q->t1 = y1 * stash->ith;
 	} else {
-		rx = floorf(*x + xoff);
-		ry = floorf(*y - yoff);
+		//rx = floorf(*x + xoff);
+		//ry = floorf(*y - yoff);
+		rx = *x + xoff;
+		ry = *y - yoff;
 
 		q->x0 = rx;
 		q->y0 = ry;

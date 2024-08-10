@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nanovg.h>
+#include <fontstash.h>
 #include "point_type.h"
 #include "matrix_type.h"
 #include "color_type.h"
@@ -13,10 +14,12 @@ void setup();
 void update();
 
 extern NVGcontext* vg;
+extern FONScontext* fons;
 
 namespace frame
 {
     static const double PI = 3.1415926535897931;
+    static const float max_depth = 1000.0f;
 
     using vec2 = point_type<float>;
     using vec2d = point_type<double>;
@@ -206,16 +209,28 @@ namespace frame
     void nanovg_flush();
 
     // *** text ***
-    enum class text_align { top_left,    top_middle,    top_right, 
-                            middle_left, middle_middle, middle_right,
-                            bottom_left, bottom_middle, bottom_right };
+    enum class text_align { top_left,      top_middle,      top_right, 
+                            middle_left,   middle_middle,   middle_right,
+                            baseline_left, baseline_middle, baseline_right,
+                            bottom_left,   bottom_middle,   bottom_right };
 
     // TODO right now we do not support multiline string which is not aligned to the left !!!
     rectangle get_text_rectangle(const char* text, const vec2& position, float size, text_align align = text_align::top_left);
     rectangle get_text_rectangle_ex(const char* text, const vec2& position, float size, const char* font_name, text_align align = text_align::top_left);
 
     void draw_text(const char* text, const vec2& position, float size, const col4& color, text_align align = text_align::top_left);
-    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align = text_align::top_left);
+    void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align = text_align::top_left, float blur = 0.0f, float spacing = 0.0f);
+    
+    struct font_metrics
+    {
+        float ascender;
+        float descender;
+        float line_height;
+    };
+    float draw_text_ex2(const char* text, const vec3& position, float size, const col4& color, const char* font_name, text_align align = text_align::top_left, float blur = 0.0f, float spacing = 0.0f);
+    rectangle get_text_rectangle2(const char* text, const vec3& position, float size, const char* font_name, text_align align = text_align::top_left, float blur = 0.0f, float spacing = 0.0f);
+    font_metrics get_font_metrics2(const char* font_name, float size);
+
     // TODO font won't be available right away because reading files is asynchronous, not sure whether this will be a problem
     void load_font(const char* font_name, const char* file_path);
 

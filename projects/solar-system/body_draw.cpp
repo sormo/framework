@@ -151,7 +151,7 @@ void body_draw::draw_world_bodies(body_node* root)
     sg_reset_state_cache();
 
     if (settings.draw_names)
-        draw_names({ root });
+        draw_names({ root }, false);
 }
 
 void draw_main_trajectory(body_node* main_body)
@@ -182,7 +182,7 @@ void body_draw::draw_main_body(body_node* main_body)
     sg_reset_state_cache();
 
     if (settings.draw_names)
-        draw_names({ main_body });
+        draw_names({ main_body }, true);
 }
 
 void body_draw::draw(body_node* body, bool is_root)
@@ -274,7 +274,7 @@ void body_draw::draw_trajectories(const quadtree::query_result_type& parents, bo
     trajectory_resolutions::draw_cache.flush();
 }
 
-void body_draw::draw_names(const quadtree::query_result_type& parents)
+void body_draw::draw_names(const quadtree::query_result_type& parents, bool is_view)
 {
     std::vector<rectangle> rectangles;
     auto check_overlap = [&rectangles](const frame::rectangle& rect)
@@ -337,8 +337,8 @@ void body_draw::draw_names(const quadtree::query_result_type& parents)
             auto computed_font_size = get_computed_font_size(body);
             if (computed_font_size > commons::NAME_FONT_SIZE)
             {
-                // TODO looks like rendering text with larger font size is super slow
-                draw_text_ex(body->name.c_str(), position.xy<float>(), computed_font_size, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
+                draw_text_ex(body->name.c_str(), position.xy<float>(), computed_font_size, col4::DARKGRAY, "roboto-bold", text_align::middle_middle, 3.0f);
+                draw_text_ex(body->name.c_str(), position.xy<float>(), computed_font_size-1.0f, col4::LIGHTGRAY, "roboto-bold", text_align::middle_middle);
             }
             else
             {
@@ -347,7 +347,10 @@ void body_draw::draw_names(const quadtree::query_result_type& parents)
                 if (!check_overlap(rect))
                 {
                     rectangles.push_back(std::move(rect));
-                    draw_text_ex(body->name.c_str(), position.xy<float>(), commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+                    if (is_view)
+                        draw_text_ex2(body->name.c_str(), position, commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
+                    else
+                        draw_text_ex(body->name.c_str(), position.xy<float>(), commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
                 }
             }
         }

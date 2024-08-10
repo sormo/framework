@@ -20,10 +20,21 @@
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
 #include "sokol_fetch.h"
+#include "sokol_gl.h"
 #include "sokol_time.h"
 #include "sokol_log.h"
 #include "imgui.h"
 #undef SOKOL_IMPL
+
+#define FONTSTASH_IMPLEMENTATION
+#define FONTSTASH_DISABLE_STB_TRUETYPE_IMPLEMENTATION
+#include <fontstash.h>
+#undef FONTSTASH_DISABLE_STB_TRUETYPE_IMPLEMENTATION
+#undef FONTSTASH_IMPLEMENTATION
+
+#define SOKOL_FONTSTASH_IMPL
+#include "sokol_fontstash.h"
+#undef SOKOL_FONTSTASH_IMPL
 
 #include "imgui_impl.h"
 
@@ -42,6 +53,7 @@ using namespace frame;
 
 sg_pass_action pass_action;
 NVGcontext* vg;
+FONScontext* fons;
 col4 background_color;
 
 std::chrono::time_point<std::chrono::high_resolution_clock> start_application;
@@ -446,6 +458,20 @@ void frame_delta_update()
     start_frame = now;
 }
 
+void sgl_begin_frame()
+{
+    sgl_defaults();
+    sgl_matrix_mode_projection();
+    sgl_ortho(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -frame::max_depth, +frame::max_depth);
+}
+
+void sgl_end_frame()
+{
+    sfons_flush(fons);
+
+    sgl_draw();
+}
+
 void frame_update()
 {
     frame_delta_update();
@@ -461,12 +487,16 @@ void frame_update()
 
     sg_begin_pass(pass);
 
+    sgl_begin_frame();
+
     nvgBeginFrame(vg, sapp_widthf(), sapp_heightf(), 1.0f);
 
     nvgResetTransform(vg);
     apply_transform(transforms.back());
 
     update();
+
+    sgl_end_frame();
 
     nvgEndFrame(vg);
 
@@ -479,6 +509,36 @@ void frame_update()
     sg_commit();
 
     events_end_frame();
+}
+
+void setup_sgl()
+{
+    sgl_desc_t desc = {};
+    desc.logger.func = slog_func;
+
+    sgl_setup(&desc);
+}
+
+// taken from sokol fontshath example
+// round to next power of 2 (see bit-twiddling-hacks)
+static int round_pow2(float v)
+{
+    uint32_t vi = ((uint32_t)v) - 1;
+    for (uint32_t i = 0; i < 5; i++) {
+        vi |= (vi >> (1 << i));
+    }
+    return (int)(vi + 1);
+}
+
+void setup_fontstash()
+{
+    const int atlas_dim = round_pow2(512.0f * sapp_dpi_scale());
+
+    sfons_desc_t fons_desc = {};
+    fons_desc.width = atlas_dim;
+    fons_desc.height = atlas_dim;
+
+    fons = sfons_create(&fons_desc);
 }
 
 void init()
@@ -518,6 +578,10 @@ void init()
     nvgCreateFontMem(vg, "default", dump_font, sizeof(dump_font), 0);
 
     setup_draw_sg();
+
+    setup_sgl();
+    
+    setup_fontstash();
 
     setup();
 }
