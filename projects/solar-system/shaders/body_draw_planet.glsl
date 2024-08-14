@@ -4,10 +4,9 @@
 @vs body_draw_planet_vs
 
 in vec2 position;
-
 out vec2 fs_position;
 
-uniform vs_params_body_draw_planet
+uniform vs_params_body_draw_common
 {
     mat4 mvp;
 };
@@ -26,12 +25,25 @@ void main()
 out vec4 FragColor;
 in vec2 fs_position;
 
-const float planet_radius = 0.25;
 const float e = 2.718281828459;
+
+const int draw_type_planet = 0;
+const int draw_type_sun = 1;
+uniform fs_params_body_draw_common
+{
+    int draw_type;
+};
+
+uniform fs_params_body_draw_sun
+{
+    float sun_radius;
+    float sun_intensity;
+};
 
 uniform fs_params_body_draw_planet
 {
     vec3 camera_position;
+    float planet_radius;
 
     // light
     vec3 light_position;
@@ -143,7 +155,7 @@ vec4 draw_atmosphere()
     return vec4(result * lambertian * light_power / distance, clamp(attenuation, 0.0, 0.9));
 }
 
-void main()
+void draw_planet()
 {
     if (!is_point_in_circle())
         discard;
@@ -161,6 +173,30 @@ void main()
         FragColor = atmosphere;
     else
         FragColor = vec4(mix(result, atmosphere.rgb, atmosphere.a), 1.);
+}
+
+// https://www.shadertoy.com/view/3s3GDn
+float get_glow(float dist, float radius, float intensity)
+{
+    return pow(radius/dist, intensity);
+}
+
+void draw_sun()
+{
+    float glow = get_glow(length(fs_position), sun_radius, sun_intensity);
+    vec4 col = glow * vec4(1.0, 0.5, 0.25, 1.0);
+
+    col = 1.0 - exp(-col);
+    
+    FragColor = col;
+}
+
+void main()
+{
+    if (draw_type == draw_type_sun)
+        draw_sun();
+    else
+        draw_planet();
 }
 
 @end

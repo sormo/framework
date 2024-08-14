@@ -64,7 +64,7 @@ void trajectory_resolutions::draw(const frame::vec3& world_translation, double s
     {
 #ifdef _DEBUG
         if (point_count == 50)
-            return frame::col4::DARKGRAY;
+            return color_type::RGB(100, 100, 100, 80);
         else if (point_count == 200)
             return frame::col4::BLUE;
         else if (point_count == 500)
@@ -73,7 +73,7 @@ void trajectory_resolutions::draw(const frame::vec3& world_translation, double s
             return frame::col4::ORANGE;
         return frame::col4::WHITE;
 #else
-        return frame::col4::DARKGRAY;
+        return color_type::RGB(100, 100, 100, 80);
 #endif
     };
 

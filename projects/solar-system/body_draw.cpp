@@ -66,6 +66,7 @@ fs_params_body_draw_planet_t create_planet_fs_params(const col4& color, const ve
 
     result.camera_position = { 0.0f, 0.0f, 1.0f };
     result.light_position = -vec3(orbit_position.normalized() * 6.0f);
+    result.planet_radius = 0.25f;
 
     result.atmosphere_radius_relative = 0.11f;
     result.atmosphere_density = 0.8f;
@@ -74,12 +75,32 @@ fs_params_body_draw_planet_t create_planet_fs_params(const col4& color, const ve
     return result;
 }
 
-static vs_params_body_draw_planet_t create_planet_vs_params(const vec3& position, const float radius)
+fs_params_body_draw_sun_t create_sun_fs_params()
 {
-    vs_params_body_draw_planet_t result = {};
+    fs_params_body_draw_sun_t result = {};
+    result.sun_radius = 0.136f;
+    result.sun_intensity = 2.0f;
+
+    return result;
+}
+
+static vs_params_body_draw_common_t create_planet_vs_params(const vec3& position, const float radius)
+{
+    vs_params_body_draw_common_t result = {};
 
     // scale should be set to twice the diameter, because shader has half of the place for planet and half is for atmosphere
     float scale_size = 4.0f * radius;
+
+    result.mvp = frame::create_world_mvp(position, 0.0f, vec2{ scale_size, scale_size });
+
+    return result;
+}
+
+static vs_params_body_draw_common_t create_sun_vs_params(const vec3& position, const float radius)
+{
+    vs_params_body_draw_common_t result = {};
+
+    float scale_size = 23.688f * radius;
 
     result.mvp = frame::create_world_mvp(position, 0.0f, vec2{ scale_size, scale_size });
 
@@ -91,11 +112,37 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
     sg_apply_pipeline(pip_planet);
     sg_apply_bindings(&bind_planet);
 
-    auto params_vs = create_planet_vs_params(body.current_position, radius);
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_planet, SG_RANGE(params_vs));
+    enum draw_type
+    {
+        planet = 0,
+        sun = 1
+    };
 
-    auto params_fs = create_planet_fs_params(color, body.get_absolute_position());
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_planet, SG_RANGE(params_fs));
+    fs_params_body_draw_common_t params_fs_common = {};
+
+    // just quick test
+    if (body.type == body_type::star)
+    {
+        auto params_vs_sun = create_sun_vs_params(body.current_position, radius);
+        auto params_fs_sun = create_sun_fs_params();
+
+        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_sun));
+        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_sun, SG_RANGE(params_fs_sun));
+
+        params_fs_common.draw_type = draw_type::sun;
+    }
+    else
+    {
+        auto params_vs_planet = create_planet_vs_params(body.current_position, radius);
+        auto params_fs_planet = create_planet_fs_params(color, body.get_absolute_position());
+
+        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_planet));
+        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_planet, SG_RANGE(params_fs_planet));
+
+        params_fs_common.draw_type = draw_type::planet;
+    }
+
+    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_common, SG_RANGE(params_fs_common));
 
     sg_draw(0, 4, 1);
 }

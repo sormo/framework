@@ -33,6 +33,9 @@ struct color_type
     uint32_t to_hex() const;
     point_type_3<float> to_vec3() const;
 
+    bool operator==(const color_type& o) const;
+    bool operator!=(const color_type & o) const;
+
     static const color_type BLANK;           // Blank (Transparent)
     static const color_type WHITE;
     static const color_type BLACK;

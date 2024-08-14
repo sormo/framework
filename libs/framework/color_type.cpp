@@ -107,6 +107,16 @@ point_type_3<float> color_type::to_vec3() const
     return { red(), green(), blue() };
 }
 
+bool color_type::operator==(const color_type& o) const
+{
+    return memcmp(data.rgba, o.data.rgba, sizeof(data.rgba)) == 0;
+}
+
+bool color_type::operator!=(const color_type& o) const
+{
+    return memcmp(data.rgba, o.data.rgba, sizeof(data.rgba)) != 0;
+}
+
 const color_type color_type::BLANK = color_type::RGB(0, 0, 0, 0);
 const color_type color_type::WHITE = color_type::RGB(255, 255, 255);
 const color_type color_type::BLACK = color_type::RGB(0, 0, 0);
