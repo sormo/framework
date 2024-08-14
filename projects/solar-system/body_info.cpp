@@ -75,7 +75,7 @@ void body_info::draw_property_str(float& y, const char* name, const char* value,
 
 void body_info::draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw)
 {
-    draw_property_str(y, name, commons::convert_double_to_string(value).c_str(), unit);
+    draw_property_str(y, name, commons::convert_double_to_string(value).c_str(), unit, skip_draw);
 }
 
 void body_info::draw_separator(float& y, const char* name, bool skip_draw)
