@@ -207,7 +207,7 @@ void body_system::draw_lagrangians(body_node* body)
 
         lagrangians[lagr] = position.xy<float>();
 
-        draw_circle(position.xy<float>(), view::get_pixel_to_view(3.0f), col4::DARKGRAY);
+        draw_circle(position.xy<float>(), view::get_pixel_to_view(3.0f), col4::GRAY);
         draw_text_ex(get_lagrangian_to_string(lagr).c_str(), position.xy<float>(), commons::NAME_FONT_SIZE, col4::LIGHTGRAY, "roboto-bold", text_align::bottom_left);
     }
 
@@ -215,11 +215,11 @@ void body_system::draw_lagrangians(body_node* body)
 
     auto thickness = view::get_pixel_to_view(0.5f);
 
-    draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
-    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::DARKGRAY);
+    draw_line_solid_ex(lagrangians[lagrangian::l2], lagrangians[lagrangian::l3], thickness, frame::col4::GRAY);
+    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::GRAY);
+    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l4], thickness, frame::col4::GRAY);
+    draw_line_solid_ex(system.minor->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::GRAY);
+    draw_line_solid_ex(system.major->current_position.xy<float>(), lagrangians[lagrangian::l5], thickness, frame::col4::GRAY);
 }
 
 body_node* body_system::query(const frame::vec2& world_position, float radius_in_pixels)

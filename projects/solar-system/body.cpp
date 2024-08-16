@@ -129,7 +129,9 @@ vec3d compute_l4_lagrangian(const vec3d& p1, double mass1, const vec3d& p2, doub
     vec3d dist = p1 - p2;
     double d = dist.length();
     vec3d midpoint = p1 + dist / 2.0;
-    vec3d direction = { -dist.y, dist.x, 0.0 }; // A direction vector perpendicular to the line between p1 and p2
+    vec3d normal = p1.cross(p2).normalized();
+    vec3d direction = normal.cross(dist).normalized();
+    //vec3d direction = { -dist.y, dist.x, 0.0 }; // A direction vector perpendicular to the line between p1 and p2
     double height = d * std::sqrt(3) / 2;
 
     return midpoint + direction.normalized() * height;
@@ -141,7 +143,9 @@ vec3d compute_l5_lagrangian(const vec3d& p1, double mass1, const vec3d& p2, doub
     vec3d dist = p1 - p2;
     double d = dist.length();
     vec3d midpoint = p1 + dist / 2.0;
-    vec3d direction = { -dist.y, dist.x, 0.0 }; // A direction vector perpendicular to the line between p1 and p2
+    vec3d normal = p1.cross(p2).normalized();
+    vec3d direction = normal.cross(dist).normalized();
+    //vec3d direction = { -dist.y, dist.x, 0.0 }; // A direction vector perpendicular to the line between p1 and p2
     double height = d * std::sqrt(3) / 2;
 
     return midpoint - direction.normalized() * height;

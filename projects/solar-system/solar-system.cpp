@@ -137,6 +137,29 @@ void draw_settings_menu_icon(float icon_size)
     frame::restore_world_transform();
 }
 
+void draw_credits()
+{
+    ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x - 80.0f, 0.0f));
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 0.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 0.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 0.0f, 0.0f));
+    if (ImGui::Button("Credits"))
+        ImGui::OpenPopup("credits_popup");
+    ImGui::PopStyleColor(3);
+
+    if (ImGui::BeginPopup("credits_popup"))
+    {
+        ImGui::BulletText("Data from JPL Horizons and SBDB databases");
+        ImGui::BulletText("2-body solution adapted from SimpleKeplerOrbits by Karth42");
+        ImGui::BulletText("Planet symbols taken from Wikipedia mostly by Kwamikagami and Denis Moskowitz");
+        ImGui::BulletText("Open source: Sokol, ImGui, Nanovg, Nanosvg, Miniz, xxHash, Nlohmann");
+
+        ImGui::EndPopup();
+    }
+}
+
 void draw_settings_gui()
 {
     static bool is_opened = false;
@@ -207,6 +230,8 @@ void draw_settings_gui()
         {
             reset_bodies_tree();
         }
+
+        draw_credits();
 
         ImGui::EndPopup();
     }
