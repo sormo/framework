@@ -13,12 +13,10 @@ camera_type camera;
 click_handler left_mouse_click = click_handler(frame::mouse_button::left);
 
 commons::settings_data settings;
+commons::state_data state;
 
 bool first_time_init = true;
 frame::image sokol_image = 0;
-
-body_node* clicked_body = nullptr;
-body_node* view_body = nullptr;
 
 void setup()
 {
@@ -75,39 +73,39 @@ void evaluate_body_view(bool init = false, bool allow_camera_move = false)
     static const double semi_major_axis_pixels_main_threshold = 15'000.0;
     static const double semi_major_axis_pixels_clicked_threshold = 80'000.0;
 
-    if (!clicked_body)
+    if (!state.clicked_body)
     {
-        view_body = nullptr;
+        state.view_body = nullptr;
 
         return;
     }
 
     auto apply_view = [](body_node* view_b)
     {
-        view_body = view_b;
-        view::set_view([body = view_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, 1000.0);
+        state.view_body = view_b;
+        view::set_view([body = state.view_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, 1000.0);
     };
 
-    double semi_major_axis_pixels_main = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->get_main_body()->orbit.semi_major_axis));
-    double semi_major_axis_pixels_clicked = view::get_world_to_pixel(commons::convert_AU_to_world_size(clicked_body->orbit.semi_major_axis));
+    double semi_major_axis_pixels_main = view::get_world_to_pixel(commons::convert_AU_to_world_size(state.clicked_body->get_main_body()->orbit.semi_major_axis));
+    double semi_major_axis_pixels_clicked = view::get_world_to_pixel(commons::convert_AU_to_world_size(state.clicked_body->orbit.semi_major_axis));
 
-    if ((init || view_body != clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
+    if ((init || state.view_body != state.clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
     {
-        apply_view(clicked_body);
-        camera.follow([body = clicked_body]() { return vec2{}; }, allow_camera_move);
+        apply_view(state.clicked_body);
+        camera.follow([body = state.clicked_body]() { return vec2{}; }, allow_camera_move);
     }
-    else if ((init || view_body != clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
+    else if ((init || state.view_body != state.clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
     {
-        apply_view(clicked_body->get_main_body());
+        apply_view(state.clicked_body->get_main_body());
         // here we again use the fact that we have position relative to main body, so only scale is needed
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()).xy<float>(); }, allow_camera_move);
+        camera.follow([body = state.clicked_body]() { return commons::draw_cast(body->get_main_body_position() * view::get_scale()).xy<float>(); }, allow_camera_move);
     }
-    else if ((init || view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
+    else if ((init || state.view_body) && semi_major_axis_pixels_main < semi_major_axis_pixels_main_threshold)
     {
-        view_body = nullptr;
+        state.view_body = nullptr;
 
         view::clear_view();
-        camera.follow([body = clicked_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, allow_camera_move);
+        camera.follow([body = state.clicked_body]() { return commons::draw_cast(body->get_absolute_position()).xy<float>(); }, allow_camera_move);
     }
 }
 
@@ -168,9 +166,9 @@ void draw_settings_gui()
     auto reset_bodies_tree = []()
     {
         // when calling setup_bodies, we need to clear all body_node references as body tree is going to be reinitialized
-        auto clicked_body_name = clicked_body ? clicked_body->name : "";
+        auto clicked_body_name = state.clicked_body ? state.clicked_body->name : "";
 
-        clicked_body = view_body = nullptr;
+        state.clicked_body = state.view_body = nullptr;
         camera.follow(nullptr);
         view::clear_view();
         b_system.set_info(nullptr);
@@ -179,8 +177,8 @@ void draw_settings_gui()
 
         if (!clicked_body_name.empty())
         {
-            clicked_body = b_system.get_body(clicked_body_name.c_str());
-            b_system.set_info(clicked_body);
+            state.clicked_body = b_system.get_body(clicked_body_name.c_str());
+            b_system.set_info(state.clicked_body);
         }
         evaluate_body_view(true);
     };
@@ -259,18 +257,18 @@ void handle_left_click()
     {
         // allow camera moving to destination if we have no body clicked yet or clicked body is new one
         // otherwise we want to change to position directly (when changing views in update)
-        bool allow_camera_move = clicked_body != new_clicked_body;
+        bool allow_camera_move = state.clicked_body != new_clicked_body;
 
-        clicked_body = new_clicked_body;
+        state.clicked_body = new_clicked_body;
 
-        b_system.info.set_body(clicked_body);
+        b_system.info.set_body(state.clicked_body);
 
         evaluate_body_view(true, allow_camera_move);
     }
     else
     {
-        view_body = nullptr;
-        clicked_body = nullptr;
+        state.view_body = nullptr;
+        state.clicked_body = nullptr;
 
         view::clear_view();
 
@@ -305,9 +303,9 @@ void draw_system()
 
     frame::nanovg_flush();
 
-    b_system.draw(view_body);
+    b_system.draw(state.view_body);
 
-    if (settings.body_system_initializing)
+    if (state.body_system_initializing)
         frame::draw_text_ex("loading ...", frame::get_world_position_screen_relative({ 0.5f, 0.5f }), 20.0f, col4::LIGHTGRAY, "roboto-medium", text_align::middle_middle);
 
     draw_settings_gui();
@@ -329,7 +327,7 @@ void update_system()
 void update()
 {
     // draw
-    if (first_time_init && settings.body_system_initializing)
+    if (first_time_init && state.body_system_initializing)
     {
         draw_welcome_screen();
     }
@@ -340,6 +338,6 @@ void update()
     }
 
     // update
-    if (!settings.body_system_initializing)
+    if (!state.body_system_initializing)
         update_system();
 }

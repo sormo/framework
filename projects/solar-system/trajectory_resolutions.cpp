@@ -58,13 +58,13 @@ static frame::draw_buffer_id create_trajectory_with_stride(const std::vector<fra
     return frame::create_draw_buffer("polyline", { (float*)points.data(), points.size(), nullptr, 0, frame::mesh_t::depth }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC, stride_in_bytes);
 }
 
-void trajectory_resolutions::draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent)
+void trajectory_resolutions::draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent, bool is_selected)
 {
-    auto get_color = [](int point_count)
+    auto get_color = [is_selected](int point_count)
     {
 #ifdef _DEBUG
         if (point_count == 50)
-            return color_type::RGB(100, 100, 100, 80);
+            return is_selected ? color_type::RGB(200, 200, 200, 120) : color_type::RGB(100, 100, 100, 80);
         else if (point_count == 200)
             return frame::col4::BLUE;
         else if (point_count == 500)
@@ -73,7 +73,7 @@ void trajectory_resolutions::draw(const frame::vec3& world_translation, double s
             return frame::col4::ORANGE;
         return frame::col4::WHITE;
 #else
-        return color_type::RGB(100, 100, 100, 80);
+        return is_selected ? color_type::RGB(200, 200, 200, 120) : color_type::RGB(100, 100, 100, 80);
 #endif
     };
 

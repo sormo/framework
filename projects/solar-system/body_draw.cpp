@@ -297,14 +297,26 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
     }
 }
 
+body_node* get_clicked_body_orbit_highlight()
+{
+    if (!state.clicked_body)
+        return nullptr;
+    // for major body of barycentric system highlight trajectory of barycenter
+    if (state.clicked_body->parent && state.clicked_body->parent->type == body_type::barycenter && state.clicked_body->system.is_major_body)
+        return state.clicked_body->parent;
+    return state.clicked_body;
+}
+
 void body_draw::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body)
 {
-    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body](body_node& data, const vec3& parent_position)
+    body_node* orbit_highlight = get_clicked_body_orbit_highlight();
+
+    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body, orbit_highlight](body_node& data, const vec3& parent_position)
     {
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body);
+        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body, &data == orbit_highlight);
 
         if (data.childs.empty())
             return;

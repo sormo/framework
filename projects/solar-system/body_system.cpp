@@ -1,5 +1,6 @@
 #include "body_system.h"
 #include "view.h"
+#include "commons.h"
 #include <fstream>
 #include <set>
 
@@ -7,8 +8,6 @@
 //#define USE_TEST_BODIES
 
 using namespace frame;
-
-extern commons::settings_data settings;
 
 static double time_current = 0.0; // in days
 
@@ -61,7 +60,7 @@ body_node* body_system::get_body(const char* name)
 
 void body_system::setup_bodies(commons::bodies_included_type type)
 {
-    settings.body_system_initializing = true;
+    state.body_system_initializing = true;
 
     const char* cache_file = nullptr;
     const char* small_bodies_file = nullptr;
@@ -88,7 +87,7 @@ void body_system::setup_bodies(commons::bodies_included_type type)
         setup_quadtree(cache_file, files[cache_file]);
 #endif
 
-        settings.body_system_initializing = false;
+        state.body_system_initializing = false;
     });
 }
 

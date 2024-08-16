@@ -3,6 +3,8 @@
 #include "drawing_sg.h"
 #include "utils.h"
 
+struct body_node;
+
 namespace commons
 {
     static const double MIN_ZOOMED_SIZE = 0.1;
@@ -31,8 +33,13 @@ namespace commons
         bool draw_lagrangians = false;
         bool shaded_planets = false;
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
-
+    };
+    
+    struct state_data
+    {
         bool body_system_initializing = false;
+        body_node* clicked_body = nullptr;
+        body_node* view_body = nullptr;
     };
 
     static frame::vec3 draw_cast(const frame::vec3d& p)
@@ -96,3 +103,6 @@ namespace commons
         return 1.0f - std::pow(1.0f - x, 3.0f);
     }
 }
+
+extern commons::settings_data settings;
+extern commons::state_data state;
