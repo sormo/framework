@@ -185,11 +185,12 @@ void body_draw::setup(body_color& cols)
 
 void body_draw::draw_world_bodies(body_node* root)
 {
-    if (settings.draw_trajectories)
-        draw_trajectories({ root }, *colors, root);
-
+    // TODO some problem with blending, points needs to be first
     if (settings.draw_points)
         draw_points({ root }, *colors);
+
+    if (settings.draw_trajectories)
+        draw_trajectories({ root }, *colors, root);
 
     // draw_points is doing instanced drawing of circles. Problem seems to be with modified opengl state
     // by sokol gfx. In particular sokol is calling glVertexAttribDivisor . This seems to make problem
@@ -240,6 +241,56 @@ void body_draw::draw(body_node* body, bool is_root)
         draw_main_body(body);
 }
 
+void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& colors)
+{
+    auto position = body.current_position;
+
+    float default_radius = view::get_pixel_to_world(3.5f);
+    double body_radius = commons::convert_km_to_world_size(body.radius);
+
+    auto color = body.group.empty() ? colors.get(body.type) : colors.get(body.group);
+
+    if (body_radius > default_radius)
+    {
+        float radius = (float)view::get_world_to_view(body_radius);
+
+        if (settings.shaded_planets)
+            body_drawer.draw(body, radius, color);
+        else
+            frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
+    }
+    else
+    {
+        auto screen_position = frame::get_world_to_screen(position.xy<float>());
+        // increase depth by 10% to have point above trajectory
+        float depth = position.z + 0.1f * std::fabs(position.z);
+
+        frame::update_draw_instance(points_instance_buffer,
+                                    point_counter++,
+                                    vec3(screen_position, depth),
+                                    color);
+    }
+}
+
+void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& colors)
+{
+    if (settings.shaded_planets)
+    {
+        float default_radius = view::get_pixel_to_world(3.0f);
+        double body_radius = commons::convert_km_to_world_size(body.radius);
+        float radius = (float)view::get_world_to_view(body_radius);
+        radius = std::max(default_radius, radius);
+
+        auto color = body.group.empty() ? colors.get(body.type) : colors.get(body.group);
+
+        body_drawer.draw(body, radius, color);
+    }
+    else
+    {
+        draw_body(body, point_counter, colors);
+    }
+}
+
 void body_draw::draw_points(const quadtree::query_result_type& parents, body_color& colors)
 {
     std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
@@ -247,32 +298,12 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
         if (is_body_node_skip(data))
             return;
 
-        auto position = data.current_position;
-
-        float default_radius = view::get_pixel_to_world(3.5f);
-        double body_radius = commons::convert_km_to_world_size(data.radius);
-
-        auto color = data.group.empty() ? colors.get(data.type) : colors.get(data.group);
-
-        if (body_radius > default_radius)
+        if (data.type != body_type::barycenter)
         {
-            float radius = (float)view::get_world_to_view(body_radius);
-
-            if (settings.shaded_planets)
-                body_drawer.draw(data, radius, color);
+            if (data.type == body_type::star)
+                draw_sun(data, point_counter, colors);
             else
-                frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
-        }
-        else if (data.type != body_type::barycenter)
-        {
-            auto screen_position = frame::get_world_to_screen(position.xy<float>());
-            // increase depth by 10% to have point above trajectory
-            float depth = position.z + 0.1f * std::fabs(position.z);
-
-            frame::update_draw_instance(points_instance_buffer,
-                                        point_counter++,
-                                        vec3(screen_position, depth),
-                                        color);
+                draw_body(data, point_counter, colors);
         }
 
         if (!data.childs.empty())
@@ -297,7 +328,8 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
     }
 }
 
-body_node* get_clicked_body_orbit_highlight()
+// we will highlight orbit of clicked body
+body_node* get_highlight_body()
 {
     if (!state.clicked_body)
         return nullptr;
@@ -307,16 +339,28 @@ body_node* get_clicked_body_orbit_highlight()
     return state.clicked_body;
 }
 
+trajectory_resolutions::color_t get_color_type(body_node* body, body_node* highlight_body)
+{
+    if (body == highlight_body)
+        return trajectory_resolutions::color_t::highlight;
+
+    // HACK diminish trajectory of sun
+    if (body->type == body_type::star)
+        return trajectory_resolutions::color_t::diminish;
+
+    return trajectory_resolutions::color_t::normal;
+}
+
 void body_draw::draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body)
 {
-    body_node* orbit_highlight = get_clicked_body_orbit_highlight();
+    body_node* highlight_body = get_highlight_body();
 
-    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body, orbit_highlight](body_node& data, const vec3& parent_position)
+    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body, highlight_body](body_node& data, const vec3& parent_position)
     {
         if (is_body_node_skip(data))
             return;
 
-        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body, &data == orbit_highlight);
+        data.trajectory.draw(parent_position, commons::convert_AU_to_world_size(data.orbit.semi_major_axis), data.parent == stationary_body, get_color_type(&data, highlight_body));
 
         if (data.childs.empty())
             return;

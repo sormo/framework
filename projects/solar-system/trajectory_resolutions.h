@@ -30,7 +30,14 @@ struct trajectory_resolutions
 
     static const std::array<resmap_type, 4> resmap;
 
-    void draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent, bool is_selected);
+    enum class color_t
+    {
+        normal,
+        highlight,
+        diminish
+    };
+
+    void draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent, color_t color_type);
 
     void init(kepler_orbit& orbit);
 

@@ -58,22 +58,44 @@ static frame::draw_buffer_id create_trajectory_with_stride(const std::vector<fra
     return frame::create_draw_buffer("polyline", { (float*)points.data(), points.size(), nullptr, 0, frame::mesh_t::depth }, sg_primitive_type::SG_PRIMITIVETYPE_LINE_STRIP, sg_usage::SG_USAGE_DYNAMIC, stride_in_bytes);
 }
 
-void trajectory_resolutions::draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent, bool is_selected)
+static const frame::col4& get_color_from_type(trajectory_resolutions::color_t color_type)
 {
-    auto get_color = [is_selected](int point_count)
+    static const frame::col4 color_normal = frame::col4::RGB(100, 100, 100, 80);
+    static const frame::col4 color_highlight = frame::col4::RGB(200, 200, 200, 120);
+    static const frame::col4 color_diminish = frame::col4::RGB(100, 100, 100, 50);
+
+    switch (color_type)
+    {
+    case trajectory_resolutions::color_t::normal: return color_normal;
+    case trajectory_resolutions::color_t::highlight: return color_highlight;
+    case trajectory_resolutions::color_t::diminish: return color_diminish;
+    }
+
+    return color_normal;
+}
+
+static const frame::col4& get_color_from_resolution(int point_count)
+{
+    if (point_count == 50)
+        return frame::col4::GRAY;
+    else if (point_count == 200)
+        return frame::col4::BLUE;
+    else if (point_count == 500)
+        return frame::col4::GREEN;
+    else if (point_count == 1000)
+        return frame::col4::ORANGE;
+    return frame::col4::WHITE;
+}
+
+void trajectory_resolutions::draw(const frame::vec3& world_translation, double semi_major_axis_world_size, bool has_stationary_parent, color_t color_type)
+{
+    auto get_color = [color_type](int point_count)
     {
 #ifdef _DEBUG
-        if (point_count == 50)
-            return is_selected ? color_type::RGB(200, 200, 200, 120) : color_type::RGB(100, 100, 100, 80);
-        else if (point_count == 200)
-            return frame::col4::BLUE;
-        else if (point_count == 500)
-            return frame::col4::GREEN;
-        else if (point_count == 1000)
-            return frame::col4::ORANGE;
-        return frame::col4::WHITE;
+        //return get_color_from_resolution(point_count);
+        return get_color_from_type(color_type);
 #else
-        return is_selected ? color_type::RGB(200, 200, 200, 120) : color_type::RGB(100, 100, 100, 80);
+        return get_color_from_type(color_type);
 #endif
     };
 
