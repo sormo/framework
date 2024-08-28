@@ -1,4 +1,4 @@
-#pragma sokol @ctype mat4 hmm_mat4
+#pragma sokol @ctype mat4 HMM_Mat4
 #pragma sokol @ctype vec3 frame::vec3
 
 @vs planet_vs

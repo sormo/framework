@@ -170,7 +170,7 @@ void update_instanced()
 {
     for (auto& tr : state_instanced.rects)
     {
-        tr.rotation += 0.5f;
+        tr.rotation += 0.05f;
         frame::update_draw_instance(state_common.rectangle_instanced, tr.index, tr.position, tr.rotation, tr.scale, tr.color);
     }
 
@@ -462,41 +462,6 @@ void setup_image()
     setup_test_sg_image(sokol);
 }
 
-hmm_mat4 create_hmm_transform(const frame::mat3& transform)
-{
-    hmm_mat4 result = HMM_Mat4d(1.0f);
-
-    result.Elements[0][0] = transform.data[0];
-    result.Elements[0][1] = transform.data[3];
-    result.Elements[0][3] = transform.data[6];
-
-    result.Elements[1][0] = transform.data[1];
-    result.Elements[1][1] = transform.data[4];
-    result.Elements[1][3] = transform.data[7];
-
-    result.Elements[3][0] = transform.data[2];
-    result.Elements[3][1] = transform.data[5];
-    result.Elements[3][3] = transform.data[8];
-
-    return result;
-}
-
-hmm_mat4 create_projection_view_matrix()
-{
-    hmm_mat4 view = create_hmm_transform(frame::get_world_transform());
-    hmm_mat4 projection = HMM_Orthographic(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
-
-    return HMM_MultiplyMat4(projection, view);
-}
-
-hmm_mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
-{
-    auto scale = HMM_Scale({ size.x, size.y, 0.0f });
-    auto rotate = HMM_Rotate(rotation, HMM_Vec3(0.0f, 0.0f, 1.0f));
-    auto translate = HMM_Translate({ position.x, position.y, 0.0f });
-    return HMM_MultiplyMat4(HMM_MultiplyMat4(translate, rotate), scale);
-}
-
 void update_image()
 {
     //frame::draw_svg(svg_test, {10.0f, 10.0f}, frame::text_align::middle_middle);
@@ -518,7 +483,7 @@ void update_image()
 
     vs_params_t vs_params;
     vs_params.color0[0] = vs_params.color0[1] = vs_params.color0[2] = vs_params.color0[3] = 1.0f;
-    vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), ::create_hmm_transform(vec2{}, 0.0f, { 500.0f, 50.0f }));
+    vs_params.mvp = HMM_MulM4(create_projection_view_matrix(), ::create_hmm_transform(vec2{}, 0.0f, { 500.0f, 50.0f }));
 
     sg_apply_pipeline(state_image.test_sg_image_pip);
     sg_apply_bindings(&state_image.test_sg_image_bind);

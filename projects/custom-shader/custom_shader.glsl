@@ -1,4 +1,4 @@
-#pragma sokol @ctype mat4 hmm_mat4
+#pragma sokol @ctype mat4 HMM_Mat4
 
 @vs custom_shader_vs
 

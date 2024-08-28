@@ -1,0 +1,7 @@
+fips_begin_app(drawing-model windowed)
+    fips_files(drawing-model.cpp)
+    fips_deps(framework)
+    sokol_shader(model3d.glsl ${slang})
+    fips_dir(data)
+    fipsutil_copy(data.yml)
+fips_end_app()

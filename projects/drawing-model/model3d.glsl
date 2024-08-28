@@ -1,0 +1,69 @@
+#pragma sokol @ctype mat4 HMM_Mat4
+#pragma sokol @ctype vec3 frame::vec3
+
+#pragma sokol @vs model3d_vs
+uniform model3d_vs_params
+{
+    mat4 model;
+    mat4 projection_view;
+};
+
+in vec3 position;
+in vec3 normal;
+
+out vec3 frag_normal;
+out vec3 frag_position;
+
+void main()
+{
+    // TODO is transpose inverse needed?
+    // (see: https://github.com/zeromake/learnopengl-examples/blob/master/src/2-2-basic-lighting/3-specular.glsl)
+    //frag_normal = mat3(transpose(inverse(model))) * normal;
+    frag_normal = mat3(model) * normal;
+    frag_position = vec3(model * vec4(position, 1.0));
+    gl_Position = projection_view * model * vec4(position, 1.0);
+}
+#pragma sokol @end
+
+#pragma sokol @fs model3d_fs
+uniform model3d_fs_params
+{
+    vec3 object_color;
+    vec3 light_color;
+
+    vec3 view_position;
+    vec3 light_position;
+
+    float ambient_strength;
+    float specular_strength;
+};
+
+in vec3 frag_normal;
+in vec3 frag_position;
+out vec4 frag_color;
+
+vec3 compute_phong() 
+{
+    vec3 ambient = ambient_strength * light_color;
+
+    vec3 norm = normalize(frag_normal);
+    vec3 light_direction = normalize(light_position - frag_position);
+    float diff = max(dot(norm, light_direction), 0.0);
+    vec3 diffuse = diff * light_color;
+
+    vec3 view_direction = normalize(view_position - frag_position);
+    vec3 reflect_direction = reflect(-light_direction, norm);
+    float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 32);
+    vec3 specular = specular_strength * spec * light_color;
+
+    return (ambient + diffuse + specular) * object_color;
+}
+
+void main()
+{
+    //frag_color = vec4(normalize(frag_normal) * 0.5 + 0.5, 1.0);
+    frag_color = vec4(compute_phong(), 1.0);
+}
+#pragma sokol @end
+
+#pragma sokol @program model3d model3d_vs model3d_fs
