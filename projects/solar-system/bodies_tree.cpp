@@ -131,6 +131,9 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.inclination = inclination;
             node.orbit = std::move(orbit);
 
+            if (orbit_data.contains("mesh"))
+                node.mesh = orbit_data["mesh"];
+
             node.trajectory.init(node.orbit);
             node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, commons::NAME_FONT_SIZE, "roboto-bold");
 

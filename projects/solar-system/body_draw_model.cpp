@@ -34,9 +34,7 @@ bool body_draw_model::load_model(body_node& body)
     if (!models_zip)
         return false;
 
-    auto model_name = body.name + ".obj";
-
-    auto data = frame::get_zip_file(*models_zip, model_name);
+    auto data = frame::get_zip_file(*models_zip, body.mesh);
     if (data.empty())
         return false;
 
@@ -68,7 +66,10 @@ bool body_draw_model::load_buffer(body_node& body)
 
 bool body_draw_model::setup_bind(body_node& body)
 {
-    if (!available_models.count(body.name + ".obj"))
+    if (body.mesh.empty())
+        return false;
+
+    if (!available_models.count(body.mesh))
         return false;
 
     if (!buffer_cache.count(body.name))

@@ -45,6 +45,8 @@ struct body_node
     std::string dimensions_str;
     double inclination = 0.0;
 
+    std::string mesh;
+
     struct
     {
         bool is_major_body = false; // whether it's most massive body in a case parent is barycenter
