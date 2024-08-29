@@ -11,13 +11,14 @@
         "gm": 62.6284,
         "group": "Main-belt Asteroid",
         "mesh": "1_Ceres_damit_5915.obj",
-        "name": "1 Ceres",
+        "name": "Ceres",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 469.7,
         "rotation_period": 9.07417,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1"
     },
     {
         "A": 2.77,
@@ -31,13 +32,14 @@
         "gm": 13.63,
         "group": "Main-belt Asteroid",
         "mesh": "2_Pallas_101.obj",
-        "name": "2 Pallas",
+        "name": "Pallas",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 256.5,
         "rotation_period": 7.8132214,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "2"
     },
     {
         "A": 2.67,
@@ -49,13 +51,14 @@
         "W": 248.0,
         "group": "Main-belt Asteroid",
         "mesh": "3_Juno_103.obj",
-        "name": "3 Juno",
+        "name": "Juno",
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 123.298,
         "rotation_period": 7.21,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "3"
     },
     {
         "A": 2.36,
@@ -69,13 +72,14 @@
         "gm": 17.288245,
         "group": "Main-belt Asteroid",
         "mesh": "4_Vesta.obj",
-        "name": "4 Vesta",
+        "name": "Vesta",
         "parent_name": "Solar-System Barycenter",
         "period": 1330.0,
         "radius": 262.7,
         "rotation_period": 5.34212766,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "4"
     },
     {
         "A": 2.58,
@@ -87,13 +91,14 @@
         "W": 359.0,
         "group": "Main-belt Asteroid",
         "mesh": "5_Astraea_104.obj",
-        "name": "5 Astraea",
+        "name": "Astraea",
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 53.3495,
         "rotation_period": 16.806,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "5"
     },
     {
         "A": 2.43,
@@ -105,13 +110,14 @@
         "W": 240.0,
         "group": "Main-belt Asteroid",
         "mesh": "6_Hebe_714.obj",
-        "name": "6 Hebe",
+        "name": "Hebe",
         "parent_name": "Solar-System Barycenter",
         "period": 1380.0,
         "radius": 92.59,
         "rotation_period": 7.2745,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "6"
     },
     {
         "A": 2.39,
@@ -123,13 +129,14 @@
         "W": 145.0,
         "group": "Main-belt Asteroid",
         "mesh": "7_Iris_107.obj",
-        "name": "7 Iris",
+        "name": "Iris",
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 99.915,
         "rotation_period": 7.139,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "7"
     },
     {
         "A": 2.2,
@@ -141,13 +148,14 @@
         "W": 286.0,
         "group": "Main-belt Asteroid",
         "mesh": "8_Flora_109.obj",
-        "name": "8 Flora",
+        "name": "Flora",
         "parent_name": "Solar-System Barycenter",
         "period": 1190.0,
         "radius": 73.7455,
         "rotation_period": 12.865,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "8"
     },
     {
         "A": 2.39,
@@ -159,13 +167,14 @@
         "W": 5.73,
         "group": "Main-belt Asteroid",
         "mesh": "9_Metis_111.obj",
-        "name": "9 Metis",
+        "name": "Metis",
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 95.0,
         "rotation_period": 5.079,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "9"
     },
     {
         "A": 3.14,
@@ -178,13 +187,14 @@
         "gm": 7.0,
         "group": "Main-belt Asteroid",
         "mesh": "10_Hygiea_ADAM.obj",
-        "name": "10 Hygiea",
+        "name": "Hygiea",
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 203.56,
         "rotation_period": 13.828,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "10"
     },
     {
         "A": 2.45,
@@ -196,13 +206,14 @@
         "W": 196.0,
         "group": "Main-belt Asteroid",
         "mesh": "11_Parthenope_503.obj",
-        "name": "11 Parthenope",
+        "name": "Parthenope",
         "parent_name": "Solar-System Barycenter",
         "period": 1400.0,
         "radius": 71.4435,
         "rotation_period": 13.7204,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "11"
     },
     {
         "A": 2.33,
@@ -214,13 +225,14 @@
         "W": 69.6,
         "group": "Main-belt Asteroid",
         "mesh": "12_Victoria_844.obj",
-        "name": "12 Victoria",
+        "name": "Victoria",
         "parent_name": "Solar-System Barycenter",
         "period": 1300.0,
         "radius": 57.5435,
         "rotation_period": 8.6599,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "12"
     },
     {
         "A": 2.58,
@@ -232,13 +244,14 @@
         "W": 79.6,
         "group": "Main-belt Asteroid",
         "mesh": "13_Egeria_307.obj",
-        "name": "13 Egeria",
+        "name": "Egeria",
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 101.318,
         "rotation_period": 7.045,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "13"
     },
     {
         "A": 2.59,
@@ -250,13 +263,14 @@
         "W": 97.9,
         "group": "Main-belt Asteroid",
         "mesh": "14_Irene_309.obj",
-        "name": "14 Irene",
+        "name": "Irene",
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 76.0,
         "rotation_period": 15.028,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "14"
     },
     {
         "A": 2.64,
@@ -268,13 +282,14 @@
         "W": 98.8,
         "group": "Main-belt Asteroid",
         "mesh": "15_Eunomia_112.obj",
-        "name": "15 Eunomia",
+        "name": "Eunomia",
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 115.8445,
         "rotation_period": 6.083,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "15"
     },
     {
         "A": 2.92,
@@ -288,13 +303,14 @@
         "gm": 1.53,
         "group": "Main-belt Asteroid",
         "mesh": "16_Psyche_Shepard.obj",
-        "name": "16 Psyche",
+        "name": "Psyche",
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 111.0,
         "rotation_period": 4.196,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "16"
     },
     {
         "A": 2.3,
@@ -306,13 +322,14 @@
         "W": 228.0,
         "group": "Main-belt Asteroid",
         "mesh": "18_Melpomene_993.obj",
-        "name": "18 Melpomene",
+        "name": "Melpomene",
         "parent_name": "Solar-System Barycenter",
         "period": 1270.0,
         "radius": 69.797,
         "rotation_period": 11.57,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "18"
     },
     {
         "A": 2.44,
@@ -324,13 +341,14 @@
         "W": 183.0,
         "group": "Main-belt Asteroid",
         "mesh": "19_Fortuna_117.obj",
-        "name": "19 Fortuna",
+        "name": "Fortuna",
         "parent_name": "Solar-System Barycenter",
         "period": 1390.0,
         "radius": 100.0,
         "rotation_period": 7.4432,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "19"
     },
     {
         "A": 2.41,
@@ -342,13 +360,14 @@
         "W": 257.0,
         "group": "Main-belt Asteroid",
         "mesh": "20_Massalia_118.obj",
-        "name": "20 Massalia",
+        "name": "Massalia",
         "parent_name": "Solar-System Barycenter",
         "period": 1360.0,
         "radius": 67.84,
         "rotation_period": 8.098,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "20"
     },
     {
         "A": 2.91,
@@ -362,13 +381,14 @@
         "gm": 0.491,
         "group": "Main-belt Asteroid",
         "mesh": "22_Kalliope_121.obj",
-        "name": "22 Kalliope",
+        "name": "Kalliope",
         "parent_name": "Solar-System Barycenter",
         "period": 1810.0,
         "radius": 83.768,
         "rotation_period": 4.1483,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "22"
     },
     {
         "A": 2.63,
@@ -380,13 +400,14 @@
         "W": 61.6,
         "group": "Main-belt Asteroid",
         "mesh": "23_Thalia_123.obj",
-        "name": "23 Thalia",
+        "name": "Thalia",
         "parent_name": "Solar-System Barycenter",
         "period": 1560.0,
         "radius": 53.765,
         "rotation_period": 12.312,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "23"
     },
     {
         "A": 3.14,
@@ -398,13 +419,14 @@
         "W": 109.0,
         "group": "Main-belt Asteroid",
         "mesh": "24_Themis_1005.obj",
-        "name": "24 Themis",
+        "name": "Themis",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 99.0,
         "rotation_period": 8.374,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "24"
     },
     {
         "A": 2.78,
@@ -416,13 +438,14 @@
         "W": 343.0,
         "group": "Main-belt Asteroid",
         "mesh": "28_Bellona_287.obj",
-        "name": "28 Bellona",
+        "name": "Bellona",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 60.45,
         "rotation_period": 15.706,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "28"
     },
     {
         "A": 2.56,
@@ -434,13 +457,14 @@
         "W": 62.3,
         "group": "Main-belt Asteroid",
         "mesh": "29_Amphitrite_124.obj",
-        "name": "29 Amphitrite",
+        "name": "Amphitrite",
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 94.7795,
         "rotation_period": 5.3921,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "29"
     },
     {
         "A": 3.16,
@@ -452,13 +476,14 @@
         "W": 61.8,
         "group": "Main-belt Asteroid",
         "mesh": "31_Euphrosyne_1067.obj",
-        "name": "31 Euphrosyne",
+        "name": "Euphrosyne",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 133.54,
         "rotation_period": 5.53,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "31"
     },
     {
         "A": 2.69,
@@ -470,13 +495,14 @@
         "W": 330.0,
         "group": "Main-belt Asteroid",
         "mesh": "34_Circe_128.obj",
-        "name": "34 Circe",
+        "name": "Circe",
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 66.496,
         "rotation_period": 12.15,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "34"
     },
     {
         "A": 3.01,
@@ -488,13 +514,14 @@
         "W": 214.0,
         "group": "Main-belt Asteroid",
         "mesh": "35_Leukothea_868.obj",
-        "name": "35 Leukothea",
+        "name": "Leukothea",
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 51.5275,
         "rotation_period": 31.9,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "35"
     },
     {
         "A": 2.75,
@@ -506,13 +533,14 @@
         "W": 47.9,
         "group": "Main-belt Asteroid",
         "mesh": "36_Atalante_824.obj",
-        "name": "36 Atalante",
+        "name": "Atalante",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 66.421,
         "rotation_period": 9.93,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "36"
     },
     {
         "A": 2.64,
@@ -524,13 +552,14 @@
         "W": 62.2,
         "group": "Main-belt Asteroid",
         "mesh": "37_Fides_311.obj",
-        "name": "37 Fides",
+        "name": "Fides",
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 54.175,
         "rotation_period": 7.3335,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "37"
     },
     {
         "A": 2.77,
@@ -542,13 +571,14 @@
         "W": 210.0,
         "group": "Main-belt Asteroid",
         "mesh": "39_Laetitia_130.obj",
-        "name": "39 Laetitia",
+        "name": "Laetitia",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 89.742,
         "rotation_period": 5.138,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "39"
     },
     {
         "A": 2.27,
@@ -560,13 +590,14 @@
         "W": 269.0,
         "group": "Main-belt Asteroid",
         "mesh": "40_Harmonia_313.obj",
-        "name": "40 Harmonia",
+        "name": "Harmonia",
         "parent_name": "Solar-System Barycenter",
         "period": 1250.0,
         "radius": 55.6255,
         "rotation_period": 8.91,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "40"
     },
     {
         "A": 2.77,
@@ -578,13 +609,14 @@
         "W": 46.3,
         "group": "Main-belt Asteroid",
         "mesh": "41_Daphne_131.obj",
-        "name": "41 Daphne",
+        "name": "Daphne",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 102.7475,
         "rotation_period": 5.988,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "41"
     },
     {
         "A": 2.44,
@@ -596,13 +628,14 @@
         "W": 237.0,
         "group": "Main-belt Asteroid",
         "mesh": "42_Isis_315.obj",
-        "name": "42 Isis",
+        "name": "Isis",
         "parent_name": "Solar-System Barycenter",
         "period": 1390.0,
         "radius": 55.4985,
         "rotation_period": 13.59,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "42"
     },
     {
         "A": 2.72,
@@ -614,13 +647,14 @@
         "W": 87.4,
         "group": "Main-belt Asteroid",
         "mesh": "45_Eugenia_134.obj",
-        "name": "45 Eugenia",
+        "name": "Eugenia",
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 101.1635,
         "rotation_period": 5.699,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "45"
     },
     {
         "A": 2.52,
@@ -632,13 +666,14 @@
         "W": 177.0,
         "group": "Main-belt Asteroid",
         "mesh": "46_Hestia_damit_4384.obj",
-        "name": "46 Hestia",
+        "name": "Hestia",
         "parent_name": "Solar-System Barycenter",
         "period": 1470.0,
         "radius": 65.7355,
         "rotation_period": 21.04,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "46"
     },
     {
         "A": 2.88,
@@ -650,13 +685,14 @@
         "W": 315.0,
         "group": "Main-belt Asteroid",
         "mesh": "47_Aglaja_damit_3233.obj",
-        "name": "47 Aglaja",
+        "name": "Aglaja",
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 84.087,
         "rotation_period": 13.178,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "47"
     },
     {
         "A": 3.11,
@@ -668,13 +704,14 @@
         "W": 251.0,
         "group": "Main-belt Asteroid",
         "mesh": "48_Doris_936.obj",
-        "name": "48 Doris",
+        "name": "Doris",
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 108.2365,
         "rotation_period": 11.89,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "48"
     },
     {
         "A": 3.1,
@@ -685,13 +722,14 @@
         "Spkid": "20000049",
         "W": 113.0,
         "group": "Main-belt Asteroid",
-        "name": "49 Pales",
+        "name": "Pales",
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 83.126,
         "rotation_period": 20.705,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "49"
     },
     {
         "A": 2.37,
@@ -703,13 +741,14 @@
         "W": 1.67,
         "group": "Main-belt Asteroid",
         "mesh": "51_Nemausa_1065.obj",
-        "name": "51 Nemausa",
+        "name": "Nemausa",
         "parent_name": "Solar-System Barycenter",
         "period": 1330.0,
         "radius": 69.0795,
         "rotation_period": 7.783,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "51"
     },
     {
         "A": 3.09,
@@ -721,13 +760,14 @@
         "W": 343.0,
         "group": "Main-belt Asteroid",
         "mesh": "52_Europa_135.obj",
-        "name": "52 Europa",
+        "name": "Europa",
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 151.959,
         "rotation_period": 5.6304,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "52"
     },
     {
         "A": 2.71,
@@ -739,13 +779,14 @@
         "W": 345.0,
         "group": "Main-belt Asteroid",
         "mesh": "54_Alexandra_136.obj",
-        "name": "54 Alexandra",
+        "name": "Alexandra",
         "parent_name": "Solar-System Barycenter",
         "period": 1630.0,
         "radius": 80.06,
         "rotation_period": 7.024,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "54"
     },
     {
         "A": 2.6,
@@ -757,13 +798,14 @@
         "W": 105.0,
         "group": "Main-belt Asteroid",
         "mesh": "56_Melete_1105.obj",
-        "name": "56 Melete",
+        "name": "Melete",
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 60.6665,
         "rotation_period": 18.147,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "56"
     },
     {
         "A": 3.15,
@@ -774,13 +816,14 @@
         "Spkid": "20000057",
         "W": 211.0,
         "group": "Main-belt Asteroid",
-        "name": "57 Mnemosyne",
+        "name": "Mnemosyne",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 56.295,
         "rotation_period": 25.324,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "57"
     },
     {
         "A": 2.7,
@@ -791,13 +834,14 @@
         "Spkid": "20000058",
         "W": 34.0,
         "group": "Main-belt Asteroid",
-        "name": "58 Concordia",
+        "name": "Concordia",
         "parent_name": "Solar-System Barycenter",
         "period": 1620.0,
         "radius": 53.2585,
         "rotation_period": 9.895,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "58"
     },
     {
         "A": 2.71,
@@ -809,13 +853,14 @@
         "W": 211.0,
         "group": "Main-belt Asteroid",
         "mesh": "59_Elpis_damit_6156.obj",
-        "name": "59 Elpis",
+        "name": "Elpis",
         "parent_name": "Solar-System Barycenter",
         "period": 1630.0,
         "radius": 82.5595,
         "rotation_period": 13.671,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "59"
     },
     {
         "A": 3.13,
@@ -827,13 +872,14 @@
         "W": 278.0,
         "group": "Main-belt Asteroid",
         "mesh": "62_Erato_317.obj",
-        "name": "62 Erato",
+        "name": "Erato",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 53.4605,
         "rotation_period": 9.2213,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "62"
     },
     {
         "A": 2.39,
@@ -845,13 +891,14 @@
         "W": 296.0,
         "group": "Main-belt Asteroid",
         "mesh": "63_Ausonia_140.obj",
-        "name": "63 Ausonia",
+        "name": "Ausonia",
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 58.022,
         "rotation_period": 9.298,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "63"
     },
     {
         "A": 3.42,
@@ -863,13 +910,14 @@
         "W": 103.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "65_Cybele_783.obj",
-        "name": "65 Cybele",
+        "name": "Cybele",
         "parent_name": "Solar-System Barycenter",
         "period": 2310.0,
         "radius": 118.63,
         "rotation_period": 6.0814,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "65"
     },
     {
         "A": 2.78,
@@ -881,13 +929,14 @@
         "W": 305.0,
         "group": "Main-belt Asteroid",
         "mesh": "68_Leto_290.obj",
-        "name": "68 Leto",
+        "name": "Leto",
         "parent_name": "Solar-System Barycenter",
         "period": 1700.0,
         "radius": 61.2545,
         "rotation_period": 14.848,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "68"
     },
     {
         "A": 2.98,
@@ -899,13 +948,14 @@
         "W": 288.0,
         "group": "Main-belt Asteroid",
         "mesh": "69_Hesperia_319.obj",
-        "name": "69 Hesperia",
+        "name": "Hesperia",
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 69.065,
         "rotation_period": 5.655,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "69"
     },
     {
         "A": 2.62,
@@ -917,13 +967,14 @@
         "W": 256.0,
         "group": "Main-belt Asteroid",
         "mesh": "70_Panopaea_damit_6171.obj",
-        "name": "70 Panopaea",
+        "name": "Panopaea",
         "parent_name": "Solar-System Barycenter",
         "period": 1540.0,
         "radius": 63.9555,
         "rotation_period": 15.8052,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "70"
     },
     {
         "A": 2.78,
@@ -935,13 +986,14 @@
         "W": 175.0,
         "group": "Main-belt Asteroid",
         "mesh": "74_Galatea_damit_6182.obj",
-        "name": "74 Galatea",
+        "name": "Galatea",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 59.355,
         "rotation_period": 17.268,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "74"
     },
     {
         "A": 3.41,
@@ -953,13 +1005,14 @@
         "W": 252.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "76_Freia_443.obj",
-        "name": "76 Freia",
+        "name": "Freia",
         "parent_name": "Solar-System Barycenter",
         "period": 2300.0,
         "radius": 72.7115,
         "rotation_period": 9.973,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "76"
     },
     {
         "A": 2.62,
@@ -970,13 +1023,14 @@
         "Spkid": "20000078",
         "W": 153.0,
         "group": "Main-belt Asteroid",
-        "name": "78 Diana",
+        "name": "Diana",
         "parent_name": "Solar-System Barycenter",
         "period": 1550.0,
         "radius": 60.3,
         "rotation_period": 7.2991,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "78"
     },
     {
         "A": 2.85,
@@ -987,13 +1041,14 @@
         "Spkid": "20000081",
         "W": 51.4,
         "group": "Main-belt Asteroid",
-        "name": "81 Terpsichore",
+        "name": "Terpsichore",
         "parent_name": "Solar-System Barycenter",
         "period": 1760.0,
         "radius": 58.8635,
         "rotation_period": 10.943,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "81"
     },
     {
         "A": 2.43,
@@ -1005,13 +1060,14 @@
         "W": 170.0,
         "group": "Main-belt Asteroid",
         "mesh": "83_Beatrix_damit_6195.obj",
-        "name": "83 Beatrix",
+        "name": "Beatrix",
         "parent_name": "Solar-System Barycenter",
         "period": 1380.0,
         "radius": 55.2515,
         "rotation_period": 10.111,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "83"
     },
     {
         "A": 2.65,
@@ -1023,13 +1079,14 @@
         "W": 123.0,
         "group": "Main-belt Asteroid",
         "mesh": "85_Io_292.obj",
-        "name": "85 Io",
+        "name": "Io",
         "parent_name": "Solar-System Barycenter",
         "period": 1580.0,
         "radius": 77.395,
         "rotation_period": 6.875,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "85"
     },
     {
         "A": 3.1,
@@ -1041,13 +1098,14 @@
         "W": 309.0,
         "group": "Main-belt Asteroid",
         "mesh": "86_Semele_damit_5800.obj",
-        "name": "86 Semele",
+        "name": "Semele",
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 54.9645,
         "rotation_period": 16.634,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "86"
     },
     {
         "A": 3.48,
@@ -1059,13 +1117,14 @@
         "W": 264.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "87_Sylvia_148.obj",
-        "name": "87 Sylvia",
+        "name": "Sylvia",
         "parent_name": "Solar-System Barycenter",
         "period": 2370.0,
         "radius": 126.5255,
         "rotation_period": 5.184,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "87"
     },
     {
         "A": 2.77,
@@ -1077,13 +1136,14 @@
         "W": 37.0,
         "group": "Main-belt Asteroid",
         "mesh": "88_Thisbe_149.obj",
-        "name": "88 Thisbe",
+        "name": "Thisbe",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 116.0,
         "rotation_period": 6.042,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "88"
     },
     {
         "A": 2.55,
@@ -1095,13 +1155,14 @@
         "W": 45.2,
         "group": "Main-belt Asteroid",
         "mesh": "89_Julia_293.obj",
-        "name": "89 Julia",
+        "name": "Julia",
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 72.7415,
         "rotation_period": 11.387,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "89"
     },
     {
         "A": 3.15,
@@ -1112,13 +1173,14 @@
         "Spkid": "20000090",
         "W": 245.0,
         "group": "Main-belt Asteroid",
-        "name": "90 Antiope",
+        "name": "Antiope",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 57.987,
         "rotation_period": 16.509,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "90"
     },
     {
         "A": 2.59,
@@ -1130,13 +1192,14 @@
         "W": 74.4,
         "group": "Main-belt Asteroid",
         "mesh": "91_Aegina_damit_5831.obj",
-        "name": "91 Aegina",
+        "name": "Aegina",
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 51.701,
         "rotation_period": 6.025,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "91"
     },
     {
         "A": 3.18,
@@ -1147,13 +1210,14 @@
         "Spkid": "20000092",
         "W": 237.0,
         "group": "Main-belt Asteroid",
-        "name": "92 Undina",
+        "name": "Undina",
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 63.21,
         "rotation_period": 15.941,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "92"
     },
     {
         "A": 2.76,
@@ -1165,13 +1229,14 @@
         "W": 276.0,
         "group": "Main-belt Asteroid",
         "mesh": "93_Minerva_1797.obj",
-        "name": "93 Minerva",
+        "name": "Minerva",
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 77.0775,
         "rotation_period": 5.982,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "93"
     },
     {
         "A": 3.15,
@@ -1183,13 +1248,14 @@
         "W": 60.4,
         "group": "Main-belt Asteroid",
         "mesh": "94_Aurora_303.obj",
-        "name": "94 Aurora",
+        "name": "Aurora",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 102.445,
         "rotation_period": 7.22,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "94"
     },
     {
         "A": 3.06,
@@ -1201,13 +1267,14 @@
         "W": 153.0,
         "group": "Main-belt Asteroid",
         "mesh": "95_Arethusa_294.obj",
-        "name": "95 Arethusa",
+        "name": "Arethusa",
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 73.9845,
         "rotation_period": 8.705,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "95"
     },
     {
         "A": 3.05,
@@ -1218,13 +1285,14 @@
         "Spkid": "20000096",
         "W": 208.0,
         "group": "Main-belt Asteroid",
-        "name": "96 Aegle",
+        "name": "Aegle",
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 88.887,
         "rotation_period": 13.868,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "96"
     },
     {
         "A": 2.67,
@@ -1236,13 +1304,14 @@
         "W": 268.0,
         "group": "Main-belt Asteroid",
         "mesh": "97_Klotho_321.obj",
-        "name": "97 Klotho",
+        "name": "Klotho",
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 50.3585,
         "rotation_period": 35.15,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "97"
     },
     {
         "A": 2.69,
@@ -1254,13 +1323,14 @@
         "W": 158.0,
         "group": "Main-belt Asteroid",
         "mesh": "98_Ianthe_1088.obj",
-        "name": "98 Ianthe",
+        "name": "Ianthe",
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 66.394,
         "rotation_period": 16.479,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "98"
     },
     {
         "A": 3.14,
@@ -1272,13 +1342,14 @@
         "W": 31.7,
         "group": "Main-belt Asteroid",
         "mesh": "104_Klymene_798.obj",
-        "name": "104 Klymene",
+        "name": "Klymene",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 68.2765,
         "rotation_period": 8.984,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "104"
     },
     {
         "A": 3.18,
@@ -1290,13 +1361,14 @@
         "W": 332.0,
         "group": "Main-belt Asteroid",
         "mesh": "106_Dione_damit_5942.obj",
-        "name": "106 Dione",
+        "name": "Dione",
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 103.9345,
         "rotation_period": 16.21,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "106"
     },
     {
         "A": 3.49,
@@ -1310,13 +1382,14 @@
         "gm": 0.7475,
         "group": "Outer Main-belt Asteroid",
         "mesh": "107_Camilla_151.obj",
-        "name": "107 Camilla",
+        "name": "Camilla",
         "parent_name": "Solar-System Barycenter",
         "period": 2380.0,
         "radius": 105.185,
         "rotation_period": 4.844,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "107"
     },
     {
         "A": 2.59,
@@ -1327,13 +1400,14 @@
         "Spkid": "20000111",
         "W": 168.0,
         "group": "Main-belt Asteroid",
-        "name": "111 Ate",
+        "name": "Ate",
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 63.172,
         "rotation_period": 22.072,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "111"
     },
     {
         "A": 2.99,
@@ -1345,13 +1419,14 @@
         "W": 52.6,
         "group": "Main-belt Asteroid",
         "mesh": "117_Lomia_839.obj",
-        "name": "117 Lomia",
+        "name": "Lomia",
         "parent_name": "Solar-System Barycenter",
         "period": 1890.0,
         "radius": 104.487,
         "rotation_period": 9.127,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "117"
     },
     {
         "A": 3.13,
@@ -1363,13 +1438,14 @@
         "W": 238.0,
         "group": "Main-belt Asteroid",
         "mesh": "120_Lachesis_944.obj",
-        "name": "120 Lachesis",
+        "name": "Lachesis",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 77.566,
         "rotation_period": 46.551,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "120"
     },
     {
         "A": 3.45,
@@ -1381,13 +1457,14 @@
         "W": 297.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "121_Hermione_155.obj",
-        "name": "121 Hermione",
+        "name": "Hermione",
         "parent_name": "Solar-System Barycenter",
         "period": 2350.0,
         "radius": 104.5,
         "rotation_period": 5.55128,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "121"
     },
     {
         "A": 2.76,
@@ -1399,13 +1476,14 @@
         "W": 92.2,
         "group": "Main-belt Asteroid",
         "mesh": "127_Johanna_444.obj",
-        "name": "127 Johanna",
+        "name": "Johanna",
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 61.0,
         "rotation_period": 12.7988,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "127"
     },
     {
         "A": 2.75,
@@ -1416,13 +1494,14 @@
         "Spkid": "20000128",
         "W": 303.0,
         "group": "Main-belt Asteroid",
-        "name": "128 Nemesis",
+        "name": "Nemesis",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 81.2575,
         "rotation_period": 38.9325,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "128"
     },
     {
         "A": 2.87,
@@ -1434,13 +1513,14 @@
         "W": 111.0,
         "group": "Main-belt Asteroid",
         "mesh": "129_Antigone_159.obj",
-        "name": "129 Antigone",
+        "name": "Antigone",
         "parent_name": "Solar-System Barycenter",
         "period": 1770.0,
         "radius": 56.5,
         "rotation_period": 4.9572,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "129"
     },
     {
         "A": 3.13,
@@ -1452,13 +1532,14 @@
         "W": 238.0,
         "group": "Main-belt Asteroid",
         "mesh": "130_Elektra_160.obj",
-        "name": "130 Elektra",
+        "name": "Elektra",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 90.326,
         "rotation_period": 5.225,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "130"
     },
     {
         "A": 2.56,
@@ -1470,13 +1551,14 @@
         "W": 85.6,
         "group": "Main-belt Asteroid",
         "mesh": "134_Sophrosyne_damit_5976.obj",
-        "name": "134 Sophrosyne",
+        "name": "Sophrosyne",
         "parent_name": "Solar-System Barycenter",
         "period": 1500.0,
         "radius": 54.0,
         "rotation_period": 17.196,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "134"
     },
     {
         "A": 3.12,
@@ -1488,13 +1570,14 @@
         "W": 108.0,
         "group": "Main-belt Asteroid",
         "mesh": "137_Meliboea_damit_5984.obj",
-        "name": "137 Meliboea",
+        "name": "Meliboea",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 64.339,
         "rotation_period": 25.676,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "137"
     },
     {
         "A": 2.79,
@@ -1506,13 +1589,14 @@
         "W": 167.0,
         "group": "Main-belt Asteroid",
         "mesh": "139_Juewa_damit_5985.obj",
-        "name": "139 Juewa",
+        "name": "Juewa",
         "parent_name": "Solar-System Barycenter",
         "period": 1700.0,
         "radius": 75.558,
         "rotation_period": 20.991,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "139"
     },
     {
         "A": 2.74,
@@ -1524,13 +1608,14 @@
         "W": 197.0,
         "group": "Main-belt Asteroid",
         "mesh": "140_Siwa_damit_5987.obj",
-        "name": "140 Siwa",
+        "name": "Siwa",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 54.895,
         "rotation_period": 34.445,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "140"
     },
     {
         "A": 2.67,
@@ -1541,13 +1626,14 @@
         "Spkid": "20000141",
         "W": 57.8,
         "group": "Main-belt Asteroid",
-        "name": "141 Lumen",
+        "name": "Lumen",
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 58.958,
         "rotation_period": 19.87,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "141"
     },
     {
         "A": 2.65,
@@ -1559,13 +1645,14 @@
         "W": 295.0,
         "group": "Main-belt Asteroid",
         "mesh": "144_Vibilia_1100.obj",
-        "name": "144 Vibilia",
+        "name": "Vibilia",
         "parent_name": "Solar-System Barycenter",
         "period": 1580.0,
         "radius": 71.19,
         "rotation_period": 13.819,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "144"
     },
     {
         "A": 2.67,
@@ -1576,13 +1663,14 @@
         "Spkid": "20000145",
         "W": 45.2,
         "group": "Main-belt Asteroid",
-        "name": "145 Adeona",
+        "name": "Adeona",
         "parent_name": "Solar-System Barycenter",
         "period": 1600.0,
         "radius": 63.8915,
         "rotation_period": 15.071,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "145"
     },
     {
         "A": 2.72,
@@ -1594,13 +1682,14 @@
         "W": 145.0,
         "group": "Main-belt Asteroid",
         "mesh": "146_Lucina_164.obj",
-        "name": "146 Lucina",
+        "name": "Lucina",
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 80.155,
         "rotation_period": 18.557,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "146"
     },
     {
         "A": 3.14,
@@ -1612,13 +1701,14 @@
         "W": 103.0,
         "group": "Main-belt Asteroid",
         "mesh": "147_Protogeneia_557.obj",
-        "name": "147 Protogeneia",
+        "name": "Protogeneia",
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 66.465,
         "rotation_period": 7.8528,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "147"
     },
     {
         "A": 2.98,
@@ -1630,13 +1720,14 @@
         "W": 154.0,
         "group": "Main-belt Asteroid",
         "mesh": "150_Nuwa_1186.obj",
-        "name": "150 Nuwa",
+        "name": "Nuwa",
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 59.564,
         "rotation_period": 8.1347,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "150"
     },
     {
         "A": 3.97,
@@ -1647,13 +1738,14 @@
         "Spkid": "20000153",
         "W": 39.4,
         "group": "Outer Main-belt Asteroid",
-        "name": "153 Hilda",
+        "name": "Hilda",
         "parent_name": "Solar-System Barycenter",
         "period": 2890.0,
         "radius": 85.315,
         "rotation_period": 5.9585,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "153"
     },
     {
         "A": 3.2,
@@ -1665,13 +1757,14 @@
         "W": 167.0,
         "group": "Main-belt Asteroid",
         "mesh": "154_Bertha_940.obj",
-        "name": "154 Bertha",
+        "name": "Bertha",
         "parent_name": "Solar-System Barycenter",
         "period": 2090.0,
         "radius": 96.3055,
         "rotation_period": 25.224,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "154"
     },
     {
         "A": 2.73,
@@ -1683,13 +1776,14 @@
         "W": 339.0,
         "group": "Main-belt Asteroid",
         "mesh": "156_Xanthippe_damit_4643.obj",
-        "name": "156 Xanthippe",
+        "name": "Xanthippe",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 71.673,
         "rotation_period": 22.132,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "156"
     },
     {
         "A": 3.11,
@@ -1701,13 +1795,14 @@
         "W": 333.0,
         "group": "Main-belt Asteroid",
         "mesh": "159_Aemilia_1870.obj",
-        "name": "159 Aemilia",
+        "name": "Aemilia",
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 62.618,
         "rotation_period": 24.476,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "159"
     },
     {
         "A": 2.63,
@@ -1719,13 +1814,14 @@
         "W": 284.0,
         "group": "Main-belt Asteroid",
         "mesh": "164_Eva_1021.obj",
-        "name": "164 Eva",
+        "name": "Eva",
         "parent_name": "Solar-System Barycenter",
         "period": 1560.0,
         "radius": 50.127,
         "rotation_period": 13.66,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "164"
     },
     {
         "A": 3.13,
@@ -1737,13 +1833,14 @@
         "W": 345.0,
         "group": "Main-belt Asteroid",
         "mesh": "165_Loreley_295.obj",
-        "name": "165 Loreley",
+        "name": "Loreley",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 90.0415,
         "rotation_period": 7.226,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "165"
     },
     {
         "A": 3.37,
@@ -1755,13 +1852,14 @@
         "W": 176.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "168_Sibylla_damit_6009.obj",
-        "name": "168 Sibylla",
+        "name": "Sibylla",
         "parent_name": "Solar-System Barycenter",
         "period": 2260.0,
         "radius": 72.683,
         "rotation_period": 47.009,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "168"
     },
     {
         "A": 3.13,
@@ -1773,13 +1871,14 @@
         "W": 55.4,
         "group": "Main-belt Asteroid",
         "mesh": "171_Ophelia_1169.obj",
-        "name": "171 Ophelia",
+        "name": "Ophelia",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 65.404,
         "rotation_period": 6.66535,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "171"
     },
     {
         "A": 2.74,
@@ -1791,13 +1890,14 @@
         "W": 229.0,
         "group": "Main-belt Asteroid",
         "mesh": "173_Ino_damit_5913.obj",
-        "name": "173 Ino",
+        "name": "Ino",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 62.9105,
         "rotation_period": 6.15,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "173"
     },
     {
         "A": 3.18,
@@ -1809,13 +1909,14 @@
         "W": 189.0,
         "group": "Main-belt Asteroid",
         "mesh": "176_Iduna_1338_2017.obj",
-        "name": "176 Iduna",
+        "name": "Iduna",
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 53.488,
         "rotation_period": 11.2877,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "176"
     },
     {
         "A": 3.13,
@@ -1826,13 +1927,14 @@
         "Spkid": "20000181",
         "W": 319.0,
         "group": "Main-belt Asteroid",
-        "name": "181 Eucharis",
+        "name": "Eucharis",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 57.6915,
         "rotation_period": 52.23,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "181"
     },
     {
         "A": 2.74,
@@ -1843,13 +1945,14 @@
         "Spkid": "20000185",
         "W": 224.0,
         "group": "Main-belt Asteroid",
-        "name": "185 Eunike",
+        "name": "Eunike",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 80.232,
         "rotation_period": 21.797,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "185"
     },
     {
         "A": 2.73,
@@ -1861,13 +1964,14 @@
         "W": 197.0,
         "group": "Main-belt Asteroid",
         "mesh": "187_Lamberta_1085.obj",
-        "name": "187 Lamberta",
+        "name": "Lamberta",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 73.647,
         "rotation_period": 10.67,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "187"
     },
     {
         "A": 3.99,
@@ -1878,13 +1982,14 @@
         "Spkid": "20000190",
         "W": 271.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "190 Ismene",
+        "name": "Ismene",
         "parent_name": "Solar-System Barycenter",
         "period": 2920.0,
         "radius": 79.5,
         "rotation_period": 6.521,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "190"
     },
     {
         "A": 2.62,
@@ -1895,13 +2000,14 @@
         "Spkid": "20000194",
         "W": 163.0,
         "group": "Main-belt Asteroid",
-        "name": "194 Prokne",
+        "name": "Prokne",
         "parent_name": "Solar-System Barycenter",
         "period": 1550.0,
         "radius": 80.8335,
         "rotation_period": 15.679,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "194"
     },
     {
         "A": 3.11,
@@ -1913,13 +2019,14 @@
         "W": 203.0,
         "group": "Main-belt Asteroid",
         "mesh": "196_Philomela_178.obj",
-        "name": "196 Philomela",
+        "name": "Philomela",
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 72.313,
         "rotation_period": 8.334,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "196"
     },
     {
         "A": 2.74,
@@ -1930,13 +2037,14 @@
         "Spkid": "20000200",
         "W": 87.1,
         "group": "Main-belt Asteroid",
-        "name": "200 Dynamene",
+        "name": "Dynamene",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 64.1505,
         "rotation_period": 37.394,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "200"
     },
     {
         "A": 2.74,
@@ -1947,13 +2055,14 @@
         "Spkid": "20000203",
         "W": 60.3,
         "group": "Main-belt Asteroid",
-        "name": "203 Pompeja",
+        "name": "Pompeja",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 62.296,
         "rotation_period": 24.052,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "203"
     },
     {
         "A": 2.74,
@@ -1965,13 +2074,14 @@
         "W": 303.0,
         "group": "Main-belt Asteroid",
         "mesh": "206_Hersilia_damit_3217.obj",
-        "name": "206 Hersilia",
+        "name": "Hersilia",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 56.5,
         "rotation_period": 11.122,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "206"
     },
     {
         "A": 3.15,
@@ -1983,13 +2093,14 @@
         "W": 250.0,
         "group": "Main-belt Asteroid",
         "mesh": "209_Dido_damit_3659.obj",
-        "name": "209 Dido",
+        "name": "Dido",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 89.504,
         "rotation_period": 5.7366,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "209"
     },
     {
         "A": 3.05,
@@ -2000,13 +2111,14 @@
         "Spkid": "20000211",
         "W": 173.0,
         "group": "Main-belt Asteroid",
-        "name": "211 Isolda",
+        "name": "Isolda",
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 70.5625,
         "rotation_period": 18.365,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "211"
     },
     {
         "A": 3.12,
@@ -2018,13 +2130,14 @@
         "W": 106.0,
         "group": "Main-belt Asteroid",
         "mesh": "212_Medea_1092.obj",
-        "name": "212 Medea",
+        "name": "Medea",
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 68.06,
         "rotation_period": 10.283,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "212"
     },
     {
         "A": 2.79,
@@ -2036,13 +2149,14 @@
         "W": 180.0,
         "group": "Main-belt Asteroid",
         "mesh": "216_Kleopatra.obj",
-        "name": "216 Kleopatra",
+        "name": "Kleopatra",
         "parent_name": "Solar-System Barycenter",
         "period": 1710.0,
         "radius": 61.0,
         "rotation_period": 5.385,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "216"
     },
     {
         "A": 3.16,
@@ -2054,13 +2168,14 @@
         "W": 270.0,
         "group": "Main-belt Asteroid",
         "mesh": "227_Philosophia_1873.obj",
-        "name": "227 Philosophia",
+        "name": "Philosophia",
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 61.9455,
         "rotation_period": 26.468,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "227"
     },
     {
         "A": 3.42,
@@ -2071,13 +2186,14 @@
         "Spkid": "20000229",
         "W": 309.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "229 Adelinda",
+        "name": "Adelinda",
         "parent_name": "Solar-System Barycenter",
         "period": 2310.0,
         "radius": 52.956,
         "rotation_period": 6.6,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "229"
     },
     {
         "A": 2.38,
@@ -2089,13 +2205,14 @@
         "W": 139.0,
         "group": "Main-belt Asteroid",
         "mesh": "230_Athamantis_185.obj",
-        "name": "230 Athamantis",
+        "name": "Athamantis",
         "parent_name": "Solar-System Barycenter",
         "period": 1340.0,
         "radius": 55.666,
         "rotation_period": 24.0055,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "230"
     },
     {
         "A": 2.91,
@@ -2107,13 +2224,14 @@
         "W": 210.0,
         "group": "Main-belt Asteroid",
         "mesh": "238_Hypatia_damit_3844.obj",
-        "name": "238 Hypatia",
+        "name": "Hypatia",
         "parent_name": "Solar-System Barycenter",
         "period": 1810.0,
         "radius": 77.8295,
         "rotation_period": 8.8749,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "238"
     },
     {
         "A": 3.05,
@@ -2124,13 +2242,14 @@
         "Spkid": "20000241",
         "W": 79.7,
         "group": "Main-belt Asteroid",
-        "name": "241 Germania",
+        "name": "Germania",
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 84.45,
         "rotation_period": 15.51,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "241"
     },
     {
         "A": 2.74,
@@ -2142,13 +2261,14 @@
         "W": 55.4,
         "group": "Main-belt Asteroid",
         "mesh": "247_Eukrate_1207.obj",
-        "name": "247 Eukrate",
+        "name": "Eukrate",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 65.4675,
         "rotation_period": 12.093,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "247"
     },
     {
         "A": 3.14,
@@ -2160,13 +2280,14 @@
         "W": 75.8,
         "group": "Main-belt Asteroid",
         "mesh": "250_Bettina_187.obj",
-        "name": "250 Bettina",
+        "name": "Bettina",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 60.4975,
         "rotation_period": 5.0545,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "250"
     },
     {
         "A": 3.13,
@@ -2177,13 +2298,14 @@
         "Spkid": "20000259",
         "W": 167.0,
         "group": "Main-belt Asteroid",
-        "name": "259 Aletheia",
+        "name": "Aletheia",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 87.159,
         "rotation_period": 8.143,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "259"
     },
     {
         "A": 3.45,
@@ -2195,13 +2317,14 @@
         "W": 180.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "260_Huberta_579.obj",
-        "name": "260 Huberta",
+        "name": "Huberta",
         "parent_name": "Solar-System Barycenter",
         "period": 2340.0,
         "radius": 50.7695,
         "rotation_period": 8.29,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "260"
     },
     {
         "A": 2.8,
@@ -2212,13 +2335,14 @@
         "Spkid": "20000266",
         "W": 152.0,
         "group": "Main-belt Asteroid",
-        "name": "266 Aline",
+        "name": "Aline",
         "parent_name": "Solar-System Barycenter",
         "period": 1720.0,
         "radius": 54.747,
         "rotation_period": 13.018,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "266"
     },
     {
         "A": 3.09,
@@ -2229,13 +2353,14 @@
         "Spkid": "20000268",
         "W": 68.2,
         "group": "Main-belt Asteroid",
-        "name": "268 Adorea",
+        "name": "Adorea",
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 72.2925,
         "rotation_period": 7.8,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "268"
     },
     {
         "A": 2.77,
@@ -2247,13 +2372,14 @@
         "W": 39.3,
         "group": "Main-belt Asteroid",
         "mesh": "275_Sapientia_damit_16283.obj",
-        "name": "275 Sapientia",
+        "name": "Sapientia",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 51.5,
         "rotation_period": 14.933,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "275"
     },
     {
         "A": 3.12,
@@ -2265,13 +2391,14 @@
         "W": 266.0,
         "group": "Main-belt Asteroid",
         "mesh": "276_Adelheid_189.obj",
-        "name": "276 Adelheid",
+        "name": "Adelheid",
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 57.3615,
         "rotation_period": 6.315,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "276"
     },
     {
         "A": 4.27,
@@ -2282,13 +2409,14 @@
         "Spkid": "20000279",
         "W": 28.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "279 Thule",
+        "name": "Thule",
         "parent_name": "Solar-System Barycenter",
         "period": 3220.0,
         "radius": 63.295,
         "rotation_period": 23.896,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "279"
     },
     {
         "A": 3.05,
@@ -2300,13 +2428,14 @@
         "W": 55.8,
         "group": "Main-belt Asteroid",
         "mesh": "283_Emma_195.obj",
-        "name": "283 Emma",
+        "name": "Emma",
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 66.1925,
         "rotation_period": 6.896,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "283"
     },
     {
         "A": 3.12,
@@ -2318,13 +2447,14 @@
         "W": 67.9,
         "group": "Main-belt Asteroid",
         "mesh": "303_Josephina_damit_10373.obj",
-        "name": "303 Josephina",
+        "name": "Josephina",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 62.4615,
         "rotation_period": 12.497,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "303"
     },
     {
         "A": 2.75,
@@ -2335,13 +2465,14 @@
         "Spkid": "20000308",
         "W": 112.0,
         "group": "Main-belt Asteroid",
-        "name": "308 Polyxo",
+        "name": "Polyxo",
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 64.289,
         "rotation_period": 12.031,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "308"
     },
     {
         "A": 2.68,
@@ -2352,13 +2483,14 @@
         "Spkid": "20000324",
         "W": 44.2,
         "group": "Main-belt Asteroid",
-        "name": "324 Bamberga",
+        "name": "Bamberga",
         "parent_name": "Solar-System Barycenter",
         "period": 1600.0,
         "radius": 110.3455,
         "rotation_period": 29.43,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "324"
     },
     {
         "A": 3.11,
@@ -2370,13 +2502,14 @@
         "W": 107.0,
         "group": "Main-belt Asteroid",
         "mesh": "328_Gudrun_damit_5907.obj",
-        "name": "328 Gudrun",
+        "name": "Gudrun",
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 72.84,
         "rotation_period": 10.992,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "328"
     },
     {
         "A": 3.91,
@@ -2388,13 +2521,14 @@
         "W": 161.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "334_Chicago_damit_4269.obj",
-        "name": "334 Chicago",
+        "name": "Chicago",
         "parent_name": "Solar-System Barycenter",
         "period": 2820.0,
         "radius": 99.385,
         "rotation_period": 7.361,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "334"
     },
     {
         "A": 2.6,
@@ -2405,13 +2539,14 @@
         "Spkid": "20000344",
         "W": 237.0,
         "group": "Main-belt Asteroid",
-        "name": "344 Desiderata",
+        "name": "Desiderata",
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 62.0905,
         "rotation_period": 10.747,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "344"
     },
     {
         "A": 2.92,
@@ -2423,13 +2558,14 @@
         "W": 344.0,
         "group": "Main-belt Asteroid",
         "mesh": "349_Dembowska_204.obj",
-        "name": "349 Dembowska",
+        "name": "Dembowska",
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 69.885,
         "rotation_period": 4.701,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "349"
     },
     {
         "A": 3.11,
@@ -2441,13 +2577,14 @@
         "W": 338.0,
         "group": "Main-belt Asteroid",
         "mesh": "350_Ornamenta_205.obj",
-        "name": "350 Ornamenta",
+        "name": "Ornamenta",
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 64.3645,
         "rotation_period": 9.178,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "350"
     },
     {
         "A": 2.8,
@@ -2459,13 +2596,14 @@
         "W": 7.93,
         "group": "Main-belt Asteroid",
         "mesh": "354_Eleonora_343.obj",
-        "name": "354 Eleonora",
+        "name": "Eleonora",
         "parent_name": "Solar-System Barycenter",
         "period": 1710.0,
         "radius": 74.485,
         "rotation_period": 4.277,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "354"
     },
     {
         "A": 2.75,
@@ -2477,13 +2615,14 @@
         "W": 79.4,
         "group": "Main-belt Asteroid",
         "mesh": "356_Liguria_damit_6079.obj",
-        "name": "356 Liguria",
+        "name": "Liguria",
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 72.7515,
         "rotation_period": 31.701,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "356"
     },
     {
         "A": 3.15,
@@ -2495,13 +2634,14 @@
         "W": 256.0,
         "group": "Main-belt Asteroid",
         "mesh": "357_Ninina_damit_16305.obj",
-        "name": "357 Ninina",
+        "name": "Ninina",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 62.0535,
         "rotation_period": 35.983,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "357"
     },
     {
         "A": 3.01,
@@ -2513,13 +2653,14 @@
         "W": 290.0,
         "group": "Main-belt Asteroid",
         "mesh": "360_Carlova_207.obj",
-        "name": "360 Carlova",
+        "name": "Carlova",
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 64.5625,
         "rotation_period": 6.183,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "360"
     },
     {
         "A": 3.98,
@@ -2531,13 +2672,14 @@
         "W": 67.4,
         "group": "Outer Main-belt Asteroid",
         "mesh": "361_Bononia_1173.obj",
-        "name": "361 Bononia",
+        "name": "Bononia",
         "parent_name": "Solar-System Barycenter",
         "period": 2900.0,
         "radius": 77.167,
         "rotation_period": 13.835,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "361"
     },
     {
         "A": 3.16,
@@ -2549,13 +2691,14 @@
         "W": 115.0,
         "group": "Main-belt Asteroid",
         "mesh": "372_Palma_298.obj",
-        "name": "372 Palma",
+        "name": "Palma",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 86.821,
         "rotation_period": 8.567,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "372"
     },
     {
         "A": 3.13,
@@ -2566,13 +2709,14 @@
         "Spkid": "20000375",
         "W": 342.0,
         "group": "Main-belt Asteroid",
-        "name": "375 Ursula",
+        "name": "Ursula",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 108.0,
         "rotation_period": 16.899,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "375"
     },
     {
         "A": 3.23,
@@ -2584,13 +2728,14 @@
         "W": 145.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "381_Myrrha_1133.obj",
-        "name": "381 Myrrha",
+        "name": "Myrrha",
         "parent_name": "Solar-System Barycenter",
         "period": 2120.0,
         "radius": 63.8195,
         "rotation_period": 6.572,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "381"
     },
     {
         "A": 2.9,
@@ -2602,13 +2747,14 @@
         "W": 221.0,
         "group": "Main-belt Asteroid",
         "mesh": "386_Siegena_447.obj",
-        "name": "386 Siegena",
+        "name": "Siegena",
         "parent_name": "Solar-System Barycenter",
         "period": 1800.0,
         "radius": 82.505,
         "rotation_period": 9.763,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "386"
     },
     {
         "A": 2.74,
@@ -2620,13 +2766,14 @@
         "W": 158.0,
         "group": "Main-belt Asteroid",
         "mesh": "387_Aquitania_1804.obj",
-        "name": "387 Aquitania",
+        "name": "Aquitania",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.255,
         "rotation_period": 24.144,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "387"
     },
     {
         "A": 3.0,
@@ -2638,13 +2785,14 @@
         "W": 329.0,
         "group": "Main-belt Asteroid",
         "mesh": "388_Charybdis_damit_3834.obj",
-        "name": "388 Charybdis",
+        "name": "Charybdis",
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 62.877,
         "rotation_period": 9.516,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "388"
     },
     {
         "A": 2.78,
@@ -2655,13 +2803,14 @@
         "Spkid": "20000393",
         "W": 90.9,
         "group": "Main-belt Asteroid",
-        "name": "393 Lampetia",
+        "name": "Lampetia",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 58.0955,
         "rotation_period": 38.455,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "393"
     },
     {
         "A": 2.58,
@@ -2673,13 +2822,14 @@
         "W": 309.0,
         "group": "Main-belt Asteroid",
         "mesh": "405_Thia_damit_5322.obj",
-        "name": "405 Thia",
+        "name": "Thia",
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 54.447,
         "rotation_period": 9.95,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "405"
     },
     {
         "A": 2.58,
@@ -2691,13 +2841,14 @@
         "W": 355.0,
         "group": "Main-belt Asteroid",
         "mesh": "409_Aspasia_215.obj",
-        "name": "409 Aspasia",
+        "name": "Aspasia",
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 85.506,
         "rotation_period": 9.022,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "409"
     },
     {
         "A": 2.72,
@@ -2709,13 +2860,14 @@
         "W": 173.0,
         "group": "Main-belt Asteroid",
         "mesh": "410_Chloris_damit_4057.obj",
-        "name": "410 Chloris",
+        "name": "Chloris",
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 59.4645,
         "rotation_period": 32.5,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "410"
     },
     {
         "A": 2.59,
@@ -2727,13 +2879,14 @@
         "W": 44.4,
         "group": "Main-belt Asteroid",
         "mesh": "419_Aurelia_1198.obj",
-        "name": "419 Aurelia",
+        "name": "Aurelia",
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 74.3505,
         "rotation_period": 16.784,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "419"
     },
     {
         "A": 3.43,
@@ -2744,13 +2897,14 @@
         "Spkid": "20000420",
         "W": 225.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "420 Bertholda",
+        "name": "Bertholda",
         "parent_name": "Solar-System Barycenter",
         "period": 2320.0,
         "radius": 69.3495,
         "rotation_period": 10.987,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "420"
     },
     {
         "A": 3.07,
@@ -2762,13 +2916,14 @@
         "W": 199.0,
         "group": "Main-belt Asteroid",
         "mesh": "423_Diotima_1836.obj",
-        "name": "423 Diotima",
+        "name": "Diotima",
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 87.9295,
         "rotation_period": 4.775,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "423"
     },
     {
         "A": 2.77,
@@ -2780,13 +2935,14 @@
         "W": 334.0,
         "group": "Main-belt Asteroid",
         "mesh": "424_Gratia_damit_5354.obj",
-        "name": "424 Gratia",
+        "name": "Gratia",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 51.2825,
         "rotation_period": 20.063,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "424"
     },
     {
         "A": 2.89,
@@ -2798,13 +2954,14 @@
         "W": 222.0,
         "group": "Main-belt Asteroid",
         "mesh": "426_Hippo_damit_16297.obj",
-        "name": "426 Hippo",
+        "name": "Hippo",
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 68.781,
         "rotation_period": 67.52,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "426"
     },
     {
         "A": 3.14,
@@ -2815,13 +2972,14 @@
         "Spkid": "20000431",
         "W": 217.0,
         "group": "Main-belt Asteroid",
-        "name": "431 Nephele",
+        "name": "Nephele",
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 50.95,
         "rotation_period": 13.53,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "431"
     },
     {
         "A": 2.77,
@@ -2833,13 +2991,14 @@
         "W": 155.0,
         "group": "Main-belt Asteroid",
         "mesh": "444_Gyptis_damit_5394.obj",
-        "name": "444 Gyptis",
+        "name": "Gyptis",
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 79.6655,
         "rotation_period": 6.214,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "444"
     },
     {
         "A": 3.06,
@@ -2850,13 +3009,14 @@
         "Spkid": "20000451",
         "W": 337.0,
         "group": "Main-belt Asteroid",
-        "name": "451 Patientia",
+        "name": "Patientia",
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 126.95,
         "rotation_period": 9.727,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "451"
     },
     {
         "A": 3.18,
@@ -2867,13 +3027,14 @@
         "Spkid": "20000469",
         "W": 215.0,
         "group": "Main-belt Asteroid",
-        "name": "469 Argentina",
+        "name": "Argentina",
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 66.859,
         "rotation_period": 17.5727,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "469"
     },
     {
         "A": 2.89,
@@ -2885,13 +3046,14 @@
         "W": 316.0,
         "group": "Main-belt Asteroid",
         "mesh": "471_Papagena_300.obj",
-        "name": "471 Papagena",
+        "name": "Papagena",
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 74.064,
         "rotation_period": 7.113,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "471"
     },
     {
         "A": 2.65,
@@ -2903,13 +3065,14 @@
         "W": 0.827,
         "group": "Main-belt Asteroid",
         "mesh": "476_Hedwig_damit_6114.obj",
-        "name": "476 Hedwig",
+        "name": "Hedwig",
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 69.2465,
         "rotation_period": 27.33,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "476"
     },
     {
         "A": 2.74,
@@ -2921,13 +3084,14 @@
         "W": 349.0,
         "group": "Main-belt Asteroid",
         "mesh": "481_Emita_damit_6119.obj",
-        "name": "481 Emita",
+        "name": "Emita",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.9145,
         "rotation_period": 14.412,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "481"
     },
     {
         "A": 3.17,
@@ -2938,13 +3102,14 @@
         "Spkid": "20000488",
         "W": 77.1,
         "group": "Main-belt Asteroid",
-        "name": "488 Kreusa",
+        "name": "Kreusa",
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 84.0585,
         "rotation_period": 32.645,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "488"
     },
     {
         "A": 3.15,
@@ -2956,13 +3121,14 @@
         "W": 8.48,
         "group": "Main-belt Asteroid",
         "mesh": "489_Comacina_809.obj",
-        "name": "489 Comacina",
+        "name": "Comacina",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 69.695,
         "rotation_period": 9.02,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "489"
     },
     {
         "A": 3.17,
@@ -2974,13 +3140,14 @@
         "W": 194.0,
         "group": "Main-belt Asteroid",
         "mesh": "490_Veritas_834.obj",
-        "name": "490 Veritas",
+        "name": "Veritas",
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 59.4015,
         "rotation_period": 7.93,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "490"
     },
     {
         "A": 2.99,
@@ -2991,13 +3158,14 @@
         "Spkid": "20000494",
         "W": 215.0,
         "group": "Main-belt Asteroid",
-        "name": "494 Virtus",
+        "name": "Virtus",
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 50.393,
         "rotation_period": 40.42,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "494"
     },
     {
         "A": 2.69,
@@ -3009,13 +3177,14 @@
         "W": 337.0,
         "group": "Main-belt Asteroid",
         "mesh": "505_Cava_452.obj",
-        "name": "505 Cava",
+        "name": "Cava",
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 57.5,
         "rotation_period": 8.1789,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "505"
     },
     {
         "A": 3.04,
@@ -3026,13 +3195,14 @@
         "Spkid": "20000506",
         "W": 145.0,
         "group": "Main-belt Asteroid",
-        "name": "506 Marion",
+        "name": "Marion",
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 52.97,
         "rotation_period": 13.546,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "506"
     },
     {
         "A": 3.17,
@@ -3044,13 +3214,14 @@
         "W": 225.0,
         "group": "Main-belt Asteroid",
         "mesh": "508_Princetonia_damit_3760.obj",
-        "name": "508 Princetonia",
+        "name": "Princetonia",
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 58.6205,
         "rotation_period": 52.8,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "508"
     },
     {
         "A": 3.16,
@@ -3062,13 +3233,14 @@
         "W": 337.0,
         "group": "Main-belt Asteroid",
         "mesh": "511_Davida_219.obj",
-        "name": "511 Davida",
+        "name": "Davida",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 135.1635,
         "rotation_period": 5.1297,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "511"
     },
     {
         "A": 3.05,
@@ -3080,13 +3252,14 @@
         "W": 112.0,
         "group": "Main-belt Asteroid",
         "mesh": "514_Armida_damit_6127.obj",
-        "name": "514 Armida",
+        "name": "Armida",
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 60.0465,
         "rotation_period": 21.851,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "514"
     },
     {
         "A": 3.16,
@@ -3098,13 +3271,14 @@
         "W": 144.0,
         "group": "Main-belt Asteroid",
         "mesh": "517_Edith_damit_5503.obj",
-        "name": "517 Edith",
+        "name": "Edith",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 55.945,
         "rotation_period": 9.2747,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "517"
     },
     {
         "A": 2.74,
@@ -3116,13 +3290,14 @@
         "W": 316.0,
         "group": "Main-belt Asteroid",
         "mesh": "521_Brixia_damit_13007.obj",
-        "name": "521 Brixia",
+        "name": "Brixia",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 53.6135,
         "rotation_period": 28.479,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "521"
     },
     {
         "A": 3.63,
@@ -3133,13 +3308,14 @@
         "Spkid": "20000522",
         "W": 249.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "522 Helga",
+        "name": "Helga",
         "parent_name": "Solar-System Barycenter",
         "period": 2520.0,
         "radius": 50.61,
         "rotation_period": 8.129,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "522"
     },
     {
         "A": 2.77,
@@ -3151,13 +3327,14 @@
         "W": 76.7,
         "group": "Main-belt Asteroid",
         "mesh": "532_Herculina_222.obj",
-        "name": "532 Herculina",
+        "name": "Herculina",
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 83.8955,
         "rotation_period": 9.405,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "532"
     },
     {
         "A": 3.49,
@@ -3169,13 +3346,14 @@
         "W": 296.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "536_Merapi_damit_5525.obj",
-        "name": "536 Merapi",
+        "name": "Merapi",
         "parent_name": "Solar-System Barycenter",
         "period": 2390.0,
         "radius": 73.533,
         "rotation_period": 8.791,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "536"
     },
     {
         "A": 3.2,
@@ -3187,13 +3365,14 @@
         "W": 332.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "545_Messalina_damit_5536.obj",
-        "name": "545 Messalina",
+        "name": "Messalina",
         "parent_name": "Solar-System Barycenter",
         "period": 2090.0,
         "radius": 56.3155,
         "rotation_period": 7.2,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "545"
     },
     {
         "A": 3.38,
@@ -3205,13 +3384,14 @@
         "W": 300.0,
         "group": "Outer Main-belt Asteroid",
         "mesh": "566_Stereoskopia_damit_16292.obj",
-        "name": "566 Stereoskopia",
+        "name": "Stereoskopia",
         "parent_name": "Solar-System Barycenter",
         "period": 2270.0,
         "radius": 83.6905,
         "rotation_period": 12.103,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "566"
     },
     {
         "A": 5.21,
@@ -3223,13 +3403,14 @@
         "W": 134.0,
         "group": "Jupiter Trojan",
         "mesh": "588_Achilles_damit_3934.obj",
-        "name": "588 Achilles",
+        "name": "Achilles",
         "parent_name": "Solar-System Barycenter",
         "period": 4350.0,
         "radius": 65.0495,
         "rotation_period": 7.306,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "588"
     },
     {
         "A": 2.93,
@@ -3241,13 +3422,14 @@
         "W": 176.0,
         "group": "Main-belt Asteroid",
         "mesh": "596_Scheila_849.obj",
-        "name": "596 Scheila",
+        "name": "Scheila",
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 79.863,
         "rotation_period": 15.848,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "596"
     },
     {
         "A": 3.08,
@@ -3258,13 +3440,14 @@
         "Spkid": "20000602",
         "W": 45.8,
         "group": "Main-belt Asteroid",
-        "name": "602 Marianna",
+        "name": "Marianna",
         "parent_name": "Solar-System Barycenter",
         "period": 1980.0,
         "radius": 55.222,
         "rotation_period": 35.195,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "602"
     },
     {
         "A": 5.21,
@@ -3275,13 +3458,14 @@
         "Spkid": "20000617",
         "W": 309.0,
         "group": "Jupiter Trojan",
-        "name": "617 Patroclus",
+        "name": "Patroclus",
         "parent_name": "Solar-System Barycenter",
         "period": 4340.0,
         "radius": 70.181,
         "rotation_period": 102.8,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "617"
     },
     {
         "A": 3.19,
@@ -3293,13 +3477,14 @@
         "W": 230.0,
         "group": "Main-belt Asteroid",
         "mesh": "618_Elfriede_damit_5625.obj",
-        "name": "618 Elfriede",
+        "name": "Elfriede",
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 65.646,
         "rotation_period": 14.791,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "618"
     },
     {
         "A": 5.27,
@@ -3311,13 +3496,14 @@
         "W": 180.0,
         "group": "Jupiter Trojan",
         "mesh": "624_Hektor_232.obj",
-        "name": "624 Hektor",
+        "name": "Hektor",
         "parent_name": "Solar-System Barycenter",
         "period": 4420.0,
         "radius": 112.5,
         "rotation_period": 6.924,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "624"
     },
     {
         "A": 2.3,
@@ -3328,13 +3514,14 @@
         "Spkid": "20000654",
         "W": 215.0,
         "group": "Main-belt Asteroid",
-        "name": "654 Zelinda",
+        "name": "Zelinda",
         "parent_name": "Solar-System Barycenter",
         "period": 1270.0,
         "radius": 80.368,
         "rotation_period": 31.735,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "654"
     },
     {
         "A": 5.17,
@@ -3346,13 +3533,14 @@
         "W": 344.0,
         "group": "Jupiter Trojan",
         "mesh": "659_Nestor_damit_4328.obj",
-        "name": "659 Nestor",
+        "name": "Nestor",
         "parent_name": "Solar-System Barycenter",
         "period": 4290.0,
         "radius": 56.16,
         "rotation_period": 15.98,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "659"
     },
     {
         "A": 3.06,
@@ -3364,13 +3552,14 @@
         "W": 314.0,
         "group": "Main-belt Asteroid",
         "mesh": "663_Gerlinde_damit_5661.obj",
-        "name": "663 Gerlinde",
+        "name": "Gerlinde",
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 53.8975,
         "rotation_period": 10.251,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "663"
     },
     {
         "A": 3.15,
@@ -3382,13 +3571,14 @@
         "W": 115.0,
         "group": "Main-belt Asteroid",
         "mesh": "690_Wratislavia_239.obj",
-        "name": "690 Wratislavia",
+        "name": "Wratislavia",
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 67.325,
         "rotation_period": 8.64,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "690"
     },
     {
         "A": 2.67,
@@ -3400,13 +3590,14 @@
         "W": 112.0,
         "group": "Main-belt Asteroid",
         "mesh": "694_Ekard_241.obj",
-        "name": "694 Ekard",
+        "name": "Ekard",
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 60.9455,
         "rotation_period": 5.925,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "694"
     },
     {
         "A": 3.19,
@@ -3417,13 +3608,14 @@
         "Spkid": "20000702",
         "W": 354.0,
         "group": "Main-belt Asteroid",
-        "name": "702 Alauda",
+        "name": "Alauda",
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 95.49,
         "rotation_period": 16.7072,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "702"
     },
     {
         "A": 3.06,
@@ -3436,13 +3628,14 @@
         "gm": 5.0,
         "group": "Main-belt Asteroid",
         "mesh": "704_Interamnia_ADAM.obj",
-        "name": "704 Interamnia",
+        "name": "Interamnia",
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 153.1565,
         "rotation_period": 8.727,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "704"
     },
     {
         "A": 2.92,
@@ -3453,13 +3646,14 @@
         "Spkid": "20000705",
         "W": 102.0,
         "group": "Main-belt Asteroid",
-        "name": "705 Erminia",
+        "name": "Erminia",
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 66.1305,
         "rotation_period": 53.68,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "705"
     },
     {
         "A": 2.58,
@@ -3471,13 +3665,14 @@
         "W": 182.0,
         "group": "Main-belt Asteroid",
         "mesh": "712_Boliviana_damit_14541.obj",
-        "name": "712 Boliviana",
+        "name": "Boliviana",
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 62.0625,
         "rotation_period": 11.7426,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "712"
     },
     {
         "A": 2.74,
@@ -3488,13 +3683,14 @@
         "Spkid": "20000739",
         "W": 44.8,
         "group": "Main-belt Asteroid",
-        "name": "739 Mandeville",
+        "name": "Mandeville",
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 52.2585,
         "rotation_period": 23.92,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "739"
     },
     {
         "A": 3.0,
@@ -3506,13 +3702,14 @@
         "W": 278.0,
         "group": "Main-belt Asteroid",
         "mesh": "747_Winchester_247.obj",
-        "name": "747 Winchester",
+        "name": "Winchester",
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 85.855,
         "rotation_period": 9.4146,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "747"
     },
     {
         "A": 3.95,
@@ -3523,13 +3720,14 @@
         "Spkid": "20000748",
         "W": 178.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "748 Simeisa",
+        "name": "Simeisa",
         "parent_name": "Solar-System Barycenter",
         "period": 2870.0,
         "radius": 51.857,
         "rotation_period": 11.905,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "748"
     },
     {
         "A": 2.55,
@@ -3541,13 +3739,14 @@
         "W": 303.0,
         "group": "Main-belt Asteroid",
         "mesh": "751_Faina_damit_6183.obj",
-        "name": "751 Faina",
+        "name": "Faina",
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 56.8495,
         "rotation_period": 23.678,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "751"
     },
     {
         "A": 3.15,
@@ -3559,13 +3758,14 @@
         "W": 189.0,
         "group": "Main-belt Asteroid",
         "mesh": "762_Pulcova_955.obj",
-        "name": "762 Pulcova",
+        "name": "Pulcova",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 73.6715,
         "rotation_period": 5.839,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "762"
     },
     {
         "A": 3.0,
@@ -3577,13 +3777,14 @@
         "W": 146.0,
         "group": "Main-belt Asteroid",
         "mesh": "772_Tanete_damit_5741.obj",
-        "name": "772 Tanete",
+        "name": "Tanete",
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 63.2365,
         "rotation_period": 17.258,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "772"
     },
     {
         "A": 2.93,
@@ -3595,13 +3796,14 @@
         "W": 306.0,
         "group": "Main-belt Asteroid",
         "mesh": "776_Berbericia_251.obj",
-        "name": "776 Berbericia",
+        "name": "Berbericia",
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 75.8555,
         "rotation_period": 7.668,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "776"
     },
     {
         "A": 3.11,
@@ -3613,13 +3815,14 @@
         "W": 212.0,
         "group": "Main-belt Asteroid",
         "mesh": "780_Armenia_damit_6220.obj",
-        "name": "780 Armenia",
+        "name": "Armenia",
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 63.1315,
         "rotation_period": 19.891,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "780"
     },
     {
         "A": 3.18,
@@ -3631,13 +3834,14 @@
         "W": 134.0,
         "group": "Main-belt Asteroid",
         "mesh": "786_Bredichina_damit_6190.obj",
-        "name": "786 Bredichina",
+        "name": "Bredichina",
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 54.1545,
         "rotation_period": 29.434,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "786"
     },
     {
         "A": 3.12,
@@ -3648,13 +3852,14 @@
         "Spkid": "20000788",
         "W": 47.5,
         "group": "Main-belt Asteroid",
-        "name": "788 Hohensteina",
+        "name": "Hohensteina",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 55.6475,
         "rotation_period": 37.137,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "788"
     },
     {
         "A": 3.4,
@@ -3665,13 +3870,14 @@
         "Spkid": "20000790",
         "W": 37.6,
         "group": "Outer Main-belt Asteroid",
-        "name": "790 Pretoria",
+        "name": "Pretoria",
         "parent_name": "Solar-System Barycenter",
         "period": 2290.0,
         "radius": 85.185,
         "rotation_period": 10.37,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "790"
     },
     {
         "A": 3.13,
@@ -3683,13 +3889,14 @@
         "W": 202.0,
         "group": "Main-belt Asteroid",
         "mesh": "791_Ani_2335.obj",
-        "name": "791 Ani",
+        "name": "Ani",
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 58.4325,
         "rotation_period": 11.174,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "791"
     },
     {
         "A": 2.84,
@@ -3701,13 +3908,14 @@
         "W": 344.0,
         "group": "Main-belt Asteroid",
         "mesh": "804_Hispania_damit_5770.obj",
-        "name": "804 Hispania",
+        "name": "Hispania",
         "parent_name": "Solar-System Barycenter",
         "period": 1740.0,
         "radius": 68.976,
         "rotation_period": 14.845,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "804"
     },
     {
         "A": 3.16,
@@ -3718,13 +3926,14 @@
         "Spkid": "20000814",
         "W": 296.0,
         "group": "Main-belt Asteroid",
-        "name": "814 Tauris",
+        "name": "Tauris",
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 51.1145,
         "rotation_period": 36.081,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "814"
     },
     {
         "A": 5.21,
@@ -3735,13 +3944,14 @@
         "Spkid": "20000884",
         "W": 337.0,
         "group": "Jupiter Trojan",
-        "name": "884 Priamus",
+        "name": "Priamus",
         "parent_name": "Solar-System Barycenter",
         "period": 4340.0,
         "radius": 50.5465,
         "rotation_period": 6.8605,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "884"
     },
     {
         "A": 3.21,
@@ -3752,13 +3962,14 @@
         "Spkid": "20000895",
         "W": 177.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "895 Helio",
+        "name": "Helio",
         "parent_name": "Solar-System Barycenter",
         "period": 2100.0,
         "radius": 54.784,
         "rotation_period": 9.347,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "895"
     },
     {
         "A": 3.55,
@@ -3769,13 +3980,14 @@
         "Spkid": "20000909",
         "W": 232.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "909 Ulla",
+        "name": "Ulla",
         "parent_name": "Solar-System Barycenter",
         "period": 2450.0,
         "radius": 58.22,
         "rotation_period": 8.7155,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "909"
     },
     {
         "A": 5.28,
@@ -3787,13 +3999,14 @@
         "W": 82.0,
         "group": "Jupiter Trojan",
         "mesh": "911_Agamemnon_damit_3870.obj",
-        "name": "911 Agamemnon",
+        "name": "Agamemnon",
         "parent_name": "Solar-System Barycenter",
         "period": 4440.0,
         "radius": 65.519,
         "rotation_period": 6.592,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "911"
     },
     {
         "A": 2.74,
@@ -3805,13 +4018,14 @@
         "W": 287.0,
         "group": "Main-belt Asteroid",
         "mesh": "1021_Flammario_862.obj",
-        "name": "1021 Flammario",
+        "name": "Flammario",
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.3825,
         "rotation_period": 12.155,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1021"
     },
     {
         "A": 3.13,
@@ -3822,13 +4036,14 @@
         "Spkid": "20001093",
         "W": 251.0,
         "group": "Main-belt Asteroid",
-        "name": "1093 Freda",
+        "name": "Freda",
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 58.365,
         "rotation_period": 19.67,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1093"
     },
     {
         "A": 5.23,
@@ -3839,13 +4054,14 @@
         "Spkid": "20001143",
         "W": 238.0,
         "group": "Jupiter Trojan",
-        "name": "1143 Odysseus",
+        "name": "Odysseus",
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 57.312,
         "rotation_period": 10.114,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1143"
     },
     {
         "A": 5.23,
@@ -3857,13 +4073,14 @@
         "W": 51.9,
         "group": "Jupiter Trojan",
         "mesh": "1172_Aneas_damit_6862.obj",
-        "name": "1172 Aneas",
+        "name": "Aneas",
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 59.01,
         "rotation_period": 8.705,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1172"
     },
     {
         "A": 5.25,
@@ -3874,13 +4091,14 @@
         "Spkid": "20001208",
         "W": 296.0,
         "group": "Jupiter Trojan",
-        "name": "1208 Troilus",
+        "name": "Troilus",
         "parent_name": "Solar-System Barycenter",
         "period": 4400.0,
         "radius": 50.2385,
         "rotation_period": 56.17,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1208"
     },
     {
         "A": 3.91,
@@ -3891,13 +4109,14 @@
         "Spkid": "20001269",
         "W": 19.0,
         "group": "Outer Main-belt Asteroid",
-        "name": "1269 Rollandia",
+        "name": "Rollandia",
         "parent_name": "Solar-System Barycenter",
         "period": 2820.0,
         "radius": 52.4465,
         "rotation_period": 60.45,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1269"
     },
     {
         "A": 5.22,
@@ -3909,13 +4128,14 @@
         "W": 130.0,
         "group": "Jupiter Trojan",
         "mesh": "1437_Diomedes_damit_4215.obj",
-        "name": "1437 Diomedes",
+        "name": "Diomedes",
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 58.893,
         "rotation_period": 24.49,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1437"
     },
     {
         "A": 5.15,
@@ -3926,13 +4146,14 @@
         "Spkid": "20001583",
         "W": 188.0,
         "group": "Jupiter Trojan",
-        "name": "1583 Antilochus",
+        "name": "Antilochus",
         "parent_name": "Solar-System Barycenter",
         "period": 4270.0,
         "radius": 54.421,
         "rotation_period": 15.759,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1583"
     },
     {
         "A": 5.13,
@@ -3943,13 +4164,14 @@
         "Spkid": "20001867",
         "W": 1.16,
         "group": "Jupiter Trojan",
-        "name": "1867 Deiphobus",
+        "name": "Deiphobus",
         "parent_name": "Solar-System Barycenter",
         "period": 4250.0,
         "radius": 59.11,
         "rotation_period": 58.66,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "1867"
     },
     {
         "A": 13.7,
@@ -3960,13 +4182,14 @@
         "Spkid": "20002060",
         "W": 339.0,
         "group": "Centaur",
-        "name": "2060 Chiron",
+        "name": "Chiron",
         "parent_name": "Solar-System Barycenter",
         "period": 18500.0,
         "radius": 83.0,
         "rotation_period": 5.918,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "2060"
     },
     {
         "A": 5.18,
@@ -3977,13 +4200,14 @@
         "Spkid": "20002241",
         "W": 292.0,
         "group": "Jupiter Trojan",
-        "name": "2241 Alcathous",
+        "name": "Alcathous",
         "parent_name": "Solar-System Barycenter",
         "period": 4300.0,
         "radius": 56.841,
         "rotation_period": 7.689,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "2241"
     },
     {
         "A": 5.22,
@@ -3994,13 +4218,14 @@
         "Spkid": "20003063",
         "W": 204.0,
         "group": "Jupiter Trojan",
-        "name": "3063 Makhaon",
+        "name": "Makhaon",
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 55.8275,
         "rotation_period": 8.637,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "3063"
     },
     {
         "A": 5.23,
@@ -4011,13 +4236,14 @@
         "Spkid": "20003317",
         "W": 151.0,
         "group": "Jupiter Trojan",
-        "name": "3317 Paris",
+        "name": "Paris",
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 59.395,
         "rotation_period": 7.0812,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "3317"
     },
     {
         "A": 5.19,
@@ -4029,13 +4255,14 @@
         "W": 133.0,
         "group": "Jupiter Trojan",
         "mesh": "3451_Mentor_damit_4281.obj",
-        "name": "3451 Mentor",
+        "name": "Mentor",
         "parent_name": "Solar-System Barycenter",
         "period": 4310.0,
         "radius": 63.144,
         "rotation_period": 7.702,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "3451"
     },
     {
         "A": 5.22,
@@ -4046,13 +4273,14 @@
         "Spkid": "20003793",
         "W": 263.0,
         "group": "Jupiter Trojan",
-        "name": "3793 Leonteus",
+        "name": "Leonteus",
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 56.023,
         "rotation_period": 5.621,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "3793"
     },
     {
         "A": 20.3,
@@ -4063,13 +4291,14 @@
         "Spkid": "20005145",
         "W": 355.0,
         "group": "Centaur",
-        "name": "5145 Pholus",
+        "name": "Pholus",
         "parent_name": "Solar-System Barycenter",
         "period": 33400.0,
         "radius": 95.0,
         "rotation_period": 9.98,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "5145"
     },
     {
         "A": 15.8,
@@ -4080,13 +4309,14 @@
         "Spkid": "20010199",
         "W": 242.0,
         "group": "Centaur",
-        "name": "10199 Chariklo",
+        "name": "Chariklo",
         "parent_name": "Solar-System Barycenter",
         "period": 22900.0,
         "radius": 151.0,
         "rotation_period": 7.004,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "10199"
     },
     {
         "A": 39.8,
@@ -4097,12 +4327,13 @@
         "Spkid": "20015789",
         "W": 319.0,
         "group": "TransNeptunian Object",
-        "name": "15789 (1993 SC)",
+        "name": "(1993 SC)",
         "parent_name": "Solar-System Barycenter",
         "period": 91900.0,
         "radius": 164.0,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "15789"
     },
     {
         "A": 43.0,
@@ -4113,13 +4344,14 @@
         "Spkid": "20020000",
         "W": 270.0,
         "group": "TransNeptunian Object",
-        "name": "20000 Varuna",
+        "name": "Varuna",
         "parent_name": "Solar-System Barycenter",
         "period": 103000.0,
         "radius": 450.0,
         "rotation_period": 6.3436,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "20000"
     },
     {
         "A": 37.5,
@@ -4130,13 +4362,14 @@
         "Spkid": "20042355",
         "W": 159.0,
         "group": "TransNeptunian Object",
-        "name": "42355 Typhon",
+        "name": "Typhon",
         "parent_name": "Solar-System Barycenter",
         "period": 84000.0,
         "radius": 96.0,
         "rotation_period": 5.0,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "42355"
     },
     {
         "A": 16.6,
@@ -4147,13 +4380,14 @@
         "Spkid": "20054598",
         "W": 152.0,
         "group": "Centaur",
-        "name": "54598 Bienor",
+        "name": "Bienor",
         "parent_name": "Solar-System Barycenter",
         "period": 24600.0,
         "radius": 93.75,
         "rotation_period": 9.14,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "54598"
     },
     {
         "A": 25.0,
@@ -4164,13 +4398,14 @@
         "Spkid": "20055576",
         "W": 239.0,
         "group": "Centaur",
-        "name": "55576 Amycus",
+        "name": "Amycus",
         "parent_name": "Solar-System Barycenter",
         "period": 45600.0,
         "radius": 50.45,
         "rotation_period": 9.76,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "55576"
     },
     {
         "A": 23.0,
@@ -4181,13 +4416,14 @@
         "Spkid": "20095626",
         "W": 156.0,
         "group": "Centaur",
-        "name": "95626 (2002 GZ32)",
+        "name": "(2002 GZ32)",
         "parent_name": "Solar-System Barycenter",
         "period": 40400.0,
         "radius": 115.25,
         "rotation_period": 5.8,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "95626"
     },
     {
         "A": 66.2,
@@ -4198,12 +4434,13 @@
         "Spkid": "20127546",
         "W": 27.7,
         "group": "TransNeptunian Object",
-        "name": "127546 (2002 XU93)",
+        "name": "(2002 XU93)",
         "parent_name": "Solar-System Barycenter",
         "period": 197000.0,
         "radius": 85.0,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "127546"
     },
     {
         "A": 20.1,
@@ -4214,13 +4451,14 @@
         "Spkid": "20136204",
         "W": 70.5,
         "group": "Centaur",
-        "name": "136204 (2003 WL7)",
+        "name": "(2003 WL7)",
         "parent_name": "Solar-System Barycenter",
         "period": 33000.0,
         "radius": 59.0,
         "rotation_period": 8.24,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "136204"
     },
     {
         "A": 29.7,
@@ -4231,13 +4469,14 @@
         "Spkid": "20310071",
         "W": 108.0,
         "group": "Centaur",
-        "name": "310071 (2010 KR59)",
+        "name": "(2010 KR59)",
         "parent_name": "Solar-System Barycenter",
         "period": 59300.0,
         "radius": 55.03,
         "rotation_period": 8.988,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "id": "310071"
     },
     {
         "A": 53.6,
