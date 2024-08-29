@@ -23,7 +23,7 @@ struct body_info
     void set_body(body_node* body);
     body_node* get_body();
 
-    void setup(const std::vector<char>& body_icons_zip, body_color& cols);
+    void setup(const std::vector<char>& icons_zip_data, body_color& cols);
 
     bool accept_click(const frame::vec2& screen_position);
 

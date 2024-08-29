@@ -83,5 +83,22 @@
         ],
         "parent_name": "Solar-System Barycenter",
         "type": "Dwarf Planet"
+    },
+    {
+        "A": 2.58,
+        "EC": 0.187,
+        "IN": 5.36,
+        "MA": 351.0,
+        "OM": 141.0,
+        "Spkid": "20000005",
+        "W": 359.0,
+        "group": "Main-belt Asteroid",
+        "name": "5 Astraea",
+        "parent_name": "Solar-System Barycenter",
+        "period": 1510.0,
+        "radius": 53.3495,
+        "rotation_period": 16.806,
+        "time": "2024-03-31",
+        "type": "Minor Planet"
     }
 ]

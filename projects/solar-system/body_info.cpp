@@ -88,11 +88,11 @@ void body_info::draw_separator(float& y, const char* name, bool skip_draw)
     y += property_y_size + 0.5f * property_y_size + 3.0f;
 }
 
-void body_info::setup(const std::vector<char>& body_icons_zip, body_color& cols)
+void body_info::setup(const std::vector<char>& icons_zip_data, body_color& cols)
 {
     colors = &cols;
 
-    auto zip = frame::open_zip(body_icons_zip);
+    auto zip = frame::open_zip(icons_zip_data);
 
     auto zip_files = frame::list_zip_files(*zip);
     for (const auto& file : zip_files)
@@ -106,6 +106,8 @@ void body_info::setup(const std::vector<char>& body_icons_zip, body_color& cols)
                                              </svg>)";
 
     expand_icon = frame::svg_parse(expand_icon_src);
+
+    // TODO missing frame::close_zip
 }
 
 void body_info::set_body(body_node* body)

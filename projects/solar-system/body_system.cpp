@@ -287,10 +287,11 @@ void body_system::setup()
 {
     setup_units();
 
-    fetch_files({ "misc/colors.json", "icons/body_icons.zip" }, [this](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "misc/colors.json", "icons/body_icons.zip", "models/body_models.zip"}, [this](std::map<std::string, std::vector<char>> files)
     {
         setup_colors(files);
         setup_info(files);
+        body_drawer.setup_models(files["models/body_models.zip"]);
     });
 
     setup_bodies(settings.bodies_included);

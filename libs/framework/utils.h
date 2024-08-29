@@ -109,4 +109,18 @@ namespace frame
 
         touch_id click_touch = (touch_id)-1;
     };
+
+    struct vertex_t
+    {
+        vec3 position;
+        vec3 normal;
+    };
+
+    struct model_t
+    {
+        std::vector<vertex_t> vertices;
+        std::vector<uint16_t> indices;
+    };
+
+    std::optional<model_t> load_obj_flat(const std::vector<char>& data);
 }

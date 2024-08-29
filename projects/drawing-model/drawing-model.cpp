@@ -50,18 +50,6 @@ struct box_t
     vec3 max;
 };
 
-struct vertex_t
-{
-    vec3 position;
-    vec3 normal;
-};
-
-struct model_t
-{
-    std::vector<vertex_t> vertices;
-    std::vector<uint16_t> indices;
-};
-
 struct
 {
     draw_state_t smooth;
@@ -181,13 +169,13 @@ std::optional<model_t> load_smooth(const std::vector<char>& data)
     }
 
     auto merge_normals = [](const vec3& n1, const vec3 n2) -> vec3
-        {
-            static const float dot_threshold = std::cos(frame::deg_to_rad(30.0f));
+    {
+        static const float dot_threshold = std::cos(frame::deg_to_rad(30.0f));
 
-            if (n1.dot(n2) > dot_threshold)
-                return n2;
-            return n1 + n2;
-        };
+        if (n1.dot(n2) > dot_threshold)
+            return n2;
+        return n1 + n2;
+    };
 
     // compute missing normals
     for (size_t i = 2; i < result.indices.size(); i += 3)
@@ -206,48 +194,6 @@ std::optional<model_t> load_smooth(const std::vector<char>& data)
     // normalize normals
     for (auto& v : result.vertices)
         v.normal.normalize();
-
-    return result;
-}
-
-std::optional<model_t> load_flat(const std::vector<char>& data)
-{
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn, err;
-
-    std::istringstream obj_stream(data.data());
-
-    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &obj_stream, nullptr, true);
-
-    if (!ret)
-        return {};
-
-    model_t result;
-
-    for (const auto& shape : shapes)
-    {
-        for (const auto& index : shape.mesh.indices)
-        {
-            auto i = index.vertex_index;
-            result.vertices.push_back({ vec3(attrib.vertices[i * 3 + 0], attrib.vertices[i * 3 + 1], attrib.vertices[i * 3 + 2]) });
-        }
-    }
-
-    // compute missing normals
-    for (size_t i = 2; i < result.vertices.size(); i += 3)
-    {
-        const vec3& v0 = result.vertices[i - 2].position;
-        const vec3& v1 = result.vertices[i - 1].position;
-        const vec3& v2 = result.vertices[i - 0].position;
-
-        vec3 normal = (v1 - v0).cross(v2 - v0);
-
-        result.vertices[i - 2].normal = normal;
-        result.vertices[i - 1].normal = normal;
-        result.vertices[i - 0].normal = normal;
-    }
 
     return result;
 }
@@ -286,7 +232,8 @@ void init_smooth(const std::vector<char>& data, draw_state_t& draw_state)
 
 void init_flat(const std::vector<char>& data, draw_state_t& draw_state)
 {
-    auto model = load_flat(data);
+    // loading flat is already in utils
+    auto model = load_obj_flat(data);
 
     sg_buffer_desc buffer_desc_vert = {};
     buffer_desc_vert.data = sg_range{ (void*)model->vertices.data(), model->vertices.size() * sizeof(vertex_t) };
@@ -453,7 +400,7 @@ void draw(const draw_state_t& draw_state)
 
 void setup_sg()
 {
-    frame::fetch_file("Fukuhara.obj", [](std::vector<char> data)
+    frame::fetch_file("Astraea.obj", [](std::vector<char> data)
     {
         init_smooth(data, state.smooth);
         init_flat(data, state.flat);
@@ -472,7 +419,7 @@ void setup()
 {
     setup_sg();
 
-    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, 1.0f }));
+    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
     free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 1'000'000.0f, 1'000'000.0f });
 }

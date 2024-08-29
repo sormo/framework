@@ -14,6 +14,10 @@ fips_begin_app(solar-system windowed)
                body.cpp
                body_draw.h
                body_draw.cpp
+               body_draw_model.h
+               body_draw_model.cpp
+               body_draw_shaded.h
+               body_draw_shaded.cpp
                body_info.h
                body_info.cpp
                body_system.h
@@ -26,4 +30,5 @@ fips_begin_app(solar-system windowed)
     fips_deps(kepler-orbit)
     fips_dir(shaders)
     sokol_shader(body_draw_planet.glsl ${slang})
+    sokol_shader(body_draw_model.glsl ${slang})
 fips_end_app()

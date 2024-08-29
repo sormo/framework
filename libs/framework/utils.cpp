@@ -1,5 +1,7 @@
 #include "utils.h"
+#include <tiny_obj_loader.h>
 #include <random>
+#include <sstream>
 
 std::mt19937_64 g_random_generator;
 
@@ -524,5 +526,48 @@ namespace frame
     double clamp(double x, double min_val, double max_val)
     {
         return x < min_val ? min_val : (x > max_val ? max_val : x);
+    }
+
+    std::optional<model_t> load_obj_flat(const std::vector<char>& data)
+    {
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+        std::string warn, err;
+
+        std::istringstream obj_stream(data.data());
+
+        bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &obj_stream, nullptr, true);
+
+        if (!ret)
+            return {};
+
+        model_t result;
+
+        for (const auto& shape : shapes)
+        {
+            // no indices
+            for (const auto& index : shape.mesh.indices)
+            {
+                auto i = index.vertex_index;
+                result.vertices.push_back({ vec3(attrib.vertices[i * 3 + 0], attrib.vertices[i * 3 + 1], attrib.vertices[i * 3 + 2]) });
+            }
+        }
+
+        // compute normals
+        for (size_t i = 2; i < result.vertices.size(); i += 3)
+        {
+            const vec3& v0 = result.vertices[i - 2].position;
+            const vec3& v1 = result.vertices[i - 1].position;
+            const vec3& v2 = result.vertices[i - 0].position;
+
+            vec3 normal = (v1 - v0).cross(v2 - v0);
+
+            result.vertices[i - 2].normal = normal;
+            result.vertices[i - 1].normal = normal;
+            result.vertices[i - 0].normal = normal;
+        }
+
+        return result;
     }
 }

@@ -31,7 +31,7 @@ namespace commons
         float step_speed = 0.001f; // in days
         bool disable_inclination = false;
         bool draw_lagrangians = false;
-        bool shaded_planets = false;
+        bool shaded_planets = true;
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
     };
     
