@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <tiny_obj_loader.h>
+#include <tiny_gltf.h>
 #include <random>
 #include <sstream>
 
@@ -528,6 +529,22 @@ namespace frame
         return x < min_val ? min_val : (x > max_val ? max_val : x);
     }
 
+    void compute_flat_normals(model_t& model)
+    {
+        for (size_t i = 2; i < model.vertices.size(); i += 3)
+        {
+            const vec3& v0 = model.vertices[i - 2].position;
+            const vec3& v1 = model.vertices[i - 1].position;
+            const vec3& v2 = model.vertices[i - 0].position;
+
+            vec3 normal = (v1 - v0).cross(v2 - v0);
+
+            model.vertices[i - 2].normal = normal;
+            model.vertices[i - 1].normal = normal;
+            model.vertices[i - 0].normal = normal;
+        }
+    }
+
     std::optional<model_t> load_obj_flat(const std::vector<char>& data)
     {
         tinyobj::attrib_t attrib;
@@ -555,18 +572,93 @@ namespace frame
         }
 
         // compute normals
-        for (size_t i = 2; i < result.vertices.size(); i += 3)
+        compute_flat_normals(result);
+
+        return result;
+    }
+
+    std::optional<model_t> load_glb_flat(const std::vector<char>& data)
+    {
+        using namespace tinygltf;
+
+        Model model;
+        TinyGLTF loader;
+        std::string err;
+        std::string warn;
+
+        bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, (const unsigned char*)data.data(), (const unsigned int)data.size());
+
+        if (!warn.empty())
+            printf("Warn: %s\n", warn.c_str());
+
+        if (!err.empty())
+            printf("Err: %s\n", err.c_str());
+
+        if (!ret)
         {
-            const vec3& v0 = result.vertices[i - 2].position;
-            const vec3& v1 = result.vertices[i - 1].position;
-            const vec3& v2 = result.vertices[i - 0].position;
-
-            vec3 normal = (v1 - v0).cross(v2 - v0);
-
-            result.vertices[i - 2].normal = normal;
-            result.vertices[i - 1].normal = normal;
-            result.vertices[i - 0].normal = normal;
+            printf("Failed to parse glTF\n");
+            return {};
         }
+
+        if (model.meshes.empty())
+            return {};
+
+        model_t result;
+
+        // single mesh only
+        const tinygltf::Mesh& mesh = model.meshes[0];
+        // Iterate over all the primitives in the mesh
+        for (const tinygltf::Primitive& primitive : mesh.primitives)
+        {
+            if (primitive.mode != TINYGLTF_MODE_TRIANGLES)
+                continue;
+
+            // Get position attribute
+            if (primitive.attributes.find("POSITION") != primitive.attributes.end())
+            {
+                const tinygltf::Accessor& pos_accessor = model.accessors[primitive.attributes.find("POSITION")->second];
+                const tinygltf::BufferView& pos_view = model.bufferViews[pos_accessor.bufferView];
+                const tinygltf::Buffer& pos_buffer = model.buffers[pos_view.buffer];
+
+                const float* positions = reinterpret_cast<const float*>(&pos_buffer.data[pos_view.byteOffset + pos_accessor.byteOffset]);
+
+                // Get indices
+                if (primitive.indices >= 0)
+                {
+                    const tinygltf::Accessor& index_accessor = model.accessors[primitive.indices];
+                    const tinygltf::BufferView& index_view = model.bufferViews[index_accessor.bufferView];
+                    const tinygltf::Buffer& index_buffer = model.buffers[index_view.buffer];
+
+                    const void* indices = &index_buffer.data[index_view.byteOffset + index_accessor.byteOffset];
+
+                    for (size_t i = 0; i < index_accessor.count; i += 3)
+                    {
+                        // Handle different index types
+                        for (int j = 0; j < 3; ++j)
+                        {
+                            unsigned int index = 0;
+                            if (index_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+                                index = reinterpret_cast<const unsigned short*>(indices)[i + j];
+                            else if (index_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
+                                index = reinterpret_cast<const unsigned int*>(indices)[i + j];
+                            else if (index_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
+                                index = reinterpret_cast<const unsigned char*>(indices)[i + j];
+
+                            result.vertices.push_back({ {positions[3 * index + 0], positions[3 * index + 1], positions[3 * index + 2]}, {} });
+                        }
+                    }
+                }
+                else
+                {
+                    // In case the mesh does not use indices (each vertex is unique)
+                    for (size_t i = 0; i < pos_accessor.count; i += 3)
+                        result.vertices.push_back({ {positions[3 * i + 0], positions[3 * i + 1], positions[3 * i + 2]}, {} });
+                }
+            }
+        }
+
+        // compute normals
+        compute_flat_normals(result);
 
         return result;
     }

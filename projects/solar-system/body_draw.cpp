@@ -3,8 +3,6 @@
 
 using namespace frame;
 
-extern commons::settings_data settings;
-
 void body_draw::initialize_instance_buffer(bodies_tree& bodies)
 {
     points_instance_buffer = frame::create_draw_buffer_instanced("points",
@@ -33,13 +31,14 @@ void body_draw::setup_bodies(bodies_tree& bodies)
     initialize_instance_buffer(bodies);
 }
 
-void body_draw::setup_models(const std::vector<char>& models_zip_data)
+void body_draw::setup_models(commons::bodies_included_type type)
 {
-    body_drawer_model.setup(models_zip_data);
+    body_drawer_model.fetch_models(type);
 }
 
 void body_draw::setup(body_color& cols)
 {
+    body_drawer_model.setup();
     body_drawer_shaded.setup();
     colors = &cols;
 

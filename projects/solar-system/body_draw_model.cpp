@@ -7,6 +7,12 @@ using namespace frame;
 
 extern commons::settings_data settings;
 
+body_draw_model::body_draw_model()
+    : buffer_model(SG_USAGE_DYNAMIC, SG_BUFFERTYPE_VERTEXBUFFER)
+{
+
+}
+
 void body_draw_model::setup_pip()
 {
     sg_pipeline_desc pip_desc = {};
@@ -29,37 +35,36 @@ void body_draw_model::setup_pip()
     pip_model = sg_make_pipeline(pip_desc);
 }
 
-bool body_draw_model::load_model(body_node& body)
+std::optional<model_t> body_draw_model::load_model(body_node& body)
 {
-    if (!models_zip)
-        return false;
+    model_zip* zip = nullptr;
 
-    auto data = frame::get_zip_file(*models_zip, body.mesh);
+    if (models_100 && models_100->available_models.count(body.mesh))
+        zip = &(*models_100);
+    else if (models_50 && models_50->available_models.count(body.mesh))
+        zip = &(*models_50);
+    else if (models_10 && models_10->available_models.count(body.mesh))
+        zip = &(*models_10);
+
+    if (!zip)
+        return {};
+
+    auto data = frame::get_zip_file(zip->zip, body.mesh);
     if (data.empty())
-        return false;
+        return {};
 
-    auto model = frame::load_obj_flat(data);
-    if (!model)
-        return false;
-
-    models_cache[body.name] = *model;
-
-    return true;
+    return frame::load_glb_flat(data);
 }
 
 bool body_draw_model::load_buffer(body_node& body)
 {
-    if (!models_cache.count(body.name))
-    {
-        if (!load_model(body))
-            return false;
-    }
+    auto model = load_model(body);
+    if (!model)
+        return false;
 
-    auto& model = models_cache[body.name];
+    auto range_id = buffer_model.append((const char*)model->vertices.data(), model->vertices.size() * sizeof(vertex_t));
 
-    sg_buffer_desc buffer_desc_vert = {};
-    buffer_desc_vert.data = sg_range{ (void*)model.vertices.data(), model.vertices.size() * sizeof(vertex_t) };
-    buffer_cache[body.name] = sg_make_buffer(&buffer_desc_vert);
+    buffer_cache[body.name] = { range_id, model->vertices.size() };
 
     return true;
 }
@@ -69,39 +74,77 @@ bool body_draw_model::setup_bind(body_node& body)
     if (body.mesh.empty())
         return false;
 
-    if (!available_models.count(body.mesh))
-        return false;
-
     if (!buffer_cache.count(body.name))
     {
         if (!load_buffer(body))
             return false;
     }
 
-    bind_model.vertex_buffers[0] = buffer_cache[body.name];
-    element_count = models_cache[body.name].vertices.size();
+    const auto& model_data = buffer_cache[body.name];
+
+    buffer_model.apply(model_data.range_id, bind_model);
+
+    element_count = model_data.element_count;
 
     bound_body = body.name;
 
     return true;
 }
 
-void body_draw_model::setup(const std::vector<char>& models_zip_data)
+void body_draw_model::setup()
 {
     setup_pip();
+}
 
-    models_zip = frame::open_zip(models_zip_data);
+void body_draw_model::fetch_models(commons::bodies_included_type type)
+{
+    std::vector<std::string> files;
+    std::vector<std::optional<model_zip>*> zips;
 
-    if (models_zip)
+    switch (type)
     {
-        auto zip_files = frame::list_zip_files(*models_zip);
-        for (auto& z : zip_files)
+    case commons::bodies_included_type::more_than_10:
+        if (!models_10)
         {
-            auto data = frame::get_zip_file(*models_zip, z);
-
-            available_models.insert(std::move(z));
+            files.push_back("models/models_10.zip");
+            zips.push_back(&models_10);
+        }
+    case commons::bodies_included_type::more_than_50:
+        if (!models_50)
+        {
+            files.push_back("models/models_50.zip");
+            zips.push_back(&models_50);
+        }
+    case commons::bodies_included_type::more_than_100:
+        if (!models_100)
+        {
+            files.push_back("models/models_100.zip");
+            zips.push_back(&models_100);
         }
     }
+
+    fetch_files(files, [files, zips](std::map<std::string, std::vector<char>> files_data)
+    {
+        auto create_model_zip = [](std::vector<char> data) -> std::optional<model_zip>
+        {
+            auto zip = frame::open_zip(data);
+            if (!zip)
+                return {};
+
+            model_zip result;
+            result.zip = *zip;
+            auto zip_files = frame::list_zip_files(*zip);
+            for (auto& z : zip_files)
+            {
+                //auto data = frame::get_zip_file(*zip, z);
+                result.available_models.insert(std::move(z));
+            }
+            return result;
+        };
+
+        for (size_t i = 0; i < files.size(); i++)
+            *zips[i] = create_model_zip(files_data[files[i]]);
+    });
 }
 
 body_draw_model_fs_params_t create_fs_params(const frame::col4& color, const vec3d& orbit_position)

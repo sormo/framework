@@ -10,7 +10,7 @@ struct body_draw
 {
 	void setup(body_color& cols);
 	void setup_bodies(bodies_tree& bodies);
-	void setup_models(const std::vector<char>& models_zip_data);
+	void setup_models(commons::bodies_included_type type);
 
 	void draw(body_node* body, bool is_root);
 

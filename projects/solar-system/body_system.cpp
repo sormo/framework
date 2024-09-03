@@ -58,37 +58,56 @@ body_node* body_system::get_body(const char* name)
     return nullptr;
 }
 
-void body_system::setup_bodies(commons::bodies_included_type type)
+void body_system::setup_bodies(commons::bodies_included_type type, std::function<void()> onSetup)
 {
     state.body_system_initializing = true;
 
-    const char* cache_file = nullptr;
+    std::vector<std::string> body_files;
+
+#ifdef USE_TEST_BODIES
+    fetch_files.push_back("bodies/test-bodies.json");
+#else
+    body_files.push_back("bodies/major-bodies.json");
+    body_files.push_back("bodies/spacecrafts.json");
+
     const char* small_bodies_file = nullptr;
-
     if (type == commons::bodies_included_type::more_than_10)
-        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-10km.json", "bodies/cache/quadtree_cache_10.cbor" };
+        body_files.push_back("bodies/small-bodies-sbdb-10km.json");
     else if (type == commons::bodies_included_type::more_than_50)
-        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-50km.json", "bodies/cache/quadtree_cache_50.cbor" };
+        body_files.push_back("bodies/small-bodies-sbdb-50km.json");
     else
-        std::tie(small_bodies_file, cache_file) = std::pair{ "bodies/small-bodies-sbdb-100km.json", "bodies/cache/quadtree_cache_100.cbor" };
+        body_files.push_back("bodies/small-bodies-sbdb-100km.json");
+#endif
 
-#ifdef USE_TEST_BODIES
-    fetch_files({ "bodies/test-bodies.json", small_bodies_file, cache_file }, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-#else
-    fetch_files({ "bodies/major-bodies.json", "bodies/spacecrafts.json", small_bodies_file, cache_file}, [this, cache_file, small_bodies_file](std::map<std::string, std::vector<char>> files)
-#endif
-    {
-#ifdef USE_TEST_BODIES
-        load_bodies_tree({ &files["bodies/test-bodies.json"] });
-#else
-        load_bodies_tree({ &files["bodies/major-bodies.json"], &files["bodies/spacecrafts.json"], &files[small_bodies_file]});
-#endif
+    const char* cache_file = nullptr;
 #ifdef USE_QUADTREE
-        setup_quadtree(cache_file, files[cache_file]);
+    if (type == commons::bodies_included_type::more_than_10)
+        cache_file = "bodies/cache/quadtree_cache_10.cbor";
+    else if (type == commons::bodies_included_type::more_than_50)
+        cache_file = "bodies/cache/quadtree_cache_50.cbor";
+    else
+        cache_file = "bodies/cache/quadtree_cache_100.cbor";
+    body_files.push_back(cache_file);
 #endif
+
+    fetch_files(body_files, [this, body_files, cache_file, onSetup](std::map<std::string, std::vector<char>> files)
+    {
+        std::vector<std::vector<char>*> data;
+        for (auto& file : body_files)
+            data.push_back(&files[file]);
+
+        load_bodies_tree(data);
+
+        if (cache_file)
+            setup_quadtree(cache_file, files[cache_file]);
 
         state.body_system_initializing = false;
+
+        if (onSetup)
+            onSetup();
     });
+
+    body_drawer.setup_models(type);
 }
 
 void body_system::create_quadtree(float max_size, float min_size)
@@ -287,11 +306,10 @@ void body_system::setup()
 {
     setup_units();
 
-    fetch_files({ "misc/colors.json", "icons/body_icons.zip", "models/body_models.zip"}, [this](std::map<std::string, std::vector<char>> files)
+    fetch_files({ "misc/colors.json", "icons/body_icons.zip" }, [this](std::map<std::string, std::vector<char>> files)
     {
         setup_colors(files);
         setup_info(files);
-        body_drawer.setup_models(files["models/body_models.zip"]);
     });
 
     setup_bodies(settings.bodies_included);

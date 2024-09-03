@@ -2,15 +2,15 @@
 
 using namespace frame;
 
-struct
-{
-	std::function<vec2()> world_position;
-	double scale = 1.0;
-
-} state;
-
 namespace view
 {
+	struct
+	{
+		std::function<vec2()> world_position;
+		double scale = 1.0;
+
+	} state;
+
 	namespace impl
 	{
 		// create world transform from given view transform

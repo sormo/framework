@@ -230,17 +230,14 @@ void init_smooth(const std::vector<char>& data, draw_state_t& draw_state)
     state.smooth_model = *model;
 }
 
-void init_flat(const std::vector<char>& data, draw_state_t& draw_state)
+void init_flat_model(const model_t& model, draw_state_t& draw_state)
 {
-    // loading flat is already in utils
-    auto model = load_obj_flat(data);
-
     sg_buffer_desc buffer_desc_vert = {};
-    buffer_desc_vert.data = sg_range{ (void*)model->vertices.data(), model->vertices.size() * sizeof(vertex_t) };
+    buffer_desc_vert.data = sg_range{ (void*)model.vertices.data(), model.vertices.size() * sizeof(vertex_t) };
     buffer_desc_vert.label = "model3d-vertices-flat";
     draw_state.bind.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
 
-    draw_state.count = model->vertices.size();
+    draw_state.count = model.vertices.size();
 
     sg_pipeline_desc pip_desc = {};
     pip_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLES;
@@ -252,8 +249,21 @@ void init_flat(const std::vector<char>& data, draw_state_t& draw_state)
     pip_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
 
     draw_state.pip = sg_make_pipeline(pip_desc);
+}
 
-    state.flat_model = *model;
+void init_flat(const std::vector<char>& data, draw_state_t& draw_state)
+{
+    // loading flat is already in utils
+    state.flat_model = *load_obj_flat(data);
+
+    init_flat_model(state.flat_model, draw_state);
+}
+
+void init_flat_glb(const std::vector<char>& data, draw_state_t& draw_state)
+{
+    state.flat_model = *load_glb_flat(data);
+
+    init_flat_model(state.flat_model, draw_state);
 }
 
 HMM_Mat4 create_perspective_projection()
@@ -403,7 +413,11 @@ void setup_sg()
     frame::fetch_file("Astraea.obj", [](std::vector<char> data)
     {
         init_smooth(data, state.smooth);
-        init_flat(data, state.flat);
+        //init_flat(data, state.flat);
+    });
+    frame::fetch_file("5_Astraea_104.glb", [](std::vector<char> data)
+    {
+        init_flat_glb(data, state.flat);
     });
 }
 

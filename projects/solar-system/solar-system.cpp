@@ -173,14 +173,15 @@ void draw_settings_gui()
         view::clear_view();
         b_system.set_info(nullptr);
 
-        b_system.setup_bodies(settings.bodies_included);
-
-        if (!clicked_body_name.empty())
+        b_system.setup_bodies(settings.bodies_included, [clicked_body_name]()
         {
-            state.clicked_body = b_system.get_body(clicked_body_name.c_str());
-            b_system.set_info(state.clicked_body);
-        }
-        evaluate_body_view(true);
+            if (!clicked_body_name.empty())
+            {
+                state.clicked_body = b_system.get_body(clicked_body_name.c_str());
+                b_system.set_info(state.clicked_body);
+            }
+            evaluate_body_view(true);
+        });
     };
 
     draw_settings_menu_icon(menu_icon_size);

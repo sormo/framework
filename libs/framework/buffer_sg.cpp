@@ -1,6 +1,6 @@
 #include "buffer_sg.h"
 
-int buffer_sg::append_buffer_data(char* data, size_t size)
+int buffer_sg::append_buffer_data(const char* data, size_t size)
 {
 	size_t required_size = buffer_data.size() + size;
 	int offset = (int)buffer_data.size();
@@ -11,7 +11,7 @@ int buffer_sg::append_buffer_data(char* data, size_t size)
 	return offset;
 }
 
-std::vector<int> buffer_sg::append_buffer_data(char* data, size_t size, size_t count)
+std::vector<int> buffer_sg::append_buffer_data(const char* data, size_t size, size_t count)
 {
 	int offset = (int)buffer_data.size();
 
@@ -31,7 +31,7 @@ std::vector<int> buffer_sg::append_buffer_data(char* data, size_t size, size_t c
 	return result;
 }
 
-void buffer_sg::create_buffer(char* data, size_t size)
+void buffer_sg::create_buffer(const char* data, size_t size)
 {
 	if (buffer_id.id != 0)
 		sg_destroy_buffer(buffer_id);
@@ -85,7 +85,7 @@ void buffer_sg::apply(range_id range_id, sg_bindings& bindings, size_t vertex_bi
 	}
 }
 
-buffer_sg::range_id buffer_sg::append(char* data, size_t size)
+buffer_sg::range_id buffer_sg::append(const char* data, size_t size)
 {
 	buffer_range range{ -1, size };
 
@@ -144,20 +144,20 @@ buffer_sg::range_id buffer_sg::append(char* data, size_t size)
 	return result;
 }
 
-std::vector<buffer_sg::range_id> buffer_sg::append(char* data, size_t size, size_t count)
+std::vector<buffer_sg::range_id> buffer_sg::append(const char* data, size_t size, size_t count)
 {
 	std::vector<range_id> result;
 
-	auto append_buffer_data_and_create_ranges = [this](char* data, size_t size, size_t count)
+	auto append_buffer_data_and_create_ranges = [this](const char* data, size_t size, size_t count)
+	{
+		std::vector<range_id> result;
+		for (auto offset : append_buffer_data(data, size, count))
 		{
-			std::vector<range_id> result;
-			for (auto offset : append_buffer_data(data, size, count))
-			{
-				result.push_back(ranges.size());
-				ranges.push_back({ offset, size });
-			}
-			return result;
-		};
+			result.push_back(ranges.size());
+			ranges.push_back({ offset, size });
+		}
+		return result;
+	};
 
 	if (usage == SG_USAGE_IMMUTABLE)
 	{
@@ -220,7 +220,7 @@ void buffer_sg::update_inplace(range_id range_id, char** data_ptr)
 	merge_update_range(offset, size);
 }
 
-void buffer_sg::update(range_id range_id, char* data)
+void buffer_sg::update(range_id range_id, const char* data)
 {
 	assert(usage != SG_USAGE_IMMUTABLE);
 

@@ -48,7 +48,10 @@ include_directories(libs
                     libs/kepler-orbit
                     libs/miniz
                     libs/xxhash
-                    libs/tiny-obj-loader)
+                    libs/tiny-obj-loader
+                    libs/tiny-gltf
+                    libs/stb
+                    libs/draco)
 
 fips_ide_group(libs)
 add_subdirectory(libs/glad)
@@ -58,6 +61,8 @@ add_subdirectory(libs/box2d/src)
 add_subdirectory(libs/miniz)
 add_subdirectory(libs/xxhash)
 add_subdirectory(libs/tiny-obj-loader)
+add_subdirectory(libs/tiny-gltf)
+add_subdirectory(libs/draco)
 
 fips_import_fips_imgui_imgui()
 

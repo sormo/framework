@@ -8,6 +8,8 @@ namespace frame
 {
 	struct zip_archive_data
 	{
+		std::vector<char> zip_data;
+
 		mz_zip_archive archive;
 		std::optional<std::vector<std::string>> files;
 		std::map<std::string, mz_zip_archive_file_stat> file_stats;
@@ -28,7 +30,9 @@ namespace frame
 	{
 		auto zdata = std::make_unique<zip_archive_data>();
 
-		if (!mz_zip_reader_init_mem(&zdata->archive, data.data(), data.size(), 0))
+		zdata->zip_data = data;
+
+		if (!mz_zip_reader_init_mem(&zdata->archive, zdata->zip_data.data(), zdata->zip_data.size(), 0))
 			return {};
 
 		auto result = zip_data.zip_counter++;

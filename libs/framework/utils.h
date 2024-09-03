@@ -123,4 +123,5 @@ namespace frame
     };
 
     std::optional<model_t> load_obj_flat(const std::vector<char>& data);
+    std::optional<model_t> load_glb_flat(const std::vector<char>& data);
 }

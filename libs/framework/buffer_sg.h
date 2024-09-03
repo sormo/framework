@@ -18,16 +18,16 @@ public:
 
 	void apply(range_id range_id, sg_bindings& bindings, size_t vertex_bindings_index = 0);
 
-	range_id append(char* data, size_t size);
+	range_id append(const char* data, size_t size);
 
-	std::vector<range_id> append(char* data, size_t size, size_t count);
+	std::vector<range_id> append(const char* data, size_t size, size_t count);
 
 	size_t get_data_size(range_id range_id);
 
 	// provide data pointer for in-place update
 	void update_inplace(range_id range_id, char** data_ptr);
 
-	void update(range_id range_id, char* data);
+	void update(range_id range_id, const char* data);
 
 	void remove(range_id range_id)
 	{
@@ -61,11 +61,11 @@ private:
 	} update_range;
 	bool is_dirty = false;
 
-	int append_buffer_data(char* data, size_t size);
+	int append_buffer_data(const char* data, size_t size);
 
-	std::vector<int> append_buffer_data(char* data, size_t size, size_t count);
+	std::vector<int> append_buffer_data(const char* data, size_t size, size_t count);
 
-	void create_buffer(char* data, size_t size);
+	void create_buffer(const char* data, size_t size);
 
 	void merge_update_range(int offset, size_t size);
 };

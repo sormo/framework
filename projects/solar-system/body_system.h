@@ -13,7 +13,7 @@ struct body_system
 
 	body_node* query(const frame::vec2& world_position, float radius_in_pixels);
 	void set_info(body_node* body);
-	void setup_bodies(commons::bodies_included_type type);
+	void setup_bodies(commons::bodies_included_type type, std::function<void()> onSetup = nullptr);
 
 	body_node* get_body(const char* name);
 

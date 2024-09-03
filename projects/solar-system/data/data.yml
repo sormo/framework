@@ -12,7 +12,9 @@ files:
     - bodies/test-bodies.json
     - misc/colors.json
     - icons/body_icons.zip
-    - models/body_models.zip
+    - models/models_100.zip
+    - models/models_50.zip
+    - models/models_10.zip
     - bodies/cache/quadtree_cache_100.cbor
     - bodies/cache/quadtree_cache_50.cbor
     - bodies/cache/quadtree_cache_10.cbor
