@@ -65,7 +65,7 @@ void body_system::setup_bodies(commons::bodies_included_type type, std::function
     std::vector<std::string> body_files;
 
 #ifdef USE_TEST_BODIES
-    fetch_files.push_back("bodies/test-bodies.json");
+    body_files.push_back("bodies/test-bodies.json");
 #else
     body_files.push_back("bodies/major-bodies.json");
     body_files.push_back("bodies/spacecrafts.json");

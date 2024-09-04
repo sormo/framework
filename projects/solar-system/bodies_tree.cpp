@@ -138,6 +138,11 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, commons::NAME_FONT_SIZE, "roboto-bold");
 
             bodies.push_back(std::move(node));
+
+            //for (const auto& p : parents)
+            //    if (p.first == body_name)
+            //        __debugbreak();
+
             parents.push_back({ std::move(body_name), std::move(parent_name) });
         }
     }
