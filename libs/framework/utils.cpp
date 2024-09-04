@@ -271,6 +271,24 @@ namespace frame
             free_move_camera_update_world_offset(config.move_button, config.boundary, config.allow_touch);
     }
 
+    void free_move_camera_refresh(const free_move_camera_config& config)
+    {
+        if (config.allow_scale)
+        {
+            vec2 new_scale = get_world_scale();
+            new_scale = free_move_camera_apply_min_size(new_scale, config.min_size);
+            new_scale = free_move_camera_apply_max_size(new_scale, config.boundary.size());
+            set_world_scale(new_scale, get_world_rectangle().center());
+        }
+        if (config.allow_move)
+        {
+            vec2 new_translation = get_world_translation();
+            set_world_translation(new_translation);
+            new_translation = free_move_camera_apply_boundary(new_translation, config.boundary);
+            set_world_translation(new_translation);
+        }
+    }
+
     void draw_coordinate_lines(const col4& color)
     {
         auto world_rect = get_world_rectangle();

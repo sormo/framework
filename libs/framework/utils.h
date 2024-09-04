@@ -62,6 +62,8 @@ namespace frame
         float zoom_speed = 0.01f;
     };
     void free_move_camera_update(const free_move_camera_config& config);
+    // after modifying world transform this function can be used to move camera within config boundaries
+    void free_move_camera_refresh(const free_move_camera_config& config);
 
     void draw_coordinate_lines(const col4& color);
 

@@ -275,6 +275,8 @@ void handle_left_click()
 
         b_system.set_info(nullptr);
         camera.follow(nullptr);
+
+        free_move_camera_refresh(camera.free_move_config);
     }
 }
 

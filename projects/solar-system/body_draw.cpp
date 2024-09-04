@@ -103,7 +103,7 @@ void body_draw::draw(body_node* body, bool is_root)
         draw_main_body(body);
 }
 
-void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& colors)
+void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& colors, const rectangle& world_rectangle)
 {
     auto position = body.current_position;
 
@@ -114,16 +114,19 @@ void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& co
 
     if (body_radius > default_radius)
     {
-        float radius = (float)view::get_world_to_view(body_radius);
+        if (world_rectangle.contains(position.xy<float>()))
+        {
+            float radius = (float)view::get_world_to_view(body_radius);
 
-        if (settings.shaded_planets)
-        {
-            if (!body_drawer_model.draw(body, radius, color))
-                body_drawer_shaded.draw(body, radius, color);
-        }
-        else
-        {
-            frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
+            if (settings.shaded_planets)
+            {
+                if (!body_drawer_model.draw(body, radius, color))
+                    body_drawer_shaded.draw(body, radius, color);
+            }
+            else
+            {
+                frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
+            }
         }
     }
     else
@@ -139,7 +142,7 @@ void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& co
     }
 }
 
-void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& colors)
+void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& colors, const frame::rectangle& world_rectangle)
 {
     if (settings.shaded_planets)
     {
@@ -154,13 +157,15 @@ void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& col
     }
     else
     {
-        draw_body(body, point_counter, colors);
+        draw_body(body, point_counter, colors, world_rectangle);
     }
 }
 
 void body_draw::draw_points(const quadtree::query_result_type& parents, body_color& colors)
 {
-    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors](body_node& data, size_t& point_counter)
+    auto world_rectangle = frame::get_world_rectangle();
+
+    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors, world_rectangle](body_node& data, size_t& point_counter)
     {
         if (is_body_node_skip(data))
             return;
@@ -168,9 +173,9 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
         if (data.type != body_type::barycenter)
         {
             if (data.type == body_type::star)
-                draw_sun(data, point_counter, colors);
+                draw_sun(data, point_counter, colors, world_rectangle);
             else
-                draw_body(data, point_counter, colors);
+                draw_body(data, point_counter, colors, world_rectangle);
         }
 
         if (!data.childs.empty())
