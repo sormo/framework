@@ -19,9 +19,11 @@ private:
 	void draw_names(const quadtree::query_result_type& parents, bool is_view);
 	void draw_trajectories(const quadtree::query_result_type& parents, body_color& colors, body_node* stationary_body);
 	void draw_points(const quadtree::query_result_type& parents, body_color& colors);
+	void draw_bodies(const quadtree::query_result_type& parents, body_color& colors);
 
-	void draw_body(body_node& body, size_t& point_counter, body_color& colors, const frame::rectangle& world_rectangle);
-	void draw_sun(body_node& body, size_t& point_counter, body_color& colors, const frame::rectangle& world_rectangle);
+	void draw_point(body_node& body, size_t& point_counter, body_color& colors);
+	void draw_body(body_node& body,body_color& colors);
+	void draw_sun(body_node& body, body_color& colors, float world_min_radius);
 
 	void draw_world_bodies(body_node* root);
 	void draw_main_body(body_node* body);

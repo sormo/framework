@@ -136,6 +136,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 
             node.trajectory.init(node.orbit);
             node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, commons::NAME_FONT_SIZE, "roboto-bold");
+            node.world_radius = commons::convert_km_to_world_size(node.radius);
 
             bodies.push_back(std::move(node));
 

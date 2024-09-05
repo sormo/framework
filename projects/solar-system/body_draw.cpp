@@ -62,6 +62,14 @@ void body_draw::draw_world_bodies(body_node* root)
 
     if (settings.draw_names)
         draw_names({ root }, false);
+
+    // Draw bodies with shading last, reason is that shading can contain transparency. When we need to draw
+    // transparent object with depth testing enabled, transparent objects must be drawn last (and possibly
+    // by z value which I'm not doint).
+    // Problem is that if transparent object with high z value is drawn fist, object that is behind (with
+    // lower z) is discarded even it should be visible because of transparency of object in front.
+    if (settings.draw_points)
+        draw_bodies({ root }, *colors);
 }
 
 void draw_main_trajectory(body_node* main_body)
@@ -93,6 +101,9 @@ void body_draw::draw_main_body(body_node* main_body)
 
     if (settings.draw_names)
         draw_names({ main_body }, true);
+
+    if (settings.draw_points)
+        draw_bodies({ main_body }, *colors);
 }
 
 void body_draw::draw(body_node* body, bool is_root)
@@ -103,53 +114,42 @@ void body_draw::draw(body_node* body, bool is_root)
         draw_main_body(body);
 }
 
-void body_draw::draw_body(body_node& body, size_t& point_counter, body_color& colors, const rectangle& world_rectangle)
+void body_draw::draw_body(body_node& body, body_color& colors)
 {
-    auto position = body.current_position;
-
-    float default_radius = view::get_pixel_to_world(3.5f);
-    double body_radius = commons::convert_km_to_world_size(body.radius);
-
     auto color = body.group.empty() ? colors.get(body.type) : colors.get(body.group);
+    float radius = (float)view::get_world_to_view(body.world_radius);
 
-    if (body_radius > default_radius)
+    if (settings.shaded_planets)
     {
-        if (world_rectangle.contains(position.xy<float>()))
-        {
-            float radius = (float)view::get_world_to_view(body_radius);
-
-            if (settings.shaded_planets)
-            {
-                if (!body_drawer_model.draw(body, radius, color))
-                    body_drawer_shaded.draw(body, radius, color);
-            }
-            else
-            {
-                frame::draw_buffer(planet_circle, position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
-            }
-        }
+        if (!body_drawer_model.draw(body, radius, color))
+            body_drawer_shaded.draw(body, radius, color);
     }
     else
     {
-        auto screen_position = frame::get_world_to_screen(position.xy<float>());
-        // increase depth by 10% to have point above trajectory
-        float depth = position.z + 0.1f * std::fabs(position.z);
-
-        frame::update_draw_instance(points_instance_buffer,
-                                    point_counter++,
-                                    vec3(screen_position, depth),
-                                    color);
+        frame::draw_buffer(planet_circle, body.current_position, 0.0f, { 2.0f * radius, 2.0f * radius }, color);
     }
 }
 
-void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& colors, const frame::rectangle& world_rectangle)
+void body_draw::draw_point(body_node& body, size_t& point_counter, body_color& colors)
+{
+    auto color = body.group.empty() ? colors.get(body.type) : colors.get(body.group);
+    auto screen_position = frame::get_world_to_screen(body.current_position.xy<float>());
+    // increase depth by 10% to have point above trajectory
+    float depth = body.current_position.z + 0.1f * std::fabs(body.current_position.z);
+
+    frame::update_draw_instance(points_instance_buffer,
+                                point_counter++,
+                                vec3(screen_position, depth),
+                                color);
+}
+
+void body_draw::draw_sun(body_node& body, body_color& colors, float world_min_radius)
 {
     if (settings.shaded_planets)
     {
-        float default_radius = view::get_pixel_to_world(3.0f);
         double body_radius = commons::convert_km_to_world_size(body.radius);
-        float radius = (float)view::get_world_to_view(body_radius);
-        radius = std::max(default_radius, radius);
+        float radius = (float)view::get_world_to_view(body.world_radius);
+        radius = std::max(world_min_radius, radius);
 
         auto color = body.group.empty() ? colors.get(body.type) : colors.get(body.group);
 
@@ -157,25 +157,22 @@ void body_draw::draw_sun(body_node& body, size_t& point_counter, body_color& col
     }
     else
     {
-        draw_body(body, point_counter, colors, world_rectangle);
+        draw_body(body, colors);
     }
 }
 
 void body_draw::draw_points(const quadtree::query_result_type& parents, body_color& colors)
 {
-    auto world_rectangle = frame::get_world_rectangle();
+    float world_min_radius = view::get_pixel_to_world(3.5f);
 
-    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors, world_rectangle](body_node& data, size_t& point_counter)
+    std::function<void(body_node&, size_t&)> draw_recursive = [this, &draw_recursive, &colors, world_min_radius](body_node& data, size_t& point_counter)
     {
         if (is_body_node_skip(data))
             return;
 
-        if (data.type != body_type::barycenter)
+        if (data.type != body_type::barycenter && data.type != body_type::star && data.world_radius < world_min_radius)
         {
-            if (data.type == body_type::star)
-                draw_sun(data, point_counter, colors, world_rectangle);
-            else
-                draw_body(data, point_counter, colors, world_rectangle);
+            draw_point(data, point_counter, colors);
         }
 
         if (!data.childs.empty())
@@ -198,6 +195,37 @@ void body_draw::draw_points(const quadtree::query_result_type& parents, body_col
 
         frame::restore_world_transform();
     }
+}
+
+void body_draw::draw_bodies(const quadtree::query_result_type& parents, body_color& colors)
+{
+    auto world_rectangle = frame::get_world_rectangle();
+    float world_min_radius = view::get_pixel_to_world(3.5f);
+
+    std::function<void(body_node&)> draw_recursive = [this, &draw_recursive, &colors, world_rectangle, world_min_radius](body_node& data)
+    {
+        if (is_body_node_skip(data))
+            return;
+
+        if (data.type == body_type::star)
+        {
+            draw_sun(data, colors, world_min_radius);
+        }
+        else if (data.type != body_type::barycenter && data.world_radius > world_min_radius)
+        {
+            if (world_rectangle.contains(data.current_position.xy<float>()))
+                draw_body(data, colors);
+        }
+
+        if (!data.childs.empty())
+        {
+            for (auto& child : data.childs)
+                draw_recursive(*child);
+        }
+    };
+
+    for (auto parent : parents)
+        draw_recursive(*parent);
 }
 
 // we will highlight orbit of clicked body
