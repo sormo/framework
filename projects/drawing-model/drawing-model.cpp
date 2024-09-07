@@ -73,6 +73,47 @@ struct
 
 } state;
 
+// asteroid_models.csv
+static const float astraea_longitude_spin_axis = 126.0f; // lambda (J2000.0, degrees), column inde 2
+static const float astraea_latitude_spin_axis = 40.0f; // beta (J2000.0, degrees), column index 3
+static const float astraea_period = 16.80061; // P (hours), column index 4 
+static const float astraea_init_time = 2436250; // jd0 (Julian date epoch), column index 6
+
+float get_rotation_angle(double jd0, double P, double jd)
+{
+    return frame::deg_to_rad(float((jd - jd0) * 360.0f / P));
+}
+
+double juliandate(const int16_t yyyy, const int8_t mm, const int8_t dd, const int8_t h, const int8_t m, const int8_t s)
+{
+    int64_t jdn = (1461 * (yyyy + 4800 + (mm - 14) / 12)) / 4 + (367 * (mm - 2 - 12 * ((mm - 14) / 12))) / 12 - (3 * ((yyyy + 4900 + (mm - 14) / 12) / 100)) / 4 + dd - 32075;
+    return static_cast<double>(jdn) + (h - 12.0) / 24.0 + m / 1440.0 + s / 86400.0;
+}
+
+double juliandate(const int16_t yyyy, const int8_t mm, const int8_t dd)
+{
+    return juliandate(yyyy, mm, dd, 0, 0, 0);
+}
+
+HMM_Mat4 get_astraea_rotation(float t)
+{
+    float lambda = frame::deg_to_rad(astraea_longitude_spin_axis);  // λ
+    float beta = frame::deg_to_rad(astraea_latitude_spin_axis);     // β
+
+    HMM_Vec3 rotation_axis;
+    rotation_axis.X = cosf(beta) * cosf(lambda);
+    rotation_axis.Y = cosf(beta) * sinf(lambda);
+    rotation_axis.Z = sinf(beta);
+
+    static int year = 2024, month = 3, day = 31;
+    static double JD = juliandate(year, month, day);
+
+    float rotation_angle = get_rotation_angle(astraea_init_time, astraea_period, JD + t);
+    //rotation_angle = t;
+
+    return HMM_Rotate_RH(rotation_angle, rotation_axis);
+}
+
 box_t compute_bounding_box(const std::vector<vertex_t>& vertices)
 {
     box_t result;
@@ -286,7 +327,7 @@ HMM_Mat4 create_perspective_view()
     return result;
 }
 
-HMM_Mat4 create_rotation()
+HMM_Mat4 create_rotation_random()
 {
     static float rx = 0.0f;
     static float ry = 0.0f;
@@ -298,6 +339,15 @@ HMM_Mat4 create_rotation()
     rx += state.rotation * t; ry += (state.rotation/2.0f) * t;
 
     return HMM_MulM4(rxm, rym);
+}
+
+HMM_Mat4 create_rotation()
+{
+    static float days = 0.0f;
+
+    days += 0.001f;
+
+    return get_astraea_rotation(days);
 }
 
 float compute_perspective_scale_factor(float screen_size)

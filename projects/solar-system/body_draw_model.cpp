@@ -162,7 +162,19 @@ body_draw_model_fs_params_t create_fs_params(const frame::col4& color, const vec
     return result;
 }
 
-HMM_Mat4 create_rotation()
+float get_rotation_angle(double jd0, double P, double jd)
+{
+    return frame::deg_to_rad(float((jd - jd0) * 360.0 / P));
+}
+
+HMM_Mat4 create_rotation(const body_node& node)
+{
+    auto angle = get_rotation_angle(node.rotation_jd0, node.rotation_period, commons::INIT_TIME_JULIAN + state.time_offset);
+
+    return HMM_Rotate_RH(angle, HMM_Vec3{ node.rotation_axis.x, node.rotation_axis.y, node.rotation_axis.z });
+}
+
+HMM_Mat4 create_random_rotation()
 {
     static const float speed = 0.005f;
 
@@ -178,25 +190,29 @@ HMM_Mat4 create_rotation()
     return HMM_MulM4(rxm, rym);
 }
 
-std::pair<HMM_Mat4, HMM_Mat4> create_world_mvp(const vec3& position, float radius)
+std::pair<HMM_Mat4, HMM_Mat4> create_world_mvp(const body_node& body, float radius)
 {
     static const float mesh_size = 2.0f;
 
     float scale_factor = radius * 2.0f / mesh_size;
 
     auto scale = HMM_Scale({ scale_factor, scale_factor, scale_factor });
-    auto rotate = create_rotation();
-    auto translate = HMM_Translate({ position.x, position.y, position.z });
+    HMM_Mat4 rotate;
+    if (settings.model_rotation_random)
+        rotate = create_random_rotation();
+    else
+        rotate = create_rotation(body);
+    auto translate = HMM_Translate({ body.current_position.x, body.current_position.y, body.current_position.z });
     HMM_Mat4 model_matrix = HMM_MulM4(HMM_MulM4(translate, rotate), scale);
 
     return { create_projection_view_matrix(), model_matrix };
 }
 
-body_draw_model_vs_params_t create_vs_params(const vec3d& position, float radius)
+body_draw_model_vs_params_t create_vs_params(const body_node& body, float radius)
 {
     body_draw_model_vs_params_t result = {};
 
-    std::tie(result.projection_view, result.model) = create_world_mvp(position, radius);
+    std::tie(result.projection_view, result.model) = create_world_mvp(body, radius);
 
     return result;
 }
@@ -213,7 +229,7 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
     sg_apply_bindings(&bind_model);
 
     body_draw_model_fs_params_t params_fs = create_fs_params(color, body.get_absolute_position());
-    body_draw_model_vs_params_t params_vs = create_vs_params(body.current_position, radius);
+    body_draw_model_vs_params_t params_vs = create_vs_params(body, radius);
 
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_body_draw_model_vs_params, SG_RANGE(params_vs));
     sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_body_draw_model_fs_params, SG_RANGE(params_fs));

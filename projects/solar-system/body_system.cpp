@@ -7,9 +7,9 @@
 //#define USE_QUADTREE
 //#define USE_TEST_BODIES
 
-using namespace frame;
+extern commons::state_data state;
 
-static double time_current = 0.0; // in days
+using namespace frame;
 
 void body_system::setup_colors(std::map<std::string, std::vector<char>>& files)
 {
@@ -194,8 +194,8 @@ void body_system::draw_current_time()
 {
     static const float offset = 20.0f;
 
-    time_t t = 1711843200; // 2024.03.31 00:00:00
-    t += (time_t)(time_current * 86400.0); // convert days to seconds
+    time_t t = commons::INIT_TIME_EPOCH;
+    t += (time_t)(state.time_offset * 86400.0); // convert days to seconds
 
     auto tm = *std::gmtime(&t);
 
@@ -360,5 +360,5 @@ void body_system::update()
     step_bodies_tree();
 
     if (settings.step_time)
-        time_current += settings.step_speed;
+        state.time_offset += settings.step_speed;
 }

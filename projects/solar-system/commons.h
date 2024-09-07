@@ -15,6 +15,9 @@ namespace commons
     // font size for body names (when not zoomed in)
     static const float NAME_FONT_SIZE = 15.0f;
 
+    static const time_t INIT_TIME_EPOCH = 1711843200; // 2024.03.31 00:00:00
+    static const double INIT_TIME_JULIAN = 2460034.5; // 2024.03.31 00:00:00
+
     enum bodies_included_type : int
     {
         more_than_100,
@@ -32,6 +35,7 @@ namespace commons
         bool disable_inclination = false;
         bool draw_lagrangians = false;
         bool shaded_planets = true;
+        bool model_rotation_random = true;
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
     };
     
@@ -40,6 +44,7 @@ namespace commons
         bool body_system_initializing = false;
         body_node* clicked_body = nullptr;
         body_node* view_body = nullptr;
+        double time_offset = 0.0; // in days 
     };
 
     static frame::vec3 draw_cast(const frame::vec3d& p)

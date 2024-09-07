@@ -45,6 +45,12 @@ struct body_node
     std::string dimensions_str;
     double inclination = 0.0;
 
+    double epoch_julian_date = 0.0;
+
+    frame::vec3 rotation_axis; 
+    double rotation_period = 0.0; // hours
+    double rotation_jd0 = 0.0; // julian day
+
     std::string mesh;
 
     struct

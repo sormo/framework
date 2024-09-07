@@ -37,6 +37,7 @@ std::vector<body_node*> bodies_tree::query(const frame::vec2& query_point, float
     return result;
 }
 
+// TODO hardcoded init time, should be in commons 
 double get_time_offset(std::string time)
 {
     // this is 0 time: 2018-01-01
@@ -57,6 +58,15 @@ double get_time_offset(std::string time)
     };
 
     return std::chrono::duration_cast<std::chrono::hours>(make_time_point(2024,3,31) - make_time_point(year,month,day)).count() / 24.0;
+}
+
+static vec3 get_rotation_axis(double lambda, double beta)
+{
+    vec3 rotation_axis;
+    rotation_axis.x = cosf(beta) * cosf(lambda);
+    rotation_axis.y = cosf(beta) * sinf(lambda);
+    rotation_axis.z = sinf(beta);
+    return rotation_axis;
 }
 
 void bodies_tree::load(std::vector<const char*> json_datas)
@@ -103,6 +113,18 @@ void bodies_tree::load(std::vector<const char*> json_datas)
                     dimensions_str += "x" + commons::convert_double_to_string(orbit_data["dimensions"][i]);
             }
 
+            double rotation_period = 0.0;
+            vec3 rotation_axis(0.0f, 0.0f, 1.0f);
+            double rotation_jd0 = 0.0;
+            if (orbit_data.contains("rotation"))
+            {
+                rotation_period = orbit_data["rotation"]["period"];
+                if (orbit_data["rotation"].contains("long"))
+                    rotation_axis = get_rotation_axis(orbit_data["rotation"]["long"], orbit_data["rotation"]["lat"]);
+                if (orbit_data["rotation"].contains("jd0"))
+                    rotation_jd0 = orbit_data["rotation"]["jd0"];
+            }
+
             // inclination hack, we are showing this in 2d
             if (settings.disable_inclination)
                 inclination = 0.0;
@@ -130,6 +152,10 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.dimensions_str = dimensions_str;
             node.inclination = inclination;
             node.orbit = std::move(orbit);
+
+            node.rotation_axis = rotation_axis;
+            node.rotation_period = rotation_period;
+            node.rotation_jd0 = rotation_jd0;
 
             if (orbit_data.contains("mesh"))
                 node.mesh = orbit_data["mesh"];

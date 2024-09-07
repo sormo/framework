@@ -15,10 +15,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 469.7,
-        "rotation_period": 9.07417,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1"
+        "id": "1",
+        "rotation": {
+            "long": 350.0,
+            "lat": 81.0,
+            "period": 9.074173,
+            "jd0": 2434407.0
+        }
     },
     {
         "A": 2.77,
@@ -36,10 +41,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 256.5,
-        "rotation_period": 7.8132214,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "2"
+        "id": "2",
+        "rotation": {
+            "long": 42.0,
+            "lat": -15.0,
+            "period": 7.81322,
+            "jd0": 2433827.77154
+        }
     },
     {
         "A": 2.67,
@@ -55,10 +65,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 123.298,
-        "rotation_period": 7.21,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "3"
+        "id": "3",
+        "rotation": {
+            "long": 105.0,
+            "lat": 21.0,
+            "period": 7.20953,
+            "jd0": 2434752.77932
+        }
     },
     {
         "A": 2.36,
@@ -76,10 +91,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1330.0,
         "radius": 262.7,
-        "rotation_period": 5.34212766,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "4"
+        "id": "4",
+        "rotation": {
+            "long": 337.0,
+            "lat": 56.0,
+            "period": 5.342124,
+            "jd0": 2433574.0
+        }
     },
     {
         "A": 2.58,
@@ -95,10 +115,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 53.3495,
-        "rotation_period": 16.806,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "5"
+        "id": "5",
+        "rotation": {
+            "long": 124.0,
+            "lat": 39.0,
+            "period": 16.80059,
+            "jd0": 2436250.0
+        }
     },
     {
         "A": 2.43,
@@ -114,10 +139,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1380.0,
         "radius": 92.59,
-        "rotation_period": 7.2745,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "6"
+        "id": "6",
+        "rotation": {
+            "long": 342.0,
+            "lat": 51.0,
+            "period": 7.274467,
+            "jd0": 2434569.0
+        }
     },
     {
         "A": 2.39,
@@ -133,10 +163,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 99.915,
-        "rotation_period": 7.139,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "7"
+        "id": "7",
+        "rotation": {
+            "long": 20.0,
+            "lat": 9.0,
+            "period": 7.138844,
+            "jd0": 2435469.87284
+        }
     },
     {
         "A": 2.2,
@@ -152,10 +187,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1190.0,
         "radius": 73.7455,
-        "rotation_period": 12.865,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "8"
+        "id": "8",
+        "rotation": {
+            "long": 334.0,
+            "lat": -2.0,
+            "period": 12.86667,
+            "jd0": 2434419.0
+        }
     },
     {
         "A": 2.39,
@@ -171,10 +211,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 95.0,
-        "rotation_period": 5.079,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "9"
+        "id": "9",
+        "rotation": {
+            "long": 181.0,
+            "lat": 23.0,
+            "period": 5.079177,
+            "jd0": 2434419.0
+        }
     },
     {
         "A": 3.14,
@@ -191,10 +236,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 203.56,
-        "rotation_period": 13.828,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "10"
+        "id": "10",
+        "rotation": {
+            "long": 307.0,
+            "lat": -29.0,
+            "period": 13.82559,
+            "jd0": 2434742.0
+        }
     },
     {
         "A": 2.45,
@@ -210,10 +260,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1400.0,
         "radius": 71.4435,
-        "rotation_period": 13.7204,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "11"
+        "id": "11",
+        "rotation": {
+            "long": 312.0,
+            "lat": 16.0,
+            "period": 13.72205,
+            "jd0": 2435475.0
+        }
     },
     {
         "A": 2.33,
@@ -229,10 +284,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1300.0,
         "radius": 57.5435,
-        "rotation_period": 8.6599,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "12"
+        "id": "12",
+        "rotation": {
+            "long": 178.0,
+            "lat": -28.0,
+            "period": 8.66034,
+            "jd0": 2440123.0
+        }
     },
     {
         "A": 2.58,
@@ -248,10 +308,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 101.318,
-        "rotation_period": 7.045,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "13"
+        "id": "13",
+        "rotation": {
+            "long": 38.0,
+            "lat": 31.0,
+            "period": 7.046665,
+            "jd0": 2438025.0
+        }
     },
     {
         "A": 2.59,
@@ -267,10 +332,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 76.0,
-        "rotation_period": 15.028,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "14"
+        "id": "14",
+        "rotation": {
+            "long": 91.0,
+            "lat": -15.0,
+            "period": 15.02987,
+            "jd0": 2434741.0
+        }
     },
     {
         "A": 2.64,
@@ -286,10 +356,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 115.8445,
-        "rotation_period": 6.083,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "15"
+        "id": "15",
+        "rotation": {
+            "long": 356.0,
+            "lat": -70.0,
+            "period": 6.082754,
+            "jd0": 2433504.0
+        }
     },
     {
         "A": 2.92,
@@ -307,10 +382,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 111.0,
-        "rotation_period": 4.196,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "16"
+        "id": "16",
+        "rotation": {
+            "long": 36.0,
+            "lat": -10.0,
+            "period": 4.195948,
+            "jd0": 2457357.4472
+        }
     },
     {
         "A": 2.3,
@@ -326,10 +406,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1270.0,
         "radius": 69.797,
-        "rotation_period": 11.57,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "18"
+        "id": "18",
+        "rotation": {
+            "long": 12.0,
+            "lat": 19.0,
+            "period": 11.57031,
+            "jd0": 2436249.0
+        }
     },
     {
         "A": 2.44,
@@ -345,10 +430,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1390.0,
         "radius": 100.0,
-        "rotation_period": 7.4432,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "19"
+        "id": "19",
+        "rotation": {
+            "long": 103.0,
+            "lat": 60.0,
+            "period": 7.443224,
+            "jd0": 2438841.25586
+        }
     },
     {
         "A": 2.41,
@@ -364,10 +454,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1360.0,
         "radius": 67.84,
-        "rotation_period": 8.098,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "20"
+        "id": "20",
+        "rotation": {
+            "long": 360.0,
+            "lat": 40.0,
+            "period": 8.09902,
+            "jd0": 2435193.0
+        }
     },
     {
         "A": 2.91,
@@ -385,10 +480,16 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1810.0,
         "radius": 83.768,
-        "rotation_period": 4.1483,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "22"
+        "id": "22",
+        "rotation": {
+            "long": 198.6,
+            "lat": 2.9,
+            "period": 4.1482015,
+            "jd0": 2436258.0,
+            "phi0": "86.996"
+        }
     },
     {
         "A": 2.63,
@@ -404,10 +505,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1560.0,
         "radius": 53.765,
-        "rotation_period": 12.312,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "23"
+        "id": "23",
+        "rotation": {
+            "long": 343.0,
+            "lat": -74.0,
+            "period": 12.31241,
+            "jd0": 2438385.0
+        }
     },
     {
         "A": 3.14,
@@ -423,10 +529,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 99.0,
-        "rotation_period": 8.374,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "24"
+        "id": "24",
+        "rotation": {
+            "long": 146.0,
+            "lat": 73.0,
+            "period": 8.37419,
+            "jd0": 2438904.0
+        }
     },
     {
         "A": 2.78,
@@ -442,10 +553,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 60.45,
-        "rotation_period": 15.706,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "28"
+        "id": "28",
+        "rotation": {
+            "long": 98.0,
+            "lat": -10.0,
+            "period": 15.70785,
+            "jd0": 2438819.0
+        }
     },
     {
         "A": 2.56,
@@ -461,10 +577,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 94.7795,
-        "rotation_period": 5.3921,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "29"
+        "id": "29",
+        "rotation": {
+            "long": 323.0,
+            "lat": -29.0,
+            "period": 5.39012,
+            "jd0": 2438935.3
+        }
     },
     {
         "A": 3.16,
@@ -480,10 +601,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 133.54,
-        "rotation_period": 5.53,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "31"
+        "id": "31",
+        "rotation": {
+            "long": 92.0,
+            "lat": 68.0,
+            "period": 5.529594,
+            "jd0": 2443410.0
+        }
     },
     {
         "A": 2.69,
@@ -499,10 +625,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 66.496,
-        "rotation_period": 12.15,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "34"
+        "id": "34",
+        "rotation": {
+            "long": 275.0,
+            "lat": 51.0,
+            "period": 12.17458,
+            "jd0": 2443602.0
+        }
     },
     {
         "A": 3.01,
@@ -518,10 +649,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 51.5275,
-        "rotation_period": 31.9,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "35"
+        "id": "35",
+        "rotation": {
+            "long": 15.0,
+            "lat": 7.0,
+            "period": 31.9009,
+            "jd0": 2446144.0
+        }
     },
     {
         "A": 2.75,
@@ -537,10 +673,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 66.421,
-        "rotation_period": 9.93,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "36"
+        "id": "36",
+        "rotation": {
+            "long": 45.0,
+            "lat": -49.0,
+            "period": 9.92692,
+            "jd0": 2443750.0
+        }
     },
     {
         "A": 2.64,
@@ -556,10 +697,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 54.175,
-        "rotation_period": 7.3335,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "37"
+        "id": "37",
+        "rotation": {
+            "long": 270.0,
+            "lat": 19.0,
+            "period": 7.332527,
+            "jd0": 2443161.0
+        }
     },
     {
         "A": 2.77,
@@ -575,10 +721,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 89.742,
-        "rotation_period": 5.138,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "39"
+        "id": "39",
+        "rotation": {
+            "long": 323.0,
+            "lat": 33.0,
+            "period": 5.138238,
+            "jd0": 2434040.61389
+        }
     },
     {
         "A": 2.27,
@@ -594,10 +745,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1250.0,
         "radius": 55.6255,
-        "rotation_period": 8.91,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "40"
+        "id": "40",
+        "rotation": {
+            "long": 22.0,
+            "lat": 38.0,
+            "period": 8.908485,
+            "jd0": 2436217.0
+        }
     },
     {
         "A": 2.77,
@@ -613,10 +769,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 102.7475,
-        "rotation_period": 5.988,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "41"
+        "id": "41",
+        "rotation": {
+            "long": 200.0,
+            "lat": -32.0,
+            "period": 5.987981,
+            "jd0": 2444771.79382
+        }
     },
     {
         "A": 2.44,
@@ -632,10 +793,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1390.0,
         "radius": 55.4985,
-        "rotation_period": 13.59,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "42"
+        "id": "42",
+        "rotation": {
+            "long": 108.0,
+            "lat": 44.0,
+            "period": 13.58364,
+            "jd0": 2440688.0
+        }
     },
     {
         "A": 2.72,
@@ -651,10 +817,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 101.1635,
-        "rotation_period": 5.699,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "45"
+        "id": "45",
+        "rotation": {
+            "long": 127.0,
+            "lat": -35.0,
+            "period": 5.699152,
+            "jd0": 2440381.0
+        }
     },
     {
         "A": 2.52,
@@ -670,10 +841,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1470.0,
         "radius": 65.7355,
-        "rotation_period": 21.04,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "46"
+        "id": "46",
+        "rotation": {
+            "long": 110.0,
+            "lat": 7.0,
+            "period": 21.0401,
+            "jd0": 2443823.0
+        }
     },
     {
         "A": 2.88,
@@ -689,10 +865,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 84.087,
-        "rotation_period": 13.178,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "47"
+        "id": "47",
+        "rotation": {
+            "long": 327.0,
+            "lat": 12.0,
+            "period": 13.17707,
+            "jd0": 2450907.0
+        }
     },
     {
         "A": 3.11,
@@ -708,10 +889,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 108.2365,
-        "rotation_period": 11.89,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "48"
+        "id": "48",
+        "rotation": {
+            "long": 298.0,
+            "lat": 59.0,
+            "period": 11.8901,
+            "jd0": 2443750.0
+        }
     },
     {
         "A": 3.1,
@@ -726,10 +912,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 83.126,
-        "rotation_period": 20.705,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "49"
+        "id": "49",
+        "rotation": {
+            "period": 20.705
+        }
     },
     {
         "A": 2.37,
@@ -745,10 +933,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1330.0,
         "radius": 69.0795,
-        "rotation_period": 7.783,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "51"
+        "id": "51",
+        "rotation": {
+            "long": 170.0,
+            "lat": -66.0,
+            "period": 7.78484,
+            "jd0": 2438055.0
+        }
     },
     {
         "A": 3.09,
@@ -764,10 +957,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 151.959,
-        "rotation_period": 5.6304,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "52"
+        "id": "52",
+        "rotation": {
+            "long": 259.0,
+            "lat": 39.0,
+            "period": 5.629959,
+            "jd0": 2445359.30436
+        }
     },
     {
         "A": 2.71,
@@ -783,10 +981,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1630.0,
         "radius": 80.06,
-        "rotation_period": 7.024,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "54"
+        "id": "54",
+        "rotation": {
+            "long": 154.0,
+            "lat": 17.0,
+            "period": 7.02264,
+            "jd0": 2438949.0
+        }
     },
     {
         "A": 2.6,
@@ -802,10 +1005,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 60.6665,
-        "rotation_period": 18.147,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "56"
+        "id": "56",
+        "rotation": {
+            "long": 283.0,
+            "lat": -1.0,
+            "period": 18.14818,
+            "jd0": 2443659.0
+        }
     },
     {
         "A": 3.15,
@@ -820,10 +1028,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 56.295,
-        "rotation_period": 25.324,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "57"
+        "id": "57",
+        "rotation": {
+            "period": 25.324
+        }
     },
     {
         "A": 2.7,
@@ -838,10 +1048,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1620.0,
         "radius": 53.2585,
-        "rotation_period": 9.895,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "58"
+        "id": "58",
+        "rotation": {
+            "period": 9.895
+        }
     },
     {
         "A": 2.71,
@@ -857,10 +1069,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1630.0,
         "radius": 82.5595,
-        "rotation_period": 13.671,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "59"
+        "id": "59",
+        "rotation": {
+            "long": 300.0,
+            "lat": -55.0,
+            "period": 13.6747,
+            "jd0": 2456220.0
+        }
     },
     {
         "A": 3.13,
@@ -876,10 +1093,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 53.4605,
-        "rotation_period": 9.2213,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "62"
+        "id": "62",
+        "rotation": {
+            "long": 269.0,
+            "lat": 23.0,
+            "period": 9.2182,
+            "jd0": 2444824.0
+        }
     },
     {
         "A": 2.39,
@@ -895,10 +1117,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1350.0,
         "radius": 58.022,
-        "rotation_period": 9.298,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "63"
+        "id": "63",
+        "rotation": {
+            "long": 121.0,
+            "lat": -27.0,
+            "period": 9.29759,
+            "jd0": 2442818.0
+        }
     },
     {
         "A": 3.42,
@@ -914,10 +1141,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2310.0,
         "radius": 118.63,
-        "rotation_period": 6.0814,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "65"
+        "id": "65",
+        "rotation": {
+            "long": 207.0,
+            "lat": -6.0,
+            "period": 6.081435,
+            "jd0": 2443386.0
+        }
     },
     {
         "A": 2.78,
@@ -933,10 +1165,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1700.0,
         "radius": 61.2545,
-        "rotation_period": 14.848,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "68"
+        "id": "68",
+        "rotation": {
+            "long": 103.0,
+            "lat": 43.0,
+            "period": 14.84547,
+            "jd0": 2443737.0
+        }
     },
     {
         "A": 2.98,
@@ -952,10 +1189,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 69.065,
-        "rotation_period": 5.655,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "69"
+        "id": "69",
+        "rotation": {
+            "long": 71.0,
+            "lat": -2.0,
+            "period": 5.65534,
+            "jd0": 2443380.0
+        }
     },
     {
         "A": 2.62,
@@ -971,10 +1213,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1540.0,
         "radius": 63.9555,
-        "rotation_period": 15.8052,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "70"
+        "id": "70",
+        "rotation": {
+            "long": 240.0,
+            "lat": 26.0,
+            "period": 15.80439,
+            "jd0": 2444471.0
+        }
     },
     {
         "A": 2.78,
@@ -990,10 +1237,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 59.355,
-        "rotation_period": 17.268,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "74"
+        "id": "74",
+        "rotation": {
+            "long": 109.0,
+            "lat": 1.0,
+            "period": 17.2675,
+            "jd0": 2455958.0
+        }
     },
     {
         "A": 3.41,
@@ -1009,10 +1261,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2300.0,
         "radius": 72.7115,
-        "rotation_period": 9.973,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "76"
+        "id": "76",
+        "rotation": {
+            "long": 320.0,
+            "lat": 17.0,
+            "period": 9.97306,
+            "jd0": 2444850.0
+        }
     },
     {
         "A": 2.62,
@@ -1027,10 +1284,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1550.0,
         "radius": 60.3,
-        "rotation_period": 7.2991,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "78"
+        "id": "78",
+        "rotation": {
+            "period": 7.2991
+        }
     },
     {
         "A": 2.85,
@@ -1045,10 +1304,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1760.0,
         "radius": 58.8635,
-        "rotation_period": 10.943,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "81"
+        "id": "81",
+        "rotation": {
+            "period": 10.943
+        }
     },
     {
         "A": 2.43,
@@ -1064,10 +1325,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1380.0,
         "radius": 55.2515,
-        "rotation_period": 10.111,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "83"
+        "id": "83",
+        "rotation": {
+            "long": 182.0,
+            "lat": -9.0,
+            "period": 10.1107,
+            "jd0": 2456337.0
+        }
     },
     {
         "A": 2.65,
@@ -1083,10 +1349,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1580.0,
         "radius": 77.395,
-        "rotation_period": 6.875,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "85"
+        "id": "85",
+        "rotation": {
+            "long": 92.0,
+            "lat": -68.0,
+            "period": 6.874784,
+            "jd0": 2438593.0
+        }
     },
     {
         "A": 3.1,
@@ -1102,10 +1373,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 54.9645,
-        "rotation_period": 16.634,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "86"
+        "id": "86",
+        "rotation": {
+            "long": 44.0,
+            "lat": -43.0,
+            "period": 16.642,
+            "jd0": 2457359.0
+        }
     },
     {
         "A": 3.48,
@@ -1121,10 +1397,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2370.0,
         "radius": 126.5255,
-        "rotation_period": 5.184,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "87"
+        "id": "87",
+        "rotation": {
+            "long": 72.0,
+            "lat": 68.0,
+            "period": 5.183641,
+            "jd0": 2443750.0
+        }
     },
     {
         "A": 2.77,
@@ -1140,10 +1421,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 116.0,
-        "rotation_period": 6.042,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "88"
+        "id": "88",
+        "rotation": {
+            "long": 74.0,
+            "lat": 63.0,
+            "period": 6.041319,
+            "jd0": 2443380.0
+        }
     },
     {
         "A": 2.55,
@@ -1159,10 +1445,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 72.7415,
-        "rotation_period": 11.387,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "89"
+        "id": "89",
+        "rotation": {
+            "long": 14.0,
+            "lat": -24.0,
+            "period": 11.388336,
+            "jd0": 2440081.0
+        }
     },
     {
         "A": 3.15,
@@ -1177,10 +1468,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 57.987,
-        "rotation_period": 16.509,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "90"
+        "id": "90",
+        "rotation": {
+            "period": 16.509
+        }
     },
     {
         "A": 2.59,
@@ -1196,10 +1489,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 51.701,
-        "rotation_period": 6.025,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "91"
+        "id": "91",
+        "rotation": {
+            "long": 218.0,
+            "lat": 36.0,
+            "period": 6.02817,
+            "jd0": 2457228.0
+        }
     },
     {
         "A": 3.18,
@@ -1214,10 +1512,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 63.21,
-        "rotation_period": 15.941,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "92"
+        "id": "92",
+        "rotation": {
+            "period": 15.941
+        }
     },
     {
         "A": 2.76,
@@ -1233,10 +1533,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 77.0775,
-        "rotation_period": 5.982,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "93"
+        "id": "93",
+        "rotation": {
+            "long": 19.0,
+            "lat": 21.0,
+            "period": 5.981768,
+            "jd0": 2444340.0
+        }
     },
     {
         "A": 3.15,
@@ -1252,10 +1557,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 102.445,
-        "rotation_period": 7.22,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "94"
+        "id": "94",
+        "rotation": {
+            "long": 244.0,
+            "lat": 0.0,
+            "period": 7.226189,
+            "jd0": 2444116.0
+        }
     },
     {
         "A": 3.06,
@@ -1271,10 +1581,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 73.9845,
-        "rotation_period": 8.705,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "95"
+        "id": "95",
+        "rotation": {
+            "long": 149.0,
+            "lat": 33.0,
+            "period": 8.70221,
+            "jd0": 2444085.0
+        }
     },
     {
         "A": 3.05,
@@ -1289,10 +1604,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 88.887,
-        "rotation_period": 13.868,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "96"
+        "id": "96",
+        "rotation": {
+            "period": 13.868
+        }
     },
     {
         "A": 2.67,
@@ -1308,10 +1625,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 50.3585,
-        "rotation_period": 35.15,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "97"
+        "id": "97",
+        "rotation": {
+            "long": 359.0,
+            "lat": 30.0,
+            "period": 35.251,
+            "jd0": 2433224.0
+        }
     },
     {
         "A": 2.69,
@@ -1327,10 +1649,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 66.394,
-        "rotation_period": 16.479,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "98"
+        "id": "98",
+        "rotation": {
+            "long": 286.0,
+            "lat": 18.0,
+            "period": 16.48013,
+            "jd0": 2446854.0
+        }
     },
     {
         "A": 3.14,
@@ -1346,10 +1673,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 68.2765,
-        "rotation_period": 8.984,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "104"
+        "id": "104",
+        "rotation": {
+            "long": 292.0,
+            "lat": -4.0,
+            "period": 8.98059,
+            "jd0": 2443244.0
+        }
     },
     {
         "A": 3.18,
@@ -1365,10 +1697,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 103.9345,
-        "rotation_period": 16.21,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "106"
+        "id": "106",
+        "rotation": {
+            "long": 57.0,
+            "lat": 12.0,
+            "period": 16.2126,
+            "jd0": 2455956.0
+        }
     },
     {
         "A": 3.49,
@@ -1386,10 +1723,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2380.0,
         "radius": 105.185,
-        "rotation_period": 4.844,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "107"
+        "id": "107",
+        "rotation": {
+            "long": 76.0,
+            "lat": 55.0,
+            "period": 4.843928,
+            "jd0": 2444636.81485
+        }
     },
     {
         "A": 2.59,
@@ -1404,10 +1746,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 63.172,
-        "rotation_period": 22.072,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "111"
+        "id": "111",
+        "rotation": {
+            "period": 22.072
+        }
     },
     {
         "A": 2.99,
@@ -1423,10 +1767,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1890.0,
         "radius": 104.487,
-        "rotation_period": 9.127,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "117"
+        "id": "117",
+        "rotation": {
+            "long": 323.0,
+            "lat": -57.0,
+            "period": 9.12418,
+            "jd0": 2446333.0
+        }
     },
     {
         "A": 3.13,
@@ -1442,10 +1791,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 77.566,
-        "rotation_period": 46.551,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "120"
+        "id": "120",
+        "rotation": {
+            "long": 82.0,
+            "lat": 55.0,
+            "period": 46.5504,
+            "jd0": 2445042.0
+        }
     },
     {
         "A": 3.45,
@@ -1461,10 +1815,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2350.0,
         "radius": 104.5,
-        "rotation_period": 5.55128,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "121"
+        "id": "121",
+        "rotation": {
+            "long": 3.0,
+            "lat": 15.0,
+            "period": 5.550877,
+            "jd0": 2443032.0
+        }
     },
     {
         "A": 2.76,
@@ -1480,10 +1839,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 61.0,
-        "rotation_period": 12.7988,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "127"
+        "id": "127",
+        "rotation": {
+            "long": 261.0,
+            "lat": -70.0,
+            "period": 12.79954,
+            "jd0": 2445342.0
+        }
     },
     {
         "A": 2.75,
@@ -1498,10 +1862,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 81.2575,
-        "rotation_period": 38.9325,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "128"
+        "id": "128",
+        "rotation": {
+            "period": 38.9325
+        }
     },
     {
         "A": 2.87,
@@ -1517,10 +1883,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1770.0,
         "radius": 56.5,
-        "rotation_period": 4.9572,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "129"
+        "id": "129",
+        "rotation": {
+            "long": 205.0,
+            "lat": 63.0,
+            "period": 4.95716,
+            "jd0": 2441100.73971
+        }
     },
     {
         "A": 3.13,
@@ -1536,10 +1907,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 90.326,
-        "rotation_period": 5.225,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "130"
+        "id": "130",
+        "rotation": {
+            "long": 64.0,
+            "lat": -90.0,
+            "period": 5.224663,
+            "jd0": 2444914.7568
+        }
     },
     {
         "A": 2.56,
@@ -1555,10 +1931,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1500.0,
         "radius": 54.0,
-        "rotation_period": 17.196,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "134"
+        "id": "134",
+        "rotation": {
+            "long": 276.0,
+            "lat": 7.0,
+            "period": 17.1892,
+            "jd0": 2456457.0
+        }
     },
     {
         "A": 3.12,
@@ -1574,10 +1955,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 64.339,
-        "rotation_period": 25.676,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "137"
+        "id": "137",
+        "rotation": {
+            "long": 355.0,
+            "lat": 13.0,
+            "period": 25.6736,
+            "jd0": 2456407.0
+        }
     },
     {
         "A": 2.79,
@@ -1593,10 +1979,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1700.0,
         "radius": 75.558,
-        "rotation_period": 20.991,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "139"
+        "id": "139",
+        "rotation": {
+            "long": 96.0,
+            "lat": -1.0,
+            "period": 20.9846,
+            "jd0": 2456445.0
+        }
     },
     {
         "A": 2.74,
@@ -1612,10 +2003,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 54.895,
-        "rotation_period": 34.445,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "140"
+        "id": "140",
+        "rotation": {
+            "long": 265.0,
+            "lat": -27.0,
+            "period": 34.398,
+            "jd0": 2455947.0
+        }
     },
     {
         "A": 2.67,
@@ -1630,10 +2026,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 58.958,
-        "rotation_period": 19.87,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "141"
+        "id": "141",
+        "rotation": {
+            "period": 19.87
+        }
     },
     {
         "A": 2.65,
@@ -1649,10 +2047,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1580.0,
         "radius": 71.19,
-        "rotation_period": 13.819,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "144"
+        "id": "144",
+        "rotation": {
+            "long": 251.0,
+            "lat": 63.0,
+            "period": 13.82517,
+            "jd0": 2444590.0
+        }
     },
     {
         "A": 2.67,
@@ -1667,10 +2070,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1600.0,
         "radius": 63.8915,
-        "rotation_period": 15.071,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "145"
+        "id": "145",
+        "rotation": {
+            "period": 15.071
+        }
     },
     {
         "A": 2.72,
@@ -1686,10 +2091,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 80.155,
-        "rotation_period": 18.557,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "146"
+        "id": "146",
+        "rotation": {
+            "long": 304.0,
+            "lat": -41.0,
+            "period": 18.5538,
+            "jd0": 2444130.0
+        }
     },
     {
         "A": 3.14,
@@ -1705,10 +2115,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 66.465,
-        "rotation_period": 7.8528,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "147"
+        "id": "147",
+        "rotation": {
+            "long": 269.0,
+            "lat": 15.0,
+            "period": 7.85232,
+            "jd0": 2444849.0
+        }
     },
     {
         "A": 2.98,
@@ -1724,10 +2139,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 59.564,
-        "rotation_period": 8.1347,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "150"
+        "id": "150",
+        "rotation": {
+            "long": 177.0,
+            "lat": 22.0,
+            "period": 8.13456,
+            "jd0": 2445590.0
+        }
     },
     {
         "A": 3.97,
@@ -1742,10 +2162,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2890.0,
         "radius": 85.315,
-        "rotation_period": 5.9585,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "153"
+        "id": "153",
+        "rotation": {
+            "period": 5.9585
+        }
     },
     {
         "A": 3.2,
@@ -1761,10 +2183,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2090.0,
         "radius": 96.3055,
-        "rotation_period": 25.224,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "154"
+        "id": "154",
+        "rotation": {
+            "long": 28.0,
+            "lat": 34.0,
+            "period": 25.2285,
+            "jd0": 2444340.0
+        }
     },
     {
         "A": 2.73,
@@ -1780,10 +2207,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 71.673,
-        "rotation_period": 22.132,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "156"
+        "id": "156",
+        "rotation": {
+            "long": 22.0,
+            "lat": 15.0,
+            "period": 22.1157,
+            "jd0": 2457319.0
+        }
     },
     {
         "A": 3.11,
@@ -1799,10 +2231,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 62.618,
-        "rotation_period": 24.476,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "159"
+        "id": "159",
+        "rotation": {
+            "long": 348.0,
+            "lat": 59.0,
+            "period": 24.47866,
+            "jd0": 2444636.0
+        }
     },
     {
         "A": 2.63,
@@ -1818,10 +2255,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1560.0,
         "radius": 50.127,
-        "rotation_period": 13.66,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "164"
+        "id": "164",
+        "rotation": {
+            "long": 54.0,
+            "lat": -10.0,
+            "period": 13.6638,
+            "jd0": 2442713.0
+        }
     },
     {
         "A": 3.13,
@@ -1837,10 +2279,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 90.0415,
-        "rotation_period": 7.226,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "165"
+        "id": "165",
+        "rotation": {
+            "long": 180.0,
+            "lat": 31.0,
+            "period": 7.22439,
+            "jd0": 2444808.0
+        }
     },
     {
         "A": 3.37,
@@ -1856,10 +2303,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2260.0,
         "radius": 72.683,
-        "rotation_period": 47.009,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "168"
+        "id": "168",
+        "rotation": {
+            "long": 108.0,
+            "lat": -62.0,
+            "period": 47.015,
+            "jd0": 2456234.0
+        }
     },
     {
         "A": 3.13,
@@ -1875,10 +2327,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 65.404,
-        "rotation_period": 6.66535,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "171"
+        "id": "171",
+        "rotation": {
+            "long": 329.0,
+            "lat": 23.0,
+            "period": 6.664541,
+            "jd0": 2443159.0
+        }
     },
     {
         "A": 2.74,
@@ -1894,10 +2351,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 62.9105,
-        "rotation_period": 6.15,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "173"
+        "id": "173",
+        "rotation": {
+            "long": 28.0,
+            "lat": -17.0,
+            "period": 6.110939,
+            "jd0": 2443380.0
+        }
     },
     {
         "A": 3.18,
@@ -1913,10 +2375,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 53.488,
-        "rotation_period": 11.2877,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "176"
+        "id": "176",
+        "rotation": {
+            "long": 156.0,
+            "lat": 79.0,
+            "period": 11.28783,
+            "jd0": 2450774.0
+        }
     },
     {
         "A": 3.13,
@@ -1931,10 +2398,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 57.6915,
-        "rotation_period": 52.23,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "181"
+        "id": "181",
+        "rotation": {
+            "period": 52.23
+        }
     },
     {
         "A": 2.74,
@@ -1949,10 +2418,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 80.232,
-        "rotation_period": 21.797,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "185"
+        "id": "185",
+        "rotation": {
+            "period": 21.797
+        }
     },
     {
         "A": 2.73,
@@ -1968,10 +2439,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 73.647,
-        "rotation_period": 10.67,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "187"
+        "id": "187",
+        "rotation": {
+            "long": 115.0,
+            "lat": -80.0,
+            "period": 10.66703,
+            "jd0": 2445081.0
+        }
     },
     {
         "A": 3.99,
@@ -1986,10 +2462,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2920.0,
         "radius": 79.5,
-        "rotation_period": 6.521,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "190"
+        "id": "190",
+        "rotation": {
+            "period": 6.521
+        }
     },
     {
         "A": 2.62,
@@ -2004,10 +2482,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1550.0,
         "radius": 80.8335,
-        "rotation_period": 15.679,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "194"
+        "id": "194",
+        "rotation": {
+            "period": 15.679
+        }
     },
     {
         "A": 3.11,
@@ -2023,10 +2503,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 72.313,
-        "rotation_period": 8.334,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "196"
+        "id": "196",
+        "rotation": {
+            "long": 276.0,
+            "lat": -49.0,
+            "period": 8.332827,
+            "jd0": 2438700.0
+        }
     },
     {
         "A": 2.74,
@@ -2041,10 +2526,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 64.1505,
-        "rotation_period": 37.394,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "200"
+        "id": "200",
+        "rotation": {
+            "period": 37.394
+        }
     },
     {
         "A": 2.74,
@@ -2059,10 +2546,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 62.296,
-        "rotation_period": 24.052,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "203"
+        "id": "203",
+        "rotation": {
+            "period": 24.052
+        }
     },
     {
         "A": 2.74,
@@ -2078,10 +2567,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 56.5,
-        "rotation_period": 11.122,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "206"
+        "id": "206",
+        "rotation": {
+            "long": 250.0,
+            "lat": 43.0,
+            "period": 11.11129,
+            "jd0": 2451087.0
+        }
     },
     {
         "A": 3.15,
@@ -2097,10 +2591,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 89.504,
-        "rotation_period": 5.7366,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "209"
+        "id": "209",
+        "rotation": {
+            "long": 43.0,
+            "lat": -34.0,
+            "period": 5.7356,
+            "jd0": 2450856.0
+        }
     },
     {
         "A": 3.05,
@@ -2115,10 +2614,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 70.5625,
-        "rotation_period": 18.365,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "211"
+        "id": "211",
+        "rotation": {
+            "period": 18.365
+        }
     },
     {
         "A": 3.12,
@@ -2134,10 +2635,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 68.06,
-        "rotation_period": 10.283,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "212"
+        "id": "212",
+        "rotation": {
+            "long": 220.0,
+            "lat": -33.0,
+            "period": 10.28414,
+            "jd0": 2445234.0
+        }
     },
     {
         "A": 2.79,
@@ -2153,10 +2659,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1710.0,
         "radius": 61.0,
-        "rotation_period": 5.385,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "216"
+        "id": "216",
+        "rotation": {
+            "long": 74.0,
+            "lat": 20.0,
+            "period": 5.385282,
+            "jd0": 2444502.76914
+        }
     },
     {
         "A": 3.16,
@@ -2172,10 +2683,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 61.9455,
-        "rotation_period": 26.468,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "227"
+        "id": "227",
+        "rotation": {
+            "long": 272.0,
+            "lat": -1.0,
+            "period": 26.4613,
+            "jd0": 2454048.0
+        }
     },
     {
         "A": 3.42,
@@ -2190,10 +2706,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2310.0,
         "radius": 52.956,
-        "rotation_period": 6.6,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "229"
+        "id": "229",
+        "rotation": {
+            "period": 6.6
+        }
     },
     {
         "A": 2.38,
@@ -2209,10 +2727,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1340.0,
         "radius": 55.666,
-        "rotation_period": 24.0055,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "230"
+        "id": "230",
+        "rotation": {
+            "long": 237.0,
+            "lat": 29.0,
+            "period": 23.9845,
+            "jd0": 2442246.8368
+        }
     },
     {
         "A": 2.91,
@@ -2228,10 +2751,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1810.0,
         "radius": 77.8295,
-        "rotation_period": 8.8749,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "238"
+        "id": "238",
+        "rotation": {
+            "long": 84.0,
+            "lat": 20.0,
+            "period": 8.87274,
+            "jd0": 2450996.0
+        }
     },
     {
         "A": 3.05,
@@ -2246,10 +2774,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 84.45,
-        "rotation_period": 15.51,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "241"
+        "id": "241",
+        "rotation": {
+            "period": 15.51
+        }
     },
     {
         "A": 2.74,
@@ -2265,10 +2795,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 65.4675,
-        "rotation_period": 12.093,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "247"
+        "id": "247",
+        "rotation": {
+            "long": 103.0,
+            "lat": -22.0,
+            "period": 12.0948,
+            "jd0": 2443750.0
+        }
     },
     {
         "A": 3.14,
@@ -2284,10 +2819,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 60.4975,
-        "rotation_period": 5.0545,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "250"
+        "id": "250",
+        "rotation": {
+            "long": 99.0,
+            "lat": 10.0,
+            "period": 5.05441,
+            "jd0": 2444492.55436
+        }
     },
     {
         "A": 3.13,
@@ -2302,10 +2842,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 87.159,
-        "rotation_period": 8.143,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "259"
+        "id": "259",
+        "rotation": {
+            "period": 8.143
+        }
     },
     {
         "A": 3.45,
@@ -2321,10 +2863,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2340.0,
         "radius": 50.7695,
-        "rotation_period": 8.29,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "260"
+        "id": "260",
+        "rotation": {
+            "long": 23.0,
+            "lat": -28.0,
+            "period": 8.29055,
+            "jd0": 2450842.0
+        }
     },
     {
         "A": 2.8,
@@ -2339,10 +2886,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1720.0,
         "radius": 54.747,
-        "rotation_period": 13.018,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "266"
+        "id": "266",
+        "rotation": {
+            "period": 13.018
+        }
     },
     {
         "A": 3.09,
@@ -2357,10 +2906,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1990.0,
         "radius": 72.2925,
-        "rotation_period": 7.8,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "268"
+        "id": "268",
+        "rotation": {
+            "period": 7.8
+        }
     },
     {
         "A": 2.77,
@@ -2376,10 +2927,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 51.5,
-        "rotation_period": 14.933,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "275"
+        "id": "275",
+        "rotation": {
+            "long": 264.0,
+            "lat": -2.0,
+            "period": 14.93046,
+            "jd0": 2450815.0
+        }
     },
     {
         "A": 3.12,
@@ -2395,10 +2951,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 57.3615,
-        "rotation_period": 6.315,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "276"
+        "id": "276",
+        "rotation": {
+            "long": 199.0,
+            "lat": -20.0,
+            "period": 6.3192,
+            "jd0": 2445975.0
+        }
     },
     {
         "A": 4.27,
@@ -2413,10 +2974,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 3220.0,
         "radius": 63.295,
-        "rotation_period": 23.896,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "279"
+        "id": "279",
+        "rotation": {
+            "period": 23.896
+        }
     },
     {
         "A": 3.05,
@@ -2432,10 +2995,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 66.1925,
-        "rotation_period": 6.896,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "283"
+        "id": "283",
+        "rotation": {
+            "long": 257.0,
+            "lat": 23.0,
+            "period": 6.895226,
+            "jd0": 2443420.31377
+        }
     },
     {
         "A": 3.12,
@@ -2451,10 +3019,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 62.4615,
-        "rotation_period": 12.497,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "303"
+        "id": "303",
+        "rotation": {
+            "long": 199.0,
+            "lat": -54.0,
+            "period": 12.499,
+            "jd0": 2457168.0
+        }
     },
     {
         "A": 2.75,
@@ -2469,10 +3042,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 64.289,
-        "rotation_period": 12.031,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "308"
+        "id": "308",
+        "rotation": {
+            "period": 12.031
+        }
     },
     {
         "A": 2.68,
@@ -2487,10 +3062,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1600.0,
         "radius": 110.3455,
-        "rotation_period": 29.43,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "324"
+        "id": "324",
+        "rotation": {
+            "period": 29.43
+        }
     },
     {
         "A": 3.11,
@@ -2506,10 +3083,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 72.84,
-        "rotation_period": 10.992,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "328"
+        "id": "328",
+        "rotation": {
+            "long": 210.0,
+            "lat": -15.0,
+            "period": 10.98504,
+            "jd0": 2450985.0
+        }
     },
     {
         "A": 3.91,
@@ -2525,10 +3107,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2820.0,
         "radius": 99.385,
-        "rotation_period": 7.361,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "334"
+        "id": "334",
+        "rotation": {
+            "long": 200.0,
+            "lat": 32.0,
+            "period": 7.36014,
+            "jd0": 2450924.0
+        }
     },
     {
         "A": 2.6,
@@ -2543,10 +3130,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 62.0905,
-        "rotation_period": 10.747,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "344"
+        "id": "344",
+        "rotation": {
+            "period": 10.747
+        }
     },
     {
         "A": 2.92,
@@ -2562,10 +3151,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 69.885,
-        "rotation_period": 4.701,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "349"
+        "id": "349",
+        "rotation": {
+            "long": 322.0,
+            "lat": 18.0,
+            "period": 4.701204,
+            "jd0": 2438005.0
+        }
     },
     {
         "A": 3.11,
@@ -2581,10 +3175,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2000.0,
         "radius": 64.3645,
-        "rotation_period": 9.178,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "350"
+        "id": "350",
+        "rotation": {
+            "long": 184.0,
+            "lat": -29.0,
+            "period": 9.18041,
+            "jd0": 2448596.0
+        }
     },
     {
         "A": 2.8,
@@ -2600,10 +3199,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1710.0,
         "radius": 74.485,
-        "rotation_period": 4.277,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "354"
+        "id": "354",
+        "rotation": {
+            "long": 154.0,
+            "lat": 51.0,
+            "period": 4.277184,
+            "jd0": 2434747.0
+        }
     },
     {
         "A": 2.75,
@@ -2619,10 +3223,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1670.0,
         "radius": 72.7515,
-        "rotation_period": 31.701,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "356"
+        "id": "356",
+        "rotation": {
+            "long": 57.0,
+            "lat": -33.0,
+            "period": 31.7046,
+            "jd0": 2456002.0
+        }
     },
     {
         "A": 3.15,
@@ -2638,10 +3247,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 62.0535,
-        "rotation_period": 35.983,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "357"
+        "id": "357",
+        "rotation": {
+            "long": 49.0,
+            "lat": 0.0,
+            "period": 35.984,
+            "jd0": 2451135.0
+        }
     },
     {
         "A": 3.01,
@@ -2657,10 +3271,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 64.5625,
-        "rotation_period": 6.183,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "360"
+        "id": "360",
+        "rotation": {
+            "long": 355.0,
+            "lat": 55.0,
+            "period": 6.189593,
+            "jd0": 2444171.0
+        }
     },
     {
         "A": 3.98,
@@ -2676,10 +3295,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2900.0,
         "radius": 77.167,
-        "rotation_period": 13.835,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "361"
+        "id": "361",
+        "rotation": {
+            "long": 294.0,
+            "lat": 13.0,
+            "period": 13.80634,
+            "jd0": 2446885.0
+        }
     },
     {
         "A": 3.16,
@@ -2695,10 +3319,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 86.821,
-        "rotation_period": 8.567,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "372"
+        "id": "372",
+        "rotation": {
+            "long": 44.0,
+            "lat": 17.0,
+            "period": 8.58191,
+            "jd0": 2443889.0
+        }
     },
     {
         "A": 3.13,
@@ -2713,10 +3342,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 108.0,
-        "rotation_period": 16.899,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "375"
+        "id": "375",
+        "rotation": {
+            "period": 16.899
+        }
     },
     {
         "A": 3.23,
@@ -2732,10 +3363,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2120.0,
         "radius": 63.8195,
-        "rotation_period": 6.572,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "381"
+        "id": "381",
+        "rotation": {
+            "long": 228.0,
+            "lat": 79.0,
+            "period": 6.571955,
+            "jd0": 2446947.0
+        }
     },
     {
         "A": 2.9,
@@ -2751,10 +3387,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1800.0,
         "radius": 82.505,
-        "rotation_period": 9.763,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "386"
+        "id": "386",
+        "rotation": {
+            "long": 287.0,
+            "lat": 25.0,
+            "period": 9.76503,
+            "jd0": 2444019.0
+        }
     },
     {
         "A": 2.74,
@@ -2770,10 +3411,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.255,
-        "rotation_period": 24.144,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "387"
+        "id": "387",
+        "rotation": {
+            "long": 123.0,
+            "lat": 46.0,
+            "period": 24.14011,
+            "jd0": 2443382.0
+        }
     },
     {
         "A": 3.0,
@@ -2789,10 +3435,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 62.877,
-        "rotation_period": 9.516,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "388"
+        "id": "388",
+        "rotation": {
+            "long": 124.0,
+            "lat": 54.0,
+            "period": 9.51122,
+            "jd0": 2450873.0
+        }
     },
     {
         "A": 2.78,
@@ -2807,10 +3458,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 58.0955,
-        "rotation_period": 38.455,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "393"
+        "id": "393",
+        "rotation": {
+            "period": 38.455
+        }
     },
     {
         "A": 2.58,
@@ -2826,10 +3479,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1520.0,
         "radius": 54.447,
-        "rotation_period": 9.95,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "405"
+        "id": "405",
+        "rotation": {
+            "long": 157.0,
+            "lat": 1.0,
+            "period": 9.9648,
+            "jd0": 2457228.0
+        }
     },
     {
         "A": 2.58,
@@ -2845,10 +3503,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 85.506,
-        "rotation_period": 9.022,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "409"
+        "id": "409",
+        "rotation": {
+            "long": 4.0,
+            "lat": 29.0,
+            "period": 9.02145,
+            "jd0": 2444310.0
+        }
     },
     {
         "A": 2.72,
@@ -2864,10 +3527,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1640.0,
         "radius": 59.4645,
-        "rotation_period": 32.5,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "410"
+        "id": "410",
+        "rotation": {
+            "long": 261.0,
+            "lat": -1.0,
+            "period": 32.9963,
+            "jd0": 2451081.0
+        }
     },
     {
         "A": 2.59,
@@ -2883,10 +3551,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1530.0,
         "radius": 74.3505,
-        "rotation_period": 16.784,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "419"
+        "id": "419",
+        "rotation": {
+            "long": 174.0,
+            "lat": 36.0,
+            "period": 16.7809,
+            "jd0": 2444019.0
+        }
     },
     {
         "A": 3.43,
@@ -2901,10 +3574,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2320.0,
         "radius": 69.3495,
-        "rotation_period": 10.987,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "420"
+        "id": "420",
+        "rotation": {
+            "period": 10.987
+        }
     },
     {
         "A": 3.07,
@@ -2920,10 +3595,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 87.9295,
-        "rotation_period": 4.775,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "423"
+        "id": "423",
+        "rotation": {
+            "long": 354.0,
+            "lat": 0.0,
+            "period": 4.775377,
+            "jd0": 2444826.0
+        }
     },
     {
         "A": 2.77,
@@ -2939,10 +3619,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 51.2825,
-        "rotation_period": 20.063,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "424"
+        "id": "424",
+        "rotation": {
+            "long": 172.0,
+            "lat": -6.0,
+            "period": 20.06,
+            "jd0": 2457227.0
+        }
     },
     {
         "A": 2.89,
@@ -2958,10 +3643,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 68.781,
-        "rotation_period": 67.52,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "426"
+        "id": "426",
+        "rotation": {
+            "long": 223.0,
+            "lat": -89.0,
+            "period": 67.5041,
+            "jd0": 2449034.0
+        }
     },
     {
         "A": 3.14,
@@ -2976,10 +3666,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 50.95,
-        "rotation_period": 13.53,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "431"
+        "id": "431",
+        "rotation": {
+            "period": 13.53
+        }
     },
     {
         "A": 2.77,
@@ -2995,10 +3687,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1690.0,
         "radius": 79.6655,
-        "rotation_period": 6.214,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "444"
+        "id": "444",
+        "rotation": {
+            "long": 234.0,
+            "lat": 38.0,
+            "period": 6.21513,
+            "jd0": 2457229.0
+        }
     },
     {
         "A": 3.06,
@@ -3013,10 +3710,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 126.95,
-        "rotation_period": 9.727,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "451"
+        "id": "451",
+        "rotation": {
+            "period": 9.727
+        }
     },
     {
         "A": 3.18,
@@ -3031,10 +3730,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 66.859,
-        "rotation_period": 17.5727,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "469"
+        "id": "469",
+        "rotation": {
+            "period": 17.5727
+        }
     },
     {
         "A": 2.89,
@@ -3050,10 +3751,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1790.0,
         "radius": 74.064,
-        "rotation_period": 7.113,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "471"
+        "id": "471",
+        "rotation": {
+            "long": 224.0,
+            "lat": 58.0,
+            "period": 7.11539,
+            "jd0": 2443103.0
+        }
     },
     {
         "A": 2.65,
@@ -3069,10 +3775,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1570.0,
         "radius": 69.2465,
-        "rotation_period": 27.33,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "476"
+        "id": "476",
+        "rotation": {
+            "long": 218.0,
+            "lat": 36.0,
+            "period": 27.2404,
+            "jd0": 2445055.0
+        }
     },
     {
         "A": 2.74,
@@ -3088,10 +3799,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.9145,
-        "rotation_period": 14.412,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "481"
+        "id": "481",
+        "rotation": {
+            "long": 6.0,
+            "lat": 38.0,
+            "period": 14.4495,
+            "jd0": 2456038.0
+        }
     },
     {
         "A": 3.17,
@@ -3106,10 +3822,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 84.0585,
-        "rotation_period": 32.645,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "488"
+        "id": "488",
+        "rotation": {
+            "period": 32.645
+        }
     },
     {
         "A": 3.15,
@@ -3125,10 +3843,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 69.695,
-        "rotation_period": 9.02,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "489"
+        "id": "489",
+        "rotation": {
+            "long": 265.0,
+            "lat": -16.0,
+            "period": 9.02321,
+            "jd0": 2445801.0
+        }
     },
     {
         "A": 3.17,
@@ -3144,10 +3867,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 59.4015,
-        "rotation_period": 7.93,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "490"
+        "id": "490",
+        "rotation": {
+            "long": 231.0,
+            "lat": 43.0,
+            "period": 7.92812,
+            "jd0": 2450995.0
+        }
     },
     {
         "A": 2.99,
@@ -3162,10 +3890,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1880.0,
         "radius": 50.393,
-        "rotation_period": 40.42,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "494"
+        "id": "494",
+        "rotation": {
+            "period": 40.42
+        }
     },
     {
         "A": 2.69,
@@ -3181,10 +3911,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1610.0,
         "radius": 57.5,
-        "rotation_period": 8.1789,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "505"
+        "id": "505",
+        "rotation": {
+            "long": 304.0,
+            "lat": -44.0,
+            "period": 8.18005,
+            "jd0": 2443874.0
+        }
     },
     {
         "A": 3.04,
@@ -3199,10 +3934,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 52.97,
-        "rotation_period": 13.546,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "506"
+        "id": "506",
+        "rotation": {
+            "period": 13.546
+        }
     },
     {
         "A": 3.17,
@@ -3218,10 +3955,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2060.0,
         "radius": 58.6205,
-        "rotation_period": 52.8,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "508"
+        "id": "508",
+        "rotation": {
+            "long": 304.0,
+            "lat": 8.0,
+            "period": 52.6755,
+            "jd0": 2450856.0
+        }
     },
     {
         "A": 3.16,
@@ -3237,10 +3979,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 135.1635,
-        "rotation_period": 5.1297,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "511"
+        "id": "511",
+        "rotation": {
+            "long": 300.0,
+            "lat": 26.0,
+            "period": 5.129365,
+            "jd0": 2434475.7
+        }
     },
     {
         "A": 3.05,
@@ -3256,10 +4003,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1940.0,
         "radius": 60.0465,
-        "rotation_period": 21.851,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "514"
+        "id": "514",
+        "rotation": {
+            "long": 22.0,
+            "lat": 14.0,
+            "period": 21.8756,
+            "jd0": 2456320.0
+        }
     },
     {
         "A": 3.16,
@@ -3275,10 +4027,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 55.945,
-        "rotation_period": 9.2747,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "517"
+        "id": "517",
+        "rotation": {
+            "long": 277.0,
+            "lat": 0.0,
+            "period": 9.2744,
+            "jd0": 2457319.0
+        }
     },
     {
         "A": 2.74,
@@ -3294,10 +4051,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 53.6135,
-        "rotation_period": 28.479,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "521"
+        "id": "521",
+        "rotation": {
+            "long": 131.0,
+            "lat": -33.0,
+            "period": 28.484,
+            "jd0": 2456896.0
+        }
     },
     {
         "A": 3.63,
@@ -3312,10 +4074,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2520.0,
         "radius": 50.61,
-        "rotation_period": 8.129,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "522"
+        "id": "522",
+        "rotation": {
+            "period": 8.129
+        }
     },
     {
         "A": 2.77,
@@ -3331,10 +4095,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1680.0,
         "radius": 83.8955,
-        "rotation_period": 9.405,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "532"
+        "id": "532",
+        "rotation": {
+            "long": 103.0,
+            "lat": 11.0,
+            "period": 9.404937,
+            "jd0": 2434744.61145
+        }
     },
     {
         "A": 3.49,
@@ -3350,10 +4119,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2390.0,
         "radius": 73.533,
-        "rotation_period": 8.791,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "536"
+        "id": "536",
+        "rotation": {
+            "long": 2.0,
+            "lat": 31.0,
+            "period": 8.7905,
+            "jd0": 2457241.0
+        }
     },
     {
         "A": 3.2,
@@ -3369,10 +4143,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2090.0,
         "radius": 56.3155,
-        "rotation_period": 7.2,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "545"
+        "id": "545",
+        "rotation": {
+            "long": 156.0,
+            "lat": 46.0,
+            "period": 7.4013,
+            "jd0": 2457358.0
+        }
     },
     {
         "A": 3.38,
@@ -3388,10 +4167,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2270.0,
         "radius": 83.6905,
-        "rotation_period": 12.103,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "566"
+        "id": "566",
+        "rotation": {
+            "long": 338.0,
+            "lat": -13.0,
+            "period": 12.08464,
+            "jd0": 2447946.0
+        }
     },
     {
         "A": 5.21,
@@ -3407,10 +4191,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4350.0,
         "radius": 65.0495,
-        "rotation_period": 7.306,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "588"
+        "id": "588",
+        "rotation": {
+            "long": 172.0,
+            "lat": -5.0,
+            "period": 7.3063,
+            "jd0": 2451069.0
+        }
     },
     {
         "A": 2.93,
@@ -3426,10 +4215,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 79.863,
-        "rotation_period": 15.848,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "596"
+        "id": "596",
+        "rotation": {
+            "long": 89.0,
+            "lat": -9.0,
+            "period": 15.8666,
+            "jd0": 2451041.0
+        }
     },
     {
         "A": 3.08,
@@ -3444,10 +4238,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1980.0,
         "radius": 55.222,
-        "rotation_period": 35.195,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "602"
+        "id": "602",
+        "rotation": {
+            "period": 35.195
+        }
     },
     {
         "A": 5.21,
@@ -3462,10 +4258,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4340.0,
         "radius": 70.181,
-        "rotation_period": 102.8,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "617"
+        "id": "617",
+        "rotation": {
+            "period": 102.8
+        }
     },
     {
         "A": 3.19,
@@ -3481,10 +4279,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 65.646,
-        "rotation_period": 14.791,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "618"
+        "id": "618",
+        "rotation": {
+            "long": 102.0,
+            "lat": 65.0,
+            "period": 14.79565,
+            "jd0": 2445832.0
+        }
     },
     {
         "A": 5.27,
@@ -3500,10 +4303,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4420.0,
         "radius": 112.5,
-        "rotation_period": 6.924,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "624"
+        "id": "624",
+        "rotation": {
+            "long": 333.0,
+            "lat": -31.0,
+            "period": 6.920509,
+            "jd0": 2435957.0
+        }
     },
     {
         "A": 2.3,
@@ -3518,10 +4326,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1270.0,
         "radius": 80.368,
-        "rotation_period": 31.735,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "654"
+        "id": "654",
+        "rotation": {
+            "period": 31.735
+        }
     },
     {
         "A": 5.17,
@@ -3537,10 +4347,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4290.0,
         "radius": 56.16,
-        "rotation_period": 15.98,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "659"
+        "id": "659",
+        "rotation": {
+            "long": 293.0,
+            "lat": -48.0,
+            "period": 15.97894,
+            "jd0": 2450332.0
+        }
     },
     {
         "A": 3.06,
@@ -3556,10 +4371,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1960.0,
         "radius": 53.8975,
-        "rotation_period": 10.251,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "663"
+        "id": "663",
+        "rotation": {
+            "long": 229.0,
+            "lat": 31.0,
+            "period": 10.2536,
+            "jd0": 2457229.0
+        }
     },
     {
         "A": 3.15,
@@ -3575,10 +4395,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2040.0,
         "radius": 67.325,
-        "rotation_period": 8.64,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "690"
+        "id": "690",
+        "rotation": {
+            "long": 359.0,
+            "lat": 45.0,
+            "period": 8.61799,
+            "jd0": 2447055.73364
+        }
     },
     {
         "A": 2.67,
@@ -3594,10 +4419,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1590.0,
         "radius": 60.9455,
-        "rotation_period": 5.925,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "694"
+        "id": "694",
+        "rotation": {
+            "long": 266.0,
+            "lat": 51.0,
+            "period": 5.92193,
+            "jd0": 2445590.0
+        }
     },
     {
         "A": 3.19,
@@ -3612,10 +4442,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2080.0,
         "radius": 95.49,
-        "rotation_period": 16.7072,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "702"
+        "id": "702",
+        "rotation": {
+            "period": 16.7072
+        }
     },
     {
         "A": 3.06,
@@ -3632,10 +4464,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1950.0,
         "radius": 153.1565,
-        "rotation_period": 8.727,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "704"
+        "id": "704",
+        "rotation": {
+            "long": 87.0,
+            "lat": 63.0,
+            "period": 8.712337,
+            "jd0": 2440449.0
+        }
     },
     {
         "A": 2.92,
@@ -3650,10 +4487,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 66.1305,
-        "rotation_period": 53.68,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "705"
+        "id": "705",
+        "rotation": {
+            "period": 53.68
+        }
     },
     {
         "A": 2.58,
@@ -3669,10 +4508,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1510.0,
         "radius": 62.0625,
-        "rotation_period": 11.7426,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "712"
+        "id": "712",
+        "rotation": {
+            "long": 244.0,
+            "lat": 56.0,
+            "period": 23.462,
+            "jd0": 2456961.0
+        }
     },
     {
         "A": 2.74,
@@ -3687,10 +4531,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1650.0,
         "radius": 52.2585,
-        "rotation_period": 23.92,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "739"
+        "id": "739",
+        "rotation": {
+            "period": 23.92
+        }
     },
     {
         "A": 3.0,
@@ -3706,10 +4552,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 85.855,
-        "rotation_period": 9.4146,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "747"
+        "id": "747",
+        "rotation": {
+            "long": 304.0,
+            "lat": -60.0,
+            "period": 9.4148,
+            "jd0": 2440674.0
+        }
     },
     {
         "A": 3.95,
@@ -3724,10 +4575,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2870.0,
         "radius": 51.857,
-        "rotation_period": 11.905,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "748"
+        "id": "748",
+        "rotation": {
+            "period": 11.905
+        }
     },
     {
         "A": 2.55,
@@ -3743,10 +4596,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1490.0,
         "radius": 56.8495,
-        "rotation_period": 23.678,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "751"
+        "id": "751",
+        "rotation": {
+            "long": 339.0,
+            "lat": -10.0,
+            "period": 23.673,
+            "jd0": 2456534.0
+        }
     },
     {
         "A": 3.15,
@@ -3762,10 +4620,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 73.6715,
-        "rotation_period": 5.839,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "762"
+        "id": "762",
+        "rotation": {
+            "long": 194.0,
+            "lat": -43.0,
+            "period": 5.83977,
+            "jd0": 2450721.0
+        }
     },
     {
         "A": 3.0,
@@ -3781,10 +4644,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1900.0,
         "radius": 63.2365,
-        "rotation_period": 17.258,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "772"
+        "id": "772",
+        "rotation": {
+            "long": 147.0,
+            "lat": 25.0,
+            "period": 17.2595,
+            "jd0": 2457602.0
+        }
     },
     {
         "A": 2.93,
@@ -3800,10 +4668,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1830.0,
         "radius": 75.8555,
-        "rotation_period": 7.668,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "776"
+        "id": "776",
+        "rotation": {
+            "long": 347.0,
+            "lat": 12.0,
+            "period": 7.66701,
+            "jd0": 2443391.0
+        }
     },
     {
         "A": 3.11,
@@ -3819,10 +4692,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2010.0,
         "radius": 63.1315,
-        "rotation_period": 19.891,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "780"
+        "id": "780",
+        "rotation": {
+            "long": 293.0,
+            "lat": -23.0,
+            "period": 19.8846,
+            "jd0": 2450859.0
+        }
     },
     {
         "A": 3.18,
@@ -3838,10 +4716,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2070.0,
         "radius": 54.1545,
-        "rotation_period": 29.434,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "786"
+        "id": "786",
+        "rotation": {
+            "long": 236.0,
+            "lat": 18.0,
+            "period": 29.8489,
+            "jd0": 2456223.0
+        }
     },
     {
         "A": 3.12,
@@ -3856,10 +4739,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 55.6475,
-        "rotation_period": 37.137,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "788"
+        "id": "788",
+        "rotation": {
+            "period": 37.137
+        }
     },
     {
         "A": 3.4,
@@ -3874,10 +4759,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2290.0,
         "radius": 85.185,
-        "rotation_period": 10.37,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "790"
+        "id": "790",
+        "rotation": {
+            "period": 10.37
+        }
     },
     {
         "A": 3.13,
@@ -3893,10 +4780,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2020.0,
         "radius": 58.4325,
-        "rotation_period": 11.174,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "791"
+        "id": "791",
+        "rotation": {
+            "long": 269.0,
+            "lat": 4.0,
+            "period": 11.16954,
+            "jd0": 2451072.0
+        }
     },
     {
         "A": 2.84,
@@ -3912,10 +4804,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1740.0,
         "radius": 68.976,
-        "rotation_period": 14.845,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "804"
+        "id": "804",
+        "rotation": {
+            "long": 268.0,
+            "lat": -35.0,
+            "period": 14.848,
+            "jd0": 2457358.0
+        }
     },
     {
         "A": 3.16,
@@ -3930,10 +4827,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2050.0,
         "radius": 51.1145,
-        "rotation_period": 36.081,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "814"
+        "id": "814",
+        "rotation": {
+            "period": 36.081
+        }
     },
     {
         "A": 5.21,
@@ -3948,10 +4847,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4340.0,
         "radius": 50.5465,
-        "rotation_period": 6.8605,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "884"
+        "id": "884",
+        "rotation": {
+            "period": 6.8605
+        }
     },
     {
         "A": 3.21,
@@ -3966,10 +4867,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2100.0,
         "radius": 54.784,
-        "rotation_period": 9.347,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "895"
+        "id": "895",
+        "rotation": {
+            "period": 9.347
+        }
     },
     {
         "A": 3.55,
@@ -3984,10 +4887,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2450.0,
         "radius": 58.22,
-        "rotation_period": 8.7155,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "909"
+        "id": "909",
+        "rotation": {
+            "period": 8.7155
+        }
     },
     {
         "A": 5.28,
@@ -4003,10 +4908,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4440.0,
         "radius": 65.519,
-        "rotation_period": 6.592,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "911"
+        "id": "911",
+        "rotation": {
+            "long": 126.0,
+            "lat": 0.0,
+            "period": 6.58179,
+            "jd0": 2451091.0
+        }
     },
     {
         "A": 2.74,
@@ -4022,10 +4932,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 1660.0,
         "radius": 50.3825,
-        "rotation_period": 12.155,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1021"
+        "id": "1021",
+        "rotation": {
+            "long": 32.0,
+            "lat": 22.0,
+            "period": 12.15186,
+            "jd0": 2448182.0
+        }
     },
     {
         "A": 3.13,
@@ -4040,10 +4955,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2030.0,
         "radius": 58.365,
-        "rotation_period": 19.67,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1093"
+        "id": "1093",
+        "rotation": {
+            "period": 19.67
+        }
     },
     {
         "A": 5.23,
@@ -4058,10 +4975,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 57.312,
-        "rotation_period": 10.114,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1143"
+        "id": "1143",
+        "rotation": {
+            "period": 10.114
+        }
     },
     {
         "A": 5.23,
@@ -4077,10 +4996,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 59.01,
-        "rotation_period": 8.705,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1172"
+        "id": "1172",
+        "rotation": {
+            "long": 5.0,
+            "lat": 41.0,
+            "period": 8.7024,
+            "jd0": 2457075.0
+        }
     },
     {
         "A": 5.25,
@@ -4095,10 +5019,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4400.0,
         "radius": 50.2385,
-        "rotation_period": 56.17,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1208"
+        "id": "1208",
+        "rotation": {
+            "period": 56.17
+        }
     },
     {
         "A": 3.91,
@@ -4113,10 +5039,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 2820.0,
         "radius": 52.4465,
-        "rotation_period": 60.45,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1269"
+        "id": "1269",
+        "rotation": {
+            "period": 60.45
+        }
     },
     {
         "A": 5.22,
@@ -4132,10 +5060,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 58.893,
-        "rotation_period": 24.49,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1437"
+        "id": "1437",
+        "rotation": {
+            "long": 150.0,
+            "lat": 5.0,
+            "period": 24.4987,
+            "jd0": 2451104.0
+        }
     },
     {
         "A": 5.15,
@@ -4150,10 +5083,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4270.0,
         "radius": 54.421,
-        "rotation_period": 15.759,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1583"
+        "id": "1583",
+        "rotation": {
+            "period": 15.759
+        }
     },
     {
         "A": 5.13,
@@ -4168,10 +5103,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4250.0,
         "radius": 59.11,
-        "rotation_period": 58.66,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "1867"
+        "id": "1867",
+        "rotation": {
+            "period": 58.66
+        }
     },
     {
         "A": 13.7,
@@ -4186,10 +5123,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 18500.0,
         "radius": 83.0,
-        "rotation_period": 5.918,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "2060"
+        "id": "2060",
+        "rotation": {
+            "period": 5.918
+        }
     },
     {
         "A": 5.18,
@@ -4204,10 +5143,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4300.0,
         "radius": 56.841,
-        "rotation_period": 7.689,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "2241"
+        "id": "2241",
+        "rotation": {
+            "period": 7.689
+        }
     },
     {
         "A": 5.22,
@@ -4222,10 +5163,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 55.8275,
-        "rotation_period": 8.637,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "3063"
+        "id": "3063",
+        "rotation": {
+            "period": 8.637
+        }
     },
     {
         "A": 5.23,
@@ -4240,10 +5183,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4370.0,
         "radius": 59.395,
-        "rotation_period": 7.0812,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "3317"
+        "id": "3317",
+        "rotation": {
+            "period": 7.0812
+        }
     },
     {
         "A": 5.19,
@@ -4259,10 +5204,15 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4310.0,
         "radius": 63.144,
-        "rotation_period": 7.702,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "3451"
+        "id": "3451",
+        "rotation": {
+            "long": 82.0,
+            "lat": 7.0,
+            "period": 7.69659,
+            "jd0": 2446145.0
+        }
     },
     {
         "A": 5.22,
@@ -4277,10 +5227,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 4360.0,
         "radius": 56.023,
-        "rotation_period": 5.621,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "3793"
+        "id": "3793",
+        "rotation": {
+            "period": 5.621
+        }
     },
     {
         "A": 20.3,
@@ -4295,10 +5247,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 33400.0,
         "radius": 95.0,
-        "rotation_period": 9.98,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "5145"
+        "id": "5145",
+        "rotation": {
+            "period": 9.98
+        }
     },
     {
         "A": 15.8,
@@ -4313,10 +5267,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 22900.0,
         "radius": 151.0,
-        "rotation_period": 7.004,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "10199"
+        "id": "10199",
+        "rotation": {
+            "period": 7.004
+        }
     },
     {
         "A": 39.8,
@@ -4348,10 +5304,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 103000.0,
         "radius": 450.0,
-        "rotation_period": 6.3436,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "20000"
+        "id": "20000",
+        "rotation": {
+            "period": 6.3436
+        }
     },
     {
         "A": 37.5,
@@ -4366,10 +5324,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 84000.0,
         "radius": 96.0,
-        "rotation_period": 5.0,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "42355"
+        "id": "42355",
+        "rotation": {
+            "period": 5.0
+        }
     },
     {
         "A": 16.6,
@@ -4384,10 +5344,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 24600.0,
         "radius": 93.75,
-        "rotation_period": 9.14,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "54598"
+        "id": "54598",
+        "rotation": {
+            "period": 9.14
+        }
     },
     {
         "A": 25.0,
@@ -4402,10 +5364,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 45600.0,
         "radius": 50.45,
-        "rotation_period": 9.76,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "55576"
+        "id": "55576",
+        "rotation": {
+            "period": 9.76
+        }
     },
     {
         "A": 23.0,
@@ -4420,10 +5384,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 40400.0,
         "radius": 115.25,
-        "rotation_period": 5.8,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "95626"
+        "id": "95626",
+        "rotation": {
+            "period": 5.8
+        }
     },
     {
         "A": 66.2,
@@ -4455,10 +5421,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 33000.0,
         "radius": 59.0,
-        "rotation_period": 8.24,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "136204"
+        "id": "136204",
+        "rotation": {
+            "period": 8.24
+        }
     },
     {
         "A": 29.7,
@@ -4473,10 +5441,12 @@
         "parent_name": "Solar-System Barycenter",
         "period": 59300.0,
         "radius": 55.03,
-        "rotation_period": 8.988,
         "time": "2024-03-31",
         "type": "Minor Planet",
-        "id": "310071"
+        "id": "310071",
+        "rotation": {
+            "period": 8.988
+        }
     },
     {
         "A": 53.6,
@@ -4491,8 +5461,10 @@
         "parent_name": "Solar-System Barycenter",
         "period": 143000.0,
         "radius": 56.35,
-        "rotation_period": 263.8,
         "time": "2024-03-31",
-        "type": "Minor Planet"
+        "type": "Minor Planet",
+        "rotation": {
+            "period": 263.8
+        }
     }
 ]
