@@ -62,20 +62,22 @@ void body_info::draw_name_type_and_group(float& y, bool skip_draw)
     y += name_y_size + type_y_size + boundary;
 }
 
-void body_info::draw_property_str(float& y, const char* name, const char* value, const char* unit, bool skip_draw)
+void body_info::draw_property_str(float& y, const char* name, const std::string& value, const char* unit, bool skip_draw)
 {
     if (!skip_draw)
     {
         frame::draw_text_ex(name, vec2(boundary, y), property_y_size - 1.0f, col4::LIGHTGRAY, "roboto");
-        frame::draw_text_ex(value, vec2(boundary + property_column_name_x_size, y), property_y_size - 3.0f, col4::LIGHTGRAY, "roboto");
+        frame::draw_text_ex(value.c_str(), vec2(boundary + property_column_name_x_size, y), property_y_size - 3.0f, col4::LIGHTGRAY, "roboto");
         frame::draw_text_ex(unit, vec2(boundary + property_column_name_x_size + property_column_value_x_size, y), property_y_size - 3.0f, col4::LIGHTGRAY, "roboto");
     }
-    y += property_y_size + 0.5f * property_y_size;
+    auto new_lines_count = std::count(std::begin(value), std::end(value), '\n');
+
+    y += property_y_size * (1 + new_lines_count) + 0.5f * property_y_size;
 }
 
 void body_info::draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw)
 {
-    draw_property_str(y, name, commons::convert_double_to_string(value).c_str(), unit, skip_draw);
+    draw_property_str(y, name, commons::convert_double_to_string(value), unit, skip_draw);
 }
 
 void body_info::draw_separator(float& y, const char* name, bool skip_draw)
@@ -212,7 +214,7 @@ float body_info::draw_internal(bool skip_draw)
         draw_property_num(y_value, "Density", body->density, "g/cm^3", skip_draw);
 
     if (!body->dimensions_str.empty())
-        draw_property_str(y_value, "Dimensions", body->dimensions_str.c_str(), "km", skip_draw);
+        draw_property_str(y_value, "Dimensions", body->dimensions_str, "km", skip_draw);
 
     y_value += 3.0f;
 

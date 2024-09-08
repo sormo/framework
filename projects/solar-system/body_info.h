@@ -31,7 +31,7 @@ private:
     float draw_internal(bool skip_draw = false);
 
     void draw_name_type_and_group(float& y, bool skip_draw = false);
-    void draw_property_str(float& y, const char* name, const char* value, const char* unit, bool skip_draw = false);
+    void draw_property_str(float& y, const char* name, const std::string& value, const char* unit, bool skip_draw = false);
     void draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw = false);
     void draw_separator(float& y, const char* name, bool skip_draw = false);
 

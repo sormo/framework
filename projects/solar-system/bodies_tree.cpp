@@ -109,8 +109,8 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             if (orbit_data.contains("dimensions"))
             {
                 dimensions_str = commons::convert_double_to_string(orbit_data["dimensions"][0]);
-                for (size_t i = 0; i < orbit_data["dimensions"].size(); i++)
-                    dimensions_str += "x" + commons::convert_double_to_string(orbit_data["dimensions"][i]);
+                for (size_t i = 1; i < orbit_data["dimensions"].size(); i++)
+                    dimensions_str += "\n" + commons::convert_double_to_string(orbit_data["dimensions"][i]);
             }
 
             double rotation_period = 0.0;
