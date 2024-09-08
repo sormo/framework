@@ -15,6 +15,7 @@ files:
     - models/models_100.zip
     - models/models_50.zip
     - models/models_10.zip
+    - models/moons.zip
     - bodies/cache/quadtree_cache_100.cbor
     - bodies/cache/quadtree_cache_50.cbor
     - bodies/cache/quadtree_cache_10.cbor

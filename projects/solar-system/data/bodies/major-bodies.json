@@ -583,6 +583,7 @@
         "parent": 4,
         "radius": 11.08,
         "mass": 1.06e+16,
+        "mesh": "Phobos Gaskell 200k poly.glb",
         "dimensions": [
             25.9,
             22.6,
@@ -617,6 +618,7 @@
         "parent": 4,
         "radius": 6.27,
         "mass": 1510000000000000.0,
+        "mesh": "Deimos Thomas.glb",
         "dimensions": [
             16.08,
             11.78,
@@ -807,6 +809,7 @@
         "radius": 83.5,
         "time": "2024-03-31",
         "mass": 2.08e+18,
+        "mesh": "Amalthea Stooke.glb",
         "dimensions": [
             250.0,
             146.0,
@@ -1069,6 +1072,7 @@
         "radius": 49.3,
         "time": "2024-03-31",
         "mass": 4.3e+17,
+        "mesh": "Thebe Stooke.glb",
         "dimensions": [
             116.0,
             98.0,
@@ -2628,6 +2632,7 @@
         "radius": 198.2,
         "time": "2024-03-31",
         "mass": 3.75094e+19,
+        "mesh": "Mimas Gaskell 200k poly.glb",
         "dimensions": [
             416.0,
             393.0,
@@ -2836,6 +2841,7 @@
         "radius": 135.0,
         "time": "2024-03-31",
         "mass": 5.551e+18,
+        "mesh": "Hyperion Thomas 2018.glb",
         "dimensions": [
             360.0,
             266.0,
@@ -2905,6 +2911,7 @@
         "radius": 106.5,
         "time": "2024-03-31",
         "mass": 8.3123e+18,
+        "mesh": "Phoebe Gaskell 200k poly.glb",
         "dimensions": [
             219.0,
             217.0,
@@ -2973,6 +2980,7 @@
         "time": "2024-03-31",
         "mass": 5.25607e+17,
         "radius": 58.6,
+        "mesh": "Epimetheus Thomas 2018.glb",
         "dimensions": [
             130.0,
             116.0,
@@ -3008,6 +3016,7 @@
         "time": "2024-03-31",
         "mass": 7100000000000000.0,
         "radius": 18.1,
+        "mesh": "Helene Thomas 2018.glb",
         "dimensions": [
             45.2,
             39.2,
@@ -3043,6 +3052,7 @@
         "time": "2024-03-31",
         "mass": 3900000000000000.0,
         "radius": 12.3,
+        "mesh": "Telesto Thomas 2018.glb",
         "dimensions": [
             33.2,
             23.4,
@@ -3078,6 +3088,7 @@
         "time": "2024-03-31",
         "mass": 1800000000000000.0,
         "radius": 9.5,
+        "mesh": "Calypso Thomas 2018.glb",
         "dimensions": [
             29.4,
             18.6,
@@ -3111,6 +3122,7 @@
         "time": "2024-03-31",
         "mass": 5490000000000000.0,
         "radius": 14.9,
+        "mesh": "Atlas Thomas 2018.glb",
         "dimensions": [
             40.8,
             35.4,
@@ -3145,6 +3157,7 @@
         "time": "2024-03-31",
         "mass": 1.5972e+17,
         "radius": 42.8,
+        "mesh": "Prometheus Thomas 2018.glb",
         "dimensions": [
             137.0,
             81.0,
@@ -3179,6 +3192,7 @@
         "time": "2024-03-31",
         "mass": 1.357e+17,
         "radius": 40.0,
+        "mesh": "Pandora Thomas 2018.glb",
         "dimensions": [
             103.0,
             79.0,
@@ -3212,6 +3226,7 @@
         "time": "2024-03-31",
         "mass": 4300000000000000.0,
         "radius": 13.7,
+        "mesh": "Pan Thomas 2018.glb",
         "dimensions": [
             34.6,
             28.2,
@@ -3708,6 +3723,7 @@
         "time": "2024-03-31",
         "mass": 68000000000000.0,
         "radius": 3.9,
+        "mesh": "Daphnis Thomas 2018.glb",
         "dimensions": [
             9.8,
             8.4,
@@ -5536,6 +5552,7 @@
         "radius": 97.0,
         "time": "2024-03-31",
         "mass": 3.8e+18,
+        "mesh": "Larissa Stooke.glb",
         "dimensions": [
             216.0,
             204.0,
@@ -5571,6 +5588,7 @@
         "radius": 210.0,
         "time": "2024-03-31",
         "mass": 3.9e+19,
+        "mesh": "Proteus Stooke.glb",
         "dimensions": [
             436.0,
             416.0,

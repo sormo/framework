@@ -43,6 +43,7 @@ private:
 	std::optional<model_zip> models_100;
 	std::optional<model_zip> models_50;
 	std::optional<model_zip> models_10;
+	std::optional<model_zip> models_moons;
 
 	buffer_sg buffer_model;
 

@@ -39,6 +39,8 @@ std::optional<model_t> body_draw_model::load_model(body_node& body)
 {
     model_zip* zip = nullptr;
 
+    if (models_moons && models_moons->available_models.count(body.mesh))
+        zip = &(*models_moons);
     if (models_100 && models_100->available_models.count(body.mesh))
         zip = &(*models_100);
     else if (models_50 && models_50->available_models.count(body.mesh))
@@ -100,6 +102,9 @@ void body_draw_model::fetch_models(commons::bodies_included_type type)
 {
     std::vector<std::string> files;
     std::vector<std::optional<model_zip>*> zips;
+
+    files.push_back("models/moons.zip");
+    zips.push_back(&models_moons);
 
     switch (type)
     {

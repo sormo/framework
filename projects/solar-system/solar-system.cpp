@@ -149,10 +149,12 @@ void draw_credits()
 
     if (ImGui::BeginPopup("credits_popup"))
     {
-        ImGui::BulletText("Data from JPL Horizons and SBDB databases");
-        ImGui::BulletText("2-body solution adapted from SimpleKeplerOrbits by Karth42");
-        ImGui::BulletText("Planet symbols taken from Wikipedia mostly by Kwamikagami and Denis Moskowitz");
-        ImGui::BulletText("Open source: Sokol, ImGui, Nanovg, Nanosvg, Miniz, xxHash, Nlohmann");
+        ImGui::BulletText("Orbit data: JPL Horizons and SBDB databases");
+        ImGui::BulletText("Physical properties: SBDB database and Wikipedia");
+        ImGui::BulletText("3D Models: DAMIT database and 3d-asteroids.space\nStooke. P., Stooke Small Body Shape Models V2.0.\nThomas, P., Joseph, J., and Ansty, T., Saturn Small Moon Shape Models V1.0");
+        ImGui::BulletText("2-body solution: adapted from SimpleKeplerOrbits by Karth42");
+        ImGui::BulletText("Planet symbols: Wikipedia mostly by Kwamikagami and Denis Moskowitz");
+        ImGui::BulletText("Open source: Sokol, ImGui, Nanovg, Nanosvg, Miniz, xxHash, Nlohmann, Draco");
 
         ImGui::EndPopup();
     }
