@@ -65,7 +65,7 @@ body_node* body_node::get_main_body()
     return tmp;
 }
 
-vec3d body_node::get_absolute_position()
+vec3d body_node::get_absolute_position() const
 {
     vec3d result = orbit.position;
     body_node* current_parent = parent;

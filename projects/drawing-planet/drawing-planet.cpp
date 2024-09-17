@@ -4,6 +4,7 @@
 #include <sokol_app.h>
 #include <sokol_gfx.h>
 #include <sokol_time.h>
+#include <sokol_shape.h>
 #include <stb_image.h>
 #include "imgui.h"
 #include "utils.h"
@@ -20,10 +21,18 @@ using namespace frame;
 
 frame::free_move_camera_config free_move_config;
 
+static const float planet_radius = 250.0f;
+static const float axis_length = 600.0f;
+static const float axis_width = 5.0f;
+
 struct 
 {
-    sg_pipeline pip_planet;
-    sg_bindings bind_planet;
+    struct
+    {
+        sg_pipeline pip;
+        sg_bindings bind;
+
+    } planet;
 
     float light_position[3] = { 0.0f, 0.0f, 1.0f };
     float light_distance = 6.0f;
@@ -38,7 +47,38 @@ struct
     float atmosphere_color[3] = { 1.0f, 0.9f, 0.7f };
     float atmosphere_density = 1.0f;
 
+    // ---
+
+    float valuex = 1.0f;
+    float valuey = 1.0f;
+    float valuez = 1.0f;
+
 } state;
+
+void update_sshape1()
+{
+    auto direction = vec3(state.valuex, state.valuey, state.valuez).normalized();
+    auto orientation = create_hmm_direction(direction);
+    auto model = HMM_MulM4(HMM_Translate(to_hmm(-direction * axis_length / 4.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, axis_length / 2.0f, axis_width })));
+    auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
+    frame::draw_cylinder(mvp, col4::RGBf(0.8f, 0.8f, 0.8f), sshapes_shading::flat, { state.light_position[0], state.light_position[1], state.light_position[2] }, model);
+}
+
+void update_sshape2()
+{
+    auto real_planet_radius = planet_radius * 0.5f;
+
+    //frame::draw_sphere(create_world_mvp(vec3{}, 0.0f, { real_planet_radius * 2.0f }), col4::BLANK);
+
+    auto direction = vec3(state.valuex, state.valuey, state.valuez).normalized();
+    auto length = axis_length/2.0f - real_planet_radius;
+
+    auto orientation = create_hmm_direction(direction);
+    //auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * axis_length / 4.0f)), HMM_MulM4(orientation, HMM_Scale({ 5.0f, axis_length/2.0f, 5.0f })));
+    auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * (axis_length/2.0f + real_planet_radius) / 2.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, length, axis_width })));
+    auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
+    frame::draw_cylinder(mvp, col4::RGBf(0.8f, 0.8f, 0.8f), sshapes_shading::flat, {state.light_position[0], state.light_position[1], state.light_position[2]}, model);
+}
 
 void setup_planet()
 {
@@ -58,14 +98,14 @@ void setup_planet()
     sg_buffer_desc buffer_desc_vert = {};
     buffer_desc_vert.data = SG_RANGE(vertices);
     buffer_desc_vert.label = "planet-vertices";
-    state.bind_planet.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
+    state.planet.bind.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
 
     uint16_t indices[] = { 0, 1, 3, 2 };
     sg_buffer_desc buffer_desc_index = {};
     buffer_desc_index.type = SG_BUFFERTYPE_INDEXBUFFER;
     buffer_desc_index.data = SG_RANGE(indices);
     buffer_desc_index.label = "planet-indices";
-    state.bind_planet.index_buffer = sg_make_buffer(&buffer_desc_index);
+    state.planet.bind.index_buffer = sg_make_buffer(&buffer_desc_index);
 
     sg_shader shd = sg_make_shader(planet_shader_desc(sg_query_backend()));
 
@@ -84,7 +124,7 @@ void setup_planet()
     pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
     pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
 
-    state.pip_planet = sg_make_pipeline(&pipeline_desc);
+    state.planet.pip = sg_make_pipeline(&pipeline_desc);
 }
 
 fs_params_planet_t create_planet_fs_params()
@@ -117,15 +157,15 @@ fs_params_planet_t create_planet_fs_params()
 static vs_params_planet_t create_planet_vs_params()
 {
     vs_params_planet_t result = {};
-    result.mvp = frame::create_world_mvp(vec2{}, 0.0f, { 500.0f, 500.0f });
+    result.mvp = frame::create_world_mvp(vec2{}, 0.0f, { planet_radius * 2.0f });
 
     return result;
 }
 
 void update_planet()
 {
-    sg_apply_pipeline(state.pip_planet);
-    sg_apply_bindings(&state.bind_planet);
+    sg_apply_pipeline(state.planet.pip);
+    sg_apply_bindings(&state.planet.bind);
 
     auto params_vs = create_planet_vs_params();
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(params_vs));
@@ -136,13 +176,28 @@ void update_planet()
     sg_draw(0, 4, 1);
 }
 
+static vec3 get_rotation_axis(double lambda, double beta)
+{
+    vec3 rotation_axis;
+    rotation_axis.x = cosf(beta) * cosf(lambda);
+    rotation_axis.y = cosf(beta) * sinf(lambda);
+    rotation_axis.z = sinf(beta);
+    return rotation_axis;
+}
+
 void setup()
 {
-    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, 1.0f }));
+    frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, -1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
     free_move_config.boundary = frame::rectangle::from_center_size({ 400.0f, 300.0f }, { 1'000'000.0f, 1'000'000.0f });
 
     setup_planet();
+
+    // set the angle
+    auto axis = get_rotation_axis(frame::deg_to_rad(339.867), frame::deg_to_rad(84.960));
+    state.valuex = axis.x;
+    state.valuey = axis.y;
+    state.valuez = axis.z;
 }
 
 void update_imgui()
@@ -189,6 +244,12 @@ void update_imgui()
         ImGui::ColorEdit3("Atmosphere Color", state.atmosphere_color);
     }
 
+    // ---
+
+    ImGui::DragFloat("valuex", &state.valuex, 0.01f, -1.0f, 1.0f);
+    ImGui::DragFloat("valuey", &state.valuey, 0.01f, -1.0f, 1.0f);
+    ImGui::DragFloat("valuez", &state.valuez, 0.01f, -1.0f, 1.0f);
+
     ImGui::End();
 
     //ImGui::ShowDemoWindow();
@@ -202,7 +263,10 @@ void update()
 
     update_imgui();
 
+    update_sshape1();
     update_planet();
+    update_sshape2();
+    frame::draw_gizmo(create_projection_view_matrix(), 200.0f, 5.0f);
 
     frame::free_move_camera_update(free_move_config);
 }

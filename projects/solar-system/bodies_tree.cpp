@@ -120,7 +120,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             {
                 rotation_period = orbit_data["rotation"]["period"];
                 if (orbit_data["rotation"].contains("long"))
-                    rotation_axis = get_rotation_axis(orbit_data["rotation"]["long"], orbit_data["rotation"]["lat"]);
+                    rotation_axis = get_rotation_axis(deg_to_rad(orbit_data["rotation"]["long"]), deg_to_rad(orbit_data["rotation"]["lat"]));
                 if (orbit_data["rotation"].contains("jd0"))
                     rotation_jd0 = orbit_data["rotation"]["jd0"];
             }

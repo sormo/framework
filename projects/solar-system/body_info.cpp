@@ -216,6 +216,9 @@ float body_info::draw_internal(bool skip_draw)
     if (!body->dimensions_str.empty())
         draw_property_str(y_value, "Dimensions", body->dimensions_str, "km", skip_draw);
 
+    if (body->rotation_period)
+        draw_property_num(y_value, "Rotation Period", body->rotation_period, "days", skip_draw);
+
     y_value += 3.0f;
 
     // orbit properties

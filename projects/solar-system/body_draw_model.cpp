@@ -2,6 +2,7 @@
 #include <sokol_app.h>
 #include "body_draw_model.glsl.h"
 #include "commons.h"
+#include "drawing_sg.h"
 
 using namespace frame;
 
@@ -174,6 +175,9 @@ float get_rotation_angle(double jd0, double P, double jd)
 
 HMM_Mat4 create_rotation(const body_node& node)
 {
+    if (node.rotation_period == 0.0)
+        return HMM_M4D(1.0f);
+
     auto angle = get_rotation_angle(node.rotation_jd0, node.rotation_period, commons::INIT_TIME_JULIAN + state.time_offset);
 
     return HMM_Rotate_RH(angle, HMM_Vec3{ node.rotation_axis.x, node.rotation_axis.y, node.rotation_axis.z });
@@ -233,13 +237,23 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
     sg_apply_pipeline(pip_model);
     sg_apply_bindings(&bind_model);
 
-    body_draw_model_fs_params_t params_fs = create_fs_params(color, body.get_absolute_position());
+    auto body_position = body.get_absolute_position();
+
+    body_draw_model_fs_params_t params_fs = create_fs_params(color, body_position);
     body_draw_model_vs_params_t params_vs = create_vs_params(body, radius);
 
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_body_draw_model_vs_params, SG_RANGE(params_vs));
     sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_body_draw_model_fs_params, SG_RANGE(params_fs));
 
     sg_draw(0, element_count, 1);
+
+    if (body.rotation_period)
+    {
+        auto scale = HMM_Scale({ radius * 0.02f, radius * 5.0f, radius * 0.02f });
+        auto model = HMM_MulM4(create_hmm_direction(body.rotation_axis), scale);
+        auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
+        frame::draw_cylinder(mvp, col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+    }
 
     return true;
 }

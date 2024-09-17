@@ -47,6 +47,9 @@ void body_draw::setup(body_color& cols)
 
 void body_draw::draw_world_bodies(body_node* root)
 {
+    if (settings.draw_names)
+        draw_names({ root }, false);
+
     // TODO some problem with blending, points needs to be first
     if (settings.draw_points)
         draw_points({ root }, *colors);
@@ -60,8 +63,6 @@ void body_draw::draw_world_bodies(body_node* root)
     // Needed to add glVertexAttribDivisor(i, 0); to _sg_gl_reset_state_cache.
     sg_reset_state_cache();
 
-    if (settings.draw_names)
-        draw_names({ root }, false);
 
     // Draw bodies with shading last, reason is that shading can contain transparency. When we need to draw
     // transparent object with depth testing enabled, transparent objects must be drawn last (and possibly

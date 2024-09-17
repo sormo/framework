@@ -4,14 +4,17 @@
 #include <xxh3.h>
 #include <sokol_app.h>
 #include <sokol_gfx.h>
+#define SOKOL_SHAPE_IMPL
+#include <sokol_shape.h>
 #include <map>
 #include <string>
 #include <vector>
 #include <cassert>
-#include "basic_depth_instanced.glsl.h"
-#include "basic_depth.glsl.h"
-#include "basic_instanced.glsl.h"
-#include "basic.glsl.h"
+#include "shaders/basic_depth_instanced.glsl.h"
+#include "shaders/basic_depth.glsl.h"
+#include "shaders/basic_instanced.glsl.h"
+#include "shaders/basic.glsl.h"
+#include "shaders/sshapes.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "HandmadeMath.h"
 
@@ -101,6 +104,15 @@ namespace frame
 		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
 
 		std::map<buffer_desc, buffer_sg> buffer_cache;
+
+		// --- sshapes ---
+		sg_pipeline sshape_pip;
+		sg_buffer sshape_vbuf;
+		sg_buffer sshape_ibuf;
+
+		sshape_element_range_t sshape_draw_box;
+		sshape_element_range_t sshape_draw_sphere;
+		sshape_element_range_t sshape_draw_cylinder;
 
 	} state;
 
@@ -238,12 +250,70 @@ namespace frame
 		return { &buffer, buffer.append(data, size) };
 	}
 
+	void setup_sshapes()
+	{
+		// pipeline
+		sg_pipeline_desc pipeline_desc = {};
+		pipeline_desc.shader = sg_make_shader(sshapes_shader_desc(sg_query_backend()));
+		pipeline_desc.layout.buffers[0] = sshape_vertex_buffer_layout_state();
+		pipeline_desc.layout.attrs[ATTR_sshapes_vs_position] = sshape_position_vertex_attr_state();
+		pipeline_desc.layout.attrs[ATTR_sshapes_vs_normal] = sshape_normal_vertex_attr_state();
+		// currently not used
+		//pipeline_desc.layout.attrs[ATTR_sshapes_vs_texcoord] = sshape_texcoord_vertex_attr_state();
+		//pipeline_desc.layout.attrs[ATTR_sshapes_vs_color0] = sshape_color_vertex_attr_state();
+		pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
+		pipeline_desc.cull_mode = SG_CULLMODE_NONE;
+		pipeline_desc.depth.write_enabled = true;
+		pipeline_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
+		pipeline_desc.label = "sshapes-pipeline";
+
+		pipeline_desc.colors[0].blend.enabled = true;
+		pipeline_desc.colors[0].blend.src_factor_rgb = SG_BLENDFACTOR_SRC_ALPHA;
+		pipeline_desc.colors[0].blend.dst_factor_rgb = SG_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+		pipeline_desc.colors[0].blend.op_rgb = SG_BLENDOP_ADD;
+		pipeline_desc.colors[0].blend.src_factor_alpha = SG_BLENDFACTOR_ONE;
+		pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
+		pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
+
+		state.sshape_pip = sg_make_pipeline(&pipeline_desc);
+
+		// sshapes
+
+		static sshape_vertex_t vertices[6 * 1024];
+		static uint16_t indices[16 * 1024];
+
+		sshape_buffer_t buffer = {};
+		buffer.vertices.buffer = SSHAPE_RANGE(vertices);
+		buffer.indices.buffer = SSHAPE_RANGE(indices);
+
+		sshape_box_t box_desc = {};
+		buffer = sshape_build_box(&buffer, &box_desc);
+		state.sshape_draw_box = sshape_element_range(&buffer);
+
+		sshape_sphere_t sphere_desc = {};
+		sphere_desc.slices = 36;
+		sphere_desc.stacks = 20;
+		buffer = sshape_build_sphere(&buffer, &sphere_desc);
+		state.sshape_draw_sphere = sshape_element_range(&buffer);
+
+		sshape_cylinder_t cylinder_desc = {};
+		cylinder_desc.slices = 36;
+		cylinder_desc.stacks = 20;
+		buffer = sshape_build_cylinder(&buffer, &cylinder_desc);
+		state.sshape_draw_cylinder = sshape_element_range(&buffer);
+
+		state.sshape_vbuf = sg_make_buffer(&sshape_vertex_buffer_desc(&buffer));
+		state.sshape_ibuf = sg_make_buffer(&sshape_index_buffer_desc(&buffer));
+	}
+
 	void setup_draw_sg()
 	{
 		state.basic_depth_instanced = sg_make_shader(basic_depth_instanced_shader_desc(sg_query_backend()));
 		state.basic_depth = sg_make_shader(basic_depth_shader_desc(sg_query_backend()));
 		state.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
 		state.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
+
+		setup_sshapes();
 
 		//state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
 		//state.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
@@ -481,6 +551,14 @@ namespace frame
 		return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
 	}
 
+	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec3 size)
+	{
+		auto scale = HMM_Scale({ size.x, size.y, size.z });
+		auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
+		auto translate = HMM_Translate({ position.x, position.y, position.z });
+		return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
+	}
+
 	HMM_Mat4 create_hmm_transform(const frame::mat3& transform)
 	{
 		HMM_Mat4 result = HMM_M4D(1.0f);
@@ -518,9 +596,19 @@ namespace frame
 		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
 	}
 
+	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size)
+	{
+		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+	}
+
 	HMM_Mat4 create_world_mvp(const frame::mat3& transform)
 	{
 		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(transform));
+	}
+
+	HMM_Vec3 to_hmm(const frame::vec3& v)
+	{
+		return { v.x, v.y, v.z };
 	}
 
 	size_t add_draw_instance(draw_buffer_id id, const HMM_Mat4& model, frame::col4 color)
@@ -750,5 +838,100 @@ namespace frame
 	void remove_buffer(draw_buffer_id id)
 	{
 		// TODO
+	}
+
+	HMM_Mat4 create_hmm_direction(const frame::vec3& direction, const frame::vec3& up_direction)
+	{
+		// special case - no orientation transformation needed
+		if (direction == up_direction)
+			return HMM_M4D(1.0f);
+
+		auto yaxis = direction;
+
+		auto zaxis = direction.cross(up_direction);
+		zaxis.normalize();
+
+		auto xaxis = direction.cross(zaxis);
+		xaxis.normalize();
+
+		HMM_Mat4 model = HMM_M4D(1.0f);
+
+		model.Columns[0].X = xaxis.x;
+		model.Columns[0].Y = xaxis.y;
+		model.Columns[0].Z = xaxis.z;
+
+		model.Columns[1].X = yaxis.x;
+		model.Columns[1].Y = yaxis.y;
+		model.Columns[1].Z = yaxis.z;
+
+		model.Columns[2].X = zaxis.x;
+		model.Columns[2].Y = zaxis.y;
+		model.Columns[2].Z = zaxis.z;
+
+		return model;
+	}
+
+	void apply_sshape_pipeline()
+	{
+		sg_apply_pipeline(state.sshape_pip);
+
+		sg_bindings bindings = {};
+		bindings.vertex_buffers[0] = state.sshape_vbuf;
+		bindings.index_buffer = state.sshape_ibuf;
+		sg_apply_bindings(&bindings);
+	}
+
+	void apply_sshape_uniform(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
+	{
+		sshapes_vs_params_t vs_params = {};
+		vs_params.color = color;
+		vs_params.mvp = transform;
+		vs_params.shading_type = (int)shading;
+		vs_params.light_direction = light_position.normalized();
+		vs_params.model = model;
+		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_sshapes_vs_params, SG_RANGE(vs_params));
+	}
+
+	void draw_cube(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
+	{
+		apply_sshape_pipeline();
+		apply_sshape_uniform(transform, color, shading, light_position, model);
+		sg_draw(state.sshape_draw_box.base_element, state.sshape_draw_box.num_elements, 1);
+	}
+
+	void draw_sphere(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
+	{
+		apply_sshape_pipeline();
+		apply_sshape_uniform(transform, color, shading, light_position, model);
+		sg_draw(state.sshape_draw_sphere.base_element, state.sshape_draw_sphere.num_elements, 1);
+	}
+
+	void draw_cylinder(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
+	{
+		apply_sshape_pipeline();
+		apply_sshape_uniform(transform, color, shading, light_position, model);
+		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+	}
+
+	void draw_gizmo(const HMM_Mat4& transform, float axis_length, float axis_width)
+	{
+		apply_sshape_pipeline();
+
+		auto scale = HMM_Scale({ axis_width, axis_length, axis_width });
+
+		// y-axis - red
+		auto yaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ 0.0f, axis_length / 2.0f, 0.0f }), scale));
+		apply_sshape_uniform(yaxis, col4::RED, sshapes_shading::none, {}, HMM_M4D(1.0f));
+		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+
+		// x-axis - green
+		auto xaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ axis_length / 2.0f, 0.0f, 0.0f }), HMM_MulM4(HMM_Rotate_RH(-PI / 2.0f, { 0.0f, 0.0f, 1.0f }), scale)));
+		apply_sshape_uniform(xaxis, col4::GREEN, sshapes_shading::none, {}, HMM_M4D(1.0f));
+		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+
+		// z-axis - blue
+		auto zaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ 0.0f, 0.0f, axis_length/2.0f }), HMM_MulM4(HMM_Rotate_RH(PI / 2.0f, { 1.0f, 0.0f, 0.0f }), scale)));
+		apply_sshape_uniform(zaxis, col4::BLUE, sshapes_shading::none, {}, HMM_M4D(1.0f));
+		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
 	}
 }

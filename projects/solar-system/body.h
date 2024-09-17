@@ -69,7 +69,7 @@ struct body_node
     double world_radius; // cached radius as world size
 
     body_node* get_main_body(); // main body is body orbiting solar-system baarycenter
-    frame::vec3d get_absolute_position();
+    frame::vec3d get_absolute_position() const;
     frame::vec3d get_main_body_position(); // this will return position relative to main body
     frame::vec3d get_lagrangian(lagrangian lagr);
 };

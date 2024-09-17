@@ -378,7 +378,7 @@ public:
 
     point_type_3 operator-() const;
 
-    template<class T> point_type_3(T x, T y, T z);
+    template<class T> constexpr point_type_3(T x, T y, T z);
     template<class T> point_type_3& operator+=(T o);
     template<class T> point_type_3& operator-=(T o);
     template<class T> point_type_3& operator*=(T o);
@@ -395,6 +395,8 @@ public:
     point_type_3 operator-(const point_type_3& o) const;
     point_type_3 operator*(const point_type_3& o) const;
     point_type_3 operator/(const point_type_3& o) const;
+
+    bool operator==(const point_type_3& o) const;
 
     void normalize();
     point_type_3 normalized() const;
@@ -453,7 +455,7 @@ point_type_3<M> point_type_3<M>::operator-() const
 
 template<class M>
 template<class T>
-point_type_3<M>::point_type_3(T x, T y, T z)
+constexpr point_type_3<M>::point_type_3(T x, T y, T z)
     : x((M)x), y((M)y), z((M)z)
 {
 }
@@ -737,4 +739,10 @@ point_type_3<M> point_type_3<M>::rotated(M radians, const point_type_3<M>& norma
     return { x * a11 + y * a12 + z * a13,
              x * a21 + y * a22 + z * a23,
              x * a31 + y * a32 + z * a33 };
+}
+
+template<class M>
+bool point_type_3<M>::operator==(const point_type_3<M>& o) const
+{
+    return x == o.x && y == o.y && z == o.z;
 }

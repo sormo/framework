@@ -1,4 +1,5 @@
 #include "body_draw_shaded.h"
+#include "commons.h"
 #include "body_draw_planet.glsl.h"
 
 using namespace frame;
@@ -106,40 +107,82 @@ static vs_params_body_draw_common_t create_sun_vs_params(const vec3& position, c
 
 void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& color)
 {
-    sg_apply_pipeline(pip_planet);
-    sg_apply_bindings(&bind_planet);
-
-    enum draw_type
+    auto draw_axis_half = [](const body_node& body, float radius, bool is_lower)
     {
-        planet = 0,
-        sun = 1
+        static const float axis_length = 5.0f;
+        static const float axit_width = 0.02f;
+
+        auto direction = is_lower ? -body.rotation_axis : body.rotation_axis;
+        auto orientation = create_hmm_direction(body.rotation_axis);
+
+        // if we are drawing upper half, draw only part that is visible above the sphere
+        // if drawing lower half, just draw whole half, it will be clipped by planet's billboard
+        if (direction.z > 0.0f)
+        {
+            auto length = radius * axis_length / 2.0f - radius;
+            auto scale = HMM_Scale({ radius * axit_width, length, radius * axit_width });
+            auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * (radius * axis_length / 2.0f + radius) / 2.0f + body.current_position)), HMM_MulM4(orientation, scale));
+            frame::draw_cylinder(HMM_MulM4(create_projection_view_matrix(), model), col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+        }
+        else
+        {
+            // make it slightly smaller to not go through planet billboard
+            auto scale = HMM_Scale({ radius * axit_width, radius * axis_length * 0.98f / 2.0f, radius * axit_width });
+            auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * axis_length * radius / 4.0f + body.current_position)), HMM_MulM4(orientation, scale));
+            frame::draw_cylinder(HMM_MulM4(create_projection_view_matrix(), model), col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+        }
     };
 
-    fs_params_body_draw_common_t params_fs_common = {};
-
-    // just quick test
-    if (body.type == body_type::star)
+    auto draw_planet = [this](body_node& body, float radius, const frame::col4& color)
     {
-        auto params_vs_sun = create_sun_vs_params(body.current_position, radius);
-        auto params_fs_sun = create_sun_fs_params();
+        sg_apply_pipeline(pip_planet);
+        sg_apply_bindings(&bind_planet);
 
-        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_sun));
-        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_sun, SG_RANGE(params_fs_sun));
+        enum draw_type
+        {
+            planet = 0,
+            sun = 1
+        };
 
-        params_fs_common.draw_type = draw_type::sun;
-    }
-    else
+        fs_params_body_draw_common_t params_fs_common = {};
+
+        if (body.type == body_type::star)
+        {
+            auto params_vs_sun = create_sun_vs_params(body.current_position, radius);
+            auto params_fs_sun = create_sun_fs_params();
+
+            sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_sun));
+            sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_sun, SG_RANGE(params_fs_sun));
+
+            params_fs_common.draw_type = draw_type::sun;
+        }
+        else
+        {
+            auto params_vs_planet = create_planet_vs_params(body.current_position, radius);
+            auto params_fs_planet = create_planet_fs_params(color, body.get_absolute_position());
+
+            sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_planet));
+            sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_planet, SG_RANGE(params_fs_planet));
+
+            params_fs_common.draw_type = draw_type::planet;
+        }
+
+        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_common, SG_RANGE(params_fs_common));
+
+        sg_draw(0, 4, 1);
+    };
+
+    if (body.rotation_period)
     {
-        auto params_vs_planet = create_planet_vs_params(body.current_position, radius);
-        auto params_fs_planet = create_planet_fs_params(color, body.get_absolute_position());
-
-        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_planet));
-        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_planet, SG_RANGE(params_fs_planet));
-
-        params_fs_common.draw_type = draw_type::planet;
+        // draw halfs of axis first half is the one behind planet (based on direction whether is forward (to camera))
+        draw_axis_half(body, radius, body.rotation_axis.z > 0.0f);
     }
 
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_common, SG_RANGE(params_fs_common));
+    draw_planet(body, radius, color);
 
-    sg_draw(0, 4, 1);
+    if (body.rotation_period)
+    {
+        //frame::draw_sphere(create_world_mvp(body.current_position, 0.0f, { 2.0f * radius }), col4::BLANK);
+        draw_axis_half(body, radius, !(body.rotation_axis.z > 0.0f));
+    }
 }

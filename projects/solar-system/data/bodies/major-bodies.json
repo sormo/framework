@@ -365,7 +365,12 @@
             -0.0003085778235992279
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 339.867,
+            "lat": 84.960,
+            "period": 58.646
+        }
     },
     {
         "A": 0.713113129931989,
@@ -395,7 +400,12 @@
             -0.0003495827936161358
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 30.182,
+            "lat": 88.761,
+            "period": -243.0226
+        }
     },
     {
         "A": 0.002517741047829192,
@@ -567,7 +577,12 @@
             3.03699580159302e-07
         ],
         "parent_name": "Earth-Moon Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 90.0,
+            "lat": 66.56,
+            "period": 0.99726968
+        }
     },
     {
         "A": 6.269698114465303e-05,
@@ -667,7 +682,12 @@
             8.799664161745182e-12
         ],
         "parent_name": "Mars Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 354.839,
+            "lat": 64.596,
+            "period": 1.025957
+        }
     },
     {
         "A": 0.002820447317167851,
@@ -2616,7 +2636,12 @@
             2.433720005545579e-08
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 247.821,
+            "lat": 87.783,
+            "period": 9.925
+        }
     },
     {
         "A": 0.001247254098758606,
@@ -4504,7 +4529,12 @@
             4.027516718786723e-08
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 266.628,
+            "lat": 64.006,
+            "period": 0.4458
+        }
     },
     {
         "A": 0.001276418969824723,
@@ -5337,7 +5367,12 @@
             -6.614940135889663e-08
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 257.643,
+            "lat": 7.722,
+            "period": -0.7183
+        }
     },
     {
         "A": 0.002370977950685832,
@@ -5775,8 +5810,8 @@
         ],
         "parent_name": "Neptune Barycenter",
         "type": "Moon"
-    },
-    {
+    }
+,    {
         "A": 4.955201367319894e-07,
         "EC": 2.233037358432227e-05,
         "IN": 129.1928061936065,
@@ -5804,7 +5839,12 @@
             -3.768167244647954e-07
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Planet"
+        "type": "Planet",
+        "rotation": {
+            "long": 319.231,
+            "lat": 61.974,
+            "period": 0.6713
+        }
     },
     {
         "A": 0.0001167398215548928,

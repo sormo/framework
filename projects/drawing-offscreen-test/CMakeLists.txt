@@ -1,0 +1,5 @@
+fips_begin_app(drawing-offscreen-test windowed)
+    fips_files(drawing-offscreen-test.cpp)
+    fips_deps(framework)
+    sokol_shader(offscreen.glsl ${slang})
+fips_end_app()

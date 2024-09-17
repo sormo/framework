@@ -80,6 +80,7 @@ namespace frame
 	// if user creates custom shader he should have all control over bingings and pipeline, add just some helper functions
 	HMM_Mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
 	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size);
+	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size);
 	HMM_Mat4 create_world_mvp(const frame::mat3& transform);
 
 	HMM_Mat4 create_projection_view_matrix();
@@ -89,4 +90,24 @@ namespace frame
 	HMM_Mat4 create_hmm_transform(const frame::mat3& transform);
 	HMM_Mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size);
 	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec2 size);
+
+	HMM_Mat4 create_hmm_direction(const frame::vec3& direction, const frame::vec3& up_direction = { 0.0f, 1.0f, 0.0f });
+
+	HMM_Vec3 to_hmm(const frame::vec3& v);
+
+	// --- sshapes ---
+	enum class sshapes_shading
+	{
+		none = 0,
+		flat
+	};
+
+	// cube has sizes 1.0f and center is in the center
+	void draw_cube(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading = sshapes_shading::none, const frame::vec3& light_position = {}, const HMM_Mat4& model = HMM_M4D(1.0f));
+	// sphere has radius 0.5f 
+	void draw_sphere(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading = sshapes_shading::none, const frame::vec3& light_position = {}, const HMM_Mat4& model = HMM_M4D(1.0f));
+	// cylinder's up is in y direction, radius is 0.5f and height is 1.0f ([0,0,0] is in the center of cylinder)
+	void draw_cylinder(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading = sshapes_shading::none, const frame::vec3& light_position = {}, const HMM_Mat4& model = HMM_M4D(1.0f));
+
+	void draw_gizmo(const HMM_Mat4& transform, float axis_length, float axis_width);
 }
