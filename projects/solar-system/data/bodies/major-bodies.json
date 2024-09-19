@@ -368,8 +368,13 @@
         "type": "Planet",
         "rotation": {
             "long": 339.867,
-            "lat": 84.960,
+            "lat": 84.96,
             "period": 58.646
+        },
+        "temperature": {
+            "min": -173,
+            "mean": 67,
+            "max": 427
         }
     },
     {
@@ -405,6 +410,9 @@
             "long": 30.182,
             "lat": 88.761,
             "period": -243.0226
+        },
+        "temperature": {
+            "mean": 464
         }
     },
     {
@@ -582,6 +590,11 @@
             "long": 90.0,
             "lat": 66.56,
             "period": 0.99726968
+        },
+        "temperature": {
+            "min": -89.2,
+            "mean": 14.76,
+            "56.7"
         }
     },
     {
@@ -687,6 +700,11 @@
             "long": 354.839,
             "lat": 64.596,
             "period": 1.025957
+        },
+        "temperature": {
+            "min": -110,
+            "mean": -60,
+            "max": 35
         }
     },
     {
@@ -722,7 +740,17 @@
             -0.0002072847821566002
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "min": -183.0,
+            "mean": -163.0,
+            "max": -143.0
+        },
+        "rotation": {
+            "period": "sync",
+            "long": 247.703,
+            "lat": 87.787
+        }
     },
     {
         "A": 0.004486427772993748,
@@ -752,7 +780,17 @@
             -0.0002055662672895917
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "min": -223.15,
+            "mean": -171.0,
+            "max": -148.15
+        },
+        "rotation": {
+            "period": "sync",
+            "long": 247.926,
+            "lat": 87.801
+        }
     },
     {
         "A": 0.007157274930426897,
@@ -782,7 +820,17 @@
             -0.0002159412856177222
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "min": -203.0,
+            "mean": -163.0,
+            "max": -121.0
+        },
+        "rotation": {
+            "period": "sync",
+            "long": 248.66719858,
+            "lat": 87.87480698
+        }
     },
     {
         "A": 0.01258497471339699,
@@ -812,7 +860,17 @@
             0.0001317219271935429
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "min": -193.15,
+            "mean": -139.15,
+            "max": -108.15
+        },
+        "rotation": {
+            "period": "sync",
+            "long": 252.48137756,
+            "lat": 88.1909692
+        }
     },
     {
         "A": 0.001216333006974831,
@@ -848,7 +906,14 @@
             0.0005302418055694394
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "min": -153,
+            "max": -111
+        },
+        "rotation": {
+            "period": "sync"
+        }
     },
     {
         "A": 0.07709508449913072,
@@ -881,7 +946,10 @@
             -0.0008132226229902892
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.32425
+        }
     },
     {
         "A": 0.07849979390715359,
@@ -965,7 +1033,10 @@
             -0.0004354534595659959
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.5483
+        }
     },
     {
         "A": 0.07826894216161362,
@@ -993,7 +1064,10 @@
             -0.0003100373827662244
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.5325
+        }
     },
     {
         "A": 0.1604248264709843,
@@ -1021,7 +1095,10 @@
             0.0003178583307941624
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.4333
+        }
     },
     {
         "A": 0.1411196263925915,
@@ -1049,7 +1126,10 @@
             -1.038966183749868e-05
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.34625
+        }
     },
     {
         "A": 0.0743798267113369,
@@ -1111,7 +1191,10 @@
             0.0003153784385623913
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        }
     },
     {
         "A": 0.0008683123541717117,
@@ -1144,7 +1227,10 @@
             0.0004201081388338731
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        }
     },
     {
         "A": 0.0008609806732358458,
@@ -1178,7 +1264,10 @@
             -0.0002696924215047469
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotaiton": {
+            "period": 0.2986305056819784
+        }
     },
     {
         "A": 0.1626573252681879,
@@ -2641,6 +2730,9 @@
             "long": 247.821,
             "lat": 87.783,
             "period": 9.925
+        },
+        "temperature": {
+            "mean": -108
         }
     },
     {
@@ -2676,7 +2768,13 @@
             0.0001373988171223889
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.001589290388392645,
@@ -2710,7 +2808,15 @@
             0.0003072640232133965
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "min": "-24",
+            "mean": "-198",
+            "max": "-128"
+        }
     },
     {
         "A": 0.001967408566105258,
@@ -2744,7 +2850,13 @@
             -0.001440374097667924
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-187"
+        }
     },
     {
         "A": 0.002525315770524911,
@@ -2778,7 +2890,13 @@
             0.002619254692993328
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-186"
+        }
     },
     {
         "A": 0.003519013784416622,
@@ -2813,7 +2931,14 @@
             -0.0006694256449612956
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero "
+        },
+        "temperature": {
+            "min": "-220",
+            "max": "-174"
+        }
     },
     {
         "A": 0.008166347863040985,
@@ -2848,7 +2973,13 @@
             -0.0001781018029779757
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-179.5"
+        }
     },
     {
         "A": 0.009875533667957155,
@@ -2884,7 +3015,10 @@
             0.001009736912769089
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-180"
+        }
     },
     {
         "A": 0.02380101481373909,
@@ -2919,7 +3053,14 @@
             0.0003263912002094134
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "min": "-183",
+            "max": "-143"
+        }
     },
     {
         "A": 0.08674637493308826,
@@ -2954,7 +3095,10 @@
             -2.665030816290951e-05
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-200"
+        }
     },
     {
         "A": 0.001017582270285178,
@@ -2988,7 +3132,13 @@
             0.004158743323320614
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-197"
+        }
     },
     {
         "A": 0.001013983983805569,
@@ -3023,7 +3173,13 @@
             -0.003617068070727827
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-195"
+        }
     },
     {
         "A": 0.002519565582481472,
@@ -3059,7 +3215,10 @@
             0.001427329153540185
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        }
     },
     {
         "A": 0.001970761073984407,
@@ -3095,7 +3254,10 @@
             -0.003019459060315848
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        }
     },
     {
         "A": 0.001968164630764565,
@@ -3131,7 +3293,10 @@
             0.001892343009097324
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        }
     },
     {
         "A": 0.0009266762119625766,
@@ -3165,7 +3330,13 @@
             -0.003448837406508135
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-192"
+        }
     },
     {
         "A": 0.0009370968463242929,
@@ -3200,7 +3371,13 @@
             -0.004110561026412437
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-199"
+        }
     },
     {
         "A": 0.0009538005592789634,
@@ -3235,7 +3412,13 @@
             -0.003256812885126613
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-195"
+        }
     },
     {
         "A": 0.0009010414058524478,
@@ -3269,7 +3452,13 @@
             0.001618522696508372
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-195"
+        }
     },
     {
         "A": 0.1547680674076369,
@@ -3666,7 +3855,10 @@
             0.003748328968266266
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        }
     },
     {
         "A": 0.001425393600534208,
@@ -3699,7 +3891,10 @@
             -0.0007912236146483784
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        }
     },
     {
         "A": 0.002525471065742881,
@@ -3766,7 +3961,10 @@
             0.004536106845979452
         ],
         "parent_name": "Saturn Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-195"
+        }
     },
     {
         "A": 0.1386604701737671,
@@ -4534,6 +4732,9 @@
             "long": 266.628,
             "lat": 64.006,
             "period": 0.4458
+        },
+        "temperature": {
+            "mean": -139
         }
     },
     {
@@ -4568,7 +4769,14 @@
             0.002440984707555291
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        },
+        "temperature": {
+            "min": "-213",
+            "max": "-189"
+        }
     },
     {
         "A": 0.001778039759770996,
@@ -4597,7 +4805,15 @@
             -0.002588965051977579
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "min": "-198",
+            "max": "-188"
+        }
     },
     {
         "A": 0.002915946798268306,
@@ -4626,7 +4842,16 @@
             0.002005222866451241
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero",
+            "period": "sync"
+        },
+        "temperature": {
+            "min": "-213",
+            "mean": "-203",
+            "max": "-184"
+        }
     },
     {
         "A": 0.003900404275837048,
@@ -4655,7 +4880,13 @@
             -0.0003411216996024479
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        },
+        "temperature": {
+            "mean": "-198"
+        }
     },
     {
         "A": 0.0008677413374913737,
@@ -4689,7 +4920,15 @@
             0.003427773635655063
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "min": "-213",
+            "max": "-189"
+        }
     },
     {
         "A": 0.0003341808075002947,
@@ -4721,7 +4960,14 @@
             0.006105650897989498
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.0003622656851280032,
@@ -4753,7 +4999,14 @@
             -0.00354481304639946
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.000396284696331121,
@@ -4785,7 +5038,14 @@
             0.002968698163836399
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0004131171057348498,
@@ -4817,7 +5077,14 @@
             -0.002247188423665023
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.0004189759169504748,
@@ -4849,7 +5116,14 @@
             0.00506855929853033
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0004310573561912954,
@@ -4881,7 +5155,14 @@
             0.0001576823972174153
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0004422255441088847,
@@ -4913,7 +5194,14 @@
             -0.005352433020065388
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0004680979996530685,
@@ -4941,7 +5229,14 @@
             0.003898419350169612
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0005038019996085983,
@@ -4973,7 +5268,14 @@
             -0.003824694747672513
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0005751198881186546,
@@ -5001,7 +5303,14 @@
             -0.002368555673025306
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.04792270748611903,
@@ -5029,7 +5338,13 @@
             -9.99460921505408e-05
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.4145"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.08178346092502428,
@@ -5057,7 +5372,13 @@
             -7.191036325407104e-05
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.2882"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.1088631280529133,
@@ -5085,7 +5406,13 @@
             -5.438457815307978e-05
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.2977"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.1183699779989,
@@ -5113,7 +5440,13 @@
             -9.994748218177611e-05
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.1773"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.05316527613641143,
@@ -5141,7 +5474,10 @@
             0.0001544581612339397
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.05686172850933776,
@@ -5169,7 +5505,10 @@
             3.20503869975049e-05
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.02858361829386016,
@@ -5197,7 +5536,10 @@
             -0.0003183099669177279
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.09684018119308305,
@@ -5225,7 +5567,10 @@
             -0.0001356849154481703
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.1349198549742872,
@@ -5253,7 +5598,13 @@
             -4.423330407589333e-07
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.4933"
+        },
+        "temperature": {
+            "mean": "-208"
+        }
     },
     {
         "A": 0.0005122130882038898,
@@ -5281,7 +5632,14 @@
             -0.004238692981014437
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 0.0006537323215306999,
@@ -5309,7 +5667,14 @@
             -0.002988748846761598
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-210"
+        }
     },
     {
         "A": 0.0004986466837887327,
@@ -5337,7 +5702,14 @@
             0.002574377541200858
         ],
         "parent_name": "Uranus Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-209"
+        }
     },
     {
         "A": 9.39256090186748e-08,
@@ -5372,6 +5744,9 @@
             "long": 257.643,
             "lat": 7.722,
             "period": -0.7183
+        },
+        "temperature": {
+            "mean": -197.2
         }
     },
     {
@@ -5406,7 +5781,14 @@
             0.001803002701460894
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-235.2"
+        }
     },
     {
         "A": 0.03686024225931816,
@@ -5434,7 +5816,13 @@
             3.36650911136939e-05
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "0.4831"
+        },
+        "temperature": {
+            "mean": "-223"
+        }
     },
     {
         "A": 0.0003236967234665257,
@@ -5468,7 +5856,14 @@
             0.003247898668616286
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.000335782877470087,
@@ -5502,7 +5897,14 @@
             0.00106114637077568
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.0003521700007148563,
@@ -5536,7 +5938,14 @@
             0.001195622731485447
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.0004143592154644704,
@@ -5570,7 +5979,14 @@
             -0.001431902855461931
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.0004923304484547149,
@@ -5605,7 +6021,14 @@
             0.0002759937645387207
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.0007868771886767126,
@@ -5641,7 +6064,14 @@
             0.001850209243944803
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-222"
+        }
     },
     {
         "A": 0.1107726499014083,
@@ -5809,9 +6239,12 @@
             -2.100149321906717e-05
         ],
         "parent_name": "Neptune Barycenter",
-        "type": "Moon"
-    }
-,    {
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        }
+    },
+    {
         "A": 4.955201367319894e-07,
         "EC": 2.233037358432227e-05,
         "IN": 129.1928061936065,
@@ -5844,6 +6277,9 @@
             "long": 319.231,
             "lat": 61.974,
             "period": 0.6713
+        },
+        "temperature": {
+            "mean": -201
         }
     },
     {
@@ -6122,7 +6558,13 @@
             0.0002361096299020667
         ],
         "parent_name": "Jupiter Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": "-195"
+        }
     },
     {
         "EC": 0.1589384460685732,

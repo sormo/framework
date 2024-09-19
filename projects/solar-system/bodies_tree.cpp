@@ -114,11 +114,17 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             }
 
             double rotation_period = 0.0;
-            vec3 rotation_axis(0.0f, 0.0f, 1.0f);
+            vec3 rotation_axis;
             double rotation_jd0 = 0.0;
             if (orbit_data.contains("rotation"))
             {
-                rotation_period = orbit_data["rotation"]["period"];
+                if (orbit_data["rotation"]["period"])
+                {
+                    if (orbit_data["rotation"]["period"] == "sync")
+                        rotation_period = period;
+                    else
+                        rotation_period = orbit_data["rotation"]["period"];
+                }
                 if (orbit_data["rotation"].contains("long"))
                     rotation_axis = get_rotation_axis(deg_to_rad(orbit_data["rotation"]["long"]), deg_to_rad(orbit_data["rotation"]["lat"]));
                 if (orbit_data["rotation"].contains("jd0"))
@@ -137,6 +143,10 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, unit::GRAVITATIONAL_CONSTANT);
 
             orbit.initialize(eccentricity, semi_major_axis * unit::AU, mean_anomaly, inclination, argument_of_periapsis, ascending_node_longitude, attractor_mass, unit::GRAVITATIONAL_CONSTANT);
+
+            // if rotation axis is not specified, set it to be perpendicular to orbit plane
+            if (rotation_axis == vec3{0.0f})
+                rotation_axis = orbit.semi_major_axis_basis.cross(orbit.semi_minor_axis_basis);
 
             auto time_offset = get_time_offset(orbit_data.contains("time") ? orbit_data["time"] : "2024-03-31");
             orbit.set_current_orbit_time(time_offset);
