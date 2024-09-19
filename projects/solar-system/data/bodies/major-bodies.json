@@ -594,7 +594,7 @@
         "temperature": {
             "min": -89.2,
             "mean": 14.76,
-            "56.7"
+            "max": 56.7
         }
     },
     {
@@ -5340,7 +5340,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.4145"
+            "period": 0.4145
         },
         "temperature": {
             "mean": "-208"
@@ -5374,7 +5374,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.2882"
+            "period": 0.2882
         },
         "temperature": {
             "mean": "-208"
@@ -5408,7 +5408,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.2977"
+            "period": 0.2977
         },
         "temperature": {
             "mean": "-208"
@@ -5442,7 +5442,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.1773"
+            "period": 0.1773
         },
         "temperature": {
             "mean": "-208"
@@ -5600,7 +5600,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.4933"
+            "period": 0.4933
         },
         "temperature": {
             "mean": "-208"
@@ -5818,7 +5818,7 @@
         "parent_name": "Neptune Barycenter",
         "type": "Moon",
         "rotation": {
-            "period": "0.4831"
+            "period": 0.4831
         },
         "temperature": {
             "mean": "-223"
