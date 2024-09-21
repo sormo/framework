@@ -172,7 +172,7 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
         sg_draw(0, 4, 1);
     };
 
-    if (body.rotation_period)
+    if (body.rotation_period && settings.show_rotation_axis)
     {
         // draw halfs of axis first half is the one behind planet (based on direction whether is forward (to camera))
         draw_axis_half(body, radius, body.rotation_axis.z > 0.0f);
@@ -180,7 +180,7 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
 
     draw_planet(body, radius, color);
 
-    if (body.rotation_period)
+    if (body.rotation_period && settings.show_rotation_axis)
     {
         //frame::draw_sphere(create_world_mvp(body.current_position, 0.0f, { 2.0f * radius }), col4::BLANK);
         draw_axis_half(body, radius, !(body.rotation_axis.z > 0.0f));

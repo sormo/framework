@@ -443,7 +443,17 @@
             -2.469094843558141e-05
         ],
         "parent_name": "Earth-Moon Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "long": 214.44930326,
+            "lat": 88.4430,
+            "period": 27.322
+        },
+        "temperature": {
+            "min": -173,
+            "mean": -23,
+            "max": 116
+        }
     },
     {
         "A": 2.332584415886591,
@@ -630,7 +640,14 @@
             -0.0005458387759474124
         ],
         "parent_name": "Mars Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync",
+            "tilt": "zero"
+        },
+        "temperature": {
+            "mean": -40
+        }
     },
     {
         "A": 0.0001568155639925692,
@@ -665,7 +682,13 @@
             0.0001038986027053677
         ],
         "parent_name": "Mars Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        },
+        "temperature": {
+            "mean": -40
+        }
     },
     {
         "EC": 0.4608058648413008,
@@ -6310,7 +6333,13 @@
             -5.231587281540607e-05
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        },
+        "temperature": {
+            "mean": -220
+        }
     },
     {
         "A": 0.0003322444841973388,
@@ -6345,7 +6374,12 @@
             -6.316475064947354e-05
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "long": 11.41116024,
+            "lat": 41.7012565,
+            "period": 1.829
+        }
     },
     {
         "A": 0.0004366021934266834,
@@ -6380,7 +6414,13 @@
             -6.60770453944956e-05
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.4295
+        },
+        "temperature": {
+            "mean": -250
+        }
     },
     {
         "A": 0.0003911741591430956,
@@ -6414,7 +6454,10 @@
             6.071943635656872e-05
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 5.31
+        }
     },
     {
         "A": 0.0002859921460235317,
@@ -6448,7 +6491,10 @@
             2.333286964872498e-05
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 3.24
+        }
     },
     {
         "A": 1.42477916992235e-05,
@@ -6477,7 +6523,17 @@
             6.385401422038558e-06
         ],
         "parent_name": "Pluto Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "long": 137.34698543,
+            "lat": -22.81554312,
+            "period": -6.387
+        },
+        "temperature": {
+            "min": -240,
+            "mean": -229,
+            "max": -218
+        }
     },
     {
         "EC": 0.09236896863372258,
@@ -9620,7 +9676,17 @@
             0.0009334316145106081
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "long": 0,
+            "lat": 28.4,
+            "period": 15.786
+        },
+        "temperature": {
+            "min": -243,
+            "mean": -231,
+            "max": -217
+        }
     },
     {
         "EC": 0.006099931261835205,
@@ -9649,7 +9715,11 @@
             -1.233063072616659e-05
         ],
         "parent_name": "Eris",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "tilt": "zero",
+            "period": "sync"
+        }
     },
     {
         "EC": 0.06142265379749655,
@@ -9679,7 +9749,13 @@
             1.870184401584494e-05
         ],
         "parent_name": "Haumea Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "rotation": {
+            "period": 0.4083
+        },
+        "temperature": {
+            "mean": -241
+        }
     },
     {
         "EC": 0.1948292695202147,
@@ -9708,7 +9784,10 @@
             4.915452343647632e-05
         ],
         "parent_name": "Haumea Barycenter",
-        "type": "Moon"
+        "type": "Moon",
+        "temperature": {
+            "mean": -241
+        }
     },
     {
         "EC": 0.07623816185285687,
@@ -9743,7 +9822,15 @@
             -8.802253004796005e-08
         ],
         "parent_name": "Haumea Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "long": 282.45639593,
+            "lat": 9.89593316,
+            "period": 0.16314
+        },
+        "temperature": {
+            "mean": -223
+        }
     },
     {
         "EC": 0.8495428937340156,
@@ -9771,7 +9858,10 @@
             0.0001960599021977958
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "temperature": {
+            "mean": -261
+        }
     },
     {
         "EC": 0.1603886153327301,
@@ -9800,7 +9890,29 @@
             -0.0002922311562647
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "period": 0.9511
+        },
+        "temperature": {
+            "mean": -239
+        }
+    },
+    {
+        "EC": 0.2908,
+        "IN": 83.08,
+        "OM": 31.99,
+        "W": 0.0,
+        "MA": 0.0,
+        "A": 0.0001403763,
+        "name": "S/2015",
+        "group": "",
+        "parent": 136472,
+        "time": "2014-12-08",
+        "radius": 85,
+        "period": 12.4,
+        "parent_name": "Makemake",
+        "type": "Moon"
     },
     {
         "EC": 0.5034090617923712,
@@ -9829,7 +9941,26 @@
             0.0006859961741059623
         ],
         "parent_name": "Solar-System Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "period": 0.9333
+        }
+    },
+    {
+        "EC": 0.2908,
+        "IN": 83.08,
+        "OM": 31.99,
+        "W": 0.0,
+        "MA": 0.0,
+        "A": 0.0001605705,
+        "name": "Xiangliu",
+        "group": "",
+        "parent": 225088,
+        "time": "2014-12-08",
+        "radius": 70,
+        "period": 25.22073,
+        "parent_name": "Gonggong",
+        "type": "Moon"
     },
     {
         "name": "Quaoar",
@@ -9863,7 +9994,15 @@
         "parent": 0,
         "time": "2024-03-31",
         "parent_name": "Solar-System Barycenter",
-        "type": "Dwarf Planet"
+        "type": "Dwarf Planet",
+        "rotation": {
+            "long": 240.17063179,
+            "lat": 76.38326199,
+            "period": 0.7366
+        },
+        "temperature": {
+            "mean": -229
+        }
     },
     {
         "name": "Weywot",
@@ -9893,5 +10032,81 @@
         "parent_name": "Quaoar",
         "type": "Moon",
         "mass": 1800000000000000.0
+    },
+    {
+        "A": 2.77,
+        "EC": 0.079,
+        "IN": 10.6,
+        "MA": 103.0,
+        "OM": 80.3,
+        "Spkid": "20000001",
+        "W": 73.4,
+        "density": 2.162,
+        "gm": 62.6284,
+        "group": "Main-belt Asteroid",
+        "mesh": "1_Ceres_damit_5915.glb",
+        "name": "Ceres",
+        "parent_name": "Solar-System Barycenter",
+        "period": 1680.0,
+        "radius": 469.7,
+        "time": "2024-03-31",
+        "id": "1",
+        "type": "Dwarf Planet",
+        "rotation": {
+            "long": 350.0,
+            "lat": 81.0,
+            "period": 9.074173,
+            "jd0": 2434407.0
+        },
+        "temperature": {
+            "min": -163,
+            "max": -38
+        }
+    },
+    {
+        "name": "Orcus",
+        "group": "",
+        "EC": 0.223848804226551,
+        "IN": 20.5675453404552,
+        "OM": 268.5832553626848,
+        "W": 73.02346628969329,
+        "MA": 186.5388114907732,
+        "A": 39.27975243476882,
+        "period": 89858.74698214338,
+        "position": [-43.59395931100881, 11.65746326893083, -16.46086511741762],
+        "velocity": [-0.0004614015955491618, -0.002134822728657521, -0.0001532729496423991],
+        "horizons_id": 90482,
+        "parent": 0,
+        "radius": 455,
+        "mass": 5.47e+20,
+        "time": "2024-03-31",
+        "parent_name": "Solar-System Barycenter",
+        "type": "Dwarf Planet",
+        "temperature": {
+            "mean": -229
+        }
+    },
+    {
+        "EC": 0.00091,
+        "IN": 105.03,
+        "OM": 53.49,
+        "W": 274.51,
+        "MA": 0.0,
+        "A": 0.0000601599,
+        "name": "Vanth",
+        "group": "",
+        "parent": 90482,
+        "time": "2006-09-05",
+        "radius": 221,
+        "mass": 8.7e19,
+        "period": 9.539154,
+        "parent_name": "Orcus",
+        "type": "Moon",
+        "rotation": {
+            "period": "sync"
+        },
+        "temperature": {
+            "max": -229
+        }
     }
 ]

@@ -215,6 +215,7 @@ void draw_settings_gui()
         ImGui::Checkbox("Draw names", &settings.draw_names);
         ImGui::Checkbox("Shaded planets", &settings.shaded_planets);
         ImGui::Checkbox("Random rotation", &settings.model_rotation_random);
+        ImGui::Checkbox("Rotation axis", &settings.show_rotation_axis);
         if (ImGui::Checkbox("Disable inclination", &settings.disable_inclination))
         {
             reset_bodies_tree();

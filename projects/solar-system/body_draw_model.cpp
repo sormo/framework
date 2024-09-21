@@ -247,7 +247,7 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
 
     sg_draw(0, element_count, 1);
 
-    if (body.rotation_period)
+    if (body.rotation_period && !settings.model_rotation_random && settings.show_rotation_axis)
     {
         auto scale = HMM_Scale({ radius * 0.02f, radius * 5.0f, radius * 0.02f });
         auto model = HMM_MulM4(create_hmm_direction(body.rotation_axis), scale);

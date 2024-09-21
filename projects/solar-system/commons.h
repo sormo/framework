@@ -35,7 +35,8 @@ namespace commons
         bool disable_inclination = false;
         bool draw_lagrangians = false;
         bool shaded_planets = true;
-        bool model_rotation_random = true;
+        bool model_rotation_random = false;
+        bool show_rotation_axis = true;
         bodies_included_type bodies_included = bodies_included_type::more_than_100;
     };
     
