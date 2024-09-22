@@ -121,7 +121,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
                 if (orbit_data["rotation"].contains("period"))
                 {
                     if (orbit_data["rotation"]["period"] == "sync")
-                        rotation_period = period;
+                        rotation_period = -period;
                     else
                         rotation_period = orbit_data["rotation"]["period"];
                 }

@@ -153,7 +153,7 @@ void body_draw_model::fetch_models(commons::bodies_included_type type)
     });
 }
 
-body_draw_model_fs_params_t create_fs_params(const frame::col4& color, const vec3d& orbit_position)
+body_draw_model_fs_params_t create_fs_params(const frame::col4& color, const vec3& orbit_position)
 {
     body_draw_model_fs_params_t result = {};
 
@@ -163,13 +163,15 @@ body_draw_model_fs_params_t create_fs_params(const frame::col4& color, const vec
     result.specular_strength = 0.1f;
 
     result.view_position = vec3(0.0f, 0.0f, 5.0f);
-    result.light_position = -vec3(orbit_position.normalized() * 10.0f);
+    result.light_position = -orbit_position.normalized() * 1000.0f;
 
     return result;
 }
 
 float get_rotation_angle(double jd0, double P, double jd)
 {
+    if (jd0 == 0.0)
+        return frame::deg_to_rad(float((jd - commons::INIT_TIME_JULIAN) * 360.0 / P));
     return frame::deg_to_rad(float((jd - jd0) * 360.0 / P));
 }
 
@@ -237,7 +239,7 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
     sg_apply_pipeline(pip_model);
     sg_apply_bindings(&bind_model);
 
-    auto body_position = body.get_absolute_position();
+    auto body_position = commons::draw_cast(body.get_absolute_position());
 
     body_draw_model_fs_params_t params_fs = create_fs_params(color, body_position);
     body_draw_model_vs_params_t params_vs = create_vs_params(body, radius);
@@ -252,7 +254,7 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
         auto scale = HMM_Scale({ radius * 0.02f, radius * 5.0f, radius * 0.02f });
         auto model = HMM_MulM4(create_hmm_direction(body.rotation_axis), scale);
         auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
-        frame::draw_cylinder(mvp, col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+        frame::draw_cylinder(mvp, col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -body_position, model);
     }
 
     return true;

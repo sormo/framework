@@ -95,7 +95,7 @@ namespace commons
     static std::string convert_double_to_string(double num)
     {
         std::string text(256, '\0');
-        if (num < 0.000'001 || num > 100'000.0)
+        if (std::fabs(num) < 0.000'001 || std::fabs(num) > 100'000.0)
             std::sprintf(text.data(), "%1.2e", num);
         else
             std::sprintf(text.data(), "%.3f", num);
