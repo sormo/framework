@@ -131,6 +131,17 @@ void bodies_tree::load(std::vector<const char*> json_datas)
                     rotation_jd0 = orbit_data["rotation"]["jd0"];
             }
 
+            std::optional<double> temp_min, temp_mean, temp_max;
+            if (orbit_data.contains("temperature"))
+            {
+                if (orbit_data["temperature"].contains("min"))
+                    temp_min = orbit_data["temperature"]["min"];
+                if (orbit_data["temperature"].contains("mean"))
+                    temp_mean = orbit_data["temperature"]["mean"];
+                if (orbit_data["temperature"].contains("max"))
+                    temp_max = orbit_data["temperature"]["max"];
+            }
+
             // inclination hack, we are showing this in 2d
             if (settings.disable_inclination)
                 inclination = 0.0;
@@ -173,6 +184,10 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             node.trajectory.init(node.orbit);
             node.name_text_rectangle = get_text_rectangle_ex(body_name.c_str(), {}, commons::NAME_FONT_SIZE, "roboto-bold");
             node.world_radius = commons::convert_km_to_world_size(node.radius);
+
+            node.temperature.min = temp_min;
+            node.temperature.mean = temp_mean;
+            node.temperature.max = temp_max;
 
             bodies.push_back(std::move(node));
 

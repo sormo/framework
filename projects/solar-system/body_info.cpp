@@ -192,6 +192,43 @@ bool body_info::accept_click(const frame::vec2& screen_position)
     return false;
 }
 
+void body_info::draw_temperature(float& y_value, bool skip_draw)
+{
+    if (!body->temperature.min && !body->temperature.max && !body->temperature.mean)
+        return;
+
+    std::string name_values("[");
+    std::string value;
+    size_t count = 0;
+
+    auto accept_value = [&name_values, &value, &count](double accept_value, const char* accept_name)
+    {
+        if (count)
+        {
+            name_values.push_back('/');
+            value.push_back('\n');
+        }
+        name_values += accept_name;
+        value += commons::convert_double_to_string(accept_value);
+        count++;
+    };
+
+    if (body->temperature.min)
+        accept_value(*body->temperature.min, "min");
+    if (body->temperature.mean)
+        accept_value(*body->temperature.mean, "mean");
+    if (body->temperature.max)
+        accept_value(*body->temperature.max, "max");
+    name_values.push_back(']');
+
+    auto prev_y_value = y_value;
+
+    draw_property_str(y_value, "Temperature", value, "celsius", skip_draw);
+
+    if (count > 1)
+        frame::draw_text_ex(name_values.c_str(), vec2(boundary + 10.0f, prev_y_value + property_y_size), property_y_size - 3.0f, col4::LIGHTGRAY, "roboto");
+}
+
 float body_info::draw_internal(bool skip_draw)
 {
     float y_value = boundary;
@@ -218,6 +255,9 @@ float body_info::draw_internal(bool skip_draw)
 
     if (body->rotation_period)
         draw_property_num(y_value, "Rotation Period", body->rotation_period, "days", skip_draw);
+
+    if (body->temperature.min || body->temperature.max || body->temperature.mean)
+        draw_temperature(y_value, skip_draw);
 
     y_value += 3.0f;
 

@@ -2796,7 +2796,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -2836,9 +2836,9 @@
             "tilt": "zero"
         },
         "temperature": {
-            "min": "-24",
-            "mean": "-198",
-            "max": "-128"
+            "min": -24,
+            "mean": -198,
+            "max": -128
         }
     },
     {
@@ -2878,7 +2878,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-187"
+            "mean": -187
         }
     },
     {
@@ -2918,7 +2918,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-186"
+            "mean": -186
         }
     },
     {
@@ -2959,8 +2959,8 @@
             "tilt": "zero "
         },
         "temperature": {
-            "min": "-220",
-            "max": "-174"
+            "min": -220,
+            "max": -174
         }
     },
     {
@@ -3001,7 +3001,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-179.5"
+            "mean": -179.5
         }
     },
     {
@@ -3040,7 +3040,7 @@
         "parent_name": "Saturn Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-180"
+            "mean": -180
         }
     },
     {
@@ -3081,8 +3081,8 @@
             "tilt": "zero"
         },
         "temperature": {
-            "min": "-183",
-            "max": "-143"
+            "min": -183,
+            "max": -143
         }
     },
     {
@@ -3120,7 +3120,7 @@
         "parent_name": "Saturn Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-200"
+            "mean": -200
         }
     },
     {
@@ -3160,7 +3160,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-197"
+            "mean": -197
         }
     },
     {
@@ -3201,7 +3201,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-195"
+            "mean": -195
         }
     },
     {
@@ -3358,7 +3358,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-192"
+            "mean": -192
         }
     },
     {
@@ -3399,7 +3399,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-199"
+            "mean": -199
         }
     },
     {
@@ -3440,7 +3440,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-195"
+            "mean": -195
         }
     },
     {
@@ -3480,7 +3480,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-195"
+            "mean": -195
         }
     },
     {
@@ -3986,7 +3986,7 @@
         "parent_name": "Saturn Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-195"
+            "mean": -195
         }
     },
     {
@@ -4797,8 +4797,8 @@
             "period": "sync"
         },
         "temperature": {
-            "min": "-213",
-            "max": "-189"
+            "min": -213,
+            "max": -189
         }
     },
     {
@@ -4834,8 +4834,8 @@
             "tilt": "zero"
         },
         "temperature": {
-            "min": "-198",
-            "max": "-188"
+            "min": -198,
+            "max": -188
         }
     },
     {
@@ -4871,9 +4871,9 @@
             "period": "sync"
         },
         "temperature": {
-            "min": "-213",
-            "mean": "-203",
-            "max": "-184"
+            "min": -213,
+            "mean": -203,
+            "max": -184
         }
     },
     {
@@ -4908,7 +4908,7 @@
             "period": "sync"
         },
         "temperature": {
-            "mean": "-198"
+            "mean": -198
         }
     },
     {
@@ -4949,8 +4949,8 @@
             "tilt": "zero"
         },
         "temperature": {
-            "min": "-213",
-            "max": "-189"
+            "min": -213,
+            "max": -189
         }
     },
     {
@@ -4989,7 +4989,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5028,7 +5028,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5067,7 +5067,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5106,7 +5106,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5145,7 +5145,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5184,7 +5184,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5223,7 +5223,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5258,7 +5258,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5297,7 +5297,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5332,7 +5332,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5366,7 +5366,7 @@
             "period": 0.4145
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5400,7 +5400,7 @@
             "period": 0.2882
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5434,7 +5434,7 @@
             "period": 0.2977
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5468,7 +5468,7 @@
             "period": 0.1773
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5499,7 +5499,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5530,7 +5530,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5561,7 +5561,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5592,7 +5592,7 @@
         "parent_name": "Uranus Barycenter",
         "type": "Moon",
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5626,7 +5626,7 @@
             "period": 0.4933
         },
         "temperature": {
-            "mean": "-208"
+            "mean": -208
         }
     },
     {
@@ -5661,7 +5661,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5696,7 +5696,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-210"
+            "mean": -210
         }
     },
     {
@@ -5731,7 +5731,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-209"
+            "mean": -209
         }
     },
     {
@@ -5810,7 +5810,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-235.2"
+            "mean": -235.2
         }
     },
     {
@@ -5844,7 +5844,7 @@
             "period": 0.4831
         },
         "temperature": {
-            "mean": "-223"
+            "mean": -223
         }
     },
     {
@@ -5885,7 +5885,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -5926,7 +5926,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -5967,7 +5967,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -6008,7 +6008,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -6050,7 +6050,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -6093,7 +6093,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-222"
+            "mean": -222
         }
     },
     {
@@ -6619,7 +6619,7 @@
             "tilt": "zero"
         },
         "temperature": {
-            "mean": "-195"
+            "mean": -195
         }
     },
     {

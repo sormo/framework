@@ -60,6 +60,14 @@ struct body_node
 
     } system;
 
+    struct
+    {
+        std::optional<double> min;
+        std::optional<double> mean;
+        std::optional<double> max;
+
+    } temperature;
+
     body_node* parent = nullptr;
     std::vector<body_node*> childs;
 

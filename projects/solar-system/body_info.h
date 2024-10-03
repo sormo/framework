@@ -35,6 +35,8 @@ private:
     void draw_property_num(float& y, const char* name, double value, const char* unit, bool skip_draw = false);
     void draw_separator(float& y, const char* name, bool skip_draw = false);
 
+    void draw_temperature(float& y, bool skip_draw);
+
     frame::rectangle get_info_rectangle();
 
     body_node* body = nullptr;
