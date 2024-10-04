@@ -169,7 +169,7 @@ void update_offscreen_non_default_pass()
     auto projection = HMM_Orthographic_RH_NO(-128.0f, 128.0f, -128.0f, 128.0f, -max_depth, max_depth);
     auto model = HMM_Scale({ 100.0f, 100.0f, 100.0f });
     vs_params.mvp = HMM_MulM4(projection, model);
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &SG_RANGE(vs_params));
+    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
 
     sg_draw(state.offscreen.sphere.base_element, state.offscreen.sphere.num_elements, 1);
 
@@ -183,7 +183,7 @@ void update_offscreen()
 
     vs_params_t vs_params = {};
     vs_params.mvp = frame::create_world_mvp(vec2{}, 0.0f, { 500.0f, 500.0f });
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &SG_RANGE(vs_params));
+    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
 
     sg_draw(0, 4, 1);
 }

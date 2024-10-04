@@ -302,8 +302,11 @@ namespace frame
 		buffer = sshape_build_cylinder(&buffer, &cylinder_desc);
 		state.sshape_draw_cylinder = sshape_element_range(&buffer);
 
-		state.sshape_vbuf = sg_make_buffer(&sshape_vertex_buffer_desc(&buffer));
-		state.sshape_ibuf = sg_make_buffer(&sshape_index_buffer_desc(&buffer));
+		auto vbuf_desc = sshape_vertex_buffer_desc(&buffer);
+		state.sshape_vbuf = sg_make_buffer(&vbuf_desc);
+
+		auto ibuf_desc = sshape_index_buffer_desc(&buffer);
+		state.sshape_ibuf = sg_make_buffer(&ibuf_desc);
 	}
 
 	void setup_draw_sg()

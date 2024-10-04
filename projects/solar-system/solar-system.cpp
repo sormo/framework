@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "body_system.h"
 #include "view.h"
+#include "utils.h"
 
 using namespace frame;
 
@@ -17,6 +18,7 @@ commons::state_data state;
 
 bool first_time_init = true;
 frame::image sokol_image = 0;
+utils::time_measure update_measure{ 300 };
 
 void setup()
 {
@@ -42,6 +44,9 @@ void draw_debug_gui()
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Average");
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Update");
+    ImGui::Text("%.3f ms", update_measure.get_average());
 
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Screen");
     auto mouse_screen = get_mouse_screen_position();
@@ -333,6 +338,8 @@ void update_system()
 
 void update()
 {
+    update_measure.start();
+
     // draw
     if (first_time_init && state.body_system_initializing)
     {
@@ -347,4 +354,6 @@ void update()
     // update
     if (!state.body_system_initializing)
         update_system();
+
+    update_measure.finish();
 }

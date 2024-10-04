@@ -22,6 +22,8 @@ fips_begin_app(solar-system windowed)
                body_info.cpp
                body_system.h
                body_system.cpp
+               utils.h
+               utils.cpp
                view.h
                view.cpp)
     fips_dir(data)
