@@ -494,16 +494,16 @@ namespace frame
 
 		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
 
-		state.buffer_data_instanced[id] = std::move(create_buffer_data_instanced(name,
-			                                                                     elements_count,
-																				 mesh.vertices, 
-																				 mesh.vertices_count,
-																			     mesh.indices,
-																				 mesh.indices_count,
-																				 mesh.type,
-																				 type,
-																				 usage,
-	                                                                             0));
+		state.buffer_data_instanced[id] = create_buffer_data_instanced(name,
+			                                                           elements_count,
+															     	   mesh.vertices, 
+																       mesh.vertices_count,
+																	   mesh.indices,
+																	   mesh.indices_count,
+																	   mesh.type,
+																	   type,
+																	   usage,
+	                                                                   0);
 
 		return id;
 	}
@@ -514,16 +514,16 @@ namespace frame
 
 		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
 
-		state.buffer_data_instanced[id] = std::move(create_buffer_data_instanced(name,
-																			  	 elements_count,
-																			 	 mesh.vertices,
-																			     mesh.vertices_count,
-																				 mesh.indices,
-																				 mesh.indices_count,
-																				 mesh.type,
-																				 type,
-																				 usage,
-																				 instances_count));
+		state.buffer_data_instanced[id] = create_buffer_data_instanced(name,
+																	   elements_count,
+																	   mesh.vertices,
+																	   mesh.vertices_count,
+																	   mesh.indices,
+																	   mesh.indices_count,
+																	   mesh.type,
+																	   type,
+																	   usage,
+																	   instances_count);
 
 		return id;
 	}
@@ -649,7 +649,7 @@ namespace frame
 		return add_draw_instance(id, transform.data, color);
 	}
 
-	void remove_draw_instance(draw_buffer_id id, size_t index)
+	void remove_draw_instance([[maybe_unused]] draw_buffer_id id, [[maybe_unused]] size_t index)
 	{
 		// TODO
 	}
@@ -843,7 +843,7 @@ namespace frame
 		}
 	}
 
-	void remove_buffer(draw_buffer_id id)
+	void remove_buffer([[maybe_unused]] draw_buffer_id id)
 	{
 		// TODO
 	}

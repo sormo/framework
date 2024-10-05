@@ -12,7 +12,7 @@ void body_draw::initialize_instance_buffer(bodies_tree& bodies)
                                                                  bodies.bodies.size());
 
     size_t point_counter = 0;
-    for (auto& body : bodies.bodies)
+    for (auto& _ : bodies.bodies)
     {
         frame::update_draw_instance(points_instance_buffer,
                                     point_counter++,
@@ -75,7 +75,6 @@ void body_draw::draw_world_bodies(body_node* root)
 
 void draw_main_trajectory(body_node* main_body)
 {
-    auto screen_size = frame::get_screen_size();
     float max_pixel_size = 10'000; // some large number
     auto to = commons::draw_cast(main_body->orbit.velocity).normalized() * view::get_pixel_to_view(max_pixel_size);
 
@@ -148,7 +147,6 @@ void body_draw::draw_sun(body_node& body, body_color& colors, float world_min_ra
 {
     if (settings.shaded_planets)
     {
-        double body_radius = commons::convert_km_to_world_size(body.radius);
         float radius = (float)view::get_world_to_view(body.world_radius);
         radius = std::max(world_min_radius, radius);
 
@@ -256,7 +254,7 @@ void body_draw::draw_trajectories(const quadtree::query_result_type& parents, bo
 {
     body_node* highlight_body = get_highlight_body();
 
-    std::function<void(body_node&, const vec3&)> draw_recursive = [this, &draw_recursive, &colors, stationary_body, highlight_body](body_node& data, const vec3& parent_position)
+    std::function<void(body_node&, const vec3&)> draw_recursive = [&draw_recursive, stationary_body, highlight_body](body_node& data, const vec3& parent_position)
     {
         if (is_body_node_skip(data))
             return;
@@ -291,7 +289,7 @@ void body_draw::draw_names(const quadtree::query_result_type& parents, bool is_v
         return false;
     };
 
-    auto get_computed_font_size = [this](const body_node* body)
+    auto get_computed_font_size = [](const body_node* body)
     {
         auto body_radius = view::get_world_to_pixel(commons::convert_km_to_world_size(body->radius));
         auto body_diameter = body_radius * 2.0f;

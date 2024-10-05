@@ -331,19 +331,18 @@ void setup_test_sg_image(const char* sokol_image_base64)
     buffer_desc_index.label = "texrect-indices";
     state_image.test_sg_image_bind.index_buffer = sg_make_buffer(&buffer_desc_index);
 
-    auto swap = [](uint32_t n) { return ((n >> 24) & 0xff) | ((n << 8) & 0xff0000) | ((n >> 8) & 0xff00) | ((n << 24) & 0xff000000); };
-
+    //auto swap = [](uint32_t n) { return ((n >> 24) & 0xff) | ((n << 8) & 0xff0000) | ((n >> 8) & 0xff00) | ((n << 24) & 0xff000000); };
     // create a checkerboard texture
-    uint32_t pixels[4 * 4] =
-    {
-        0xFF0000FF, 0xFF000000, 0xFFFFFFFF, swap(frame::col4::BLUE.to_hex()),
-        0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
-        0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000,
-        0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
-    };
+    //uint32_t pixels[4 * 4] =
+    //{
+    //    0xFF0000FF, 0xFF000000, 0xFFFFFFFF, swap(frame::col4::BLUE.to_hex()),
+    //    0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
+    //    0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000,
+    //    0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF,
+    //};
 
     auto sokol_image = frame::base64_decode(sokol_image_base64);
-    int w, h, n, image;
+    int w, h, n;
     unsigned char* img = stbi_load_from_memory((const unsigned char*)sokol_image.data(), sokol_image.size(), &w, &h, &n, 4);
 
     sg_image_desc image_desc = {};
@@ -381,12 +380,12 @@ void setup_test_sg_image(const char* sokol_image_base64)
 
 void setup_image()
 {
-    static const char earth_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" version="1.1" style="fill:none;stroke-width:0.6;stroke:#ffffff">
-	                                       <circle cx="6" cy="6" r="5"/>
-	                                       <path d="M 6 1 L 6 11" />
-	                                       <path d="M 1 6 L 11 6" />
-                                       </svg>)";
+    //static const char earth_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
+    //                                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" version="1.1" style="fill:none;stroke-width:0.6;stroke:#ffffff">
+	//                                       <circle cx="6" cy="6" r="5"/>
+	//                                       <path d="M 6 1 L 6 11" />
+	//                                       <path d="M 1 6 L 11 6" />
+    //                                   </svg>)";
 
     static const char sun_svg[] = R"(<?xml version="1.0" encoding="UTF-8"?>
                                      <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" style="fill:#ffffff>
@@ -464,26 +463,45 @@ void setup_image()
 
 void update_image()
 {
-    //frame::draw_svg(svg_test, {10.0f, 10.0f}, frame::text_align::middle_middle);
-    //frame::draw_svg_ex(svg_test, { 10.0f, 10.0f }, 45.0f, { 1.0f, 1.0f }, frame::text_align::middle_middle);
-    //frame::draw_svg_ex_size(svg_test, { 10.0f, -10.0f }, 0.0f, { 20.0f, 20.0f }, frame::text_align::middle_middle);
-    frame::draw_svg_ex_size(state_image.svg_test, { 10.0f, 10.0f }, 90.0f, { 80.0f, 80.0f }, frame::text_align::bottom_right);
+    frame::draw_svg_ex_size(state_image.svg_test, { 0.0f, 0.0f }, 90.0f, { 80.0f, 80.0f }, frame::text_align::middle_middle);
 
     auto image_size = frame::get_image_size(state_image.image_test);
-    frame::draw_circle({ 100.0f, 100.0f }, 3.0f, col4::RED);
-    frame::draw_rectangle(frame::rectangle::from_min_max({ 100.0f, 100.0f }, { 300.0f, 50.0f }), col4::BLUE);
 
-    frame::draw_image(state_image.image_test, { 100.0f, 100.0f }, frame::text_align::top_left);
-    //frame::draw_image_ex(state_image.image_test, { 100.0f, 100.0f }, frame::deg_to_rad(45.0f), {0.2f, 0.2f}, text_align::top_middle);
-    //frame::draw_image_ex_size(state_image.image_test, { 100.0f, 100.0f }, 0.0f, image_size * 0.3f, text_align::top_left);
-    //frame::draw_image_ex_size(state_image.image_test, { 100.0f, 100.0f }, frame::deg_to_rad(90.0f), { 200.0f, 50.0f }, text_align::top_left);
+    static const float offx = 500.0f;
+    static const float offy = 0.0f;
+    static const float size = 200.0f;
+    auto get_pos = [](int row, int col) -> vec2
+    {
+        return { offx + row * size, offy + col * size };
+    };
 
-    frame::draw_image(state_image.rasterize_test, { -200, 200 });
-    //frame::draw_svg(rasterize_test_svg, { -200, 200 });
+    auto draw_test = [get_pos, image_size](int row, int col, const char* text, text_align align_image, text_align align_text)
+    {
+        auto pos = get_pos(row, col);
+        frame::draw_circle(pos, 2.0f, col4::RED);
+        frame::draw_text(text, pos, 15.0f, col4::WHITE, align_text);
+        frame::draw_image_ex_size(state_image.image_test, pos, 0.0f, image_size * 0.1f, align_image);
+    };
+
+    draw_test(0, 0, "bottom_left", text_align::bottom_left, text_align::top_middle);
+    draw_test(1, 0, "bottom_middle", text_align::bottom_middle, text_align::top_middle);
+    draw_test(2, 0, "bottom_right", text_align::bottom_right, text_align::top_middle);
+
+    draw_test(0, 1, "middle_left", text_align::middle_left, text_align::middle_right);
+    draw_test(1, 1, "middle_middle", text_align::middle_middle, text_align::middle_middle);
+    draw_test(2, 1, "middle_right", text_align::middle_right, text_align::middle_left);
+
+    draw_test(0, 2, "top_left", text_align::top_left, text_align::bottom_middle);
+    draw_test(1, 2, "top_middle", text_align::top_middle, text_align::bottom_middle);
+    draw_test(2, 2, "top_right", text_align::top_right, text_align::bottom_middle);
+
+    frame::draw_image(state_image.rasterize_test, { 0, -200 });
+
+    // sg test
 
     vs_params_t vs_params;
     vs_params.color0[0] = vs_params.color0[1] = vs_params.color0[2] = vs_params.color0[3] = 1.0f;
-    vs_params.mvp = HMM_MulM4(create_projection_view_matrix(), ::create_hmm_transform(vec2{}, 0.0f, { 500.0f, 50.0f }));
+    vs_params.mvp = HMM_MulM4(create_projection_view_matrix(), ::create_hmm_transform(vec2{-500.0f, 0.0f}, 0.0f, { 100.0f, 20.0f }));
 
     sg_apply_pipeline(state_image.test_sg_image_pip);
     sg_apply_bindings(&state_image.test_sg_image_bind);

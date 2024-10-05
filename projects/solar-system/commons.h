@@ -48,22 +48,22 @@ namespace commons
         double time_offset = 0.0; // in days 
     };
 
-    static frame::vec3 draw_cast(const frame::vec3d& p)
+    [[maybe_unused]] static frame::vec3 draw_cast(const frame::vec3d& p)
     {
         return { (float)(p.x * DRAW_SIZE_FACTOR), (float)(p.y * DRAW_SIZE_FACTOR), (float)frame::clamp(p.z * DRAW_DEPTH_FACTOR, -frame::max_depth, frame::max_depth) };
     }
 
-    static float pixel_to_world(float s)
+    [[maybe_unused]] static float pixel_to_world(float s)
     {
         return s / frame::get_world_scale().x;
     }
 
-    static float world_to_pixel(float s)
+    [[maybe_unused]] static float world_to_pixel(float s)
     {
         return s * frame::get_world_scale().x;
     }
 
-    static std::vector<frame::vec3> draw_cast(const std::vector<frame::vec3d>& data, double scale = 1.0)
+    [[maybe_unused]] static std::vector<frame::vec3> draw_cast(const std::vector<frame::vec3d>& data, double scale = 1.0)
     {
         std::vector<frame::vec3> r;
         r.reserve(data.size());
@@ -72,27 +72,27 @@ namespace commons
         return r;
     }
 
-    static double convert_world_size_to_AU(double world_size)
+    [[maybe_unused]] static double convert_world_size_to_AU(double world_size)
     {
         return unit::AU * world_size / commons::DRAW_SIZE_FACTOR;
     }
 
-    static double convert_km_to_world_size(double value_km)
+    [[maybe_unused]] static double convert_km_to_world_size(double value_km)
     {
         return value_km * commons::DRAW_SIZE_FACTOR * unit::kilometer;
     }
 
-    static double convert_AU_to_world_size(double value_au)
+    [[maybe_unused]] static double convert_AU_to_world_size(double value_au)
     {
         return value_au * commons::DRAW_SIZE_FACTOR * unit::AU;
     }
 
-    static double convert_AU_to_km(double value_au)
+    [[maybe_unused]] static double convert_AU_to_km(double value_au)
     {
         return value_au * 1.496e+8;
     }
 
-    static std::string convert_double_to_string(double num)
+    [[maybe_unused]] static std::string convert_double_to_string(double num)
     {
         std::string text(256, '\0');
         if (std::fabs(num) < 0.000'001 || std::fabs(num) > 100'000.0)
@@ -104,7 +104,7 @@ namespace commons
     }
 
     // https://easings.net/#easeOutCubic
-    static float easing_cubic_out(float x)
+    [[maybe_unused]] static float easing_cubic_out(float x)
     {
         return 1.0f - std::pow(1.0f - x, 3.0f);
     }

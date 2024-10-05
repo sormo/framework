@@ -70,7 +70,6 @@ void body_system::setup_bodies(commons::bodies_included_type type, std::function
     body_files.push_back("bodies/major-bodies.json");
     body_files.push_back("bodies/spacecrafts.json");
 
-    const char* small_bodies_file = nullptr;
     if (type == commons::bodies_included_type::more_than_10)
         body_files.push_back("bodies/small-bodies-sbdb-10km.json");
     else if (type == commons::bodies_included_type::more_than_50)

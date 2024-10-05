@@ -123,7 +123,7 @@ void camera_type::move_internal(std::function<frame::vec2()> move_destination)
 }
 
 camera_type::move_data::move_data(frame::vec2 world_source, std::function<frame::vec2()> world_destination, easing_func eas, float speed, float zoom_speed)
-    : speed(speed), start(world_source), end(world_destination), easing(eas), zoom_speed(zoom_speed)
+    : easing(eas), start(world_source), end(world_destination), speed(speed), zoom_speed(zoom_speed)
 {
 }
 

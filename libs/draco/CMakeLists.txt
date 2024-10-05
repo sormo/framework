@@ -123,6 +123,15 @@ fips_files(
     metadata/metadata_decoder.cc
     metadata/metadata_decoder.h
     point_cloud/point_cloud.cc
-    point_cloud/point_cloud.h
-)
+    point_cloud/point_cloud.h)
+
+    if (FIPS_CLANG OR FIPS_GCC)
+        target_compile_options(draco PUBLIC -Wno-deprecated-copy-with-user-provided-copy
+                                            -Wno-sign-compare
+                                            -Wno-unused-parameter
+                                            -Wno-implicit-const-int-float-conversion
+                                            -Wno-unused-local-typedef
+                                            -Wno-missing-field-initializers)
+    endif()
+
 fips_end_lib(draco)

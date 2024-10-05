@@ -128,7 +128,7 @@ buffer_sg::range_id buffer_sg::append(const char* data, size_t size)
 		else
 		{
 			range.offset = append_buffer_data(data, size);
-			int sg_offset = sg_append_buffer(buffer_id, { data, size });
+			[[maybe_unused]] int sg_offset = sg_append_buffer(buffer_id, { data, size });
 
 			assert(sg_offset == range.offset);
 		}

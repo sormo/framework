@@ -689,22 +689,22 @@ namespace frame
         return -1;
     }
 
-    vec2 get_align_offset_factor(text_align align)
-    {
-        switch (align)
-        {
-        case text_align::top_left: return { -0.5f, -0.5f };
-        case text_align::top_middle: return { 0.0f, -0.5f };
-        case text_align::top_right: return { 0.5f, -0.5f };
-        case text_align::middle_left: return { -0.5f, 0.0f };
-        case text_align::middle_middle: return { 0.0f, 0.0f };
-        case text_align::middle_right: return { 0.5f, 0.0f };
-        case text_align::bottom_left: return { -0.5f, 0.5f };
-        case text_align::bottom_middle: return { 0.0f, 0.5f };
-        case text_align::bottom_right: return { 0.5f, 0.5f };
-        }
-        return {};
-    }
+    //vec2 get_align_offset_factor(text_align align)
+    //{
+    //    switch (align)
+    //    {
+    //    case text_align::top_left: return { -0.5f, -0.5f };
+    //    case text_align::top_middle: return { 0.0f, -0.5f };
+    //    case text_align::top_right: return { 0.5f, -0.5f };
+    //    case text_align::middle_left: return { -0.5f, 0.0f };
+    //    case text_align::middle_middle: return { 0.0f, 0.0f };
+    //    case text_align::middle_right: return { 0.5f, 0.0f };
+    //    case text_align::bottom_left: return { -0.5f, 0.5f };
+    //    case text_align::bottom_middle: return { 0.0f, 0.5f };
+    //    case text_align::bottom_right: return { 0.5f, 0.5f };
+    //    }
+    //    return {};
+    //}
 
     rectangle get_text_rectangle_common(const char* text, const vec2& position, float size, text_align align)
     {
@@ -805,13 +805,8 @@ namespace frame
 
     void set_text_transform2(const vec3& position, float size)
     {
-        // this is attempt to fix slow text rendering when size is big, but doesn't look to help
-        float sizeDiscrete = std::roundf(size);
-        float scale = size / sizeDiscrete;
-
         // TODO
         auto t = get_world_translation();
-        auto s = get_world_scale();
 
         float world[16] =
         {
@@ -961,7 +956,7 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
+        set_world_transform(frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
 
         draw_image_internal(img, size, 1.0f);
 
@@ -977,7 +972,7 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
+        set_world_transform(frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
 
         draw_image_internal(img, size, 1.0f);
 
@@ -992,7 +987,11 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
+        auto translation = screen_position + get_align_offset_factor_image(align) * screen_size;
+        if (radians == 0.0f)
+            set_world_transform(frame::translation(translation) * frame::scale(scale));
+        else
+            set_world_transform(frame::translation(translation) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
 
         draw_image_internal(img, image_size, 1.0f);
 

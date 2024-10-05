@@ -169,7 +169,7 @@ private:
         auto max = frame::vec2(json["maxx"], json["maxy"]);
         node.rect = frame::rectangle::from_min_max(min, max);
 
-        for (const std::string& name : json["bodies"])
+        for (std::string name : json["bodies"])
         {
             if (bodies.count(name))
                 node.bodies.push_back(bodies[name]);

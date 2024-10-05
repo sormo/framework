@@ -40,11 +40,7 @@ public:
     }
     static matrix_type_4 rotation(const point_type<float>& center, float radians)
     {
-        auto T_origin = translation(-center);
-        auto R = rotation(radians);
-        auto T_center = translation(center);
-
-        return T_center * R * T_origin;
+        return HMM_MulM4(HMM_Translate({ center.x, center.y, 0.0f }), HMM_Rotate_RH(radians, { 0.0f, 0.0f, 1.0f }));
     }
     static matrix_type_4 scaling(float x, float y)
     {
@@ -351,7 +347,7 @@ public:
         result += o;
         return result;
     }
-    matrix_type_4& operator+(const matrix_type_4& o)
+    matrix_type_4 operator+(const matrix_type_4& o)
     {
         *this += o;
         return *this;
@@ -362,7 +358,7 @@ public:
         result -= o;
         return result;
     }
-    matrix_type_4& operator-(const matrix_type_4& o)
+    matrix_type_4 operator-(const matrix_type_4& o)
     {
         *this -= o;
         return *this;

@@ -10,7 +10,6 @@ using namespace frame;
 
 // constants
 static const float boundary = 10.0f;
-static const float x_size = 300.0f;
 
 // draw name, type and group
 static const float name_y_size = 30.0f;

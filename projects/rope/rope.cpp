@@ -75,7 +75,7 @@ struct Rope
             bodies[i] = world.m_world.CreateBody(&bodyDef);
 
             fixtureDef.userData.ropeIndex = i;
-            auto fixture = bodies[i]->CreateFixture(&fixtureDef);
+            bodies[i]->CreateFixture(&fixtureDef);
         }
     }
 

@@ -96,7 +96,7 @@ namespace frame
 
 		if (!mz_zip_reader_extract_to_mem(&(archive.archive), file_stats.m_file_index, buffer.data(), buffer.size(), 0))
 		{
-			auto error = mz_zip_get_last_error(&archive.archive);
+			mz_zip_get_last_error(&archive.archive);
 
 			return invalid_file;
 		}

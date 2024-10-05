@@ -66,6 +66,10 @@ std::vector<mat4> transforms;
 
 void apply_transform(const mat4& m)
 {
+    //   [a c e]
+    //   [b d f]
+    //   [0 0 1]
+    //               a                      b                      c                      d                      e                      f
     nvgTransform(vg, m.data.Elements[0][0], m.data.Elements[0][1], m.data.Elements[1][0], m.data.Elements[1][1], m.data.Elements[3][0], m.data.Elements[3][1]);
 }
 
@@ -78,12 +82,12 @@ namespace frame
 {
     void setup_draw_sg();
 
-    col4 rgb(char r, char g, char b)
+    col4 rgb(uint8_t r, uint8_t g, uint8_t b)
     {
         return col4::RGB(r, g, b);
     }
 
-    col4 rgba(char r, char g, char b, char a)
+    col4 rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
         return col4::RGB(r, g, b, a);
     }

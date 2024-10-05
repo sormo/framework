@@ -338,7 +338,7 @@ void World::DrawObject(const ObjectData& data)
 
 void World::DrawRope(const RopeData& data)
 {
-    for (const auto& rope : m_ropes)
+    for (const auto& _ : m_ropes)
     {
         std::vector<frame::vec2> points(data.segments.size() + 2);
 
@@ -578,7 +578,7 @@ void DebugDraw::DrawCircle(const b2Vec2& center, float radius, const b2Color& co
     frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }
 
-void DebugDraw::DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color)
+void DebugDraw::DrawSolidCircle(const b2Vec2& center, float radius, [[maybe_unused]] const b2Vec2& axis, const b2Color& color)
 {
     frame::draw_circle_ex(WorldScalePoint(center), 0.0f, radius * WorldScale, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }
@@ -588,12 +588,12 @@ void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& c
     frame::draw_line_solid(WorldScalePoint(p1), WorldScalePoint(p2), color_type::RGBf(color.r, color.g, color.b, color.a));
 }
 
-void DebugDraw::DrawTransform(const b2Transform& xf)
+void DebugDraw::DrawTransform([[maybe_unused]] const b2Transform& xf)
 {
 
 }
 
-void DebugDraw::DrawPoint(const b2Vec2& p, float size, const b2Color& color)
+void DebugDraw::DrawPoint(const b2Vec2& p, [[maybe_unused]] float size, const b2Color& color)
 {
     frame::draw_circle_ex(WorldScalePoint(p), 0.0f, 2.0f, color_type::RGBf(color.r, color.g, color.b, color.a), 0.0f, color_type::BLANK);
 }

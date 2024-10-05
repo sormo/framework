@@ -36,4 +36,10 @@ fips_begin_lib(framework)
     sokol_shader(shaders/basic_instanced.glsl ${slang})
     sokol_shader(shaders/basic.glsl ${slang})
     sokol_shader(shaders/sshapes.glsl ${slang})
+
+    if (FIPS_CLANG OR FIPS_GCC)
+        target_compile_options(framework PUBLIC -Wno-missing-braces
+                                                -Wno-switch)
+    endif()
+
 fips_end_lib()

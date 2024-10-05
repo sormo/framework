@@ -146,10 +146,6 @@ void bodies_tree::load(std::vector<const char*> json_datas)
             if (settings.disable_inclination)
                 inclination = 0.0;
 
-            double AU = 1.495978707e11;
-            // TODO G constant is used as free parameter to fixate orbits periods values while SemiMajor axis parameter is adjusted for the scene.
-            double compensatedGConst = unit::GRAVITATIONAL_CONSTANT / pow(AU / unit::AU, 3.0);
-
             kepler_orbit orbit;
             double attractor_mass = kepler_orbit::compute_mass(semi_major_axis * unit::AU * sqrt(1.0 - eccentricity * eccentricity), period, unit::GRAVITATIONAL_CONSTANT);
 
@@ -255,7 +251,7 @@ void bodies_tree::load(std::vector<const char*> json_datas)
 
 void bodies_tree::update_current_positions(const quadtree::query_result_type& parents)
 {
-    std::function<void(vec3, body_node&)> update_recursive = [this, &update_recursive](vec3 parent_position, body_node& data)
+    std::function<void(vec3, body_node&)> update_recursive = [&update_recursive](vec3 parent_position, body_node& data)
     {
         if (is_body_node_skip(data))
             return;

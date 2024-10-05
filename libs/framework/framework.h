@@ -51,8 +51,8 @@ namespace frame
         bool contains(const rectangle& o) const; // return true if rectangle o is completly inside this rect
     };
 
-    col4 rgb(char r, char g, char b);
-    col4 rgba(char r, char g, char b, char a);
+    col4 rgb(uint8_t r, uint8_t g, uint8_t b);
+    col4 rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     float get_delta_time(); // time since last frame [ms]
     float get_time(); // time since start [ms]

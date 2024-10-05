@@ -97,7 +97,7 @@ void evaluate_body_view(bool init = false, bool allow_camera_move = false)
     if ((init || state.view_body != state.clicked_body) && semi_major_axis_pixels_clicked > semi_major_axis_pixels_clicked_threshold)
     {
         apply_view(state.clicked_body);
-        camera.follow([body = state.clicked_body]() { return vec2{}; }, allow_camera_move);
+        camera.follow([]() { return vec2{}; }, allow_camera_move);
     }
     else if ((init || state.view_body != state.clicked_body->get_main_body()) && semi_major_axis_pixels_clicked < semi_major_axis_pixels_clicked_threshold && semi_major_axis_pixels_main > semi_major_axis_pixels_main_threshold)
     {
