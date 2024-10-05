@@ -6,7 +6,8 @@ fips_begin_lib(framework)
                world.h
                world.cpp
                point_type.h
-               matrix_type.h
+               matrix_type_3.h
+               matrix_type_4.h
                imgui_impl.h
                imgui_impl.cpp
                drawing.cpp
