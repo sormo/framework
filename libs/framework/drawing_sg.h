@@ -48,22 +48,22 @@ namespace frame
 
 	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	size_t add_draw_instance(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color);
-	size_t add_draw_instance(draw_buffer_id id, const frame::mat3& transform, frame::col4 color);
+	size_t add_draw_instance(draw_buffer_id id, const frame::mat4& transform, frame::col4 color);
 	void remove_draw_instance(draw_buffer_id id, size_t index);
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
-	void update_draw_instance(draw_buffer_id id, size_t index, const frame::mat3& transform, frame::col4 color);
+	void update_draw_instance(draw_buffer_id id, size_t index, const frame::mat4& transform, frame::col4 color);
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec2& position, const frame::col4& color);
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec3& position, const frame::col4& color);
 
 	void draw_buffer(draw_buffer_id id, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color);
 	void draw_buffer(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color);
-	void draw_buffer(draw_buffer_id id, const frame::mat3& transform, frame::col4 color);
+	void draw_buffer(draw_buffer_id id, const frame::mat4& transform, frame::col4 color);
 	void draw_buffer_instanced(draw_buffer_id id);
 	void draw_buffer_instanced(draw_buffer_id id, size_t count);
 
 	// optimization to avoid creating multiple projection/view matrices
-	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat3>& transforms, const std::vector<frame::col4>& colors);
+	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat4>& transforms, const std::vector<frame::col4>& colors);
 	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<HMM_Mat4>& transforms, const std::vector<frame::col4>& colors);
 
 	// ---
@@ -81,13 +81,14 @@ namespace frame
 	HMM_Mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
 	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size);
 	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size);
-	HMM_Mat4 create_world_mvp(const frame::mat3& transform);
+	HMM_Mat4 create_world_mvp(const frame::mat4& transform);
 
 	HMM_Mat4 create_projection_view_matrix();
 
 	// TODO what about getting rid of mat3 ???
 	// drawing with depth allows using vec3 for position
 	HMM_Mat4 create_hmm_transform(const frame::mat3& transform);
+	HMM_Mat4 create_hmm_transform(const frame::mat4& transform);
 	HMM_Mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size);
 	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec2 size);
 

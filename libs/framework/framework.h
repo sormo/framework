@@ -3,7 +3,8 @@
 #include <nanovg.h>
 #include <fontstash.h>
 #include "point_type.h"
-#include "matrix_type.h"
+#include "matrix_type_4.h"
+#include "matrix_type_3.h"
 #include "color_type.h"
 #include <functional>
 #include <vector>
@@ -24,8 +25,9 @@ namespace frame
     using vec2 = point_type<float>;
     using vec2d = point_type<double>;
     using col4 = color_type;
-    using mat3 = matrix_type<float>;
-    using mat3d = matrix_type<double>;
+
+    using mat4 = matrix_type_4;
+    using mat3 = matrix_type_3<float>;
 
     using vec3 = point_type_3<float>;
     using vec3d = point_type_3<double>;
@@ -74,28 +76,35 @@ namespace frame
 
     // *** transform ***
 
-    mat3 translation(const vec2& translation);
-    mat3 rotation(float rotation);
-    mat3 rotation(const vec2& center, float rotation);
-    mat3 scale(const vec2& scale);
-    mat3 identity();
+    mat4 translation(const vec2& translation);
+    mat4 rotation(float rotation);
+    mat4 rotation(const vec2& center, float rotation);
+    mat4 scale(const vec2& scale);
+    mat4 identity();
+
+    // 3D transform
+
+    mat4 translation(const vec3& translation);
+    mat4 scale(const vec3& scale);
 
     // *** world ***
     // WORLD COORDINATES - world transform is transformation matrix that transforms world to screen
     //
     // ! world transform ! - transforms world -> screen
     //
-    void set_world_transform(const mat3& transform); // reset the last transform
-    void set_world_transform_multiply(const mat3& transform); // reset the last transform
+    void set_world_transform(const mat4& transform); // reset the last transform
+    void set_world_transform_multiply(const mat4& transform); // reset the last transform
 
     void save_world_transform();
     void restore_world_transform();
 
-    const mat3& get_world_transform();
+    const mat4& get_world_transform();
 
+    //vec2 get_world_translation();
     vec2 get_world_translation();
     void set_world_translation(const vec2& translation);
 
+    //vec2 get_world_scale();
     vec2 get_world_scale();
     void set_world_scale(const vec2& scale);
     void set_world_scale(const vec2& scale, const vec2& stationary_world_point); // stationary_world_point is point that should preserve it's position
@@ -106,6 +115,14 @@ namespace frame
     // pos x and y is between 0 and 1, returns world position on screen at these coordinate offsets
     vec2 get_world_position_screen_relative(const vec2& rel);
     void set_world_translation(const vec2& screen_point, const vec2& world_point); // modify world translation such that screen_point match the world point
+
+    // 3D transform
+
+    vec3 get_world_translation_3();
+    vec3 get_world_scale_3();
+
+    void set_world_translation(const vec3& translation);
+    void set_world_scale(const vec3& scale);
 
     // *** events ***
     enum class mouse_button { left, right, middle };

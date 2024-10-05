@@ -595,6 +595,8 @@ void update_text()
 
     // Special characters
     // TODO doesn't work
+#pragma warning(push)
+#pragma warning(disable: 4566)
 
     d.x = sx;
     d.y += get_font_metrics2("Regular", 24.0f).line_height * 1.5f;
@@ -603,6 +605,8 @@ void update_text()
     d.x = sx;
     d.y += get_font_metrics2("Italic", 18.0f).line_height * 1.2f;
     draw_text_ex2("私はガラスを食べられます。それは私を傷つけません。", { d / sc, 0.0f }, 18.0f, white, "Japanese", text_align::baseline_left);
+
+#pragma warning(pop)
 
     // Allignment
 

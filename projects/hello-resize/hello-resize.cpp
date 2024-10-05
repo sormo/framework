@@ -118,7 +118,7 @@ void setup()
 
     set_world_transform(translation({ 0.0f, get_screen_size().y }) * scale({ 1.0f, -1.0f }));
 
-    auto m = mat3::translation({ 0.0f, 600.0f }) * mat3::scaling({ 1.0f, -1.0f });
+    auto m = mat4::translation({ 0.0f, 600.0f }) * mat4::scaling({ 1.0f, -1.0f });
     auto mi = m.inverted();
     auto p = mi.transform_point(vec2{ 0.0f, 0.0f });
 

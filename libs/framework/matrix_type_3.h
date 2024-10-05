@@ -2,61 +2,61 @@
 #include <point_type.h>
 
 template<typename M>
-class matrix_type
+class matrix_type_3
 {
 public:
-    static matrix_type translation(M x, M y);
-    static matrix_type translation(const point_type<M>& translation);
-    static matrix_type rotation(M radians);
-    static matrix_type rotation(const point_type<M>& center, M radians);
-    static matrix_type scaling(M x, M y);
-    static matrix_type scaling(const point_type<M>& scale);
-    static matrix_type identity();
-    static matrix_type projection(const point_type<M>& size);
-    static matrix_type projection(const point_type<M>& bottom_left, const point_type<M>& upper_right);
+    static matrix_type_3 translation(M x, M y);
+    static matrix_type_3 translation(const point_type<M>& translation);
+    static matrix_type_3 rotation(M radians);
+    static matrix_type_3 rotation(const point_type<M>& center, M radians);
+    static matrix_type_3 scaling(M x, M y);
+    static matrix_type_3 scaling(const point_type<M>& scale);
+    static matrix_type_3 identity();
+    static matrix_type_3 projection(const point_type<M>& size);
+    static matrix_type_3 projection(const point_type<M>& bottom_left, const point_type<M>& upper_right);
 
-    matrix_type& translate(M x, M y);
-    matrix_type& translate(const point_type<M>& scale);
-    matrix_type translated(M x, M y) const;
-    matrix_type translated(const point_type<M>& scale) const;
+    matrix_type_3& translate(M x, M y);
+    matrix_type_3& translate(const point_type<M>& scale);
+    matrix_type_3 translated(M x, M y) const;
+    matrix_type_3 translated(const point_type<M>& scale) const;
 
-    matrix_type& rotate(M x);
-    matrix_type rotated(M x) const;
+    matrix_type_3& rotate(M x);
+    matrix_type_3 rotated(M x) const;
 
-    matrix_type& scale(M x, M y);
-    matrix_type& scale(const point_type<M>& scale);
-    matrix_type scaled(M x, M y) const;
-    matrix_type scaled(const point_type<M>& scale) const;
+    matrix_type_3& scale(M x, M y);
+    matrix_type_3& scale(const point_type<M>& scale);
+    matrix_type_3 scaled(M x, M y) const;
+    matrix_type_3 scaled(const point_type<M>& scale) const;
 
     point_type<M> get_scale() const;
     point_type<M> get_translation() const;
     void set_scale(const point_type<M>& scale);
     void set_translation(const point_type<M>& translation);
 
-    std::array<bool, 9> operator<(const matrix_type& other) const;
-    std::array<bool, 9> operator>(const matrix_type& other) const;
-    std::array<bool, 9> operator==(const matrix_type& other) const;
+    std::array<bool, 9> operator<(const matrix_type_3& other) const;
+    std::array<bool, 9> operator>(const matrix_type_3& other) const;
+    std::array<bool, 9> operator==(const matrix_type_3& other) const;
 
-    template<class T> matrix_type& operator+=(T o);
-    template<class T> matrix_type& operator-=(T o);
-    template<class T> matrix_type& operator*=(T o);
-    template<class T> matrix_type& operator/=(T o);
-    matrix_type& operator+=(const matrix_type& o);
-    matrix_type& operator-=(const matrix_type& o);
-    //matrix_type& operator*=(const matrix_type& o);
-    //matrix_type& operator/=(const matrix_type& o);
-    template<class T> matrix_type operator+(T o) const;
-    template<class T> matrix_type operator-(T o) const;
-    template<class T> matrix_type operator*(T o) const;
-    template<class T> matrix_type operator/(T o) const;
-    matrix_type operator+(const matrix_type& o) const;
-    matrix_type operator-(const matrix_type& o) const;
-    matrix_type operator*(const matrix_type& o) const;
-    //matrix_type operator/(const matrix_type& o) const;
+    template<class T> matrix_type_3& operator+=(T o);
+    template<class T> matrix_type_3& operator-=(T o);
+    template<class T> matrix_type_3& operator*=(T o);
+    template<class T> matrix_type_3& operator/=(T o);
+    matrix_type_3& operator+=(const matrix_type_3& o);
+    matrix_type_3& operator-=(const matrix_type_3& o);
+    //matrix_type_3& operator*=(const matrix_type_3& o);
+    //matrix_type_3& operator/=(const matrix_type_3& o);
+    template<class T> matrix_type_3 operator+(T o) const;
+    template<class T> matrix_type_3 operator-(T o) const;
+    template<class T> matrix_type_3 operator*(T o) const;
+    template<class T> matrix_type_3 operator/(T o) const;
+    matrix_type_3 operator+(const matrix_type_3& o) const;
+    matrix_type_3 operator-(const matrix_type_3& o) const;
+    matrix_type_3 operator*(const matrix_type_3& o) const;
+    //matrix_type_3 operator/(const matrix_type_3& o) const;
 
-    matrix_type transposed() const;
-    matrix_type inverted() const;
-    matrix_type inverted_rigid() const;
+    matrix_type_3 transposed() const;
+    matrix_type_3 inverted() const;
+    matrix_type_3 inverted_rigid() const;
 
     template<class T> point_type<T> transform_vector(const point_type<T>& vector) const;
     template<class T> point_type<T> transform_point(const point_type<T>& vector) const;
@@ -71,7 +71,7 @@ public:
 // implementation of template methods
 
 template<typename M>
-matrix_type<M> matrix_type<M>::translation(M x, M y)
+matrix_type_3<M> matrix_type_3<M>::translation(M x, M y)
 {
     return { M(1), M(0),   x,
              M(0), M(1),   y,
@@ -79,13 +79,13 @@ matrix_type<M> matrix_type<M>::translation(M x, M y)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::translation(const point_type<M>& t)
+matrix_type_3<M> matrix_type_3<M>::translation(const point_type<M>& t)
 {
     return translation(t.x, t.y);
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::rotation(M radians)
+matrix_type_3<M> matrix_type_3<M>::rotation(M radians)
 {
     const M sine = std::sin(radians);
     const M cosine = std::cos(radians);
@@ -96,7 +96,7 @@ matrix_type<M> matrix_type<M>::rotation(M radians)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::rotation(const point_type<M>& center, M radians)
+matrix_type_3<M> matrix_type_3<M>::rotation(const point_type<M>& center, M radians)
 {
     auto T_origin = translation(-center);
     auto R = rotation(radians);
@@ -106,13 +106,13 @@ matrix_type<M> matrix_type<M>::rotation(const point_type<M>& center, M radians)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::scaling(const point_type<M>& s)
+matrix_type_3<M> matrix_type_3<M>::scaling(const point_type<M>& s)
 {
     return scaling(s.x, s.y);
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::scaling(M x, M y)
+matrix_type_3<M> matrix_type_3<M>::scaling(M x, M y)
 {
     return {   x , M(0), M(0),
              M(0),   y , M(0),
@@ -120,7 +120,7 @@ matrix_type<M> matrix_type<M>::scaling(M x, M y)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::identity()
+matrix_type_3<M> matrix_type_3<M>::identity()
 {
     return { M(1), M(0), M(0),
              M(0), M(1), M(0),
@@ -128,13 +128,13 @@ matrix_type<M> matrix_type<M>::identity()
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::projection(const point_type<M>& size)
+matrix_type_3<M> matrix_type_3<M>::projection(const point_type<M>& size)
 {
     return scaling(size / 2.0f);
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::projection(const point_type<M>& bottom_left, const point_type<M>& upper_right)
+matrix_type_3<M> matrix_type_3<M>::projection(const point_type<M>& bottom_left, const point_type<M>& upper_right)
 {
     const point_type<M> difference = upper_right - bottom_left;
     const point_type<M> scale = { M(2.0) / difference.x, M(2.0) / difference.y };
@@ -146,7 +146,7 @@ matrix_type<M> matrix_type<M>::projection(const point_type<M>& bottom_left, cons
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>::translate(M x, M y)
+matrix_type_3<M>& matrix_type_3<M>::translate(M x, M y)
 {
     // TODO in place ?
     //data = { data[0], data[1], x*data[0] + y*data[1] + data[2],
@@ -158,25 +158,25 @@ matrix_type<M>& matrix_type<M>::translate(M x, M y)
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>::translate(const point_type<M>& vec)
+matrix_type_3<M>& matrix_type_3<M>::translate(const point_type<M>& vec)
 {
     return translate(vec.x, vec.y);
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::translated(M x, M y) const
+matrix_type_3<M> matrix_type_3<M>::translated(M x, M y) const
 {
     return translation(x, y) * *this;
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::translated(const point_type<M>& vec) const
+matrix_type_3<M> matrix_type_3<M>::translated(const point_type<M>& vec) const
 {
     return translated(vec.x, vec.y);
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>:: rotate(M x)
+matrix_type_3<M>& matrix_type_3<M>:: rotate(M x)
 {
     // TODO in place ?
     data = (rotation(x) * *this).data;
@@ -184,38 +184,38 @@ matrix_type<M>& matrix_type<M>:: rotate(M x)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::rotated(M x) const
+matrix_type_3<M> matrix_type_3<M>::rotated(M x) const
 {
     return rotation(x) * *this;
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>:: scale(M x, M y)
+matrix_type_3<M>& matrix_type_3<M>:: scale(M x, M y)
 {
     data = (scaling(x, y) * *this).data;
     return *this;
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>:: scale(const point_type<M>& scale)
+matrix_type_3<M>& matrix_type_3<M>:: scale(const point_type<M>& scale)
 {
     return scale(scale.x, scale.y);
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::scaled(M x, M y) const
+matrix_type_3<M> matrix_type_3<M>::scaled(M x, M y) const
 {
     return scaling(x, y) * *this;
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::scaled(const point_type<M>& scale) const
+matrix_type_3<M> matrix_type_3<M>::scaled(const point_type<M>& scale) const
 {
     return scaled(scale.x, scale.y);
 }
 
 template<typename M>
-std::array<bool, 9> matrix_type<M>::operator<(const matrix_type& other) const
+std::array<bool, 9> matrix_type_3<M>::operator<(const matrix_type_3& other) const
 {
     std::array<bool, 9> result;
     for (int i = 0; i < 9; i++)
@@ -224,7 +224,7 @@ std::array<bool, 9> matrix_type<M>::operator<(const matrix_type& other) const
 }
 
 template<typename M>
-std::array<bool, 9> matrix_type<M>::operator>(const matrix_type& other) const
+std::array<bool, 9> matrix_type_3<M>::operator>(const matrix_type_3& other) const
 {
     std::array<bool, 9> result;
     for (int i = 0; i < 9; i++)
@@ -233,7 +233,7 @@ std::array<bool, 9> matrix_type<M>::operator>(const matrix_type& other) const
 }
 
 template<typename M>
-std::array<bool, 9> matrix_type<M>::operator==(const matrix_type& other) const
+std::array<bool, 9> matrix_type_3<M>::operator==(const matrix_type_3& other) const
 {
     std::array<bool, 9> result;
     for (int i = 0; i < 9; i++)
@@ -243,7 +243,7 @@ std::array<bool, 9> matrix_type<M>::operator==(const matrix_type& other) const
 
 template<typename M>
 template<typename T>
-matrix_type<M>& matrix_type<M>::operator+=(T o)
+matrix_type_3<M>& matrix_type_3<M>::operator+=(T o)
 {
     for (int i = 0; i < 9; i++)
         data[i] += (M)o;
@@ -251,7 +251,7 @@ matrix_type<M>& matrix_type<M>::operator+=(T o)
 
 template<typename M>
 template<typename T>
-matrix_type<M>& matrix_type<M>::operator-=(T o)
+matrix_type_3<M>& matrix_type_3<M>::operator-=(T o)
 {
     for (int i = 0; i < 9; i++)
         data[i] -= (M)o;
@@ -259,7 +259,7 @@ matrix_type<M>& matrix_type<M>::operator-=(T o)
 
 template<typename M>
 template<typename T>
-matrix_type<M>& matrix_type<M>::operator*=(T o)
+matrix_type_3<M>& matrix_type_3<M>::operator*=(T o)
 {
     for (int i = 0; i < 9; i++)
         data[i] *= (M)o;
@@ -267,21 +267,21 @@ matrix_type<M>& matrix_type<M>::operator*=(T o)
 
 template<typename M>
 template<typename T>
-matrix_type<M>& matrix_type<M>::operator/=(T o)
+matrix_type_3<M>& matrix_type_3<M>::operator/=(T o)
 {
     for (int i = 0; i < 9; i++)
         data[i] /= (M)o;
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>::operator+=(const matrix_type& o)
+matrix_type_3<M>& matrix_type_3<M>::operator+=(const matrix_type_3& o)
 {
     for (int i = 0; i < 9; i++)
         data[i] += o.data[i];
 }
 
 template<typename M>
-matrix_type<M>& matrix_type<M>::operator-=(const matrix_type& o)
+matrix_type_3<M>& matrix_type_3<M>::operator-=(const matrix_type_3& o)
 {
     for (int i = 0; i < 9; i++)
         data[i] -= o.data[i];
@@ -289,60 +289,60 @@ matrix_type<M>& matrix_type<M>::operator-=(const matrix_type& o)
 
 template<typename M>
 template<typename T>
-matrix_type<M> matrix_type<M>::operator+(T o) const
+matrix_type_3<M> matrix_type_3<M>::operator+(T o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result += o;
     return result;
 }
 
 template<typename M>
 template<typename T>
-matrix_type<M> matrix_type<M>::operator-(T o) const
+matrix_type_3<M> matrix_type_3<M>::operator-(T o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result -= o;
     return result;
 }
 
 template<typename M>
 template<typename T>
-matrix_type<M> matrix_type<M>::operator*(T o) const
+matrix_type_3<M> matrix_type_3<M>::operator*(T o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result *= o;
     return result;
 }
 
 template<typename M>
 template<typename T>
-matrix_type<M> matrix_type<M>::operator/(T o) const
+matrix_type_3<M> matrix_type_3<M>::operator/(T o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result /= o;
     return result;
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::operator+(const matrix_type& o) const
+matrix_type_3<M> matrix_type_3<M>::operator+(const matrix_type_3& o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result += o;
     return result;
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::operator-(const matrix_type& o) const
+matrix_type_3<M> matrix_type_3<M>::operator-(const matrix_type_3& o) const
 {
-    matrix_type<M> result(this->data);
+    matrix_type_3<M> result(this->data);
     result -= o;
     return result;
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::operator*(const matrix_type& o) const
+matrix_type_3<M> matrix_type_3<M>::operator*(const matrix_type_3& o) const
 {
-    matrix_type<M> result{};
+    matrix_type_3<M> result{};
     for (int r = 0; r < 3; ++r)
         for (int c = 0; c < 3; ++c)
             for (int k = 0; k < 3; ++k)
@@ -351,9 +351,9 @@ matrix_type<M> matrix_type<M>::operator*(const matrix_type& o) const
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::transposed() const
+matrix_type_3<M> matrix_type_3<M>::transposed() const
 {
-    matrix_type<M> result{};
+    matrix_type_3<M> result{};
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
             result.data[i * 3 + j] = data[j * 3 + i];
@@ -361,7 +361,7 @@ matrix_type<M> matrix_type<M>::transposed() const
 }
 
 template<typename M>
-M matrix_type<M>::determinant() const
+M matrix_type_3<M>::determinant() const
 {
     return data[0] * (data[4] * data[8] - data[7] * data[5]) -
            data[1] * (data[3] * data[8] - data[6] * data[5]) +
@@ -406,9 +406,9 @@ void invert3x3(const M* src, M* dst)
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::inverted() const
+matrix_type_3<M> matrix_type_3<M>::inverted() const
 {
-    matrix_type<M> result;
+    matrix_type_3<M> result;
 
     invert3x3(data.data(), result.data.data());
 
@@ -416,7 +416,7 @@ matrix_type<M> matrix_type<M>::inverted() const
 }
 
 template<typename M>
-bool matrix_type<M>::is_rigid() const
+bool matrix_type_3<M>::is_rigid() const
 {
     // Calculate transpose
     auto t = transposed();
@@ -438,12 +438,12 @@ bool matrix_type<M>::is_rigid() const
 }
 
 template<typename M>
-matrix_type<M> matrix_type<M>::inverted_rigid() const
+matrix_type_3<M> matrix_type_3<M>::inverted_rigid() const
 {
     // assume rigid
 
     // The inverse of the rotation matrix is its transpose
-    matrix_type<M> result;
+    matrix_type_3<M> result;
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
             result[i * 3 + j] = data[j * 3 + i];
@@ -458,7 +458,7 @@ matrix_type<M> matrix_type<M>::inverted_rigid() const
 
 template<typename M>
 template<typename T>
-point_type<T> matrix_type<M>::transform_vector(const point_type<T>& vector) const
+point_type<T> matrix_type_3<M>::transform_vector(const point_type<T>& vector) const
 {
     return { data[0] * vector.x + data[1] * vector.y,
              data[3] * vector.x + data[4] * vector.y };
@@ -466,33 +466,33 @@ point_type<T> matrix_type<M>::transform_vector(const point_type<T>& vector) cons
 
 template<typename M>
 template<typename T>
-point_type<T> matrix_type<M>::transform_point(const point_type<T>& vector) const
+point_type<T> matrix_type_3<M>::transform_point(const point_type<T>& vector) const
 {
     return { data[0] * vector.x + data[1] * vector.y + data[2],
              data[3] * vector.x + data[4] * vector.y + data[5] };
 }
 
 template<typename M>
-point_type<M> matrix_type<M>::get_scale() const
+point_type<M> matrix_type_3<M>::get_scale() const
 {
     return { data[0], data[4] };
 }
 
 template<typename M>
-point_type<M> matrix_type<M>::get_translation() const
+point_type<M> matrix_type_3<M>::get_translation() const
 {
     return { data[2], data[5] };
 }
 
 template<typename M>
-void matrix_type<M>::set_scale(const point_type<M>& scale)
+void matrix_type_3<M>::set_scale(const point_type<M>& scale)
 {
     data[0] = scale.x;
     data[4] = scale.y;
 }
 
 template<typename M>
-void matrix_type<M>::set_translation(const point_type<M>& translation)
+void matrix_type_3<M>::set_translation(const point_type<M>& translation)
 {
     data[2] = translation.x;
     data[5] = translation.y;

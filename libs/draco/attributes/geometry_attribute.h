@@ -369,7 +369,10 @@ class GeometryAttribute {
       if (!std::is_same<T, bool>::value && std::is_integral<T>::value) {
         static constexpr OutT kOutMin =
             std::is_signed<T>::value ? std::numeric_limits<OutT>::min() : 0;
+#pragma warning( push )
+#pragma warning( disable : 4804)
         if (in_value < kOutMin || in_value > std::numeric_limits<OutT>::max()) {
+#pragma warning( pop ) 
           return false;
         }
       }
@@ -397,8 +400,11 @@ class GeometryAttribute {
 
         // Make sure the floating point |in_value| fits within the range of
         // values that integral type OutT is able to represent.
+#pragma warning( push )
+#pragma warning( disable : 4804)
         if (in_value < std::numeric_limits<OutT>::min() ||
             in_value >= std::numeric_limits<OutT>::max()) {
+#pragma warning( pop ) 
           return false;
         }
       }
@@ -413,7 +419,10 @@ class GeometryAttribute {
     } else if (std::is_floating_point<T>::value &&
                std::is_integral<OutT>::value && normalized) {
       // Converting from floating point to a normalized integer.
+#pragma warning( push )
+#pragma warning( disable : 4804)
       if (in_value > 1 || in_value < 0) {
+#pragma warning( pop ) 
         // Normalized float values need to be between 0 and 1.
         return false;
       }

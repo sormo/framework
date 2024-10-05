@@ -292,7 +292,7 @@ void body_info::draw()
         return;
 
     frame::save_world_transform();
-    frame::set_world_transform(frame::mat3::identity());
+    frame::set_world_transform(frame::mat4::identity());
     frame::set_world_translation(draw_position);
 
     auto rect = get_info_rectangle();

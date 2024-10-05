@@ -8,7 +8,7 @@ namespace view
 	void set_view(std::function<frame::vec2()> world_position, double scale);
 	void clear_view();
 
-	frame::mat3 get_world_transform();
+	frame::mat4 get_world_transform();
 
 	frame::vec2 get_world_to_view(const frame::vec2& world_position);
 	frame::vec2 get_view_to_world(const frame::vec2& view_position);

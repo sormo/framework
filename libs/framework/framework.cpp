@@ -61,7 +61,13 @@ std::chrono::time_point<std::chrono::high_resolution_clock> start_frame;
 float frame_delta = 0.0f;
 
 // TODO store also lazily inversion
-std::vector<mat3> transforms;
+std::vector<mat4> transforms;
+//std::vector<mat3> transforms;
+
+void apply_transform(const mat4& m)
+{
+    nvgTransform(vg, m.data.Elements[0][0], m.data.Elements[0][1], m.data.Elements[1][0], m.data.Elements[1][1], m.data.Elements[3][0], m.data.Elements[3][1]);
+}
 
 void apply_transform(const mat3& m)
 {
@@ -126,32 +132,43 @@ namespace frame
         return (float)std::chrono::duration_cast<std::chrono::milliseconds>(now - start_application).count();
     }
 
-    mat3 translation(const vec2& translation)
+    mat4 translation(const vec2& translation)
     {
-        return mat3::translation(translation);
+        return mat4::translation(translation);
     }
 
-    mat3 rotation(float rotation)
+    mat4 translation(const vec3& translation)
     {
-        return mat3::rotation(rotation);
+        return mat4::translation(translation);
     }
 
-    mat3 rotation(const vec2& center, float rotation)
+
+    mat4 rotation(float rotation)
     {
-        return mat3::rotation(center, rotation);
+        return mat4::rotation(rotation);
     }
 
-    mat3 scale(const vec2& scale)
+    mat4 rotation(const vec2& center, float rotation)
     {
-        return mat3::scaling(scale);
+        return mat4::rotation(center, rotation);
     }
 
-    mat3 identity()
+    mat4 scale(const vec2& scale)
     {
-        return mat3::identity();
+        return mat4::scaling(scale);
     }
 
-    void set_world_transform(const mat3& transform)
+    mat4 scale(const vec3& scale)
+    {
+        return mat4::scaling(scale);
+    }
+
+    mat4 identity()
+    {
+        return mat4::identity();
+    }
+
+    void set_world_transform(const mat4& transform)
     {
         if (transforms.size() == 1)
             transforms.push_back(transform);
@@ -162,7 +179,7 @@ namespace frame
         apply_transform(transform);
     }
 
-    void set_world_transform_multiply(const mat3& transform)
+    void set_world_transform_multiply(const mat4& transform)
     {
         transforms.back() = transform * transforms.back();
         apply_transform(transform);
@@ -185,7 +202,7 @@ namespace frame
         apply_transform(transforms.back());
     }
 
-    const mat3& get_world_transform()
+    const mat4& get_world_transform()
     {
         return transforms.back();
     }
@@ -241,6 +258,14 @@ namespace frame
         apply_transform(transforms.back());
     }
 
+    void set_world_translation(const vec3& translation)
+    {
+        transforms.back().set_translation(translation);
+
+        nvgResetTransform(vg);
+        apply_transform(transforms.back());
+    }
+
     void set_world_translation(const vec2& screen_point, const vec2& world_point)
     {
         // find new translation such that world_point is transformed to screen_point
@@ -258,8 +283,11 @@ namespace frame
 
         const auto& M = transforms.back().data;
 
-        float c = screen_point.x - M[0] * world_point.x - M[1] * world_point.y;
-        float f = screen_point.y - M[3] * world_point.x - M[4] * world_point.y;
+        float c = screen_point.x - M.Elements[0][0] * world_point.x - M.Elements[1][0] * world_point.y;
+        float f = screen_point.y - M.Elements[0][1] * world_point.x - M.Elements[1][1] * world_point.y;
+		// mat3 :
+        //float c = screen_point.x - M[0] * world_point.x - M[1] * world_point.y;
+        //float f = screen_point.y - M[3] * world_point.x - M[4] * world_point.y;
 
         set_world_translation({ c,f });
     }
@@ -275,9 +303,16 @@ namespace frame
         set_world_transform(transforms.back());
     }
 
+    void set_world_scale(const vec3& scale)
+    {
+        transforms.back().set_scale(scale);
+        set_world_transform(transforms.back());
+    }
+
+
     void set_world_scale(const vec2& scale, const vec2& stationary_world_point)
     {
-        mat3 new_transform = mat3::scaling(scale);
+        mat4 new_transform = mat4::scaling(scale);
         // find new translation such that we will preserve stationary_world_point(after scale)
         // what we need to achieve is that current stationary screen position s maps to same world position w (as with current transform)
         // M * w = s
@@ -292,8 +327,26 @@ namespace frame
         {
             vec2 s = transforms.back().transform_point(stationary_world_point);
             const vec2& w = stationary_world_point;
-            float c = s.x - new_transform.data[0] * w.x - new_transform.data[1] * w.y;
-            float f = s.y - new_transform.data[3] * w.x - new_transform.data[4] * w.y;
+            float c = s.x - new_transform.data.Elements[0][0] * w.x - new_transform.data.Elements[1][0] * w.y;
+            float f = s.y - new_transform.data.Elements[0][1] * w.x - new_transform.data.Elements[1][1] * w.y;
+			// mat3:
+            //float c = s.x - new_transform.data[0] * w.x - new_transform.data[1] * w.y;
+            //float f = s.y - new_transform.data[3] * w.x - new_transform.data[4] * w.y;
+
+            new_transform.set_translation({ c, f });
+        }
+        set_world_transform(new_transform);
+    }
+
+    void set_world_scale(const vec3& scale, const vec3& stationary_world_point)
+    {
+        mat4 new_transform = mat4::scaling(scale);
+        {
+            vec3 s = transforms.back().transform_point(stationary_world_point);
+            const vec3& w = stationary_world_point;
+            float c = s.x - new_transform.data.Elements[0][0] * w.x - new_transform.data.Elements[1][0] * w.y;
+            float f = s.y - new_transform.data.Elements[0][1] * w.x - new_transform.data.Elements[0][1] * w.y;
+            //float i = s.z - new_transform.data[6] * w.x - new_transform.data[7] * w.y;
 
             new_transform.set_translation({ c,f });
         }
@@ -605,7 +658,7 @@ sapp_desc sokol_main(int argc, char* argv[])
     (void)argv;
 
     start_application = start_frame = std::chrono::steady_clock::now();
-    transforms.push_back(mat3::identity());
+    transforms.push_back(mat4::identity());
 
     sapp_desc desc{};
     desc.init_cb = init;

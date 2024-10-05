@@ -14,7 +14,7 @@ namespace view
 	namespace impl
 	{
 		// create world transform from given view transform
-		frame::mat3 get_transform_to_world(const mat3& view_transform)
+		frame::mat4 get_transform_to_world(const mat4& view_transform)
 		{
 			auto translation = view_transform.get_translation() - state.world_position() * view_transform.get_scale() * state.scale;
 			auto scale = view_transform.get_scale() * state.scale;
@@ -23,7 +23,7 @@ namespace view
 		}
 
 		// create view transform from given world transform
-		frame::mat3 get_transform_to_view(const mat3& world_transform)
+		frame::mat4 get_transform_to_view(const mat4& world_transform)
 		{
 			auto translation = frame::get_screen_size() / 2.0f;
 			auto scale = world_transform.get_scale();
@@ -70,7 +70,7 @@ namespace view
 		}
 	}
 
-	frame::mat3 get_world_transform()
+	frame::mat4 get_world_transform()
 	{
 		if (state.world_position)
 		{
