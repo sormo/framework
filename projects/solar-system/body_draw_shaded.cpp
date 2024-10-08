@@ -113,23 +113,23 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
         static const float axit_width = 0.02f;
 
         auto direction = is_lower ? -body.rotation_axis : body.rotation_axis;
-        auto orientation = create_hmm_direction(body.rotation_axis);
+        auto orientation = frame::mat4::look_at(body.rotation_axis);
 
         // if we are drawing upper half, draw only part that is visible above the sphere
         // if drawing lower half, just draw whole half, it will be clipped by planet's billboard
         if (direction.z > 0.0f)
         {
             auto length = radius * axis_length / 2.0f - radius;
-            auto scale = HMM_Scale({ radius * axit_width, length, radius * axit_width });
-            auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * (radius * axis_length / 2.0f + radius) / 2.0f + body.current_position)), HMM_MulM4(orientation, scale));
-            frame::draw_cylinder(HMM_MulM4(create_projection_view_matrix(), model), col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+            auto scale = mat4::scaling({ radius * axit_width, length, radius * axit_width });
+            auto model = mat4::translation(direction * (radius * axis_length / 2.0f + radius) / 2.0f + body.current_position) * orientation * scale;
+            frame::draw_cylinder(create_world_projection_view() * model, col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
         }
         else
         {
             // make it slightly smaller to not go through planet billboard
-            auto scale = HMM_Scale({ radius * axit_width, radius * axis_length * 0.98f / 2.0f, radius * axit_width });
-            auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * axis_length * radius / 4.0f + body.current_position)), HMM_MulM4(orientation, scale));
-            frame::draw_cylinder(HMM_MulM4(create_projection_view_matrix(), model), col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
+            auto scale = mat4::scaling({ radius * axit_width, radius * axis_length * 0.98f / 2.0f, radius * axit_width });
+            auto model = mat4::translation(direction * axis_length * radius / 4.0f + body.current_position) * orientation * scale;
+            frame::draw_cylinder(create_world_projection_view() * model, col4::RGBf(0.5f, 0.5f, 0.5f), sshapes_shading::flat, -vec3(body.get_absolute_position()), model);
         }
     };
 

@@ -501,7 +501,7 @@ void update_image()
 
     vs_params_t vs_params;
     vs_params.color0[0] = vs_params.color0[1] = vs_params.color0[2] = vs_params.color0[3] = 1.0f;
-    vs_params.mvp = HMM_MulM4(create_projection_view_matrix(), ::create_hmm_transform(vec2{-500.0f, 0.0f}, 0.0f, { 100.0f, 20.0f }));
+    vs_params.mvp = create_world_projection_view() * frame::mat4::transform(vec2{-500.0f, 0.0f}, 0.0f, { 100.0f, 20.0f });
 
     sg_apply_pipeline(state_image.test_sg_image_pip);
     sg_apply_bindings(&state_image.test_sg_image_bind);

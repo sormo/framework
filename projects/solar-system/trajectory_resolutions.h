@@ -7,12 +7,12 @@
 
 struct trajectories_draw_cache
 {
-    void draw(frame::draw_buffer_id id, HMM_Mat4&& transform, frame::col4&& color);
+    void draw(frame::draw_buffer_id id, frame::mat4&& transform, frame::col4&& color);
 
     void flush();
 
     std::vector<frame::draw_buffer_id> ids;
-    std::vector<HMM_Mat4> transforms;
+    std::vector<frame::mat4> transforms;
     std::vector<frame::col4> colors;
 };
 
@@ -53,12 +53,12 @@ private:
     };
 
     resolution& get_resolution(double semi_major_axis_pixel_size);
-    HMM_Mat4 get_transform(const frame::vec3& position, bool has_stationary_parent);
+    frame::mat4 get_transform(const frame::vec3& position, bool has_stationary_parent);
 
     double scale_factor = 1.0;
 
     std::vector<resolution> resolutions;
     std::vector<frame::vec3> points;
 
-    std::optional<HMM_Mat4> cached_transform;
+    std::optional<frame::mat4> cached_transform;
 };

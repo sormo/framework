@@ -64,7 +64,6 @@ namespace frame
 
 	// optimization to avoid creating multiple projection/view matrices
 	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat4>& transforms, const std::vector<frame::col4>& colors);
-	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<HMM_Mat4>& transforms, const std::vector<frame::col4>& colors);
 
 	// ---
 
@@ -78,23 +77,11 @@ namespace frame
 
 	// --- drawing with custom shader ---
 	// if user creates custom shader he should have all control over bingings and pipeline, add just some helper functions
-	HMM_Mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
-	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size);
-	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size);
-	HMM_Mat4 create_world_mvp(const frame::mat4& transform);
-
-	HMM_Mat4 create_projection_view_matrix();
-
-	// TODO what about getting rid of mat3 ???
-	// drawing with depth allows using vec3 for position
-	HMM_Mat4 create_hmm_transform(const frame::mat3& transform);
-	HMM_Mat4 create_hmm_transform(const frame::mat4& transform);
-	HMM_Mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size);
-	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec2 size);
-
-	HMM_Mat4 create_hmm_direction(const frame::vec3& direction, const frame::vec3& up_direction = { 0.0f, 1.0f, 0.0f });
-
-	HMM_Vec3 to_hmm(const frame::vec3& v);
+	frame::mat4 create_world_projection_view();
+	frame::mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
+	frame::mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size);
+	frame::mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size);
+	frame::mat4 create_world_mvp(const frame::mat4& transform);
 
 	// --- sshapes ---
 	enum class sshapes_shading

@@ -13,7 +13,7 @@ const std::array<trajectory_resolutions::resmap_type, 4> trajectory_resolutions:
     { max_orbit_points, 64'000 }
 } };
 
-void trajectories_draw_cache::draw(frame::draw_buffer_id id, HMM_Mat4&& transform, frame::col4&& color)
+void trajectories_draw_cache::draw(frame::draw_buffer_id id, frame::mat4&& transform, frame::col4&& color)
 {
     ids.push_back(id);
     transforms.push_back(std::move(transform));
@@ -29,11 +29,11 @@ void trajectories_draw_cache::flush()
     colors.clear();
 }
 
-HMM_Mat4 trajectory_resolutions::get_transform(const frame::vec3& position, bool has_stationary_parent)
+frame::mat4 trajectory_resolutions::get_transform(const frame::vec3& position, bool has_stationary_parent)
 {
     auto create_transform = [this](const frame::vec3& position)
     {
-        return frame::create_hmm_transform(position, 0.0f, frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
+        return frame::mat4::transform(position, 0.0f, frame::vec2{ view::get_scale() / scale_factor, view::get_scale() / scale_factor });
     };
 
     if (has_stationary_parent)

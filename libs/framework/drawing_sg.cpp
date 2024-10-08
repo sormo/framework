@@ -538,55 +538,7 @@ namespace frame
 		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC);
 	}
 
-	HMM_Mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
-	{
-		auto scale = HMM_Scale({ size.x, size.y, 1.0f });
-		auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
-		auto translate = HMM_Translate({ position.x, position.y, 0.0f });
-		return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
-	}
-
-	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec2 size)
-	{
-		auto scale = HMM_Scale({ size.x, size.y, 1.0f });
-		auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
-		auto translate = HMM_Translate({ position.x, position.y, position.z });
-		return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
-	}
-
-	HMM_Mat4 create_hmm_transform(frame::vec3 position, float rotation, frame::vec3 size)
-	{
-		auto scale = HMM_Scale({ size.x, size.y, size.z });
-		auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
-		auto translate = HMM_Translate({ position.x, position.y, position.z });
-		return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
-	}
-
-	HMM_Mat4 create_hmm_transform(const frame::mat3& transform)
-	{
-		HMM_Mat4 result = HMM_M4D(1.0f);
-
-		result.Elements[0][0] = transform.data[0];
-		result.Elements[0][1] = transform.data[3];
-		result.Elements[0][3] = transform.data[6];
-
-		result.Elements[1][0] = transform.data[1];
-		result.Elements[1][1] = transform.data[4];
-		result.Elements[1][3] = transform.data[7];
-
-		result.Elements[3][0] = transform.data[2];
-		result.Elements[3][1] = transform.data[5];
-		result.Elements[3][3] = transform.data[8];
-
-		return result;
-	}
-
-	HMM_Mat4 create_hmm_transform(const frame::mat4& transform)
-	{
-		return transform.data;
-	}
-
-	HMM_Mat4 create_projection_view_matrix()
+	frame::mat4 create_world_projection_view()
 	{
 		HMM_Mat4 view = frame::get_world_transform().data;
 		HMM_Mat4 projection = HMM_Orthographic_RH_NO(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -max_depth, max_depth);
@@ -594,29 +546,24 @@ namespace frame
 		return HMM_MulM4(projection, view);
 	}
 
-	HMM_Mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size)
+	frame::mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size)
 	{
-		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+		return create_world_projection_view() * frame::mat4::transform(position, rotation, size);
 	}
 
-	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size)
+	frame::mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size)
 	{
-		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+		return create_world_projection_view() * frame::mat4::transform(position, rotation, size);
 	}
 
-	HMM_Mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size)
+	frame::mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec3 size)
 	{
-		return HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size));
+		return create_world_projection_view() * frame::mat4::transform(position, rotation, size);
 	}
 
-	HMM_Mat4 create_world_mvp(const frame::mat4& transform)
+	frame::mat4 create_world_mvp(const frame::mat4& transform)
 	{
-		return HMM_MulM4(create_projection_view_matrix(), transform.data);
-	}
-
-	HMM_Vec3 to_hmm(const frame::vec3& v)
-	{
-		return { v.x, v.y, v.z };
+		return create_world_projection_view() * transform;
 	}
 
 	size_t add_draw_instance(draw_buffer_id id, const HMM_Mat4& model, frame::col4 color)
@@ -636,12 +583,12 @@ namespace frame
 
 	size_t add_draw_instance(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		return add_draw_instance(id, create_hmm_transform(position, rotation, size), color);
+		return add_draw_instance(id, frame::mat4::transform(position, rotation, size).data, color);
 	}
 
 	size_t add_draw_instance(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		return add_draw_instance(id, create_hmm_transform(position, rotation, size), color);
+		return add_draw_instance(id, frame::mat4::transform(position, rotation, size).data, color);
 	}
 
 	size_t add_draw_instance(draw_buffer_id id, const frame::mat4& transform, frame::col4 color)
@@ -700,7 +647,7 @@ namespace frame
 
 	void update_draw_instance(draw_buffer_id id, size_t index, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		update_draw_instance(id, index, create_hmm_transform(position, rotation, size), color);
+		update_draw_instance(id, index, frame::mat4::transform(position, rotation, size), color);
 	}
 
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::mat4& transform, frame::col4 color)
@@ -728,10 +675,10 @@ namespace frame
 		sg_apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
-		auto projection_view = create_projection_view_matrix();
+		auto projection_view = create_world_projection_view();
 
 		basic_instanced_vs_params_t vs_params;
-		memcpy(vs_params.view_projection, projection_view.Elements, sizeof(projection_view.Elements));
+		memcpy(vs_params.view_projection, projection_view.data.Elements, sizeof(projection_view.data.Elements));
 		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, SG_RANGE(vs_params));
 
 		sg_draw(0, (int)data.draw_elements, count == 0 ? (int)data.instances.size() : (int)count);
@@ -805,41 +752,31 @@ namespace frame
 
 	void draw_buffer(draw_buffer_id id, frame::col4 color)
 	{
-		draw_buffer(id, create_projection_view_matrix(), color);
+		draw_buffer(id, create_world_projection_view(), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::vec2 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		draw_buffer(id, HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size)), color);
+		draw_buffer(id, HMM_MulM4(create_world_projection_view(), frame::mat4::transform(position, rotation, size)), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, frame::vec3 position, float rotation, frame::vec2 size, frame::col4 color)
 	{
-		draw_buffer(id, HMM_MulM4(create_projection_view_matrix(), create_hmm_transform(position, rotation, size)), color);
+		draw_buffer(id, HMM_MulM4(create_world_projection_view(), frame::mat4::transform(position, rotation, size)), color);
 	}
 
 	void draw_buffer(draw_buffer_id id, const frame::mat4& transform, frame::col4 color)
 	{
-		draw_buffer(id, HMM_MulM4(create_projection_view_matrix(), transform.data), color);
+		draw_buffer(id, HMM_MulM4(create_world_projection_view(), transform.data), color);
 	}
 
 	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<frame::mat4>& transforms, const std::vector<frame::col4>& colors)
 	{
-		HMM_Mat4 projection_view = create_projection_view_matrix();
+		HMM_Mat4 projection_view = create_world_projection_view();
 
 		for (size_t i = 0; i < ids.size(); i++)
 		{
 			draw_buffer(ids[i], HMM_MulM4(projection_view, transforms[i].data), colors[i]);
-		}
-	}
-
-	void draw_buffers(const std::vector<draw_buffer_id>& ids, const std::vector<HMM_Mat4>& transforms, const std::vector<frame::col4>& colors)
-	{
-		HMM_Mat4 projection_view = create_projection_view_matrix();
-
-		for (size_t i = 0; i < ids.size(); i++)
-		{
-			draw_buffer(ids[i], HMM_MulM4(projection_view, transforms[i]), colors[i]);
 		}
 	}
 

@@ -95,15 +95,15 @@ double juliandate(const int16_t yyyy, const int8_t mm, const int8_t dd)
     return juliandate(yyyy, mm, dd, 0, 0, 0);
 }
 
-HMM_Mat4 get_astraea_rotation(float t)
+frame::mat4 get_astraea_rotation(float t)
 {
     float lambda = frame::deg_to_rad(astraea_longitude_spin_axis);  // λ
     float beta = frame::deg_to_rad(astraea_latitude_spin_axis);     // β
 
-    HMM_Vec3 rotation_axis;
-    rotation_axis.X = cosf(beta) * cosf(lambda);
-    rotation_axis.Y = cosf(beta) * sinf(lambda);
-    rotation_axis.Z = sinf(beta);
+    frame::vec3 rotation_axis;
+    rotation_axis.x = cosf(beta) * cosf(lambda);
+    rotation_axis.y = cosf(beta) * sinf(lambda);
+    rotation_axis.z = sinf(beta);
 
     static int year = 2024, month = 3, day = 31;
     static double JD = juliandate(year, month, day);
@@ -111,7 +111,7 @@ HMM_Mat4 get_astraea_rotation(float t)
     float rotation_angle = get_rotation_angle(astraea_init_time, astraea_period, JD + t);
     //rotation_angle = t;
 
-    return HMM_Rotate_RH(rotation_angle, rotation_axis);
+    return frame::mat4::rotation(rotation_axis, rotation_angle);
 }
 
 box_t compute_bounding_box(const std::vector<vertex_t>& vertices)
@@ -133,9 +133,9 @@ box_t compute_bounding_box(const std::vector<vertex_t>& vertices)
     return result;
 }
 
-vec2 convert_to_screen(const HMM_Mat4& mvp, const vec3& point_model_space)
+vec2 convert_to_screen(const frame::mat4& mvp, const vec3& point_model_space)
 {
-    auto clip_space = HMM_MulM4V4(mvp, HMM_Vec4{ point_model_space.x, point_model_space.y, point_model_space.z, 1.0f });
+    auto clip_space = HMM_MulM4V4(mvp.data, HMM_Vec4{ point_model_space.x, point_model_space.y, point_model_space.z, 1.0f });
 
     auto perspective_division = [](HMM_Vec4 v)
     {
@@ -157,7 +157,7 @@ vec2 convert_to_screen(const HMM_Mat4& mvp, const vec3& point_model_space)
     return result;
 }
 
-rectangle get_model_size_on_screen(const HMM_Mat4& mvp, const model_t& model)
+rectangle get_model_size_on_screen(const frame::mat4& mvp, const model_t& model)
 {
     std::vector<vec2> converted_vertices(model.vertices.size());
     for (size_t i = 0; i < model.vertices.size(); i++)
@@ -318,7 +318,7 @@ HMM_Mat4 create_perspective_view()
 {
     //return HMM_LookAt_RH(HMM_Vec3{ 0.0f, 0.0f, 5.0f }, HMM_Vec3{ 0.0f, 0.0f, 0.0f }, HMM_Vec3{ 0.0f, 1.0f, 0.0f });
 
-    HMM_Mat4 result = create_hmm_transform(frame::get_world_transform());
+    HMM_Mat4 result = frame::get_world_transform().data;
     // scale also z-coordinate, why not needed in orthogonal ?
     result.Elements[2][2] = result.Elements[0][0];
     // set distance in z-coordinate
@@ -327,21 +327,21 @@ HMM_Mat4 create_perspective_view()
     return result;
 }
 
-HMM_Mat4 create_rotation_random()
+frame::mat4 create_rotation_random()
 {
     static float rx = 0.0f;
     static float ry = 0.0f;
 
-    HMM_Mat4 rxm = HMM_Rotate_RH(rx, HMM_Vec3{ 1.0f, 0.0f, 0.0f });
-    HMM_Mat4 rym = HMM_Rotate_RH(ry, HMM_Vec3{ 0.0f, 1.0f, 0.0f });
+    auto rxm = frame::mat4::rotation({ 1.0f, 0.0f, 0.0f }, rx);
+    auto rym = frame::mat4::rotation({ 0.0f, 1.0f, 0.0f }, ry);
 
     const float t = (float)(sapp_frame_duration() * 60.0);
     rx += state.rotation * t; ry += (state.rotation/2.0f) * t;
 
-    return HMM_MulM4(rxm, rym);
+    return rxm * rym;
 }
 
-HMM_Mat4 create_rotation()
+frame::mat4 create_rotation()
 {
     static float days = 0.0f;
 
@@ -410,7 +410,7 @@ std::pair<HMM_Mat4, HMM_Mat4> create_orthogonal_mvp()
     HMM_Mat4 modelMatrix = HMM_Scale(HMM_Vec3{ scale_factor, scale_factor, scale_factor });
     modelMatrix = HMM_MulM4(modelMatrix, create_rotation());
 
-    return { create_projection_view_matrix(), modelMatrix };
+    return { create_world_projection_view(), modelMatrix };
 }
 
 model3d_vs_params_t create_vs_params()

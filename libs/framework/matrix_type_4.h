@@ -1,5 +1,7 @@
+#pragma once
 #include <array>
 #include <point_type.h>
+#include <matrix_type_3.h>
 #include "HandmadeMath.h"
 
 // HMM matrix representation 
@@ -12,7 +14,26 @@
 class matrix_type_4
 {
 public:
-    matrix_type_4(HMM_Mat4&& mat) : data(std::move(mat)) {}
+    matrix_type_4() noexcept {}
+    matrix_type_4(HMM_Mat4&& mat) noexcept : data(std::move(mat)) {}
+    matrix_type_4(matrix_type_4&& mat) noexcept : data(std::move(mat.data)) {}
+    matrix_type_4(const matrix_type_4& mat) noexcept : data(mat.data) {}
+    matrix_type_4(const matrix_type_3<float>& mat)
+    {
+        data = HMM_M4D(1.0f);
+
+        data.Elements[0][0] = mat.data[0];
+        data.Elements[0][1] = mat.data[3];
+        data.Elements[0][3] = mat.data[6];
+
+        data.Elements[1][0] = mat.data[1];
+        data.Elements[1][1] = mat.data[4];
+        data.Elements[1][3] = mat.data[7];
+
+        data.Elements[3][0] = mat.data[2];
+        data.Elements[3][1] = mat.data[5];
+        data.Elements[3][3] = mat.data[8];
+    }
 
     static matrix_type_4 translation(float x, float y)
     {
@@ -34,7 +55,7 @@ public:
     {
         return HMM_Rotate_RH(radians, { 0.0f, 0.0f, 1.0f });
     }
-    static matrix_type_4 rotation(float radians, const point_type_3<float>& axis)
+    static matrix_type_4 rotation(const point_type_3<float>& axis, float radians)
     {
         return HMM_Rotate_RH(radians, { axis.x, axis.y, axis.z });
     }
@@ -45,6 +66,38 @@ public:
         auto T_center = translation(center);
 
         return T_center * R * T_origin;
+    }
+    static matrix_type_4 look_at(const point_type_3<float>& direction, const point_type_3<float>& up_direction = { 0.0f, 1.0f, 0.0f })
+    {
+        // TODO why not to use builtin HMM look_at ?
+        // 
+        // special case - no orientation transformation needed
+        if (direction == up_direction)
+            return HMM_M4D(1.0f);
+
+        auto yaxis = direction;
+
+        auto zaxis = direction.cross(up_direction);
+        zaxis.normalize();
+
+        auto xaxis = direction.cross(zaxis);
+        xaxis.normalize();
+
+        HMM_Mat4 model = HMM_M4D(1.0f);
+
+        model.Columns[0].X = xaxis.x;
+        model.Columns[0].Y = xaxis.y;
+        model.Columns[0].Z = xaxis.z;
+
+        model.Columns[1].X = yaxis.x;
+        model.Columns[1].Y = yaxis.y;
+        model.Columns[1].Z = yaxis.z;
+
+        model.Columns[2].X = zaxis.x;
+        model.Columns[2].Y = zaxis.y;
+        model.Columns[2].Z = zaxis.z;
+
+        return model;
     }
     static matrix_type_4 scaling(float x, float y)
     {
@@ -62,9 +115,31 @@ public:
     {
         return HMM_Scale({ scale.x, scale.y, scale.z });
     }
+    static matrix_type_4 transform(const point_type<float>& position, float rotation, const point_type<float>& size)
+    {
+        auto scale = HMM_Scale({ size.x, size.y, 1.0f });
+        auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
+        auto translate = HMM_Translate({ position.x, position.y, 0.0f });
+        return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
+    }
+    static matrix_type_4 transform(const point_type_3<float>& position, float rotation, const point_type_3<float>& size)
+    {
+        auto scale = HMM_Scale({ size.x, size.y, size.z });
+        auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
+        auto translate = HMM_Translate({ position.x, position.y, position.z });
+        return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
+    }
     static matrix_type_4 identity()
     {
         return HMM_M4D(1.0f);
+    }
+    static matrix_type_4 orthographic(float left, float right, float bottom, float top, float nearz, float farz)
+    {
+        return HMM_Orthographic_RH_NO(left, right, bottom, top, nearz, farz);
+    }
+    static matrix_type_4 perspective(float fov, float aspect_ratio, float nearz, float farz)
+    {
+        return HMM_Perspective_RH_NO(fov, aspect_ratio, nearz, farz);
     }
 
     matrix_type_4& translate(float x, float y)
@@ -124,7 +199,7 @@ public:
     }
     matrix_type_4& rotate(float radians, const point_type_3<float>& axis)
     {
-        HMM_MulM4(this->data, rotation(radians, axis).data);
+        HMM_MulM4(this->data, rotation(axis, radians).data);
         return *this;
     }
     matrix_type_4 rotated(float radians) const
@@ -277,6 +352,30 @@ public:
         return result;
     }
 
+    matrix_type_4& operator=(matrix_type_4&& other)
+    {
+        data = std::move(other.data);
+        return *this;
+    }
+
+    matrix_type_4& operator=(HMM_Mat4&& other)
+    {
+        data = std::move(other);
+        return *this;
+    }
+
+    matrix_type_4& operator=(const matrix_type_4& other)
+    {
+        data = other.data;
+        return *this;
+    }
+
+    matrix_type_4& operator=(const HMM_Mat4& other)
+    {
+        data = other;
+        return *this;
+    }
+
     matrix_type_4& operator+=(float o)
     {
         for (size_t i = 0; i < 4; i++)
@@ -419,6 +518,21 @@ public:
     {
         return HMM_DeterminantM4(data);
     }
+
+    operator HMM_Mat4&&() &&
+    {
+        return std::move(data);
+    }
+
+    operator HMM_Mat4&() &
+    {
+        return data;
+    }
+
+    //operator const HMM_Mat4&() const &
+    //{
+    //    return data;
+    //}
 
     HMM_Mat4 data;
 };

@@ -166,9 +166,9 @@ void update_offscreen_non_default_pass()
     sg_apply_bindings(&state.offscreen.bind);
 
     vs_params_t vs_params = {};
-    auto projection = HMM_Orthographic_RH_NO(-128.0f, 128.0f, -128.0f, 128.0f, -max_depth, max_depth);
-    auto model = HMM_Scale({ 100.0f, 100.0f, 100.0f });
-    vs_params.mvp = HMM_MulM4(projection, model);
+    auto projection = mat4::orthographic(-128.0f, 128.0f, -128.0f, 128.0f, -max_depth, max_depth);
+    auto model = mat4::scaling(100.0f);
+    vs_params.mvp = projection * model;
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
 
     sg_draw(state.offscreen.sphere.base_element, state.offscreen.sphere.num_elements, 1);

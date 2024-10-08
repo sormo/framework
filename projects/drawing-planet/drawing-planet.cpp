@@ -58,9 +58,10 @@ struct
 void update_sshape1()
 {
     auto direction = vec3(state.valuex, state.valuey, state.valuez).normalized();
-    auto orientation = create_hmm_direction(direction);
-    auto model = HMM_MulM4(HMM_Translate(to_hmm(-direction * axis_length / 4.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, axis_length / 2.0f, axis_width })));
-    auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
+    auto orientation = frame::mat4::look_at(direction);
+    auto model = mat4::translation(-direction * axis_length / 4.0f) * orientation * mat4::scaling({ axis_width, axis_length / 2.0f, axis_width });
+    //auto model = HMM_MulM4(HMM_Translate(to_hmm(-direction * axis_length / 4.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, axis_length / 2.0f, axis_width })));
+    auto mvp = create_world_projection_view() * model;
     frame::draw_cylinder(mvp, col4::RGBf(0.8f, 0.8f, 0.8f), sshapes_shading::flat, { state.light_position[0], state.light_position[1], state.light_position[2] }, model);
 }
 
@@ -73,10 +74,10 @@ void update_sshape2()
     auto direction = vec3(state.valuex, state.valuey, state.valuez).normalized();
     auto length = axis_length/2.0f - real_planet_radius;
 
-    auto orientation = create_hmm_direction(direction);
-    //auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * axis_length / 4.0f)), HMM_MulM4(orientation, HMM_Scale({ 5.0f, axis_length/2.0f, 5.0f })));
-    auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * (axis_length/2.0f + real_planet_radius) / 2.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, length, axis_width })));
-    auto mvp = HMM_MulM4(create_projection_view_matrix(), model);
+    auto orientation = frame::mat4::look_at(direction);
+    auto model = mat4::translation(direction * (axis_length / 2.0f + real_planet_radius) / 2.0f) * orientation * mat4::scaling({ axis_width, length, axis_width });
+    //auto model = HMM_MulM4(HMM_Translate(to_hmm(direction * (axis_length/2.0f + real_planet_radius) / 2.0f)), HMM_MulM4(orientation, HMM_Scale({ axis_width, length, axis_width })));
+    auto mvp = create_world_projection_view() * model;
     frame::draw_cylinder(mvp, col4::RGBf(0.8f, 0.8f, 0.8f), sshapes_shading::flat, {state.light_position[0], state.light_position[1], state.light_position[2]}, model);
 }
 
@@ -266,7 +267,7 @@ void update()
     update_sshape1();
     update_planet();
     update_sshape2();
-    frame::draw_gizmo(create_projection_view_matrix(), 200.0f, 5.0f);
+    frame::draw_gizmo(create_world_projection_view(), 200.0f, 5.0f);
 
     frame::free_move_camera_update(free_move_config);
 }

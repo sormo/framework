@@ -71,22 +71,6 @@ void setup_shadertoy()
     state.pip_shadertoy = sg_make_pipeline(&pipeline_desc);
 }
 
-HMM_Mat4 create_projection_view_matrix()
-{
-    HMM_Mat4 view = create_hmm_transform(frame::get_world_transform());
-    HMM_Mat4 projection = HMM_Orthographic_RH_NO(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, 0.0f, 100.0f);
-
-    return HMM_MulM4(projection, view);
-}
-
-HMM_Mat4 create_hmm_transform(frame::vec2 position, float rotation, frame::vec2 size)
-{
-    auto scale = HMM_Scale({ size.x, size.y, 0.0f });
-    auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
-    auto translate = HMM_Translate({ position.x, position.y, 0.0f });
-    return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
-}
-
 float get_seconds_since_app_start()
 {
     auto duration = std::chrono::system_clock::now() - state.start_app;
@@ -111,8 +95,8 @@ void update_shadertoy()
     sg_apply_bindings(&state.bind_shadertoy);
 
     vs_params_shadertoy_t vs_params;
-    //vs_params.mvp = HMM_MultiplyMat4(create_projection_view_matrix(), create_hmm_transform({}, 0.0f, get_screen_size()));
-    vs_params.mvp = HMM_Orthographic_RH_NO(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 100.0f);
+    //vs_params.mvp = create_world_projection_view() * mat4::transform({}, 0.0f, get_screen_size());
+    vs_params.mvp = mat4::orthographic(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 100.0f);
 
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_shadertoy, SG_RANGE(vs_params));
 
