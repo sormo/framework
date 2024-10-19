@@ -3,11 +3,103 @@
 #include <sokol_gfx.h>
 #include <sokol_gl.h>
 #include <sokol_fontstash.h>
+#include <stb_image.h>
 #include <cmath>
 #include <vector>
+#include <unordered_map>
+#include "drawing_sg.h"
+#include "basic_image.glsl.h"
+
+template <>
+struct std::hash<frame::image_draw_desc_t>
+{
+    std::size_t operator()(const frame::image_draw_desc_t& k) const
+    {
+        return k.filter + k.wrap;
+    }
+};
 
 namespace frame
 {
+    bool image_draw_desc_t::operator==(const image_draw_desc_t& d) const
+    {
+        return filter == d.filter && wrap == d.wrap;
+    }
+
+    struct
+    {
+        sg_pipeline image_pip;
+        sg_bindings image_bind;
+
+        std::unordered_map<image_draw_desc_t, sg_sampler> samplers;
+
+    } state_drawing;
+
+    sg_sampler setup_sampler(const image_draw_desc_t& draw_desc)
+    {
+        sg_sampler_desc sampler_desc = {};
+        sampler_desc.wrap_u = sampler_desc.wrap_v = draw_desc.wrap;
+        sampler_desc.min_filter = sampler_desc.mag_filter = draw_desc.filter;
+        sampler_desc.border_color = SG_BORDERCOLOR_TRANSPARENT_BLACK;
+
+        return sg_make_sampler(&sampler_desc);
+    }
+
+    sg_sampler get_sampler(const image_draw_desc_t& draw_desc)
+    {
+        if (state_drawing.samplers.count(draw_desc))
+            return state_drawing.samplers[draw_desc];
+        return state_drawing.samplers[draw_desc] = setup_sampler(draw_desc);
+    }
+
+    void setup_image()
+    {
+        struct vertex_t
+        {
+            float x, y;
+        };
+
+        vertex_t vertices[] =
+        {
+             0.0f,  0.0f,
+             1.0f,  0.0f,
+             1.0f,  1.0f,
+             0.0f,  1.0f
+        };
+        sg_buffer_desc buffer_desc_vert = {};
+        buffer_desc_vert.data = SG_RANGE(vertices);
+        buffer_desc_vert.label = "basic-image-vertices";
+        state_drawing.image_bind.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
+
+        uint16_t indices[] = { 1, 0, 2, 3 };
+        sg_buffer_desc buffer_desc_index = {};
+        buffer_desc_index.type = SG_BUFFERTYPE_INDEXBUFFER;
+        buffer_desc_index.data = SG_RANGE(indices);
+        buffer_desc_index.label = "basic-image-indices";
+        state_drawing.image_bind.index_buffer = sg_make_buffer(&buffer_desc_index);
+
+        // create a sampler object with default attributes
+        state_drawing.image_bind.fs.samplers[SLOT_sampler_fs] = get_sampler({});
+
+        // a shader
+        sg_shader shd = sg_make_shader(basic_image_shader_desc(sg_query_backend()));
+
+        // a pipeline state object
+        sg_pipeline_desc pipeline_desc = {};
+        pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
+        pipeline_desc.layout.attrs[ATTR_basic_image_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+        pipeline_desc.shader = shd;
+        pipeline_desc.alpha_to_coverage_enabled = true;
+        pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
+        pipeline_desc.label = "basic-image-pipeline";
+        state_drawing.image_pip = sg_make_pipeline(&pipeline_desc);
+    }
+
+    void setup_draw()
+    {
+        setup_image();
+    }
+
     void draw_rectangle(const vec2& center, float width, float height, const col4& color)
     {
         float hw = width / 2.0f, hh = height / 2.0f;
@@ -898,103 +990,118 @@ namespace frame
         });
     }
 
-    image image_create(const char* data, size_t size)
+    image_t create_image(uint32_t width, uint32_t height, sg_pixel_format pixel_format)
     {
-        return nvgCreateImageMem(vg, 0, (const unsigned char*)data, (int)size);
+        sg_image_desc image_desc = {};
+        image_desc.pixel_format = pixel_format;
+        image_desc.width = (int)width;
+        image_desc.height = (int)height;
+        image_desc.label = "image";
+
+        return sg_make_image(&image_desc).id;
     }
 
-    image image_create(const std::vector<char>& data)
+    image_t create_image(uint32_t width, uint32_t height, const char* data, size_t data_size, sg_pixel_format pixel_format)
     {
-        return nvgCreateImageMem(vg, 0, (const unsigned char*)data.data(), (int)data.size());
+        sg_image_desc image_desc = {};
+        image_desc.pixel_format = pixel_format;
+        image_desc.width = (int)width;
+        image_desc.height = (int)height;
+        image_desc.data.subimage[0][0] = sg_range{ data, data_size };
+        image_desc.label = "image";
+
+        return sg_make_image(&image_desc).id;
     }
 
-    void image_delete(image img)
+    image_t load_image(const char* data, size_t size)
     {
-        nvgDeleteImage(vg, img);
+        int width, height, channels_in_file;
+        // TODO possibly always 4 channels may be unnecessary
+        unsigned char* img = stbi_load_from_memory((const unsigned char*)data, size, &width, &height, &channels_in_file, 4);
+
+        auto result = create_image(width, height, (const char*)img, width * height * 4, SG_PIXELFORMAT_RGBA8);
+
+        stbi_image_free(img);
+
+        return result;
     }
 
-    vec2 get_image_size(image img)
+    image_t load_image(const std::vector<char>& data)
     {
-        int w = 0, h = 0;
-        nvgImageSize(vg, img, &w, &h);
+        return load_image(data.data(), data.size());
+    }
 
-        return { (float)w, (float)h };
+    void delete_image(image_t img)
+    {
+        sg_destroy_image({ img });
+    }
+
+    vec2 get_image_size(image_t img)
+    {
+        auto desc = sg_query_image_desc({ img });
+
+        return { (float)desc.width, (float)desc.height };
+    }
+
+    sg_pixel_format get_image_pixel_format(image_t image)
+    {
+        return sg_query_image_desc({ image }).pixel_format;
+    }
+
+    void update_image(image_t image, const char* data, size_t data_size)
+    {
+        sg_image_data image_data = {};
+        image_data.subimage[0][0] = { data, data_size };
+
+        sg_update_image({ image }, image_data);
     }
 
     vec2 get_align_offset_factor_image(text_align align)
     {
         switch (align)
         {
-        case text_align::top_left: return vec2{ 0.0f, 0.0f };
-        case text_align::top_middle: return vec2{ -0.5f, 0.0f };
-        case text_align::top_right: return vec2{ -1.0f, 0.0f };
-        case text_align::middle_left: return vec2{ 0.0f, -0.5f };
-        case text_align::middle_middle: return vec2{ -0.5f, -0.5f };
-        case text_align::middle_right: return vec2{ -1.0f, -0.5f };
-        case text_align::bottom_left: return vec2{ 0.0f, -1.0f };
-        case text_align::bottom_middle: return vec2{ -0.5f, -1.0f };
-        case text_align::bottom_right: return vec2{ -1.0f, -1.0f };
+        case text_align::top_left: return { 0.5f, 0.5f };
+        case text_align::top_middle: return { 0.0f, 0.5f };
+        case text_align::top_right: return { -0.5f, 0.5f };
+        case text_align::middle_left: return { 0.5f, 0.0f };
+        case text_align::middle_middle: return { 0.0f, 0.0f };
+        case text_align::middle_right: return { -0.5f, 0.0f };
+        case text_align::bottom_left: return { 0.5f, -0.5f };
+        case text_align::bottom_middle: return { 0.0f, -0.5f };
+        case text_align::bottom_right: return { -0.5f, -0.5f };
         }
         return {};
     }
 
-    void draw_image_internal(image img, const vec2& size, float alpha)
+    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align, image_draw_desc_t draw_desc)
     {
-        auto paint = nvgImagePattern(vg, 0.0f, 0.0f, size.x, size.y, 0.0f, img, alpha);
+        basic_image_vs_params_t vs_params;
+        vs_params.color0 = std::move(draw_desc.tint_color);
 
-        nvgBeginPath(vg);
-        nvgRect(vg, 0.0f, 0.0f, size.x, size.y);
-        nvgFillPaint(vg, paint);
-        nvgFill(vg);
+        auto align_offset = get_align_offset_factor_image(align);
+        auto screen_scale = get_world_scale().abs();
+        auto screen_position = get_world_to_screen(position);
+        auto model_position = radians != 0.0f ? (align_offset * scale).rotated(radians) : align_offset * scale;
+
+        vs_params.mvp = create_world_projection() * mat4::translation(screen_position) * mat4::scaling(screen_scale) * mat4::transform(model_position, radians, scale);
+
+        state_drawing.image_bind.fs.images[SLOT_texture_fs] = { img };
+        state_drawing.image_bind.fs.samplers[SLOT_sampler_fs] = get_sampler(draw_desc);
+
+        sg_apply_pipeline(state_drawing.image_pip);
+        sg_apply_bindings(&state_drawing.image_bind);
+        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_image_vs_params, SG_RANGE(vs_params));
+
+        sg_draw(0, 4, 1);
     }
 
-    void draw_image(image img, const vec2& position, text_align align)
+    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align, image_draw_desc_t draw_desc)
     {
-        auto size = get_image_size(img);
-        vec2 screen_scale = get_world_scale().abs();
-        vec2 screen_position = get_world_to_screen(position);
-
-        save_world_transform();
-
-        set_world_transform(frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
-
-        draw_image_internal(img, size, 1.0f);
-
-        restore_world_transform();
+        draw_image_ex(img, position, radians, screen_size / get_world_scale().abs(), align, std::move(draw_desc));
     }
 
-    void draw_image_ex(image img, const vec2& position, float radians, const vec2& scale, text_align align)
+    void draw_image(image_t img, const vec2& position, text_align align, image_draw_desc_t draw_desc)
     {
-        vec2 size = get_image_size(img);
-        vec2 screen_scale = scale * get_world_scale().abs();
-        vec2 screen_size = size * screen_scale;
-        vec2 screen_position = get_world_to_screen(position);
-
-        save_world_transform();
-
-        set_world_transform(frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
-
-        draw_image_internal(img, size, 1.0f);
-
-        restore_world_transform();
-    }
-
-    void draw_image_ex_size(image img, const vec2& position, float radians, const vec2& screen_size, text_align align)
-    {
-        vec2 image_size = get_image_size(img);
-        vec2 scale = screen_size / image_size;
-        vec2 screen_position = get_world_to_screen(position);
-
-        save_world_transform();
-
-        auto translation = screen_position + get_align_offset_factor_image(align) * screen_size;
-        if (radians == 0.0f)
-            set_world_transform(frame::translation(translation) * frame::scale(scale));
-        else
-            set_world_transform(frame::translation(translation) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
-
-        draw_image_internal(img, image_size, 1.0f);
-
-        restore_world_transform();
+        draw_image_ex(img, position, 0.0f, get_image_size(img), align, std::move(draw_desc));
     }
 }

@@ -114,7 +114,7 @@ namespace frame
 		sshape_element_range_t sshape_draw_sphere;
 		sshape_element_range_t sshape_draw_cylinder;
 
-	} state;
+	} state_drawing_sg;
 
 	sg_pipeline_desc get_pipeline_desc_common(sg_primitive_type type, bool index_buffer)
 	{
@@ -141,7 +141,7 @@ namespace frame
 	sg_pipeline_desc get_pipeline_desc_basic_depth_instanced(sg_primitive_type type, bool index_buffer)
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
-		pip_desc.shader = state.basic_depth_instanced;
+		pip_desc.shader = state_drawing_sg.basic_depth_instanced;
 		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
 		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].buffer_index = 0;
 		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
@@ -163,7 +163,7 @@ namespace frame
 	sg_pipeline_desc get_pipeline_desc_basic_instanced(sg_primitive_type type, bool index_buffer)
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
-		pip_desc.shader = state.basic_instanced;
+		pip_desc.shader = state_drawing_sg.basic_instanced;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
 		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
@@ -185,7 +185,7 @@ namespace frame
 	sg_pipeline_desc get_pipeline_desc_basic_depth(sg_primitive_type type, bool index_buffer, int stride_in_bytes)
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
-		pip_desc.shader = state.basic_depth;
+		pip_desc.shader = state_drawing_sg.basic_depth;
 		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
 		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
 		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].buffer_index = 0;
@@ -201,7 +201,7 @@ namespace frame
 	sg_pipeline_desc get_pipeline_desc_basic(sg_primitive_type type, bool index_buffer, int stride_in_bytes)
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
-		pip_desc.shader = state.basic;
+		pip_desc.shader = state_drawing_sg.basic;
 		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
 		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
 		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
@@ -232,20 +232,20 @@ namespace frame
 
 	sg_pipeline create_pipeline(pipeline_desc desc)
 	{
-		if (state.pipeline_cache.count(desc))
-			return state.pipeline_cache[desc];
+		if (state_drawing_sg.pipeline_cache.count(desc))
+			return state_drawing_sg.pipeline_cache[desc];
 
-		state.pipeline_cache[desc] = sg_make_pipeline(get_pipeline_desc(desc));
+		state_drawing_sg.pipeline_cache[desc] = sg_make_pipeline(get_pipeline_desc(desc));
 
-		return state.pipeline_cache[desc];
+		return state_drawing_sg.pipeline_cache[desc];
 	}
 
 	std::pair<buffer_sg*, buffer_sg::range_id> create_buffer(buffer_desc desc, char* data, size_t size)
 	{
-		if (!state.buffer_cache.count(desc))
-			state.buffer_cache[desc] = buffer_sg(desc.usage, desc.type);
+		if (!state_drawing_sg.buffer_cache.count(desc))
+			state_drawing_sg.buffer_cache[desc] = buffer_sg(desc.usage, desc.type);
 
-		buffer_sg& buffer = state.buffer_cache[desc];
+		buffer_sg& buffer = state_drawing_sg.buffer_cache[desc];
 
 		return { &buffer, buffer.append(data, size) };
 	}
@@ -275,7 +275,7 @@ namespace frame
 		pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
 		pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
 
-		state.sshape_pip = sg_make_pipeline(&pipeline_desc);
+		state_drawing_sg.sshape_pip = sg_make_pipeline(&pipeline_desc);
 
 		// sshapes
 
@@ -288,38 +288,38 @@ namespace frame
 
 		sshape_box_t box_desc = {};
 		buffer = sshape_build_box(&buffer, &box_desc);
-		state.sshape_draw_box = sshape_element_range(&buffer);
+		state_drawing_sg.sshape_draw_box = sshape_element_range(&buffer);
 
 		sshape_sphere_t sphere_desc = {};
 		sphere_desc.slices = 36;
 		sphere_desc.stacks = 20;
 		buffer = sshape_build_sphere(&buffer, &sphere_desc);
-		state.sshape_draw_sphere = sshape_element_range(&buffer);
+		state_drawing_sg.sshape_draw_sphere = sshape_element_range(&buffer);
 
 		sshape_cylinder_t cylinder_desc = {};
 		cylinder_desc.slices = 36;
 		cylinder_desc.stacks = 20;
 		buffer = sshape_build_cylinder(&buffer, &cylinder_desc);
-		state.sshape_draw_cylinder = sshape_element_range(&buffer);
+		state_drawing_sg.sshape_draw_cylinder = sshape_element_range(&buffer);
 
 		auto vbuf_desc = sshape_vertex_buffer_desc(&buffer);
-		state.sshape_vbuf = sg_make_buffer(&vbuf_desc);
+		state_drawing_sg.sshape_vbuf = sg_make_buffer(&vbuf_desc);
 
 		auto ibuf_desc = sshape_index_buffer_desc(&buffer);
-		state.sshape_ibuf = sg_make_buffer(&ibuf_desc);
+		state_drawing_sg.sshape_ibuf = sg_make_buffer(&ibuf_desc);
 	}
 
 	void setup_draw_sg()
 	{
-		state.basic_depth_instanced = sg_make_shader(basic_depth_instanced_shader_desc(sg_query_backend()));
-		state.basic_depth = sg_make_shader(basic_depth_shader_desc(sg_query_backend()));
-		state.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
-		state.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
+		state_drawing_sg.basic_depth_instanced = sg_make_shader(basic_depth_instanced_shader_desc(sg_query_backend()));
+		state_drawing_sg.basic_depth = sg_make_shader(basic_depth_shader_desc(sg_query_backend()));
+		state_drawing_sg.basic_instanced = sg_make_shader(basic_instanced_shader_desc(sg_query_backend()));
+		state_drawing_sg.basic = sg_make_shader(basic_shader_desc(sg_query_backend()));
 
 		setup_sshapes();
 
-		//state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
-		//state.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
+		//state_drawing_sg.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
+		//state_drawing_sg.pass_action.colors[0].clear_value = { 0.2f, 0.3f, 0.3f, 1.0f };
 	}
 
 	buffer_data_instanced create_buffer_data_instanced(const char* name,
@@ -494,7 +494,7 @@ namespace frame
 
 		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
 
-		state.buffer_data_instanced[id] = create_buffer_data_instanced(name,
+		state_drawing_sg.buffer_data_instanced[id] = create_buffer_data_instanced(name,
 			                                                           elements_count,
 															     	   mesh.vertices, 
 																       mesh.vertices_count,
@@ -514,7 +514,7 @@ namespace frame
 
 		size_t elements_count = mesh.indices ? mesh.indices_count : mesh.vertices_count;
 
-		state.buffer_data_instanced[id] = create_buffer_data_instanced(name,
+		state_drawing_sg.buffer_data_instanced[id] = create_buffer_data_instanced(name,
 																	   elements_count,
 																	   mesh.vertices,
 																	   mesh.vertices_count,
@@ -536,6 +536,11 @@ namespace frame
 	draw_buffer_id create_instanced_circle(size_t count)
 	{
 		return create_draw_buffer_instanced("circle", create_mesh_circle(count), SG_PRIMITIVETYPE_TRIANGLE_STRIP, SG_USAGE_DYNAMIC);
+	}
+
+	frame::mat4 create_world_projection()
+	{
+		return HMM_Orthographic_RH_NO(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -max_depth, max_depth);
 	}
 
 	frame::mat4 create_world_projection_view()
@@ -568,7 +573,7 @@ namespace frame
 
 	size_t add_draw_instance(draw_buffer_id id, const HMM_Mat4& model, frame::col4 color)
 	{
-		auto& data = state.buffer_data_instanced[id];
+		auto& data = state_drawing_sg.buffer_data_instanced[id];
 
 		instanced_element instance{};
 
@@ -603,7 +608,7 @@ namespace frame
 
 	void update_draw_instance(draw_buffer_id id, size_t index, const HMM_Mat4& model, frame::col4 color)
 	{
-		auto& data = state.buffer_data_instanced[id];
+		auto& data = state_drawing_sg.buffer_data_instanced[id];
 
 		instanced_element* instance;
 		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
@@ -615,7 +620,7 @@ namespace frame
 	// fast position update
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec2& position, const frame::col4& color)
 	{
-		auto& data = state.buffer_data_instanced[id];
+		auto& data = state_drawing_sg.buffer_data_instanced[id];
 
 		instanced_element* instance;
 		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
@@ -633,7 +638,7 @@ namespace frame
 
 	void update_draw_instance(draw_buffer_id id, size_t index, const frame::vec3& position, const frame::col4& color)
 	{
-		auto& data = state.buffer_data_instanced[id];
+		auto& data = state_drawing_sg.buffer_data_instanced[id];
 
 		instanced_element* instance;
 		data.instance_buffer.update_inplace(data.instances[index], (char**)&instance);
@@ -683,17 +688,17 @@ namespace frame
 
 		sg_draw(0, (int)data.draw_elements, count == 0 ? (int)data.instances.size() : (int)count);
 
-		//state.rect.instances = 0;
+		//state_drawing_sg.rect.instances = 0;
 	}
 
 	void draw_buffer_instanced(draw_buffer_id id)
 	{
-		draw_buffer_data_instanced(state.buffer_data_instanced[id]);
+		draw_buffer_data_instanced(state_drawing_sg.buffer_data_instanced[id]);
 	}
 
 	void draw_buffer_instanced(draw_buffer_id id, size_t count)
 	{
-		draw_buffer_data_instanced(state.buffer_data_instanced[id], count);
+		draw_buffer_data_instanced(state_drawing_sg.buffer_data_instanced[id], count);
 	}
 
 	draw_buffer_id create_draw_buffer(const char* name, mesh mesh, sg_primitive_type type, sg_usage usage, uint8_t stride_in_bytes)
@@ -710,7 +715,7 @@ namespace frame
 			elements_count = (size_t)std::ceil((float)elements_count / stride_divisor);
 		}
 
-		state.buffer_data[id] = create_buffer_data(name,
+		state_drawing_sg.buffer_data[id] = create_buffer_data(name,
 			elements_count,
 			mesh.vertices,
 			mesh.vertices_count,
@@ -726,7 +731,7 @@ namespace frame
 
 	void draw_buffer(draw_buffer_id id, const HMM_Mat4& mvp, frame::col4 color)
 	{
-		auto& data = state.buffer_data[id];
+		auto& data = state_drawing_sg.buffer_data[id];
 
 		data.vertex_buffer->flush();
 		data.vertex_buffer->apply(data.vertex_buffer_id, data.bindings, 0);
@@ -818,11 +823,11 @@ namespace frame
 
 	void apply_sshape_pipeline()
 	{
-		sg_apply_pipeline(state.sshape_pip);
+		sg_apply_pipeline(state_drawing_sg.sshape_pip);
 
 		sg_bindings bindings = {};
-		bindings.vertex_buffers[0] = state.sshape_vbuf;
-		bindings.index_buffer = state.sshape_ibuf;
+		bindings.vertex_buffers[0] = state_drawing_sg.sshape_vbuf;
+		bindings.index_buffer = state_drawing_sg.sshape_ibuf;
 		sg_apply_bindings(&bindings);
 	}
 
@@ -841,21 +846,21 @@ namespace frame
 	{
 		apply_sshape_pipeline();
 		apply_sshape_uniform(transform, color, shading, light_position, model);
-		sg_draw(state.sshape_draw_box.base_element, state.sshape_draw_box.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_box.base_element, state_drawing_sg.sshape_draw_box.num_elements, 1);
 	}
 
 	void draw_sphere(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
 	{
 		apply_sshape_pipeline();
 		apply_sshape_uniform(transform, color, shading, light_position, model);
-		sg_draw(state.sshape_draw_sphere.base_element, state.sshape_draw_sphere.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_sphere.base_element, state_drawing_sg.sshape_draw_sphere.num_elements, 1);
 	}
 
 	void draw_cylinder(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)
 	{
 		apply_sshape_pipeline();
 		apply_sshape_uniform(transform, color, shading, light_position, model);
-		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_cylinder.base_element, state_drawing_sg.sshape_draw_cylinder.num_elements, 1);
 	}
 
 	void draw_gizmo(const HMM_Mat4& transform, float axis_length, float axis_width)
@@ -867,16 +872,16 @@ namespace frame
 		// y-axis - red
 		auto yaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ 0.0f, axis_length / 2.0f, 0.0f }), scale));
 		apply_sshape_uniform(yaxis, col4::RED, sshapes_shading::none, {}, HMM_M4D(1.0f));
-		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_cylinder.base_element, state_drawing_sg.sshape_draw_cylinder.num_elements, 1);
 
 		// x-axis - green
 		auto xaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ axis_length / 2.0f, 0.0f, 0.0f }), HMM_MulM4(HMM_Rotate_RH(-PI / 2.0f, { 0.0f, 0.0f, 1.0f }), scale)));
 		apply_sshape_uniform(xaxis, col4::GREEN, sshapes_shading::none, {}, HMM_M4D(1.0f));
-		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_cylinder.base_element, state_drawing_sg.sshape_draw_cylinder.num_elements, 1);
 
 		// z-axis - blue
 		auto zaxis = HMM_MulM4(transform, HMM_MulM4(HMM_Translate({ 0.0f, 0.0f, axis_length/2.0f }), HMM_MulM4(HMM_Rotate_RH(PI / 2.0f, { 1.0f, 0.0f, 0.0f }), scale)));
 		apply_sshape_uniform(zaxis, col4::BLUE, sshapes_shading::none, {}, HMM_M4D(1.0f));
-		sg_draw(state.sshape_draw_cylinder.base_element, state.sshape_draw_cylinder.num_elements, 1);
+		sg_draw(state_drawing_sg.sshape_draw_cylinder.base_element, state_drawing_sg.sshape_draw_cylinder.num_elements, 1);
 	}
 }

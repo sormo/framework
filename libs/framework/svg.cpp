@@ -199,8 +199,22 @@ static void svgDraw(NVGcontext* vg, NSVGimage* svg) {
 
 namespace frame
 {
-    vec2 get_align_offset_factor_image(text_align align);
-
+    vec2 get_align_offset_factor_svg(text_align align)
+    {
+        switch (align)
+        {
+        case text_align::top_left: return vec2{ 0.0f, 0.0f };
+        case text_align::top_middle: return vec2{ -0.5f, 0.0f };
+        case text_align::top_right: return vec2{ -1.0f, 0.0f };
+        case text_align::middle_left: return vec2{ 0.0f, -0.5f };
+        case text_align::middle_middle: return vec2{ -0.5f, -0.5f };
+        case text_align::middle_right: return vec2{ -1.0f, -0.5f };
+        case text_align::bottom_left: return vec2{ 0.0f, -1.0f };
+        case text_align::bottom_middle: return vec2{ -0.5f, -1.0f };
+        case text_align::bottom_right: return vec2{ -1.0f, -1.0f };
+        }
+        return {};
+    }
     svg_image* svg_parse(const char* input_xml)
     {
         std::string copy = input_xml;
@@ -218,7 +232,7 @@ namespace frame
         nsvgDelete(image);
     }
 
-    image svg_rasterize(svg_image* image, uint32_t width, uint32_t height)
+    image_t svg_rasterize(svg_image* image, uint32_t width, uint32_t height)
     {
         NSVGrasterizer* rasterizer = nsvgCreateRasterizer();
         
@@ -229,7 +243,7 @@ namespace frame
         nsvgRasterize(rasterizer, image, 0.0f, 0.0f, scale, (unsigned char*)buffer.data(), width, height, width * 4);
         nsvgDeleteRasterizer(rasterizer);
 
-        return nvgCreateImageRGBA(vg, width, height, 0, (const unsigned char*)buffer.data());
+        return create_image(width, height, buffer.data(), width * height * 4, SG_PIXELFORMAT_RGBA8);
     }
 
     void draw_svg(svg_image* image, const vec2& position, frame::text_align align)
@@ -240,7 +254,7 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * size * screen_scale) * frame::scale(screen_scale));
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * size * screen_scale) * frame::scale(screen_scale));
 
         svgDraw(vg, image);
 
@@ -256,7 +270,7 @@ namespace frame
 
         save_world_transform();
 
-        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
+        set_world_transform(identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(screen_scale));
 
         svgDraw(vg, image);
 
@@ -267,14 +281,14 @@ namespace frame
     {
         vec2 image_size = get_svg_image_size(image);
         vec2 scale = screen_size / image_size;
-        
+
         //scale = scale * frame::get_world_scale().abs();
 
         vec2 screen_position = get_world_to_screen(world_position);
 
         save_world_transform();
 
-        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_image(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
+        set_world_transform(frame::identity() * frame::translation(screen_position + get_align_offset_factor_svg(align) * screen_size) * frame::rotation(screen_size / 2.0f, radians) * frame::scale(scale));
 
         svgDraw(vg, image);
 

@@ -30,6 +30,7 @@ public:
 
     point_type operator-() const;
 
+    //template<class T> point_type(T x);
     template<class T> point_type(T x, T y);
     template<class T> point_type& operator+=(T o);
     template<class T> point_type& operator-=(T o);
@@ -79,6 +80,13 @@ point_type<M> point_type<M>::operator-() const
 {
     return { -x, -y };
 }
+
+//template<class M>
+//template<class T>
+//point_type<M>::point_type(T v)
+//    : x((M)v), y((M)v)
+//{
+//}
 
 template<class M>
 template<class T>

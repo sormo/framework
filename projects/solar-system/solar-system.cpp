@@ -17,7 +17,7 @@ commons::settings_data settings;
 commons::state_data state;
 
 bool first_time_init = true;
-frame::image sokol_image = 0;
+frame::image_t sokol_image = 0;
 utils::time_measure update_measure{ 300 };
 
 void setup()
@@ -27,7 +27,7 @@ void setup()
     frame::load_font("roboto-bold", "fonts/roboto-bold.ttf");
     frame::load_font("roboto", "fonts/roboto.ttf");
 
-    frame::fetch_file("images/sokol_logo.png", [](std::vector<char> data) { sokol_image = frame::image_create(data); });
+    frame::fetch_file("images/sokol_logo.png", [](std::vector<char> data) { sokol_image = frame::load_image(data); });
 
     //set_world_transform(translation(get_screen_size() / 2.0f) * scale({ 1.0f, -1.0f }));
     set_world_translation(get_screen_size() / 2.0f);
@@ -116,7 +116,7 @@ void evaluate_body_view(bool init = false, bool allow_camera_move = false)
 
 void draw_settings_menu_icon(float icon_size)
 {
-    static frame::image menu_image = -1;
+    static frame::image_t menu_image = -1;
     if (menu_image == -1)
     {
         static const char menu_svg[] = R"(<svg width="800px" height="800px" fill="none" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

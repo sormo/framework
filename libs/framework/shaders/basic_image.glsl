@@ -1,7 +1,9 @@
 #pragma sokol @ctype mat4 HMM_Mat4
+#pragma sokol @ctype vec4 frame::col4
 
-#pragma sokol @vs vs
-uniform vs_params
+#pragma sokol @vs basic_image_vs
+
+uniform basic_image_vs_params
 {
     mat4 mvp;
     vec4 color0;
@@ -18,11 +20,14 @@ void main()
     color = color0;
     uv = position;
 }
+
 #pragma sokol @end
 
-#pragma sokol @fs fs
-uniform texture2D tex;
-uniform sampler smp;
+
+#pragma sokol @fs basic_image_fs
+
+uniform texture2D texture_fs;
+uniform sampler sampler_fs;
 
 in vec4 color;
 in vec2 uv;
@@ -30,8 +35,9 @@ out vec4 frag_color;
 
 void main()
 {
-    frag_color = texture(sampler2D(tex, smp), uv) * color;
+    frag_color = texture(sampler2D(texture_fs, sampler_fs), uv) * color;
 }
+
 #pragma sokol @end
 
-#pragma sokol @program texrect vs fs
+#pragma sokol @program basic_image basic_image_vs basic_image_fs

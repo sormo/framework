@@ -1,6 +1,6 @@
 #pragma once
 #include "framework.h"
-#include "sokol_gfx.h"
+//#include "sokol_gfx.h"
 #include "HandmadeMath.h"
 
 namespace frame
@@ -77,6 +77,7 @@ namespace frame
 
 	// --- drawing with custom shader ---
 	// if user creates custom shader he should have all control over bingings and pipeline, add just some helper functions
+	frame::mat4 create_world_projection();
 	frame::mat4 create_world_projection_view();
 	frame::mat4 create_world_mvp(frame::vec2 position, float rotation, frame::vec2 size);
 	frame::mat4 create_world_mvp(frame::vec3 position, float rotation, frame::vec2 size);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nanovg.h>
+#include "sokol_gfx.h"
 #include <fontstash.h>
 #include "point_type.h"
 #include "matrix_type_4.h"
@@ -252,18 +253,33 @@ namespace frame
     void load_font(const char* font_name, const char* file_path);
 
     // *** image ***
-    // TODO switch to sg_image 
-    using image = int32_t;
+    using image_t = uint32_t;
 
-    image image_create(const char* data, size_t size);
-    image image_create(const std::vector<char>& data);
-    void image_delete(image img);
+    image_t create_image(uint32_t width, uint32_t height, sg_pixel_format pixel_format = SG_PIXELFORMAT_RGBA8);
+    image_t create_image(uint32_t width, uint32_t height, const char* data, size_t data_size, sg_pixel_format pixel_format = SG_PIXELFORMAT_RGBA8);
 
-    vec2 get_image_size(image img);
+    image_t load_image(const char* data, size_t size);
+    image_t load_image(const std::vector<char>& data);
 
-    void draw_image(image img, const vec2& position, text_align align = text_align::top_left);
-    void draw_image_ex(image img, const vec2& position, float radians, const vec2& scale, text_align align = text_align::top_left);
-    void draw_image_ex_size(image img, const vec2& position, float radians, const vec2& screen_size, text_align align = text_align::top_left);
+    void delete_image(image_t img);
+
+    vec2 get_image_size(image_t img);
+    sg_pixel_format get_image_pixel_format(image_t image);
+
+    void update_image(image_t image, const char* data, size_t data_size);
+
+    struct image_draw_desc_t
+    {
+        sg_filter filter = SG_FILTER_LINEAR;
+        sg_wrap wrap = SG_WRAP_CLAMP_TO_BORDER;
+        col4 tint_color = col4::WHITE;
+
+        bool operator==(const image_draw_desc_t& draw_desc) const;
+    };
+
+    void draw_image(image_t img, const vec2& position, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
+    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
+    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
 
     // *** file ***
     using fetch_callback = std::function<void(std::vector<char>)>;

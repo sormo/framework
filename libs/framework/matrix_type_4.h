@@ -120,14 +120,14 @@ public:
         auto scale = HMM_Scale({ size.x, size.y, 1.0f });
         auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
         auto translate = HMM_Translate({ position.x, position.y, 0.0f });
-        return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
+        return HMM_MulM4(translate, HMM_MulM4(rotate, scale));
     }
     static matrix_type_4 transform(const point_type_3<float>& position, float rotation, const point_type_3<float>& size)
     {
         auto scale = HMM_Scale({ size.x, size.y, size.z });
         auto rotate = HMM_Rotate_RH(rotation, HMM_Vec3{ 0.0f, 0.0f, 1.0f });
         auto translate = HMM_Translate({ position.x, position.y, position.z });
-        return HMM_MulM4(HMM_MulM4(translate, rotate), scale);
+        return HMM_MulM4(translate, HMM_MulM4(rotate, scale));
     }
     static matrix_type_4 identity()
     {

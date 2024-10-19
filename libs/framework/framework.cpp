@@ -15,6 +15,7 @@
 #define SOKOL_WIN32_NO_GL_LOADER
 #endif
 
+#include "framework.h"
 #define SOKOL_IMPL
 #include "sokol_app.h"
 #include "sokol_gfx.h"
@@ -41,7 +42,6 @@
 #include "nanovg.h"
 #include "nanovg_gl.h"
 
-#include "framework.h"
 #include "events.h"
 
 #include "imgui_font.h"
@@ -81,6 +81,7 @@ void apply_transform(const mat3& m)
 namespace frame
 {
     void setup_draw_sg();
+    void setup_draw();
 
     col4 rgb(uint8_t r, uint8_t g, uint8_t b)
     {
@@ -634,6 +635,7 @@ void init()
 
     nvgCreateFontMem(vg, "default", dump_font, sizeof(dump_font), 0);
 
+    setup_draw();
     setup_draw_sg();
 
     setup_sgl();
