@@ -469,6 +469,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_debug_gui();
 
     draw_coordinate_lines(rgb(50,50,50));
@@ -480,4 +482,6 @@ void update()
     free_move_camera_update(free_move_config);
 
     time_current += time_delta;
+
+    frame::end_pass();
 }

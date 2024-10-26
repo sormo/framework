@@ -120,6 +120,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_gui();
     draw_debug_gui();
 
@@ -150,4 +152,6 @@ void update()
 
     world.Update();
     world.Draw();
+
+    frame::end_pass();
 }

@@ -17,6 +17,10 @@
 #include "shaders/sshapes.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "HandmadeMath.h"
+#include "manager_sg.h"
+
+extern frame::pipeline_manager_sg pip_manager;
+extern frame::manager_sg pass_manager;
 
 namespace frame
 {
@@ -34,7 +38,7 @@ namespace frame
 
 	struct buffer_data
 	{
-		sg_pipeline pipeline = {};
+		pipeline_t pipeline = {};
 		sg_bindings bindings = {};
 		size_t draw_elements = 0;
 
@@ -101,12 +105,12 @@ namespace frame
 		std::unordered_map<draw_buffer_id, buffer_data> buffer_data;
 		sg_pass_action pass_action;
 
-		std::map<pipeline_desc, sg_pipeline> pipeline_cache;
+		std::map<pipeline_desc, pipeline_t> pipeline_cache;
 
 		std::map<buffer_desc, buffer_sg> buffer_cache;
 
 		// --- sshapes ---
-		sg_pipeline sshape_pip;
+		pipeline_t sshape_pip;
 		sg_buffer sshape_vbuf;
 		sg_buffer sshape_ibuf;
 
@@ -230,12 +234,12 @@ namespace frame
 		return {};
 	}
 
-	sg_pipeline create_pipeline(pipeline_desc desc)
+	pipeline_t create_pipeline(pipeline_desc desc)
 	{
 		if (state_drawing_sg.pipeline_cache.count(desc))
 			return state_drawing_sg.pipeline_cache[desc];
 
-		state_drawing_sg.pipeline_cache[desc] = sg_make_pipeline(get_pipeline_desc(desc));
+		state_drawing_sg.pipeline_cache[desc] = pip_manager.make_pipeline(get_pipeline_desc(desc));
 
 		return state_drawing_sg.pipeline_cache[desc];
 	}
@@ -275,7 +279,7 @@ namespace frame
 		pipeline_desc.colors[0].blend.dst_factor_alpha = SG_BLENDFACTOR_ZERO;
 		pipeline_desc.colors[0].blend.op_alpha = SG_BLENDOP_ADD;
 
-		state_drawing_sg.sshape_pip = sg_make_pipeline(&pipeline_desc);
+		state_drawing_sg.sshape_pip = pip_manager.make_pipeline(pipeline_desc);
 
 		// sshapes
 
@@ -540,13 +544,17 @@ namespace frame
 
 	frame::mat4 create_world_projection()
 	{
-		return HMM_Orthographic_RH_NO(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -max_depth, max_depth);
+		auto [width, height] = pass_manager.get_pass_size();
+
+		return HMM_Orthographic_RH_NO(0.0f, (float)width, (float)height, 0.0f, -max_depth, max_depth);
 	}
 
 	frame::mat4 create_world_projection_view()
 	{
+		auto [width, height] = pass_manager.get_pass_size();
+
 		HMM_Mat4 view = frame::get_world_transform().data;
-		HMM_Mat4 projection = HMM_Orthographic_RH_NO(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -max_depth, max_depth);
+		HMM_Mat4 projection = HMM_Orthographic_RH_NO(0.0f, (float)width, (float)height, 0.0f, -max_depth, max_depth);
 
 		return HMM_MulM4(projection, view);
 	}
@@ -677,7 +685,7 @@ namespace frame
 			data.index_buffer->apply(data.index_buffer_id, data.bindings);
 		}
 
-		sg_apply_pipeline(data.pipeline);
+		pip_manager.apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
 		auto projection_view = create_world_projection_view();
@@ -742,7 +750,7 @@ namespace frame
 			data.index_buffer->apply(data.index_buffer_id, data.bindings);
 		}
 
-		sg_apply_pipeline(data.pipeline);
+		pip_manager.apply_pipeline(data.pipeline);
 		sg_apply_bindings(&data.bindings);
 
 		// TODO this can be wrong if using different shader
@@ -823,7 +831,7 @@ namespace frame
 
 	void apply_sshape_pipeline()
 	{
-		sg_apply_pipeline(state_drawing_sg.sshape_pip);
+		pip_manager.apply_pipeline(state_drawing_sg.sshape_pip);
 
 		sg_bindings bindings = {};
 		bindings.vertex_buffers[0] = state_drawing_sg.sshape_vbuf;

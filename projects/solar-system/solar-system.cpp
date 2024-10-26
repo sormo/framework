@@ -338,6 +338,8 @@ void update_system()
 
 void update()
 {
+    frame::begin_default_pass();
+
     update_measure.start();
 
     // draw
@@ -356,4 +358,6 @@ void update()
         update_system();
 
     update_measure.finish();
+
+    frame::end_pass();
 }

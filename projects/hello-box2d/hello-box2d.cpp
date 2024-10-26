@@ -94,6 +94,8 @@ void draw_gui()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_gui();
 
     handle_mouse();
@@ -108,4 +110,6 @@ void update()
 
     world.Update();
     world.Draw();
+
+    frame::end_pass();
 }

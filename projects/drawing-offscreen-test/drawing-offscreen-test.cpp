@@ -23,169 +23,25 @@ frame::free_move_camera_config free_move_config;
 
 struct
 {
-    struct
-    {
-        sg_pass pass;
-        sg_pipeline pip;
-        sg_bindings bind;
-
-        sshape_element_range_t sphere;
-
-    } offscreen;
-
-    struct
-    {
-        sg_pipeline pip;
-        sg_bindings bind;
-
-    } display;
+    image_t render_target;
 
 } state;
 
 void setup_offscreen()
 {
-    static const auto offscreen_pixel_format = SG_PIXELFORMAT_RGBA8;
-    static const auto offscreen_sample_count = 1;
-
-    // prepare images for offscreen rendering
-    sg_image_desc img_desc = {};
-
-    img_desc.render_target = true;
-    img_desc.width = 256;
-    img_desc.height = 256;
-    img_desc.pixel_format = offscreen_pixel_format;
-    img_desc.sample_count = offscreen_sample_count;
-    img_desc.label = "color-image";
-    sg_image color_img = sg_make_image(&img_desc);
-
-    img_desc.pixel_format = SG_PIXELFORMAT_DEPTH;
-    img_desc.label = "depth-image";
-    sg_image depth_img = sg_make_image(&img_desc);
-
-    // create offscreen pass
-    sg_attachments_desc attachments_desc = {};
-    attachments_desc.colors[0].image = color_img;
-    attachments_desc.depth_stencil.image = depth_img;
-    attachments_desc.label = "offscreen-attachments";
-
-    state.offscreen.pass.attachments = sg_make_attachments(attachments_desc);
-    state.offscreen.pass.action.colors[0].load_action = SG_LOADACTION_CLEAR;
-    state.offscreen.pass.action.colors[0].clear_value = { 0.25f, 0.25f, 0.25f, 1.0f };
-    state.offscreen.pass.label = "offscreen-pass";
-
-    // create offscreen pipeline
-    sg_pipeline_desc pipeline_desc = {};
-    pipeline_desc.layout.buffers[0] = sshape_vertex_buffer_layout_state();
-    pipeline_desc.layout.attrs[ATTR_vs_offscreen_position] = sshape_position_vertex_attr_state();
-    pipeline_desc.layout.attrs[ATTR_vs_offscreen_normal] = sshape_normal_vertex_attr_state();
-    pipeline_desc.shader = sg_make_shader(offscreen_shader_desc(sg_query_backend()));
-    pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
-    pipeline_desc.cull_mode = SG_CULLMODE_BACK;
-    pipeline_desc.sample_count = offscreen_sample_count;
-    pipeline_desc.depth.pixel_format = SG_PIXELFORMAT_DEPTH;
-    pipeline_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
-    pipeline_desc.depth.write_enabled = true;
-    pipeline_desc.colors[0].pixel_format = offscreen_pixel_format;
-    pipeline_desc.label = "offscreen-pipeline";
-    state.offscreen.pip = sg_make_pipeline(pipeline_desc);
-
-    // create offscreen bindings
-    {
-        static sshape_vertex_t vertices[4000] = { 0 };
-        static uint16_t indices[24000] = { 0 };
-        sshape_buffer_t buf = {};
-        buf.vertices.buffer = SSHAPE_RANGE(vertices);
-        buf.indices.buffer = SSHAPE_RANGE(indices);
-        sshape_sphere_t sphere_desc = {};
-        sphere_desc.slices = 72;
-        sphere_desc.stacks = 40;
-        buf = sshape_build_sphere(&buf, &sphere_desc);
-        state.offscreen.sphere = sshape_element_range(&buf);
-
-        sg_buffer_desc vbuf_desc = sshape_vertex_buffer_desc(&buf);
-        sg_buffer_desc ibuf_desc = sshape_index_buffer_desc(&buf);
-        vbuf_desc.label = "shape-vbuf";
-        ibuf_desc.label = "shape-ibuf";
-        state.offscreen.bind.vertex_buffers[0] = sg_make_buffer(&vbuf_desc);
-        state.offscreen.bind.index_buffer = sg_make_buffer(&ibuf_desc);
-    }
-
-    // create display pipeline
-    {
-        sg_pipeline_desc desc = {};
-        desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
-        desc.layout.attrs[ATTR_vs_display_position].format = SG_VERTEXFORMAT_FLOAT2;
-        desc.shader = sg_make_shader(display_shader_desc(sg_query_backend()));
-        desc.index_type = SG_INDEXTYPE_UINT16;
-        desc.label = "display-pipeline";
-        state.display.pip = sg_make_pipeline(desc);
-    }
-
-    // create display bindings (draw quad)
-    {
-        struct vertex_t
-        {
-            float x, y;
-        };
-
-        vertex_t vertices[] =
-        {
-             0.5f,  0.5f,
-             0.5f, -0.5f,
-            -0.5f, -0.5f,
-            -0.5f,  0.5f
-        };
-
-        sg_buffer_desc buffer_desc_vert = {};
-        buffer_desc_vert.data = SG_RANGE(vertices);
-        buffer_desc_vert.label = "display-vertices";
-        state.display.bind.vertex_buffers[0] = sg_make_buffer(&buffer_desc_vert);
-
-        uint16_t indices[] = { 0, 1, 3, 2 };
-        sg_buffer_desc buffer_desc_index = {};
-        buffer_desc_index.type = SG_BUFFERTYPE_INDEXBUFFER;
-        buffer_desc_index.data = SG_RANGE(indices);
-        buffer_desc_index.label = "display-indices";
-        state.display.bind.index_buffer = sg_make_buffer(&buffer_desc_index);
-
-        sg_sampler_desc sampler_desc = {};
-        sampler_desc.min_filter = SG_FILTER_LINEAR;
-        sampler_desc.mag_filter = SG_FILTER_LINEAR;
-        sampler_desc.wrap_u = SG_WRAP_CLAMP_TO_EDGE;
-        sampler_desc.wrap_v = SG_WRAP_CLAMP_TO_EDGE;
-        state.display.bind.fs.images[SLOT_tex] = color_img;
-        state.display.bind.fs.samplers[SLOT_smp] = sg_make_sampler(sampler_desc);
-    }
+    state.render_target = frame::create_image_target(256, 256, { SG_PIXELFORMAT_RGBA8, 1, true });
 }
 
 void update_offscreen_non_default_pass()
 {
-    sg_begin_pass(&state.offscreen.pass);
-
-    sg_apply_pipeline(state.offscreen.pip);
-    sg_apply_bindings(&state.offscreen.bind);
-
-    vs_params_t vs_params = {};
     auto projection = mat4::orthographic(-128.0f, 128.0f, -128.0f, 128.0f, -max_depth, max_depth);
     auto model = mat4::scaling(100.0f);
-    vs_params.mvp = projection * model;
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
-
-    sg_draw(state.offscreen.sphere.base_element, state.offscreen.sphere.num_elements, 1);
-
-    sg_end_pass();
+    frame::draw_sphere(projection * model, col4::ORANGE, sshapes_shading::flat, { 5.0f, 5.0f, 10.0f }, model);
 }
 
 void update_offscreen()
 {
-    sg_apply_pipeline(state.display.pip);
-    sg_apply_bindings(&state.display.bind);
-
-    vs_params_t vs_params = {};
-    vs_params.mvp = frame::create_world_mvp(vec2{}, 0.0f, { 500.0f, 500.0f });
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, SG_RANGE(vs_params));
-
-    sg_draw(0, 4, 1);
+    frame::draw_image_ex(state.render_target, {}, .0f, { 500.0f, 500.0f }, text_align::middle_middle);
 }
 
 void setup()
@@ -239,11 +95,13 @@ void update()
 
     update_imgui();
 
-    // TODO this will not work because in update we have already default pass, this function must be called before 
-    // sg_begin_pass(pass); in frame_update in framework.cpp
+    begin_pass_clear(state.render_target, col4::DARKGRAY);
     update_offscreen_non_default_pass();
+    end_pass();
 
+    begin_default_pass();
     update_offscreen();
+    end_pass();
 
     frame::free_move_camera_update(free_move_config);
 }

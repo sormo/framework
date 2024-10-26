@@ -285,6 +285,8 @@ void draw_gui()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_gui();
     
     handle_mouse();
@@ -296,4 +298,6 @@ void update()
     world.Draw();
 
     g_rope2->Draw();
+
+    frame::end_pass();
 }

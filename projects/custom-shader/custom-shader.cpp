@@ -95,6 +95,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_coordinate_lines(rgb(40, 40, 40));
 
     frame::nanovg_flush();
@@ -102,4 +104,6 @@ void update()
     draw_sg();
 
     frame::free_move_camera_update(free_move_config);
+
+    frame::end_pass();
 }

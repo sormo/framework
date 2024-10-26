@@ -244,6 +244,8 @@ void drawTrajectories(Objects& obj)
 
 void update()
 {
+    frame::begin_default_pass();
+
     world.Draw(Background);
 
     colorLerp.Update();
@@ -286,4 +288,6 @@ void update()
         drawGui();
 
     drawDebugGui();
+
+    frame::end_pass();
 }

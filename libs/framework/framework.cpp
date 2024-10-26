@@ -16,6 +16,7 @@
 #endif
 
 #include "framework.h"
+#include "manager_sg.h"
 #define SOKOL_IMPL
 #include "sokol_app.h"
 #include "sokol_gfx.h"
@@ -43,7 +44,6 @@
 #include "nanovg_gl.h"
 
 #include "events.h"
-
 #include "imgui_font.h"
 #include <chrono>
 #include <vector>
@@ -51,10 +51,10 @@
 
 using namespace frame;
 
-sg_pass_action pass_action;
 NVGcontext* vg;
 FONScontext* fons;
-col4 background_color;
+manager_sg pass_manager;
+pipeline_manager_sg pip_manager;
 
 std::chrono::time_point<std::chrono::high_resolution_clock> start_application;
 std::chrono::time_point<std::chrono::high_resolution_clock> start_frame;
@@ -110,15 +110,12 @@ namespace frame
 
     void set_screen_background(const col4& color)
     {
-        pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
-        pass_action.colors[0].clear_value = { color.data.r, color.data.g, color.data.b, color.data.a };
-
-        background_color = color;
+        pass_manager.set_default_pass_clear_color(color);
     }
 
-    const col4& get_screen_background()
+    col4 get_screen_background()
     {
-        return background_color;
+        return pass_manager.get_default_pass_clear_color();
     }
 
     vec2 get_screen_size()
@@ -507,6 +504,55 @@ namespace frame
             });
         }
     }
+
+    image_t create_image_target(uint32_t width, uint32_t height, const image_target_desc& desc)
+    {
+        return pass_manager.create_render_target(width, height, desc);
+    }
+
+    void begin_pass(image_t target)
+    {
+        pass_manager.begin_pass(target);
+        pip_manager.apply_pass(pass_manager.get_target_desc(target));
+    }
+
+    void begin_pass_clear(image_t target, const col4& color)
+    {
+        pass_manager.begin_pass_clear(target, color);
+        pip_manager.apply_pass(pass_manager.get_target_desc(target));
+    }
+
+    void begin_default_pass()
+    {
+        pass_manager.begin_default_pass();
+        pip_manager.apply_pass(pass_manager.get_default_target_desc());
+    }
+
+    void end_pass()
+    {
+        if (pass_manager.is_default_pass())
+        {
+            // render imgui at the end of default pass
+            imgui::render();
+        }
+
+        pass_manager.end_pass();
+    }
+
+    const image_target_desc& get_image_target_desc(image_t image)
+    {
+        return pass_manager.get_target_desc(image);
+    }
+
+    bool is_image_target(image_t image)
+    {
+        return pass_manager.is_target(image);
+    }
+
+    bool image_target_desc::operator==(const image_target_desc& b) const
+    {
+        return depth_stencil == b.depth_stencil && pixel_format == b.pixel_format && samples == b.samples;
+    }
 }
 
 void frame_delta_update()
@@ -514,20 +560,6 @@ void frame_delta_update()
     auto now = std::chrono::high_resolution_clock::now();
     frame_delta = (float)std::chrono::duration_cast<std::chrono::milliseconds>(now - start_frame).count();
     start_frame = now;
-}
-
-void sgl_begin_frame()
-{
-    sgl_defaults();
-    sgl_matrix_mode_projection();
-    sgl_ortho(0.0f, sapp_widthf(), sapp_heightf(), 0.0f, -frame::max_depth, +frame::max_depth);
-}
-
-void sgl_end_frame()
-{
-    sfons_flush(fons);
-
-    sgl_draw();
 }
 
 void frame_update()
@@ -538,31 +570,16 @@ void frame_update()
 
     imgui::prepare_render();
 
-    //sg_begin_default_pass(&pass_action, sapp_widthf(), sapp_heightf());
-    sg_pass pass = {};
-    pass.action = pass_action;
-    pass.swapchain = sglue_swapchain();
-
-    sg_begin_pass(pass);
-
-    sgl_begin_frame();
-
     nvgBeginFrame(vg, sapp_widthf(), sapp_heightf(), 1.0f);
-
+    
     nvgResetTransform(vg);
     apply_transform(transforms.back());
 
     update();
 
-    sgl_end_frame();
-
     nvgEndFrame(vg);
 
     sg_reset_state_cache();
-
-    imgui::render();
-
-    sg_end_pass();
 
     sg_commit();
 
@@ -633,6 +650,8 @@ void init()
         sfetch_setup(&desc);
     }
 
+    pass_manager.initialize();
+
     nvgCreateFontMem(vg, "default", dump_font, sizeof(dump_font), 0);
 
     setup_draw();
@@ -673,7 +692,7 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.event_cb = input;
     desc.width = 800;
     desc.height = 600;
-    desc.sample_count = 8; // antialiasing
+    desc.sample_count = 4; // antialiasing
     desc.alpha = false; // TODO test, what is doing this
     desc.html5_premultiplied_alpha = false;
     //desc.html5_preserve_drawing_buffer = false;

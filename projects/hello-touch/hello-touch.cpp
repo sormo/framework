@@ -46,6 +46,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     frame::draw_coordinate_lines(frame::rgb(80, 80, 80));
 
     frame::draw_text("Hello, Touch!", { 100.0f, 100.0f }, 25.0f, frame::col4::RGBf(0.9f, 0.9f, 0.9f), frame::text_align::bottom_left);
@@ -95,4 +97,6 @@ void update()
 
     for (const auto& pos : clicked_positions)
         frame::draw_circle(pos, 5.0f, frame::col4::BLUE);
+
+    frame::end_pass();
 }

@@ -158,6 +158,8 @@ void update_imgui()
 
 void update()
 {
+    frame::begin_default_pass();
+
     state.frame_count++;
 
     auto now = std::chrono::system_clock::now();
@@ -169,4 +171,6 @@ void update()
 
     update_imgui();
     update_shadertoy();
+
+    frame::end_pass();
 }

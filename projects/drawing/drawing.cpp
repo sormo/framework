@@ -50,22 +50,24 @@ using namespace frame;
 
 frame::free_move_camera_config free_move_config;
 
-using drawing_type_cbk = void(*)();
+using drawing_t_cbk = void(*)();
 
-struct drawing_type_data
+struct drawing_t_data
 {
     const char* name;
-    drawing_type_cbk setup;
-    drawing_type_cbk update;
+    drawing_t_cbk setup;
+    drawing_t_cbk update;
+    drawing_t_cbk update_non_default;
 };
 
-enum drawing_type
+enum drawing_t
 {
     instanced,
     basic,
     image,
     depth,
-    text
+    text,
+    offscreen
 };
 
 void setup_instanced();
@@ -78,14 +80,18 @@ void setup_depth();
 void update_depth();
 void setup_text();
 void update_text();
+void setup_offscreen();
+void update_offscreen();
+void update_offscreen_non_default();
 
-drawing_type_data drawing_types[] =
+drawing_t_data drawing_ts[] =
 {
-    { "instanced", setup_instanced, update_instanced },
-    { "basic", setup_basic, update_basic },
-    { "image", setup_image, update_image },
-    { "depth", setup_depth, update_depth },
-    { "text", setup_text, update_text }
+    { "instanced", setup_instanced, update_instanced, nullptr },
+    { "basic", setup_basic, update_basic, nullptr },
+    { "image", setup_image, update_image, nullptr },
+    { "depth", setup_depth, update_depth, nullptr },
+    { "text", setup_text, update_text, nullptr },
+    { "offscreen", setup_offscreen, update_offscreen, update_offscreen_non_default }
 };
 
 frame::col4 get_random_color()
@@ -102,6 +108,49 @@ frame::vec2 get_random_position()
 ////// COMMON /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+static const char sokol_image[] = "iVBORw0KGgoAAAANSUhEUgAAA5gAAACwCAYAAABq38F7AAAAAXNSR0IArs4c6QAACVxJREFUeJzt3d+"
+                                  "LnFcZB/CZss0mJiHJNkbFWg2UUKNWQ0GpIJIIJhZ/Ia1Y4520hUIpiEW8C94UaS9aFGmkKogh0kapVs"
+                                  "SaJilVkEjboFGMunQDJtLuprMxP5psYjL+A5t5hfM9vDOzn8/t5Jz3cN5nntlvzsXp9r/7wU5V0+v7d"
+                                  "R/AIFM/OTrw896ud3SLHnDDhaLhrXtjRd351f9AI1+fh99Vd/5OR/0M0Fg/37iprH5qO7lmpN9v9f2/"
+                                  "8UzR8Eb6f6v0/0bqp0WN9fmVDxTVZ/exAyXDh951bS8AAACA8SBgAgAAECFgAgAAECFgAgAAECFgAgA"
+                                  "AECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAg"
+                                  "AAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAENHt793Ub3sRJ"
+                                  "aYeON32Eor0vrO27SUUadr/3q/f2y16wKrlRcMb/WlG/Q8w9vX54pay+vz7sqLhTabuOVy1Psf+/f70"
+                                  "Q2Xvt7a542Pdf3pPbC7b/82TRcMb6f8DjX1/0P9rTl9d23//z5+aHe7fl5Y5wQQAACBCwAQAACBCwAQ"
+                                  "AACBCwAQAACBCwAQAACBCwAQAACBCwAQAACBiou0F1Nbb9b6ye2pevxRaybXMjfQ9XAy33tc2Ft7TNK"
+                                  "8+W9T7dmH/anTS+4Uxpf+PNv2/TPH+Ha17Btd97EDV+dvmBBMAAIAIARMAAIAIARMAAIAIARMAAIAIA"
+                                  "RMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAI"
+                                  "ARMAAICIbr/3pX7biygxtengwM//8vuPdEvmX7h0pWR4o9u2vTTS+99k/tRs0f6Pe33W1rT//b2bBo6"
+                                  "feuB01f3v/WNbzemra3q/x45uLar/ybnTJcMbrblx3Vh/v4794fai/d9ww4qx3p/a9P/h3n/9v4z+36"
+                                  "6m/Z85uKVo/9fe+lzJ8CXPCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+                                  "20vYKk79swtRff0NJl882LN6Tudt6+rO/+Y+9ezZe9/5fHXGv7F2pLpi9f3fxjpe7hglPWeek/R9/s/"
+                                  "6/X/Evq//g/jygkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+                                  "mAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAERNTmw5WfcDvXt7a6vzznU6/6A"
+                                  "ErikY3enPN6qrzf+y2QwM//8GhO7ol869fdrVkeKOpswtV52/bP992U9H4Lbe/GFrJ4o68+uGq819/9"
+                                  "nLV+dv27wvXl02w6q2ZhVzDqO9/U/+fK+z/c2fLfj6aNPXn2l559y1F46/r1u3/o16fTfT/8X6/+n+7"
+                                  "ZirvX6knX7qn7SVU5QQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiImZv24"
+                                  "tugexyYmLhfdQAsASdODw9qLf536n6s87ACzKCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAi"
+                                  "YAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
+                                  "99/dVXVBzz8mWerzj/qHvnN51qdv7fQ6ZfM/9Wtvxj8/Oc+3S2Zv3N2smj4sHthdnnR+Hv33x9ayeJe"
+                                  "mL1Udf7VEyuqzt+21y+W/R/eiQsToZVcQ3+09/+hHYP7T6m2+/Mr82X9uWl/7tv3haL+fPPquv1h1Ou"
+                                  "zif4/3u9X/2/Xy/PLisbX/n5Nn7tadf6bV10p+v1o0vT74gQTAACACAETAACACAETAACACAETAACACA"
+                                  "ETAACACAETAACACAETAACAiMqX7HQ6j/72jrJ7EBu8c8XlmtN3Ll2tm8FnL5TdcwbA4n54aEfR788bh"
+                                  "fcEA8BS5AQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACA"
+                                  "CAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiInpc5P9mg+YPldz9k7n6bv3Dfz8o99"
+                                  "7vlsy/9rJ2ZLhjVa+5edV529bb2GiaPzDn30mtJLF3bX3zlbn/9vZTtH3r6n+P757b1H9dzo/q9ofam"
+                                  "van9p2bP5xq89vcu/++9teQlWH595fNH73Fx8NrWRxbfef3uWy/vPQ9l8N/Hznnl1F/WfPzl0lwxu1v"
+                                  "f/6f136/2Dj3v8Pnfhy0fjTCxtCK7mGdU9U/X79cb7dM0QnmAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
+                                  "mAAAAEQImAAAAEQImAAAAESUXVIIlX3zl58vvMdrsOnzZfeQMdpK6+vkme2ppSzqzH+rln+n03m+8vy"
+                                  "j7b6nvl71BfSuHNd/BtD/qUn/1/+pxwkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQ"
+                                  "ImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEd116zf0a"
+                                  "z5gy+MzNaenwZEHN7b6/PlTs91WF9BA/ber7fq8a++dRfU5PftIainXUrU+R11T/Xziyd1D3X965z85"
+                                  "0u+39v5PrdxfMrzR03fv0/9bpP83Gun+wHhr+v46wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQAACB"
+                                  "CwAQAACBCwAQAACBi4lM/+lbVe8JeO+Men2FW+v5XLf9zaimtOHfxVvU/xJZ6fQL1+PtnuOn/MLqcYA"
+                                  "IAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhY"
+                                  "AIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABDR3bbnfNUHHHlwY7/qAyiy5fGZbsn4gztXppbSCvU/"
+                                  "3OZPzRbVZ23qZ7g11U/t99dk3N+v7+94v9/a1I/6YXQ5wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQ"
+                                  "AACBCwAQAACBCwAQAACDifxFf+7S1xG8ZAAAAAElFTkSuQmCC)";
+
 struct
 {
     frame::draw_buffer_id rectangle;
@@ -109,8 +158,8 @@ struct
     frame::draw_buffer_id circle;
     frame::draw_buffer_id circle_instanced;
 
-    std::string drawing_types_string;
-    drawing_type drawing_type_current = drawing_type::image;
+    std::string drawing_ts_string;
+    drawing_t drawing_t_current = drawing_t::offscreen;
 
 } state_common;
 
@@ -131,7 +180,7 @@ void setup_common()
 ////// INSTANCED //////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct state_instanced_type
+struct state_instanced_t
 {
     struct rect
     {
@@ -159,7 +208,7 @@ void setup_instanced()
 
     for (size_t i = 0; i < 10; i++)
     {
-        state_instanced_type::rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), { 10.0f, 20.0f }, get_random_color() };
+        state_instanced_t::rect tr{ get_random_position(), frame::randf(0.0f, 6.28f), { 10.0f, 20.0f }, get_random_color() };
         tr.index = frame::add_draw_instance(state_common.rectangle_instanced, tr.position, tr.rotation, tr.scale, get_random_color());
 
         state_instanced.rects.push_back(std::move(tr));
@@ -299,6 +348,7 @@ struct
     frame::image_t svg_rasterized_test_512;
     frame::svg_image* rasterize_test_svg;
     frame::image_t created_image;
+    frame::image_t created_image_r8;
 
 } state_image;
 
@@ -323,49 +373,6 @@ void setup_image()
                                       </g>
                                      </svg>)";
 
-    static const char sokol[] = "iVBORw0KGgoAAAANSUhEUgAAA5gAAACwCAYAAABq38F7AAAAAXNSR0IArs4c6QAACVxJREFUeJzt3d+"
-        "LnFcZB/CZss0mJiHJNkbFWg2UUKNWQ0GpIJIIJhZ/Ia1Y4520hUIpiEW8C94UaS9aFGmkKogh0kapVs"
-        "SaJilVkEjboFGMunQDJtLuprMxP5psYjL+A5t5hfM9vDOzn8/t5Jz3cN5nntlvzsXp9r/7wU5V0+v7d"
-        "R/AIFM/OTrw896ud3SLHnDDhaLhrXtjRd351f9AI1+fh99Vd/5OR/0M0Fg/37iprH5qO7lmpN9v9f2/"
-        "8UzR8Eb6f6v0/0bqp0WN9fmVDxTVZ/exAyXDh951bS8AAACA8SBgAgAAECFgAgAAECFgAgAAECFgAgA"
-        "AECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAg"
-        "AAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAECFgAgAAENHt793Ub3sRJ"
-        "aYeON32Eor0vrO27SUUadr/3q/f2y16wKrlRcMb/WlG/Q8w9vX54pay+vz7sqLhTabuOVy1Psf+/f70"
-        "Q2Xvt7a542Pdf3pPbC7b/82TRcMb6f8DjX1/0P9rTl9d23//z5+aHe7fl5Y5wQQAACBCwAQAACBCwAQ"
-        "AACBCwAQAACBCwAQAACBCwAQAACBCwAQAACBiou0F1Nbb9b6ye2pevxRaybXMjfQ9XAy33tc2Ft7TNK"
-        "8+W9T7dmH/anTS+4Uxpf+PNv2/TPH+Ha17Btd97EDV+dvmBBMAAIAIARMAAIAIARMAAIAIARMAAIAIA"
-        "RMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAIARMAAIAI"
-        "ARMAAICIbr/3pX7biygxtengwM//8vuPdEvmX7h0pWR4o9u2vTTS+99k/tRs0f6Pe33W1rT//b2bBo6"
-        "feuB01f3v/WNbzemra3q/x45uLar/ybnTJcMbrblx3Vh/v4794fai/d9ww4qx3p/a9P/h3n/9v4z+36"
-        "6m/Z85uKVo/9fe+lzJ8CXPCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
-        "20vYKk79swtRff0NJl882LN6Tudt6+rO/+Y+9ezZe9/5fHXGv7F2pLpi9f3fxjpe7hglPWeek/R9/s/"
-        "6/X/Evq//g/jygkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
-        "mAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAERNTmw5WfcDvXt7a6vzznU6/6A"
-        "ErikY3enPN6qrzf+y2QwM//8GhO7ol869fdrVkeKOpswtV52/bP992U9H4Lbe/GFrJ4o68+uGq819/9"
-        "nLV+dv27wvXl02w6q2ZhVzDqO9/U/+fK+z/c2fLfj6aNPXn2l559y1F46/r1u3/o16fTfT/8X6/+n+7"
-        "ZirvX6knX7qn7SVU5QQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiImZv24"
-        "tugexyYmLhfdQAsASdODw9qLf536n6s87ACzKCSYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAi"
-        "YAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARAiYAAAARE"
-        "99/dVXVBzz8mWerzj/qHvnN51qdv7fQ6ZfM/9Wtvxj8/Oc+3S2Zv3N2smj4sHthdnnR+Hv33x9ayeJe"
-        "mL1Udf7VEyuqzt+21y+W/R/eiQsToZVcQ3+09/+hHYP7T6m2+/Mr82X9uWl/7tv3haL+fPPquv1h1Ou"
-        "zif4/3u9X/2/Xy/PLisbX/n5Nn7tadf6bV10p+v1o0vT74gQTAACACAETAACACAETAACACAETAACACA"
-        "ETAACACAETAACACAETAACAiMqX7HQ6j/72jrJ7EBu8c8XlmtN3Ll2tm8FnL5TdcwbA4n54aEfR788bh"
-        "fcEA8BS5AQTAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACACAETAACA"
-        "CAETAACACAETAACACAETAACACAETAACACAETAACACAETAACAiInpc5P9mg+YPldz9k7n6bv3Dfz8o99"
-        "7vlsy/9rJ2ZLhjVa+5edV529bb2GiaPzDn30mtJLF3bX3zlbn/9vZTtH3r6n+P757b1H9dzo/q9ofam"
-        "van9p2bP5xq89vcu/++9teQlWH595fNH73Fx8NrWRxbfef3uWy/vPQ9l8N/Hznnl1F/WfPzl0lwxu1v"
-        "f/6f136/2Dj3v8Pnfhy0fjTCxtCK7mGdU9U/X79cb7dM0QnmAAAAEQImAAAAEQImAAAAEQImAAAAEQI"
-        "mAAAAEQImAAAAEQImAAAAESUXVIIlX3zl58vvMdrsOnzZfeQMdpK6+vkme2ppSzqzH+rln+n03m+8vy"
-        "j7b6nvl71BfSuHNd/BtD/qUn/1/+pxwkmAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQ"
-        "ImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEQImAAAAEd116zf0a"
-        "z5gy+MzNaenwZEHN7b6/PlTs91WF9BA/ber7fq8a++dRfU5PftIainXUrU+R11T/Xziyd1D3X965z85"
-        "0u+39v5PrdxfMrzR03fv0/9bpP83Gun+wHhr+v46wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQAACB"
-        "CwAQAACBCwAQAACBi4lM/+lbVe8JeO+Men2FW+v5XLf9zaimtOHfxVvU/xJZ6fQL1+PtnuOn/MLqcYA"
-        "IAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABAhY"
-        "AIAABAhYAIAABAhYAIAABAhYAIAABAhYAIAABDR3bbnfNUHHHlwY7/qAyiy5fGZbsn4gztXppbSCvU/"
-        "3OZPzRbVZ23qZ7g11U/t99dk3N+v7+94v9/a1I/6YXQ5wQQAACBCwAQAACBCwAQAACBCwAQAACBCwAQ"
-        "AACBCwAQAACBCwAQAACDifxFf+7S1xG8ZAAAAAElFTkSuQmCC)";
-
     //static const char menu_svg[] = R"(<svg width="800px" height="800px" fill="none" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     //                                   <g id="a">
     //                                    <g id="b" clip-rule="evenodd" fill="#c8c8c8" fill-rule="evenodd">
@@ -376,7 +383,7 @@ void setup_image()
     //                                   </g>
     //                                  </svg>)";
 
-    state_image.image_test = frame::load_image(frame::base64_decode(sokol));
+    state_image.image_test = frame::load_image(frame::base64_decode(sokol_image));
     state_image.svg_test = frame::svg_parse(sun_svg);
 
     state_image.rasterize_test_svg = frame::svg_parse(sun_svg);
@@ -393,6 +400,16 @@ void setup_image()
     };
 
     state_image.created_image = create_image(4, 4, (const char*)pixels, sizeof(pixels), SG_PIXELFORMAT_RGBA8);
+
+    uint8_t pixels_r8[4 * 4] =
+    {
+        0xFF, 0x00, 0xFF, 0x00,
+        0x00, 0xFF, 0x00, 0xFF,
+        0xFF, 0x00, 0xFF, 0x00,
+        0x00, 0xFF, 0x00, 0xFF
+    };
+
+    state_image.created_image_r8 = create_image(4, 4, (const char*)pixels_r8, sizeof(pixels_r8), SG_PIXELFORMAT_R8);
 }
 
 void update_image()
@@ -440,6 +457,7 @@ void update_image()
     frame::draw_image_ex(state_image.image_test, test_position, frame::deg_to_rad(60.0f), { 100.0f, 20.0f }, text_align::bottom_right);
 
     frame::draw_image_ex(state_image.created_image, { 0.0f, 200.0f }, 0.0f, {100.0f, 100.0f}, text_align::middle_middle, { SG_FILTER_NEAREST });
+    frame::draw_image_ex(state_image.created_image_r8, { -200.0f, 200.0f }, 0.0f, {100.0f, 100.0f}, text_align::middle_middle, { SG_FILTER_NEAREST });
 
     frame::draw_image_ex(state_image.svg_rasterized_test_16, { -100.0f, -200.0f }, 0.0f, {50.0f, 50.0f}, frame::text_align::middle_middle, { SG_FILTER_NEAREST, SG_WRAP_CLAMP_TO_BORDER, col4::YELLOW });
     frame::draw_image_ex(state_image.svg_rasterized_test_512, { 100.0f, -200.0f }, 0.0f, {50.0f, 50.0f}, frame::text_align::middle_middle, { SG_FILTER_NEAREST, SG_WRAP_CLAMP_TO_BORDER, col4::ORANGE });
@@ -603,6 +621,73 @@ void update_text()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////// OFFSCREEN //////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct state_offscreen_t
+{
+    image_t sokol_image;
+    image_t sokol_target_4;
+    image_t sokol_target_1;
+    bool is_sokol_target_drawn = false;
+
+} state_offscreen;
+
+void setup_offscreen()
+{
+    state_offscreen.sokol_image = load_image(base64_decode(sokol_image));
+    state_offscreen.sokol_target_4 = create_image_target(256, 256, { SG_PIXELFORMAT_RGBA8, 4, false });
+    state_offscreen.sokol_target_1 = create_image_target(256, 256, { SG_PIXELFORMAT_RGBA8, 1, false });
+}
+
+void update_offscreen_non_default()
+{
+    if (!state_offscreen.is_sokol_target_drawn)
+    {
+        auto test_draw = [](image_t target)
+        {
+            begin_pass_clear(target, col4::BLACK);
+
+            //for (size_t r = 0; r < 256 / 64; r++)
+            //{
+            //    for (size_t c = 0; c < 256 / 32; c++)
+            //    {
+            //        draw_image_ex(state_offscreen.sokol_image, { r * 64, c * 32 }, 0.0f, { 64, 32 });
+            //    }
+            //}
+
+            draw_image_ex(state_offscreen.sokol_image, { 128.0f, 128.0f }, 0.0f, { 64.0f, 32.0f });
+
+            frame::draw_buffer(state_common.circle, vec2{}, 0.0f, { 20.0f, 20.0f }, col4::BLUE);
+            frame::draw_buffer(state_common.circle, vec2{ 128.0f, 128.0f }, 0.0f, { 20.0f, 20.0f }, col4::GREEN);
+            frame::draw_buffer(state_common.circle, vec2{ 256.0f, 256.0f }, 0.0f, { 20.0f, 20.0f }, col4::RED);
+
+            end_pass();
+        };
+
+        frame::save_world_transform();
+        frame::set_world_transform(mat4::identity());
+
+        test_draw(state_offscreen.sokol_target_1);
+        test_draw(state_offscreen.sokol_target_4);
+
+        frame::restore_world_transform();
+
+        state_offscreen.is_sokol_target_drawn = true;
+    }
+}
+
+void update_offscreen()
+{
+    draw_image(state_offscreen.sokol_target_4, {}, text_align::middle_middle);
+
+    draw_image_ex(state_offscreen.sokol_target_4, {-500.0f, .0f}, .0f, {256.0f, -256.0f}, text_align::middle_middle);
+    draw_image_ex(state_offscreen.sokol_target_1, { 500.0f, .0f}, .0f, {256.0f, -256.0f}, text_align::middle_middle);
+
+    draw_image_ex(state_offscreen.sokol_image, {0.0f, 300.0f}, 0.0f, { 64.0f, 32.0f });
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -610,13 +695,13 @@ void setup()
 {
     setup_common();
 
-    for (auto& m : drawing_types)
+    for (auto& m : drawing_ts)
     {
         m.setup();
-        state_common.drawing_types_string += m.name;
-        state_common.drawing_types_string.push_back('\0');
+        state_common.drawing_ts_string += m.name;
+        state_common.drawing_ts_string.push_back('\0');
     }
-    state_common.drawing_types_string.push_back('\0');
+    state_common.drawing_ts_string.push_back('\0');
 
     frame::set_world_transform(frame::translation(frame::get_screen_size() / 2.0f) * frame::scale({ 1.0f, 1.0f }));
     free_move_config.min_size = { 0.1f, 0.1f };
@@ -651,16 +736,23 @@ void update_imgui()
     ImGui::SameLine();
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    ImGui::Combo("Type", (int*)&state_common.drawing_type_current, state_common.drawing_types_string.data());
+    ImGui::Combo("Type", (int*)&state_common.drawing_t_current, state_common.drawing_ts_string.data());
 
     ImGui::End();
 }
 
 void update()
 {
+    if (drawing_ts[state_common.drawing_t_current].update_non_default)
+        drawing_ts[state_common.drawing_t_current].update_non_default();
+
+    frame::begin_default_pass();
+
     update_imgui();
 
-    drawing_types[state_common.drawing_type_current].update();
+    drawing_ts[state_common.drawing_t_current].update();
 
     frame::free_move_camera_update(free_move_config);
+
+    frame::end_pass();
 }

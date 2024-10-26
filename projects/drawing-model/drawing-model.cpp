@@ -538,6 +538,8 @@ void update_imgui()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_coordinate_lines(rgb(40, 40, 40));
 
     frame::nanovg_flush();
@@ -560,4 +562,6 @@ void update()
     update_imgui();
 
     frame::free_move_camera_update(free_move_config);
+
+    frame::end_pass();
 }

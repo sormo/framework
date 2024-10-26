@@ -15,6 +15,8 @@ fips_begin_lib(framework)
                drawing_sg.cpp
                buffer_sg.h
                buffer_sg.cpp
+               manager_sg.h
+               manager_sg.cpp
                events.h
                events.cpp
                color_type.h

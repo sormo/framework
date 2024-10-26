@@ -66,7 +66,7 @@ namespace frame
     // SCREEN COORDINATES - screen coordinates has origin in upper-left and extends to right (x) and down (y)
     // screen has size get_screen_size()
     void set_screen_background(const col4& color);
-    const col4& get_screen_background();
+    col4 get_screen_background();
     vec2 get_screen_size();
     bool is_screen_resized();
 
@@ -258,6 +258,16 @@ namespace frame
     image_t create_image(uint32_t width, uint32_t height, sg_pixel_format pixel_format = SG_PIXELFORMAT_RGBA8);
     image_t create_image(uint32_t width, uint32_t height, const char* data, size_t data_size, sg_pixel_format pixel_format = SG_PIXELFORMAT_RGBA8);
 
+    struct image_target_desc
+    {
+        sg_pixel_format pixel_format = SG_PIXELFORMAT_RGBA8;
+        uint32_t samples = 1;
+        bool depth_stencil = true;
+
+        bool operator==(const image_target_desc& b) const;
+    };
+    image_t create_image_target(uint32_t width, uint32_t height, const image_target_desc& desc = {});
+
     image_t load_image(const char* data, size_t size);
     image_t load_image(const std::vector<char>& data);
 
@@ -265,21 +275,30 @@ namespace frame
 
     vec2 get_image_size(image_t img);
     sg_pixel_format get_image_pixel_format(image_t image);
+    const image_target_desc& get_image_target_desc(image_t image);
+    bool is_image_target(image_t image);
+    //image_t get_image_target_depth_stencil(image_t target);
 
     void update_image(image_t image, const char* data, size_t data_size);
 
-    struct image_draw_desc_t
+    struct image_draw_desc
     {
         sg_filter filter = SG_FILTER_LINEAR;
         sg_wrap wrap = SG_WRAP_CLAMP_TO_BORDER;
         col4 tint_color = col4::WHITE;
 
-        bool operator==(const image_draw_desc_t& draw_desc) const;
+        bool operator==(const image_draw_desc& draw_desc) const;
     };
 
-    void draw_image(image_t img, const vec2& position, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
-    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
-    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align = text_align::top_left, image_draw_desc_t draw_desc = {});
+    void draw_image(image_t img, const vec2& position, text_align align = text_align::top_left, image_draw_desc draw_desc = {});
+    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align = text_align::top_left, image_draw_desc draw_desc = {});
+    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align = text_align::top_left, image_draw_desc draw_desc = {});
+
+    // *** pass ***
+    void begin_pass(image_t target);
+    void begin_pass_clear(image_t target, const col4& color);
+    void begin_default_pass();
+    void end_pass();
 
     // *** file ***
     using fetch_callback = std::function<void(std::vector<char>)>;

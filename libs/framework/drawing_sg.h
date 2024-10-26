@@ -36,6 +36,8 @@ namespace frame
 		operator mesh() { return { vertices.data(), vertices.size() / 2, indices.data(), indices.size(), type }; }
 	};
 
+	// TODO refactor this interface, looks very complicated
+
 	mesh_data create_mesh_rectangle();
 	mesh_data create_mesh_circle(size_t count);
 	mesh_data create_mesh_circle(size_t count, float depth);

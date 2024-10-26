@@ -31,6 +31,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     draw_debug_gui();
 
     frame::draw_circle({ 0.0f, 0.0f }, 20.0f, frame::rgba(0, 0, 255, 128));
@@ -39,4 +41,6 @@ void update()
 
     frame::draw_rectangle(rect.center(), rect.size().x, rect.size().y, frame::rgb(123, 12, 12));
     frame::draw_text("Hello, World!", { -100.0f, 100.0f }, 25.0f, frame::col4::RGBf(0.9f, 0.9f, 0.9f), frame::text_align::bottom_left);
+
+    frame::end_pass();
 }

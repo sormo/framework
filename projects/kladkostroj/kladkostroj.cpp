@@ -274,6 +274,8 @@ void handle_mouse()
 
 void update()
 {
+    frame::begin_default_pass();
+
     //draw_gui();
     draw_debug_gui();
 
@@ -282,4 +284,6 @@ void update()
     world.Update();
 
     draw_kladkostroj();
+
+    frame::end_pass();
 }

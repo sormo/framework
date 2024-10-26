@@ -9,33 +9,36 @@
 #include <unordered_map>
 #include "drawing_sg.h"
 #include "basic_image.glsl.h"
+#include "manager_sg.h"
 
 template <>
-struct std::hash<frame::image_draw_desc_t>
+struct std::hash<frame::image_draw_desc>
 {
-    std::size_t operator()(const frame::image_draw_desc_t& k) const
+    std::size_t operator()(const frame::image_draw_desc& k) const
     {
         return k.filter + k.wrap;
     }
 };
 
+extern frame::pipeline_manager_sg pip_manager;
+
 namespace frame
 {
-    bool image_draw_desc_t::operator==(const image_draw_desc_t& d) const
+    bool image_draw_desc::operator==(const image_draw_desc& d) const
     {
         return filter == d.filter && wrap == d.wrap;
     }
 
     struct
     {
-        sg_pipeline image_pip;
+        pipeline_t image_pip;
         sg_bindings image_bind;
 
-        std::unordered_map<image_draw_desc_t, sg_sampler> samplers;
+        std::unordered_map<image_draw_desc, sg_sampler> samplers;
 
     } state_drawing;
 
-    sg_sampler setup_sampler(const image_draw_desc_t& draw_desc)
+    sg_sampler setup_sampler(const image_draw_desc& draw_desc)
     {
         sg_sampler_desc sampler_desc = {};
         sampler_desc.wrap_u = sampler_desc.wrap_v = draw_desc.wrap;
@@ -45,7 +48,7 @@ namespace frame
         return sg_make_sampler(&sampler_desc);
     }
 
-    sg_sampler get_sampler(const image_draw_desc_t& draw_desc)
+    sg_sampler get_sampler(const image_draw_desc& draw_desc)
     {
         if (state_drawing.samplers.count(draw_desc))
             return state_drawing.samplers[draw_desc];
@@ -59,13 +62,22 @@ namespace frame
             float x, y;
         };
 
+        //vertex_t vertices[] =
+        //{
+        //     0.0f,  0.0f,
+        //     1.0f,  0.0f,
+        //     1.0f,  1.0f,
+        //     0.0f,  1.0f
+        //};
+
         vertex_t vertices[] =
         {
              0.0f,  0.0f,
-             1.0f,  0.0f,
+             0.0f,  1.0f,
              1.0f,  1.0f,
-             0.0f,  1.0f
+             1.0f,  0.0f
         };
+
         sg_buffer_desc buffer_desc_vert = {};
         buffer_desc_vert.data = SG_RANGE(vertices);
         buffer_desc_vert.label = "basic-image-vertices";
@@ -92,7 +104,7 @@ namespace frame
         pipeline_desc.alpha_to_coverage_enabled = true;
         pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
         pipeline_desc.label = "basic-image-pipeline";
-        state_drawing.image_pip = sg_make_pipeline(&pipeline_desc);
+        state_drawing.image_pip = pip_manager.make_pipeline(pipeline_desc);
     }
 
     void setup_draw()
@@ -1073,7 +1085,7 @@ namespace frame
         return {};
     }
 
-    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align, image_draw_desc_t draw_desc)
+    void draw_image_ex(image_t img, const vec2& position, float radians, const vec2& scale, text_align align, image_draw_desc draw_desc)
     {
         basic_image_vs_params_t vs_params;
         vs_params.color0 = std::move(draw_desc.tint_color);
@@ -1088,19 +1100,19 @@ namespace frame
         state_drawing.image_bind.fs.images[SLOT_texture_fs] = { img };
         state_drawing.image_bind.fs.samplers[SLOT_sampler_fs] = get_sampler(draw_desc);
 
-        sg_apply_pipeline(state_drawing.image_pip);
+        pip_manager.apply_pipeline(state_drawing.image_pip);
         sg_apply_bindings(&state_drawing.image_bind);
         sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_image_vs_params, SG_RANGE(vs_params));
 
         sg_draw(0, 4, 1);
     }
 
-    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align, image_draw_desc_t draw_desc)
+    void draw_image_ex_size(image_t img, const vec2& position, float radians, const vec2& screen_size, text_align align, image_draw_desc draw_desc)
     {
         draw_image_ex(img, position, radians, screen_size / get_world_scale().abs(), align, std::move(draw_desc));
     }
 
-    void draw_image(image_t img, const vec2& position, text_align align, image_draw_desc_t draw_desc)
+    void draw_image(image_t img, const vec2& position, text_align align, image_draw_desc draw_desc)
     {
         draw_image_ex(img, position, 0.0f, get_image_size(img), align, std::move(draw_desc));
     }

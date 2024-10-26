@@ -111,6 +111,8 @@ void setup()
 
 void update()
 {
+    frame::begin_default_pass();
+
     frame::draw_coordinate_lines(frame::rgb(80, 80, 80));
     world.Draw();
 
@@ -132,4 +134,6 @@ void update()
         create_world_object();
 
     world.Update();
+
+    frame::end_pass();
 }
