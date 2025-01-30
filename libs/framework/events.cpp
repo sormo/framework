@@ -5,6 +5,7 @@
 #include <memory>
 #include <cmath>
 #include <set>
+#include <unordered_map>
 #include "sokol_app.h"
 
 using namespace frame;

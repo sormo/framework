@@ -5,6 +5,12 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#elif __ANDROID_API__
+#define NANOVG_GLES3_IMPLEMENTATION
+#define SOKOL_GLES3
+#define GL_GLEXT_PROTOTYPES
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #else
 #define SOKOL_GLCORE
 #define NOMINMAX
@@ -47,6 +53,9 @@
 #include "imgui_font.h"
 #include <chrono>
 #include <vector>
+#include <map>
+#include <string>
+#include <memory>
 #include <algorithm>
 
 using namespace frame;
@@ -618,7 +627,7 @@ void setup_fontstash()
 
 void init()
 {
-#ifndef __EMSCRIPTEN__
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID_API__)
     gladLoadGL();
 #endif
 
@@ -637,7 +646,7 @@ void init()
 
     set_screen_background(frame::col4::RGBf(0.0f, 0.0f, 0.0f));
 
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) || defined(__ANDROID_API__)
     vg = nvgCreateGLES3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 	//vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 #else

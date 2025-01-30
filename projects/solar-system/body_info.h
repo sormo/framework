@@ -1,7 +1,7 @@
 #pragma once
 #include "body.h"
 #include <svg.h>
-#include <map>
+#include <unordered_map>
 #include <string>
 
 struct body_color

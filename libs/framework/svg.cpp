@@ -7,6 +7,7 @@
 
 #include <nanovg.h>
 #include <assert.h>
+#include <string>
 
 #define DEBUG_ONLY(fmt, ...)
 

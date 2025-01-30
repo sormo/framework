@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <unordered_map>
 #include <sokol_app.h>
 #include <sokol_gfx.h>
 #include <sokol_time.h>

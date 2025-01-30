@@ -2,6 +2,7 @@
 #include "unit.h"
 #include "drawing_sg.h"
 #include <utils.h>
+#include <string>
 
 struct body_node;
 
