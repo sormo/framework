@@ -10,11 +10,11 @@
 #include <string>
 #include <vector>
 #include <cassert>
-#include "shaders/basic_depth_instanced.glsl.h"
-#include "shaders/basic_depth.glsl.h"
-#include "shaders/basic_instanced.glsl.h"
-#include "shaders/basic.glsl.h"
-#include "shaders/sshapes.glsl.h"
+#include "basic_depth_instanced.glsl.h"
+#include "basic_depth.glsl.h"
+#include "basic_instanced.glsl.h"
+#include "basic.glsl.h"
+#include "sshapes.glsl.h"
 #define HANDMADE_MATH_IMPLEMENTATION
 #include "HandmadeMath.h"
 #include "manager_sg.h"

@@ -23,7 +23,7 @@ if (FIPS_EMSCRIPTEN)
 elseif (FIPS_ANDROID)
     set(sokol_backend SOKOL_GLES3)
     set(slang "glsl300es")
-elseif (SOKOL_USE_D3D11)
+elseif (FIPS_WINDOWS)
     set(sokol_backend SOKOL_D3D11)
     set(slang "hlsl5")
 elseif (SOKOL_USE_EGL_GLES3)
@@ -37,7 +37,7 @@ endif()
 
 set(FIPS_RTTI ON CACHE BOOL "Enable C++ RTTI" FORCE)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(libs
                     libs/glad/include
@@ -63,6 +63,7 @@ add_subdirectory(libs/xxhash)
 add_subdirectory(libs/tiny-obj-loader)
 add_subdirectory(libs/tiny-gltf)
 add_subdirectory(libs/draco)
+add_subdirectory(libs/glm)
 
 fips_import_fips_imgui_imgui()
 

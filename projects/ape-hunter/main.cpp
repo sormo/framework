@@ -107,30 +107,30 @@ void stopSimulation()
 
 void createTexts()
 {
-    texts.heading = textsManager->Text(u8"Kruh a Štvorec")
+    texts.heading = textsManager->Text((const char*)u8"Kruh a Štvorec")
         .SetPosition(frame::get_world_position_screen_relative({ 0.5f, 0.5f }))
         .SetSize(35.0f)
         .SetColor(frame::col4::RGB(220, 225, 220));
 
-    texts.velocity = textsManager->Text(u8"Kruhu je udelená počiatočná rýchlosť  v ,\nktorej smer ukazuje priamo na štvorec.")
+    texts.velocity = textsManager->Text((const char*)u8"Kruhu je udelená počiatočná rýchlosť  v ,\nktorej smer ukazuje priamo na štvorec.")
         .SetPosition(frame::get_world_position_screen_relative({ 0.2f, 0.7f }))
         .SetSize(15.0f)
         .SetColor(frame::col4::RGB(220, 225, 220))
         .SetHidden(true);
 
-    texts.gravity = textsManager->Text(u8"Na obe telesá pôsobí gravitačné zrýchlenie  g.")
+    texts.gravity = textsManager->Text((const char*)u8"Na obe telesá pôsobí gravitačné zrýchlenie  g.")
         .SetPosition(frame::get_world_position_screen_relative({ 0.2f, 0.7f }))
         .SetSize(15.0f)
         .SetColor(frame::col4::RGB(220, 225, 220))
         .SetHidden(true);
 
-    texts.trajectory = textsManager->Text(u8"Štvorec bude padať rovno dolu a kruh\nsa bude pohybovať po parabolickej trajektórii.")
+    texts.trajectory = textsManager->Text((const char*)u8"Štvorec bude padať rovno dolu a kruh\nsa bude pohybovať po parabolickej trajektórii.")
         .SetPosition(frame::get_world_position_screen_relative({ 0.2f, 0.7f }))
         .SetSize(15.0f)
         .SetColor(frame::col4::RGB(220, 225, 220))
         .SetHidden(true);
 
-    texts.startSimmulation = textsManager->Text(u8"Dokázeš nastaviť parametre tak, aby\nkruh trafil padajúci štvorec?\nV ďalšom kroku sa spustí simulácia.")
+    texts.startSimmulation = textsManager->Text((const char*)u8"Dokázeš nastaviť parametre tak, aby\nkruh trafil padajúci štvorec?\nV ďalšom kroku sa spustí simulácia.")
         .SetPosition(frame::get_world_position_screen_relative({ 0.1f, 0.6f }))
         .SetSize(15.0f)
         .SetColor(frame::col4::RGB(220, 225, 220))
