@@ -542,6 +542,7 @@ namespace frame
         if (pass_manager.is_default_pass())
         {
             // render imgui at the end of default pass
+            sg_reset_state_cache();
             imgui::render();
         }
 
@@ -586,9 +587,8 @@ void frame_update()
 
     update();
 
-    nvgEndFrame(vg);
-
     sg_reset_state_cache();
+    nvgEndFrame(vg);
 
     sg_commit();
 

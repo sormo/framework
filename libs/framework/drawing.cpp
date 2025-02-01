@@ -892,6 +892,8 @@ namespace frame
         draw_text_common(text, position, size, color, align);
 
         nvgRestore(vg);
+
+        sg_reset_state_cache();
     }
 
     void draw_text_ex(const char* text, const vec2& position, float size, const col4& color, const char* font_name, text_align align, float blur, float spacing)
@@ -905,6 +907,8 @@ namespace frame
         draw_text_common(text, position, size, color, align);
 
         nvgRestore(vg);
+
+        sg_reset_state_cache();
     }
 
     void set_text_transform2(const vec3& position, float size)

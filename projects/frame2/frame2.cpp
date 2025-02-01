@@ -26,7 +26,7 @@ static void init(void)
 {
     sg_desc setup_desc = {};
     setup_desc.environment = sglue_environment();
-    setup_desc.logger = sg_logger{ .func = slog_func };
+    setup_desc.logger.func = slog_func;
 
     sg_setup(&setup_desc);
 
@@ -36,20 +36,30 @@ static void init(void)
          0.5f, -0.5f, 0.5f,     0.0f, 1.0f, 0.0f, 1.0f,
         -0.5f, -0.5f, 0.5f,     0.0f, 0.0f, 1.0f, 1.0f
     };
-    state.bind.vertex_buffers[0] = sg_make_buffer({ .data = SG_RANGE(vertices) });
 
-    sg_pipeline_desc pipeline = { .shader = sg_make_shader(triangle_shader_desc(sg_query_backend())) };
+    sg_buffer_desc buffer_desc = {};
+    buffer_desc.data = SG_RANGE(vertices);
+
+    state.bind.vertex_buffers[0] = sg_make_buffer(buffer_desc);
+
+    sg_pipeline_desc pipeline = {};
+    pipeline.shader = sg_make_shader(triangle_shader_desc(sg_query_backend()));
     pipeline.layout.attrs[ATTR_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
     pipeline.layout.attrs[ATTR_vs_color0].format = SG_VERTEXFORMAT_FLOAT4;
 
     state.pip = sg_make_pipeline(pipeline);
 
-    state.pass_action.colors[0] = { .load_action = SG_LOADACTION_CLEAR, .clear_value = {0.0f, 0.0f, 0.0f, 1.0f } };
+    state.pass_action.colors[0].load_action = SG_LOADACTION_CLEAR;
+    state.pass_action.colors[0].clear_value = { 0.1f, 0.3f, 5.0f, 1.0f };
 }
 
 void frame(void)
 {
-    sg_begin_pass({ .action = state.pass_action, .swapchain = sglue_swapchain() });
+    sg_pass pass = {};
+    pass.action = state.pass_action;
+    pass.swapchain = sglue_swapchain();
+
+    sg_begin_pass(pass);
     sg_apply_pipeline(state.pip);
     sg_apply_bindings(&state.bind);
     sg_draw(0, 3, 1);
@@ -66,15 +76,15 @@ sapp_desc sokol_main(int argc, char* argv[])
 {
     (void)argc; (void)argv;
 
-    return 
-    {
-        .init_cb = init,
-        .frame_cb = frame,
-        .cleanup_cb = cleanup,
-        .width = 640,
-        .height = 480,
-        .window_title = "Triangle",
-        .icon = { .sokol_default = true },
-        .logger = { .func = slog_func }
-    };
+    sapp_desc desc = {};
+    desc.init_cb = init;
+    desc.frame_cb = frame;
+    desc.cleanup_cb = cleanup;
+    desc.width = 640;
+    desc.height = 480;
+    desc.window_title = "Triangle";
+    desc.icon.sokol_default = true;
+    desc.logger.func = slog_func;
+
+    return desc;
 }
