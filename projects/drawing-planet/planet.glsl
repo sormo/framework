@@ -7,7 +7,7 @@ in vec2 position;
 
 out vec2 fs_position;
 
-uniform vs_params_planet
+layout(binding=0) uniform vs_params_planet
 {
     mat4 mvp;
 };
@@ -29,7 +29,7 @@ in vec2 fs_position;
 const float planet_radius = 0.25;
 const float e = 2.718281828459;
 
-uniform fs_params_planet
+layout(binding=1) uniform fs_params_planet
 {
     vec3 camera_position;
     

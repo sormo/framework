@@ -20,8 +20,8 @@ void body_draw_model::setup_pip()
     pip_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLES;
     pip_desc.shader = sg_make_shader(body_draw_model_shader_desc(sg_query_backend()));;
 
-    pip_desc.layout.attrs[ATTR_body_draw_model_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-    pip_desc.layout.attrs[ATTR_body_draw_model_vs_normal].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_body_draw_model_position].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_body_draw_model_normal].format = SG_VERTEXFORMAT_FLOAT3;
     pip_desc.depth.write_enabled = true;
     pip_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
 
@@ -244,8 +244,8 @@ bool body_draw_model::draw(body_node& body, float radius, const frame::col4& col
     body_draw_model_fs_params_t params_fs = create_fs_params(color, body_position);
     body_draw_model_vs_params_t params_vs = create_vs_params(body, radius);
 
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_body_draw_model_vs_params, SG_RANGE(params_vs));
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_body_draw_model_fs_params, SG_RANGE(params_fs));
+    sg_apply_uniforms(UB_body_draw_model_vs_params, SG_RANGE(params_vs));
+    sg_apply_uniforms(UB_body_draw_model_fs_params, SG_RANGE(params_fs));
 
     sg_draw(0, element_count, 1);
 

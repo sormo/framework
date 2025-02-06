@@ -64,7 +64,7 @@ void setup_shadertoy()
 
     sg_pipeline_desc pipeline_desc = {};
     pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
-    pipeline_desc.layout.attrs[ATTR_shadertoy_vs_uv].format = SG_VERTEXFORMAT_FLOAT2;
+    pipeline_desc.layout.attrs[ATTR_shadertoy_uv].format = SG_VERTEXFORMAT_FLOAT2;
     pipeline_desc.shader = shd;
     pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
     pipeline_desc.label = "shadertoy-pipeline";
@@ -98,7 +98,7 @@ void update_shadertoy()
     //vs_params.mvp = create_world_projection_view() * mat4::transform({}, 0.0f, get_screen_size());
     vs_params.mvp = mat4::orthographic(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 100.0f);
 
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_shadertoy, SG_RANGE(vs_params));
+    sg_apply_uniforms(UB_vs_params_shadertoy, SG_RANGE(vs_params));
 
     fs_params_shadertoy_t fs_params;
     fs_params.iResolution[0] = sapp_widthf();
@@ -110,7 +110,7 @@ void update_shadertoy()
     fs_params.iMouse[0] = state.last_mouse_press.x;
     fs_params.iMouse[1] = state.last_mouse_press.y;
 
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_shadertoy, SG_RANGE(fs_params));
+    sg_apply_uniforms(UB_fs_params_shadertoy, SG_RANGE(fs_params));
 
     sg_draw(0, 4, 1);
 }

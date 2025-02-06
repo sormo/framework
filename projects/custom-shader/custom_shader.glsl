@@ -4,7 +4,7 @@
 
 in vec2 position;
 
-uniform custom_shader_vs_params
+layout(binding=0) uniform custom_shader_vs_params
 {
     mat4 mvp;
 };

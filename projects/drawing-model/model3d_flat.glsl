@@ -1,7 +1,7 @@
 #pragma sokol @ctype mat4 hmm_mat4
 
 #pragma sokol @vs model3d_flat_vs
-uniform model3d_flat_vs_params
+layout(binding=0) uniform model3d_flat_vs_params
 {
     mat4 model;
     mat4 view;

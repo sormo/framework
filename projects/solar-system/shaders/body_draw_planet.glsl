@@ -6,7 +6,7 @@
 in vec2 position;
 out vec2 fs_position;
 
-uniform vs_params_body_draw_common
+layout(binding=0) uniform vs_params_body_draw_common
 {
     mat4 mvp;
 };
@@ -29,18 +29,18 @@ const float e = 2.718281828459;
 
 const int draw_type_planet = 0;
 const int draw_type_sun = 1;
-uniform fs_params_body_draw_common
+layout(binding=1) uniform fs_params_body_draw_common
 {
     int draw_type;
 };
 
-uniform fs_params_body_draw_sun
+layout(binding=2) uniform fs_params_body_draw_sun
 {
     float sun_radius;
     float sun_intensity;
 };
 
-uniform fs_params_body_draw_planet
+layout(binding=3) uniform fs_params_body_draw_planet
 {
     vec3 camera_position;
     float planet_radius;

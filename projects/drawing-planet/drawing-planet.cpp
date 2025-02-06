@@ -112,7 +112,7 @@ void setup_planet()
 
     sg_pipeline_desc pipeline_desc = {};
     pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
-    pipeline_desc.layout.attrs[ATTR_planet_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+    pipeline_desc.layout.attrs[ATTR_planet_position].format = SG_VERTEXFORMAT_FLOAT2;
     pipeline_desc.shader = shd;
     pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
     pipeline_desc.label = "planet-pipeline";
@@ -169,10 +169,10 @@ void update_planet()
     sg_apply_bindings(&state.planet.bind);
 
     auto params_vs = create_planet_vs_params();
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_planet, SG_RANGE(params_vs));
+    sg_apply_uniforms(UB_vs_params_planet, SG_RANGE(params_vs));
 
     auto params_fs = create_planet_fs_params();
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_planet, SG_RANGE(params_fs));
+    sg_apply_uniforms(UB_fs_params_planet, SG_RANGE(params_fs));
 
     sg_draw(0, 4, 1);
 }

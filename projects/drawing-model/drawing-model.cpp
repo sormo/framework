@@ -262,8 +262,8 @@ void init_smooth(const std::vector<char>& data, draw_state_t& draw_state)
     pip_desc.shader = sg_make_shader(model3d_shader_desc(sg_query_backend()));;
     pip_desc.index_type = SG_INDEXTYPE_UINT16;
 
-    pip_desc.layout.attrs[ATTR_model3d_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-    pip_desc.layout.attrs[ATTR_model3d_vs_normal].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_model3d_position].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_model3d_normal].format = SG_VERTEXFORMAT_FLOAT3;
     pip_desc.depth.write_enabled = true;
     pip_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
 
@@ -285,8 +285,8 @@ void init_flat_model(const model_t& model, draw_state_t& draw_state)
     pip_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLES;
     pip_desc.shader = sg_make_shader(model3d_shader_desc(sg_query_backend()));;
 
-    pip_desc.layout.attrs[ATTR_model3d_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-    pip_desc.layout.attrs[ATTR_model3d_vs_normal].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_model3d_position].format = SG_VERTEXFORMAT_FLOAT3;
+    pip_desc.layout.attrs[ATTR_model3d_normal].format = SG_VERTEXFORMAT_FLOAT3;
     pip_desc.depth.write_enabled = true;
     pip_desc.depth.compare = SG_COMPAREFUNC_LESS_EQUAL;
 
@@ -454,8 +454,8 @@ void draw(const draw_state_t& draw_state)
 
     sg_apply_pipeline(draw_state.pip);
     sg_apply_bindings(&draw_state.bind);
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_model3d_vs_params, SG_RANGE(vs_params));
-    sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_model3d_fs_params, SG_RANGE(fs_params));
+    sg_apply_uniforms(UB_model3d_vs_params, SG_RANGE(vs_params));
+    sg_apply_uniforms(UB_model3d_fs_params, SG_RANGE(fs_params));
     sg_draw(0, draw_state.count, 1);
 }
 

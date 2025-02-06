@@ -2,8 +2,8 @@
 #pragma sokol @ctype vec4 frame::col4
 
 #pragma sokol @vs basic_image_vs
-
-uniform basic_image_vs_params
+ 
+layout(binding=0) uniform basic_image_vs_params
 {
     mat4 mvp;
     vec4 color0;
@@ -26,8 +26,8 @@ void main()
 
 #pragma sokol @fs basic_image_fs
 
-uniform texture2D texture_fs;
-uniform sampler sampler_fs;
+layout(binding=0) uniform texture2D texture_fs;
+layout(binding=0) uniform sampler sampler_fs;
 
 in vec4 color;
 in vec2 uv;

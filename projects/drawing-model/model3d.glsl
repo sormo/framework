@@ -2,7 +2,7 @@
 #pragma sokol @ctype vec3 frame::vec3
 
 #pragma sokol @vs model3d_vs
-uniform model3d_vs_params
+layout(binding=0) uniform model3d_vs_params
 {
     mat4 model;
     mat4 projection_view;
@@ -26,7 +26,7 @@ void main()
 #pragma sokol @end
 
 #pragma sokol @fs model3d_fs
-uniform model3d_fs_params
+layout(binding=1) uniform model3d_fs_params
 {
     vec3 object_color;
     vec3 light_color;

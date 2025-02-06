@@ -3,7 +3,7 @@
 in vec3 position;
 out vec4 fs_color;
 
-uniform basic_depth_vs_params
+layout(binding=0) uniform basic_depth_vs_params
 {
     mat4 mvp;
     vec4 color;

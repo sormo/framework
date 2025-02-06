@@ -146,18 +146,18 @@ namespace frame
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
 		pip_desc.shader = state_drawing_sg.basic_depth_instanced;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model0].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model1].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model2].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_model3].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_depth_instanced_vs_color].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_position].format = SG_VERTEXFORMAT_FLOAT3;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model0].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model0].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model1].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model1].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model2].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model2].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model3].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_model3].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_color].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_depth_instanced_color].buffer_index = 1;
 		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
 		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
 
@@ -168,18 +168,18 @@ namespace frame
 	{
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
 		pip_desc.shader = state_drawing_sg.basic_instanced;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model0].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model1].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model2].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_model3].buffer_index = 1;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].format = SG_VERTEXFORMAT_FLOAT4;
-		pip_desc.layout.attrs[ATTR_basic_instanced_vs_color].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_instanced_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model0].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model0].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model1].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model1].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model2].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model2].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model3].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_model3].buffer_index = 1;
+		pip_desc.layout.attrs[ATTR_basic_instanced_color].format = SG_VERTEXFORMAT_FLOAT4;
+		pip_desc.layout.attrs[ATTR_basic_instanced_color].buffer_index = 1;
 		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
 		pip_desc.layout.buffers[1].step_func = SG_VERTEXSTEP_PER_INSTANCE;
 
@@ -191,9 +191,9 @@ namespace frame
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
 		pip_desc.shader = state_drawing_sg.basic_depth;
 		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
-		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].format = SG_VERTEXFORMAT_FLOAT3;
-		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_basic_depth_vs_position].offset = 0;
+		pip_desc.layout.attrs[ATTR_basic_depth_position].format = SG_VERTEXFORMAT_FLOAT3;
+		pip_desc.layout.attrs[ATTR_basic_depth_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_depth_position].offset = 0;
 		// single buffer with positions at index 0
 		pip_desc.layout.buffers[0].stride = stride_in_bytes;
 		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
@@ -207,9 +207,9 @@ namespace frame
 		sg_pipeline_desc pip_desc = get_pipeline_desc_common(type, index_buffer);
 		pip_desc.shader = state_drawing_sg.basic;
 		// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
-		pip_desc.layout.attrs[ATTR_basic_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-		pip_desc.layout.attrs[ATTR_basic_vs_position].buffer_index = 0;
-		pip_desc.layout.attrs[ATTR_basic_vs_position].offset = 0;
+		pip_desc.layout.attrs[ATTR_basic_position].format = SG_VERTEXFORMAT_FLOAT2;
+		pip_desc.layout.attrs[ATTR_basic_position].buffer_index = 0;
+		pip_desc.layout.attrs[ATTR_basic_position].offset = 0;
 		// single buffer with positions at index 0
 		pip_desc.layout.buffers[0].stride = stride_in_bytes;
 		pip_desc.layout.buffers[0].step_func = SG_VERTEXSTEP_PER_VERTEX;
@@ -260,11 +260,11 @@ namespace frame
 		sg_pipeline_desc pipeline_desc = {};
 		pipeline_desc.shader = sg_make_shader(sshapes_shader_desc(sg_query_backend()));
 		pipeline_desc.layout.buffers[0] = sshape_vertex_buffer_layout_state();
-		pipeline_desc.layout.attrs[ATTR_sshapes_vs_position] = sshape_position_vertex_attr_state();
-		pipeline_desc.layout.attrs[ATTR_sshapes_vs_normal] = sshape_normal_vertex_attr_state();
+		pipeline_desc.layout.attrs[ATTR_sshapes_position] = sshape_position_vertex_attr_state();
+		pipeline_desc.layout.attrs[ATTR_sshapes_normal] = sshape_normal_vertex_attr_state();
 		// currently not used
-		//pipeline_desc.layout.attrs[ATTR_sshapes_vs_texcoord] = sshape_texcoord_vertex_attr_state();
-		//pipeline_desc.layout.attrs[ATTR_sshapes_vs_color0] = sshape_color_vertex_attr_state();
+		//pipeline_desc.layout.attrs[ATTR_sshapes_texcoord] = sshape_texcoord_vertex_attr_state();
+		//pipeline_desc.layout.attrs[ATTR_sshapes_color0] = sshape_color_vertex_attr_state();
 		pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
 		pipeline_desc.cull_mode = SG_CULLMODE_NONE;
 		pipeline_desc.depth.write_enabled = true;
@@ -692,7 +692,7 @@ namespace frame
 
 		basic_instanced_vs_params_t vs_params;
 		memcpy(vs_params.view_projection, projection_view.data.Elements, sizeof(projection_view.data.Elements));
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_instanced_vs_params, SG_RANGE(vs_params));
+		sg_apply_uniforms(UB_basic_instanced_vs_params, SG_RANGE(vs_params));
 
 		sg_draw(0, (int)data.draw_elements, count == 0 ? (int)data.instances.size() : (int)count);
 
@@ -758,7 +758,7 @@ namespace frame
 		memcpy(vs_params.mvp, mvp.Elements, sizeof(mvp.Elements));
 		memcpy(vs_params.color, color.data.rgba, sizeof(color.data.rgba));
 
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_vs_params, SG_RANGE(vs_params));
+		sg_apply_uniforms(UB_basic_vs_params, SG_RANGE(vs_params));
 
 		sg_draw(0, (int)data.draw_elements, 1);
 	}
@@ -847,7 +847,7 @@ namespace frame
 		vs_params.shading_type = (int)shading;
 		vs_params.light_direction = light_position.normalized();
 		vs_params.model = model;
-		sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_sshapes_vs_params, SG_RANGE(vs_params));
+		sg_apply_uniforms(UB_sshapes_vs_params, SG_RANGE(vs_params));
 	}
 
 	void draw_cube(const HMM_Mat4& transform, const frame::col4& color, sshapes_shading shading, const frame::vec3& light_position, const HMM_Mat4& model)

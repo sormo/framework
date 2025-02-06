@@ -1,7 +1,7 @@
 #pragma sokol @ctype mat4 HMM_Mat4
 
 #pragma sokol @vs vs
-uniform vs_params
+layout(binding=0) uniform vs_params
 {
     mat4 mvp;
     vec4 color0;
@@ -21,8 +21,8 @@ void main()
 #pragma sokol @end
 
 #pragma sokol @fs fs
-uniform texture2D tex;
-uniform sampler smp;
+layout(binding=0) uniform texture2D tex;
+layout(binding=0) uniform sampler smp;
 
 in vec4 color;
 in vec2 uv;

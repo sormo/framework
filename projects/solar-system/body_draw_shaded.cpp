@@ -35,7 +35,7 @@ void body_draw_shaded::setup()
 
     sg_pipeline_desc pipeline_desc = {};
     pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
-    pipeline_desc.layout.attrs[ATTR_body_draw_planet_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+    pipeline_desc.layout.attrs[ATTR_body_draw_planet_position].format = SG_VERTEXFORMAT_FLOAT2;
     pipeline_desc.shader = shd;
     pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
     pipeline_desc.label = "planet-pipeline";
@@ -151,8 +151,8 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
             auto params_vs_sun = create_sun_vs_params(body.current_position, radius);
             auto params_fs_sun = create_sun_fs_params();
 
-            sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_sun));
-            sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_sun, SG_RANGE(params_fs_sun));
+            sg_apply_uniforms(UB_vs_params_body_draw_common, SG_RANGE(params_vs_sun));
+            sg_apply_uniforms(UB_fs_params_body_draw_sun, SG_RANGE(params_fs_sun));
 
             params_fs_common.draw_type = draw_type::sun;
         }
@@ -161,13 +161,13 @@ void body_draw_shaded::draw(body_node& body, float radius, const frame::col4& co
             auto params_vs_planet = create_planet_vs_params(body.current_position, radius);
             auto params_fs_planet = create_planet_fs_params(color, body.get_absolute_position());
 
-            sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params_body_draw_common, SG_RANGE(params_vs_planet));
-            sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_planet, SG_RANGE(params_fs_planet));
+            sg_apply_uniforms(UB_vs_params_body_draw_common, SG_RANGE(params_vs_planet));
+            sg_apply_uniforms(UB_fs_params_body_draw_planet, SG_RANGE(params_fs_planet));
 
             params_fs_common.draw_type = draw_type::planet;
         }
 
-        sg_apply_uniforms(SG_SHADERSTAGE_FS, SLOT_fs_params_body_draw_common, SG_RANGE(params_fs_common));
+        sg_apply_uniforms(UB_fs_params_body_draw_common, SG_RANGE(params_fs_common));
 
         sg_draw(0, 4, 1);
     };

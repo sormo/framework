@@ -3,7 +3,7 @@
 @ctype vec4 frame::col4
 
 @vs sshapes_vs
-uniform sshapes_vs_params
+layout(binding=0) uniform sshapes_vs_params
 {
     mat4 mvp;
     mat4 model;

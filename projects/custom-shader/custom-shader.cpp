@@ -61,9 +61,9 @@ void setup_sg()
 	pip_desc.index_type = SG_INDEXTYPE_UINT16;
 
 	// position attribute in shader (starts at offset 0, it is taken from buffer at index 0 and is two floats)
-	pip_desc.layout.attrs[ATTR_custom_shader_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
-	pip_desc.layout.attrs[ATTR_custom_shader_vs_position].buffer_index = 0;
-	pip_desc.layout.attrs[ATTR_custom_shader_vs_position].offset = 0;
+	pip_desc.layout.attrs[ATTR_custom_shader_position].format = SG_VERTEXFORMAT_FLOAT2;
+	pip_desc.layout.attrs[ATTR_custom_shader_position].buffer_index = 0;
+	pip_desc.layout.attrs[ATTR_custom_shader_position].offset = 0;
 	
 	// single buffer with positions at index 0
 	pip_desc.layout.buffers[0].stride = 0;
@@ -80,7 +80,7 @@ void draw_sg()
 
     sg_apply_pipeline(state.pip);
     sg_apply_bindings(&state.bind);
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_custom_shader_vs_params, SG_RANGE(vs_params));
+    sg_apply_uniforms(UB_custom_shader_vs_params, SG_RANGE(vs_params));
     sg_draw(0, 4, 1);
 }
 

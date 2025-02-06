@@ -8,7 +8,7 @@ in vec4 model3;
 in vec4 color;
 out vec4 fs_color;
 
-uniform basic_depth_instanced_vs_params
+layout(binding=0) uniform basic_depth_instanced_vs_params
 {
     mat4 view_projection;
 };

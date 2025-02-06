@@ -91,7 +91,7 @@ namespace frame
         state_drawing.image_bind.index_buffer = sg_make_buffer(&buffer_desc_index);
 
         // create a sampler object with default attributes
-        state_drawing.image_bind.fs.samplers[SLOT_sampler_fs] = get_sampler({});
+        state_drawing.image_bind.samplers[SMP_sampler_fs] = get_sampler({});
 
         // a shader
         sg_shader shd = sg_make_shader(basic_image_shader_desc(sg_query_backend()));
@@ -99,7 +99,7 @@ namespace frame
         // a pipeline state object
         sg_pipeline_desc pipeline_desc = {};
         pipeline_desc.primitive_type = SG_PRIMITIVETYPE_TRIANGLE_STRIP;
-        pipeline_desc.layout.attrs[ATTR_basic_image_vs_position].format = SG_VERTEXFORMAT_FLOAT2;
+        pipeline_desc.layout.attrs[ATTR_basic_image_position].format = SG_VERTEXFORMAT_FLOAT2;
         pipeline_desc.shader = shd;
         pipeline_desc.alpha_to_coverage_enabled = true;
         pipeline_desc.index_type = SG_INDEXTYPE_UINT16;
@@ -1101,12 +1101,12 @@ namespace frame
 
         vs_params.mvp = create_world_projection() * mat4::translation(screen_position) * mat4::scaling(screen_scale) * mat4::transform(model_position, radians, scale);
 
-        state_drawing.image_bind.fs.images[SLOT_texture_fs] = { img };
-        state_drawing.image_bind.fs.samplers[SLOT_sampler_fs] = get_sampler(draw_desc);
+        state_drawing.image_bind.images[IMG_texture_fs] = { img };
+        state_drawing.image_bind.samplers[SMP_sampler_fs] = get_sampler(draw_desc);
 
         pip_manager.apply_pipeline(state_drawing.image_pip);
         sg_apply_bindings(&state_drawing.image_bind);
-        sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_basic_image_vs_params, SG_RANGE(vs_params));
+        sg_apply_uniforms(UB_basic_image_vs_params, SG_RANGE(vs_params));
 
         sg_draw(0, 4, 1);
     }

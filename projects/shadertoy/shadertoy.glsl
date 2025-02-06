@@ -10,7 +10,7 @@ in vec2 uv;
 
 out vec2 fs_uv;
 
-uniform vs_params_shadertoy
+layout(binding=0) uniform vs_params_shadertoy
 {
     mat4 mvp;
 };
@@ -29,7 +29,7 @@ void main()
 out vec4 frag_color;
 in vec2 fs_uv;
 
-uniform fs_params_shadertoy
+layout(binding=1) uniform fs_params_shadertoy
 {
     vec3 iResolution;
     float iTime;
